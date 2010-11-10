@@ -58,6 +58,7 @@
 		1AAD78261288B93D001FB721 /* JAValueToString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAValueToString.h; sourceTree = "<group>"; };
 		1AAD78271288B93D001FB721 /* JAValueToString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAValueToString.m; sourceTree = "<group>"; };
 		1AAD7958128B04C7001FB721 /* JAMinecraftBlockIDs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = JAMinecraftBlockIDs.c; sourceTree = "<group>"; };
+		1AAD7B06128B2B34001FB721 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		32A70AAB03705E1F00C91783 /* mcxform_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mcxform_Prefix.pch; sourceTree = "<group>"; };
 		8DD76FA10486AA7600D96B5E /* mcxform */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mcxform; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -78,6 +79,7 @@
 		08FB7794FE84155DC02AAC07 /* mcxform */ = {
 			isa = PBXGroup;
 			children = (
+				1AAD7B06128B2B34001FB721 /* README */,
 				08FB7795FE84155DC02AAC07 /* Source */,
 				1A9FB1DE1281F88B003DD1C3 /* MinecraftKit */,
 				08FB779DFE84155DC02AAC07 /* External Frameworks and Libraries */,

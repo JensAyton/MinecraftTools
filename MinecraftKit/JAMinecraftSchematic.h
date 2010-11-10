@@ -1,7 +1,7 @@
 /*
 	JAMinecraftSchematic.h
 	
-	The JAMinecraftSchematic class represents an ifiniteish three-dimensional
+	The JAMinecraftSchematic class represents an infiniteish three-dimensional
 	matrix of cells containing Minecraft blocks. Data is stored in a sparse
 	structure where large areas of air take no memory. The extents, width,
 	height and depth properties represent the axis-aligned bounding box of all

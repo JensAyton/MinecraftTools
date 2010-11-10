@@ -119,6 +119,9 @@ enum
 	Note that additional information is stored in the TileEntities structure
 	for the following block types: Furnace, Sign, MobSpawner, Chest. Signs
 	have both block data and tile entity data.
+	
+	In actual map data, the high nybble of the data byte is used for lighting.
+	In schematics, it’s unused.
 */
 enum
 {
