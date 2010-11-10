@@ -4,5 +4,5 @@ A proto-framework for working with Minecraft data.
 MIT license.
 
 JAMinecraftBlockIDs.h and JAMinecraftBlockIDs.c are plain C and should work
-from C++. The rest is bleeding-edge Objective-C Ð it requires Apple-Clang 1.5
-and x86_64.
+from C++. The rest is bleeding-edge Objective-C â€“ it requires Apple-Clang 1.5,
+Snow Leopard, x86_64 and garbage collection.
