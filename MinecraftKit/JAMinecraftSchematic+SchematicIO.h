@@ -40,4 +40,6 @@
 
 - (id) initWithSchematicData:(NSData *)data error:(NSError **)outError;
 
+- (NSData *) schematicDataWithError:(NSError **)outError;
+
 @end

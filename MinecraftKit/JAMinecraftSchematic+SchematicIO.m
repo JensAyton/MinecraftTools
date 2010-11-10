@@ -59,9 +59,9 @@
 	
 	NSUInteger planeSize = width * height * depth;
 	
-	NSData *blockData = [[dict objectForKey:@"Blocks"] objectValue];
-	NSData *metaData = [[dict objectForKey:@"Data"] objectValue];
-	if (![blockData isKindOfClass:[NSData class]] || ![metaData isKindOfClass:[NSData class]] || blockData.length < planeSize || metaData.length < planeSize)
+	NSData *blockIDs = [[dict objectForKey:@"Blocks"] objectValue];
+	NSData *blockData = [[dict objectForKey:@"Data"] objectValue];
+	if (![blockIDs isKindOfClass:[NSData class]] || ![blockData isKindOfClass:[NSData class]] || blockIDs.length < planeSize || blockData.length < planeSize)
 	{
 		if (outError != nil)  *outError = [NSError errorWithDomain:kJAMinecraftSchematicErrorDomain
 															  code:kJACircuitErrorTruncatedData
@@ -69,8 +69,8 @@
 		return nil;
 	}
 	
-	const uint8_t *blockBytes = blockData.bytes;
-	const uint8_t *metaBytes = metaData.bytes;
+	const uint8_t *blockBytes = blockIDs.bytes;
+	const uint8_t *metaBytes = blockData.bytes;
 	
 	self = [self init];
 	if (self == nil)
@@ -95,7 +95,7 @@
 				
 				JAMinecraftCell cell = { .blockID = blockID, .blockData = meta };
 				[self setCell:cell
-						   at:(JACellLocation){width - y, x, z}];	// Coordinate weirdness inherited from MCEdit, which got it from Minecraft.
+						   at:(JACellLocation){height - y, x, z}];	// Coordinate weirdness inherited from MCEdit, which got it from Minecraft.
 			}
 		}
 	}
@@ -103,6 +103,58 @@
 	[self endBulkUpdate];
 	
 	return self;
+}
+
+
+- (NSData *) schematicDataWithError:(NSError **)outError
+{
+	JACircuitExtents extents = self.extents;
+	NSMutableDictionary *root = [NSMutableDictionary dictionary];
+	
+	// Note that the concept of width and height differs.
+	NSUInteger width = JACircuitExtentsWidth(extents);
+	NSUInteger height = JACircuitExtentsWidth(extents);
+	NSUInteger depth = JACircuitExtentsDepth(extents);
+	
+	[root ja_setNBTInteger:height type:kJANBTTagShort forKey:@"Length"];
+	[root ja_setNBTInteger:width type:kJANBTTagShort forKey:@"Width"];
+	[root ja_setNBTInteger:depth type:kJANBTTagShort forKey:@"Height"];
+	
+	[root ja_setNBTString:@"Alpha" forKey:@"Materials"];
+	
+	NSUInteger planeSize = width * height * depth;
+	NSMutableData *blockIDs = [NSMutableData dataWithLength:planeSize];
+	NSMutableData *blockData = [NSMutableData dataWithLength:planeSize];
+	if (blockIDs == nil || blockData == nil)
+	{
+		if (outError != nil)  *outError = [NSError errorWithDomain:NSOSStatusErrorDomain
+															  code:memFullErr
+														  userInfo:nil];
+		return nil;
+	}
+	
+	uint8_t *blockBytes = blockIDs.mutableBytes;
+	uint8_t *metaBytes = blockData.mutableBytes;
+	
+	NSUInteger x, y, z;
+	for (z = 0; z < depth; z++)
+	{
+		for (y = 0; y < height; y++)
+		{
+			for (x = 0; x < width; x++)
+			{
+				JAMinecraftCell cell = [self cellAt:(JACellLocation){height - y, x, z}];
+				*blockBytes++ = cell.blockID;
+				*metaBytes++ = cell.blockData;
+			}
+		}
+	}
+	
+	[root ja_setNBTByteArray:blockIDs forKey:@"Blocks"];
+	[root ja_setNBTByteArray:blockData forKey:@"Data"];
+	
+	JANBTTag *nbtRoot = [root ja_asNBTTagWithName:@"Schematic"];
+	return [JANBTEncoder encodeTag:nbtRoot];
 }
 
 @end

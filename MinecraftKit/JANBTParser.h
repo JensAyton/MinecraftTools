@@ -68,9 +68,23 @@ typedef enum
 - (NSString *) debugDescription;
 #endif
 
++ (id) tagWithName:(NSString *)name integerValue:(long long)value type:(JANBTTagType)type;
++ (id) tagWithName:(NSString *)name integerValue:(long long)value;	// Selects smallest type.
++ (id) tagWithName:(NSString *)name floatValue:(float)value;
++ (id) tagWithName:(NSString *)name doubleValue:(double)value;
++ (id) tagWithName:(NSString *)name byteArrayValue:(NSData *)value;
++ (id) tagWithName:(NSString *)name stringValue:(NSString *)value;
++ (id) tagWithName:(NSString *)name listValue:(NSArray *)value;
++ (id) tagWithName:(NSString *)name compoundValue:(NSDictionary *)value;
+
 @end
 
 
+/*
+	JANBTParser
+	
+	Deserialize an NBT file into JANBTTags.
+*/
 @interface JANBTParser: NSObject
 
 + (JANBTTag *) parseData:(NSData *)data;
@@ -78,5 +92,40 @@ typedef enum
 - (id) initWithData:(NSData *)data;
 
 - (JANBTTag *) parsedTags;
+
+@end
+
+
+/*
+	JANBTEncoder
+	
+	Serialize a JANBTTag hierarchy into an NBT file.
+	The specification requires the root to be a compound tag, but this isn’t
+	enforced.
+*/
+@interface JANBTEncoder: NSObject
+
++ (NSData *) encodeTag:(JANBTTag *)tag;
+
+- (id) initWithRootTag:(JANBTTag *)tag;
+
+- (NSData *) encodedData;
+
+@end
+
+
+// Helpers for building compounds.
+@interface NSMutableDictionary (JANBTHelpers)
+
+- (void) ja_setNBTInteger:(long long)value type:(JANBTTagType)type forKey:(NSString *)key;
+- (void) ja_setNBTInteger:(long long)value forKey:(NSString *)key;
+- (void) ja_setNBTFloat:(float)value forKey:(NSString *)key;
+- (void) ja_setNBTDouble:(double)value forKey:(NSString *)key;
+- (void) ja_setNBTByteArray:(NSData *)value forKey:(NSString *)key;
+- (void) ja_setNBTString:(NSString *)value forKey:(NSString *)key;
+- (void) ja_setNBTList:(NSArray *)value forKey:(NSString *)key;
+- (void) ja_setNBTCompound:(NSDictionary *)value forKey:(NSString *)key;
+
+- (JANBTTag *) ja_asNBTTagWithName:(NSString *)name;
 
 @end

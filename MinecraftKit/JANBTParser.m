@@ -46,7 +46,6 @@ static NSString *NameFromTagType(JANBTTagType type);
 @property (readwrite, setter=priv_setType:) JANBTTagType type;
 @property (readwrite, copy, setter=priv_setName:) NSString *name;
 
-// Move to header when implementing writing.
 - (id) initWithName:(NSString *)name integerValue:(long long)value type:(JANBTTagType)type;
 - (id) initWithName:(NSString *)name integerValue:(long long)value;	// Selects smallest type.
 - (id) initWithName:(NSString *)name floatValue:(float)value;
@@ -55,6 +54,9 @@ static NSString *NameFromTagType(JANBTTagType type);
 - (id) initWithName:(NSString *)name stringValue:(NSString *)value;
 - (id) initWithName:(NSString *)name listValue:(NSArray *)value;
 - (id) initWithName:(NSString *)name compoundValue:(NSDictionary *)value;
+
+- (void) encodeInto:(NSMutableData *)data;
+- (void) encodeWithoutHeaderInto:(NSMutableData *)data;
 
 @end
 
@@ -139,6 +141,54 @@ static inline BOOL IsFloatType(JANBTTagType type)
 
 @synthesize type = _type;
 @synthesize name = _name;
+
+
++ (id) tagWithName:(NSString *)name integerValue:(long long)value type:(JANBTTagType)type
+{
+	return [[[self alloc] initWithName:name integerValue:value type:type] autorelease];
+}
+
+
++ (id) tagWithName:(NSString *)name integerValue:(long long)value
+{
+	return [[[self alloc] initWithName:name integerValue:value] autorelease];
+}
+
+
++ (id) tagWithName:(NSString *)name floatValue:(float)value
+{
+	return [[[self alloc] initWithName:name floatValue:value] autorelease];
+}
+
+
++ (id) tagWithName:(NSString *)name doubleValue:(double)value
+{
+	return [[[self alloc] initWithName:name doubleValue:value] autorelease];
+}
+
+
++ (id) tagWithName:(NSString *)name byteArrayValue:(NSData *)value
+{
+	return [[[self alloc] initWithName:name byteArrayValue:value] autorelease];
+}
+
+
++ (id) tagWithName:(NSString *)name stringValue:(NSString *)value
+{
+	return [[[self alloc] initWithName:name stringValue:value] autorelease];
+}
+
+
++ (id) tagWithName:(NSString *)name listValue:(NSArray *)value
+{
+	return [[[self alloc] initWithName:name listValue:value] autorelease];
+}
+
+
++ (id) tagWithName:(NSString *)name compoundValue:(NSDictionary *)value
+{
+	return [[[self alloc] initWithName:name compoundValue:value] autorelease];
+}
 
 
 - (id) initWithName:(NSString *)name integerValue:(long long)value type:(JANBTTagType)type
@@ -349,6 +399,158 @@ static inline BOOL IsFloatType(JANBTTagType type)
 }
 
 
+static void WriteByte(NSMutableData *data, uint8_t byteVal)
+{
+	[data appendBytes:&byteVal length:1];
+}
+
+
+static void WriteShort(NSMutableData *data, uint16_t shortVal)
+{
+	int8_t shortBytes[] =
+	{
+		(shortVal >> 8) & 0xFF,
+		(shortVal) & 0xFF
+	};
+	[data appendBytes:shortBytes length:sizeof shortBytes];
+}
+
+
+static void WriteInt(NSMutableData *data, uint16_t intVal)
+{
+	int8_t intBytes[] =
+	{
+		(intVal >> 24) & 0xFF,
+		(intVal >> 16) & 0xFF,
+		(intVal >> 8) & 0xFF,
+		(intVal) & 0xFF
+	};
+	[data appendBytes:intBytes length:sizeof intBytes];
+}
+
+
+static void WriteLong(NSMutableData *data, uint64_t longVal)
+{
+	int8_t longBytes[] =
+	{
+		(longVal >> 56) & 0xFF,
+		(longVal >> 48) & 0xFF,
+		(longVal >> 40) & 0xFF,
+		(longVal >> 32) & 0xFF,
+		(longVal >> 24) & 0xFF,
+		(longVal >> 16) & 0xFF,
+		(longVal >> 8) & 0xFF,
+		(longVal) & 0xFF
+	};
+	[data appendBytes:longBytes length:sizeof longVal];
+}
+
+
+static void WriteString(NSMutableData *data, NSString *string)
+{
+	NSData *stringData = [string dataUsingEncoding:NSUTF8StringEncoding];
+	WriteShort(data, string.length);
+	[data appendData:stringData];
+}
+
+
+- (void) encodeInto:(NSMutableData *)data
+{
+	JANBTTagType type = self.type;
+	
+	WriteByte(data, type);
+	WriteString(data, self.name);
+	
+	[self encodeWithoutHeaderInto:data];
+}
+
+
+- (void) encodeWithoutHeaderInto:(NSMutableData *)data
+{
+	switch (self.type)
+	{
+		case kJANBTTagEnd:
+			break;
+			
+		case kJANBTTagByte:
+			WriteByte(data, self.integerValue);
+			break;
+			
+		case kJANBTTagShort:
+			WriteShort(data, self.integerValue);
+			break;
+			
+		case kJANBTTagInt:
+			WriteInt(data, self.integerValue);
+			break;
+			
+		case kJANBTTagLong:
+			WriteLong(data, self.integerValue);
+			break;
+			
+		case kJANBTTagFloat:
+		{
+			Float32 floatVal = self.doubleValue;
+			WriteInt(data, *(int32_t *)&floatVal);
+			break;
+		}
+			
+		case kJANBTTagDouble:
+		{
+			Float64 doubleVal = self.doubleValue;
+			WriteLong(data, *(int64_t *)&doubleVal);
+			break;
+		}
+			
+		case kJANBTTagByteArray:
+		{
+			NSData *byteArrayVal = self.objectValue;
+			WriteInt(data, byteArrayVal.length);
+			[data appendData:byteArrayVal];
+			break;
+		}
+			
+		case kJANBTTagString:
+		{
+			WriteString(data, self.objectValue);
+			break;
+		}
+			
+		case kJANBTTagList:
+		{
+			NSArray *listVal = self.objectValue;
+			
+			// FIXME: store type for collections.
+			NSUInteger count = listVal.count;
+			JANBTTagType subType = kJANBTTagByte;
+			if (count > 0)  subType = [(JANBTTag *)[listVal objectAtIndex:0] type];
+			
+			WriteByte(data, subType);
+			WriteInt(data, count);
+			
+			for (JANBTTag *tag in listVal)
+			{
+				[tag encodeWithoutHeaderInto:data];
+			}
+			break;
+		}
+			
+		case kJANBTTagCompound:
+		{
+			NSDictionary *compoundVal = self.objectValue;
+			for (JANBTTag *tag in compoundVal.allValues)
+			{
+				[tag encodeInto:data];
+			}
+			
+			// Write a TAG_End to terminate.
+			WriteByte(data, kJANBTTagEnd);
+			break;
+		}
+	}
+}
+
+
 #ifndef NDEBUG
 static NSString *IndentString(NSUInteger count)
 {
@@ -426,15 +628,16 @@ static NSString *IndentString(NSUInteger count)
 		}
 		else if (type == kJANBTTagCompound)
 		{
-			NSArray *list = self.objectValue;
-			NSUInteger count = list.count;
+			NSDictionary *dict = self.objectValue;
+			NSUInteger count = dict.count;
 			if (count == 0)  [result appendString:@"0 entries"];	// Strictly, we shouldn't be losing type info in this case.
 			else
 			{
 				[result appendFormat:@"%llu entries\n%@{", count, IndentString(indent)];
 				
-				for (JANBTTag *subTag in list)
+				for (NSString *key in dict)
 				{
+					JANBTTag *subTag = [dict objectForKey:key];
 					[result appendFormat:@"\n%@%@", IndentString(indent + 1), [subTag debugDescriptionWithIndentLevel:indent + 1]];
 				}
 				
@@ -541,6 +744,14 @@ static NSString * const kJANBTParserUnknownTagException = @"se.ayton.jens JANBTP
 - (JANBTTag *) priv_parseListWithName:(NSString *)name;
 - (JANBTTag *) priv_parseCompoundWithName:(NSString *)name;
 
+@end
+
+
+@interface JANBTEncoder ()
+{
+	JANBTTag				*_rootTag;
+	NSData					*_data;
+}
 @end
 
 
@@ -808,7 +1019,7 @@ static void UnexpectedEOF(void)
 - (JANBTTag *) priv_parseFloatWithName:(NSString *)name
 {
 	int32_t floatBytes = [self readInt];
-	float floatVal = *(float *)&floatBytes;
+	Float32 floatVal = *(Float32 *)&floatBytes;
 	return [[[JANBTTag alloc] initWithName:name floatValue:floatVal] autorelease];
 }
 
@@ -816,7 +1027,7 @@ static void UnexpectedEOF(void)
 - (JANBTTag *) priv_parseDoubleWithName:(NSString *)name
 {
 	int64_t doubleBytes = [self readLong];
-	float doubleVal = *(double *)&doubleBytes;
+	Float64 doubleVal = *(Float64 *)&doubleBytes;
 	return [[[JANBTTag alloc] initWithName:name doubleValue:doubleVal] autorelease];
 }
 
@@ -875,11 +1086,135 @@ static void UnexpectedEOF(void)
 		if (tag == nil) break;	// Signifies TAG_End
 		
 		NSString *key = tag.name;
-		if (key == nil)  key = @"";
+		if (key == nil)  continue;
 		[subTags setObject:tag forKey:key];
 	}
 	
 	return [[[JANBTTag alloc] initWithName:name compoundValue:[NSDictionary dictionaryWithDictionary:subTags]] autorelease];
+}
+
+@end
+
+
+@implementation JANBTEncoder
+
++ (NSData *) encodeTag:(JANBTTag *)tag
+{
+	JANBTEncoder *encoder = [[self alloc] initWithRootTag:tag];
+	NSData *result = [encoder encodedData];
+	[encoder release];
+	
+	return result;
+}
+
+
+- (id) initWithRootTag:(JANBTTag *)tag
+{
+	if (tag == nil)
+	{
+		[self release];
+		return nil;
+	}
+	
+	if ((self = [super init]))
+	{
+		_rootTag = [tag retain];
+	}
+	
+	return self;
+}
+
+
+- (void) dealloc
+{
+	[_rootTag release];
+	_rootTag = nil;
+	
+	[_data release];
+	_data = nil;
+	
+	[super dealloc];
+}
+
+
+- (NSData *) encodedData
+{
+	if (_data == nil)
+	{
+		NSMutableData *rawData = [NSMutableData data];
+		[_rootTag encodeInto:rawData];
+		_data = [[rawData dd_gzipDeflate] retain];
+		[_rootTag release];
+		_rootTag = nil;
+	}
+	
+	return _data;
+}
+
+@end
+
+
+@implementation NSMutableDictionary (JANBTHelpers)
+
+- (void) ja_setNBTInteger:(long long)value type:(JANBTTagType)type forKey:(NSString *)key
+{
+	if (key == nil)  return;
+	[self setObject:[JANBTTag tagWithName:key integerValue:value type:type] forKey:key];
+}
+
+
+- (void) ja_setNBTInteger:(long long)value forKey:(NSString *)key
+{
+	if (key == nil)  return;
+	[self setObject:[JANBTTag tagWithName:key integerValue:value] forKey:key];
+}
+
+
+- (void) ja_setNBTFloat:(float)value forKey:(NSString *)key
+{
+	if (key == nil)  return;
+	[self setObject:[JANBTTag tagWithName:key floatValue:value] forKey:key];
+}
+
+
+- (void) ja_setNBTDouble:(double)value forKey:(NSString *)key
+{
+	if (key == nil)  return;
+	[self setObject:[JANBTTag tagWithName:key doubleValue:value] forKey:key];
+}
+
+
+- (void) ja_setNBTByteArray:(NSData *)value forKey:(NSString *)key
+{
+	if (key == nil)  return;
+	[self setObject:[JANBTTag tagWithName:key byteArrayValue:value] forKey:key];
+}
+
+
+- (void) ja_setNBTString:(NSString *)value forKey:(NSString *)key
+{
+	if (key == nil)  return;
+	[self setObject:[JANBTTag tagWithName:key stringValue:value] forKey:key];
+}
+
+
+- (void) ja_setNBTList:(NSArray *)value forKey:(NSString *)key
+{
+	if (key == nil)  return;
+	[self setObject:[JANBTTag tagWithName:key listValue:value] forKey:key];
+}
+
+
+- (void) ja_setNBTCompound:(NSDictionary *)value forKey:(NSString *)key
+{
+	if (key == nil)  return;
+	[self setObject:[JANBTTag tagWithName:key compoundValue:value] forKey:key];
+}
+
+
+- (JANBTTag *) ja_asNBTTagWithName:(NSString *)name
+{
+	return [JANBTTag tagWithName:name compoundValue:self];
 }
 
 @end
