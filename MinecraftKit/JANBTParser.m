@@ -54,7 +54,7 @@ static NSString *NameFromTagType(JANBTTagType type);
 - (id) initWithName:(NSString *)name byteArrayValue:(NSData *)value;
 - (id) initWithName:(NSString *)name stringValue:(NSString *)value;
 - (id) initWithName:(NSString *)name listValue:(NSArray *)value;
-- (id) initWithName:(NSString *)name compoundValue:(NSArray *)value;
+- (id) initWithName:(NSString *)name compoundValue:(NSDictionary *)value;
 
 @end
 
@@ -256,7 +256,7 @@ static inline BOOL IsFloatType(JANBTTagType type)
 }
 
 
-- (id) initWithName:(NSString *)name compoundValue:(NSArray *)value
+- (id) initWithName:(NSString *)name compoundValue:(NSDictionary *)value
 {
 	return [self priv_initWithName:name type:kJANBTTagCompound object:value];
 }
@@ -346,26 +346,6 @@ static inline BOOL IsFloatType(JANBTTagType type)
 - (BOOL) isObjectType
 {
 	return IsObjectType(self.type);
-}
-
-
-
-- (NSDictionary *) dictionaryRepresentation
-{
-	if (self.type != kJANBTTagCompound)  return nil;
-	
-	NSArray *elements = self.objectValue;
-	NSMutableDictionary *result = [NSMutableDictionary dictionaryWithCapacity:elements.count];
-	for (JANBTTag *tag in elements)
-	{
-		NSString *name = tag.name;
-		if (name != nil)
-		{
-			[result setObject:tag forKey:name];
-		}
-	}
-	
-	return result;
 }
 
 
@@ -888,16 +868,18 @@ static void UnexpectedEOF(void)
 
 - (JANBTTag *) priv_parseCompoundWithName:(NSString *)name
 {
-	NSMutableArray *subTags = [NSMutableArray array];
+	NSMutableDictionary *subTags = [NSMutableDictionary dictionary];
 	for (;;)
 	{
 		JANBTTag *tag = [self priv_parseOneTag];
 		if (tag == nil) break;	// Signifies TAG_End
 		
-		[subTags addObject:tag];
+		NSString *key = tag.name;
+		if (key == nil)  key = @"";
+		[subTags setObject:tag forKey:key];
 	}
 	
-	return [[[JANBTTag alloc] initWithName:name compoundValue:[NSArray arrayWithArray:subTags]] autorelease];
+	return [[[JANBTTag alloc] initWithName:name compoundValue:[NSDictionary dictionaryWithDictionary:subTags]] autorelease];
 }
 
 @end

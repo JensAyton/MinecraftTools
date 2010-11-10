@@ -55,7 +55,7 @@ typedef enum
 
 @property (readonly) JANBTTagType type;
 @property (readonly, copy) NSString *name;
-@property (readonly) id objectValue;
+@property (readonly) id objectValue;	// NSDictionary for compound, NSArray for array; NSString, NSNumber or NSData for leaves.
 
 @property (readonly) double doubleValue;
 @property (readonly) long long integerValue;
@@ -63,9 +63,6 @@ typedef enum
 @property (readonly, getter=isIntegerType) BOOL integerType;
 @property (readonly, getter=isFloatType) BOOL floatType;
 @property (readonly, getter=isObjectType) BOOL objectType;
-
-// Convert a kJANBTTagCompound to an NSDictionary. Returns nil for other tag types.
-- (NSDictionary *) dictionaryRepresentation;
 
 #ifndef NDEBUG
 - (NSString *) debugDescription;

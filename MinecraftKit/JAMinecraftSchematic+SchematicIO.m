@@ -51,7 +51,7 @@
 		return nil;
 	}
 	
-	NSDictionary *dict = [root dictionaryRepresentation];
+	NSDictionary *dict = root.objectValue;
 	
 	NSUInteger width = [[dict objectForKey:@"Width"] integerValue];
 	NSUInteger height = [[dict objectForKey:@"Length"] integerValue];
