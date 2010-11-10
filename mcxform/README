@@ -1,0 +1,31 @@
+mcxform
+
+Command-line tool to manipulate Minecraft schematics, primarily intended
+for redstone construction.
+
+IMPORTANT: the current implementation discards entities and tile entities,
+making it impractical for general use.
+
+Usage:
+mcxform <outputfile> [commands]
+
+<outputfile> is a file name, which currently must end with .rdat
+(signifying a Redstone Simulator document). The result of the command list
+will be written to this file, unless the resulting schematic is empty.
+
+[commands] is a series of commands from the following list. In theory any
+sequence is valid, but starting with anything other than --in is pointless.
+
+--in <filename>: Load <filename> (an rdat or schematic file) at location
+                 0, 0, 0. If multiple files are loaded, the newest will
+                 overwrite the previous ones, except that air tiles will
+                 not be written over non-air tiles.
+--move <x y z>:  Move the already-loaded data. X ranges from west to east,
+                 y from south to north and z from bottom to top.
+--flipx:         Flip the schematic horizontally, from east to west.
+--flipy:         Flip the schematic vertically, from north to south.
+--rotl:          Rotate the schematic left (anti-clockwise as seen from
+                 above) 90¡.
+--rotr:          Rotate the schematic right (clockwise as seen from above)
+                 90¡.
+--rot180:        Rotate the schematic 180¡.

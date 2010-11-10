@@ -1,4 +1,7 @@
 MinecraftKit
 
-A proto-framework for working with Minecraft data in Objective-C.
+A proto-framework for working with Minecraft data.
 MIT license.
+
+JAMinecraftBlockIDs.h and JAMinecraftBlockIDs.c are plain C and should
+work from C++. The rest is Objective-C.

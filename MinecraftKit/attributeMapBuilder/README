@@ -1,0 +1,3 @@
+attributeMapBuilder
+
+A tool to generate the JAMinecraftBlockIDs.c file for MinecraftKit.
