@@ -25,7 +25,7 @@ sequence is valid, but starting with anything other than --in is pointless.
 --flipx:         Flip the schematic horizontally, from east to west.
 --flipy:         Flip the schematic vertically, from north to south.
 --rotl:          Rotate the schematic left (anti-clockwise as seen from
-                 above) 90¡.
+                 above) 90Â°.
 --rotr:          Rotate the schematic right (clockwise as seen from above)
-                 90¡.
---rot180:        Rotate the schematic 180¡.
+                 90Â°.
+--rot180:        Rotate the schematic 180Â°.
