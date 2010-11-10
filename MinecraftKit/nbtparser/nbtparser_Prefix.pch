@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'nbtparser' target in the 'nbtparser' project.
+//
+
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+#endif
