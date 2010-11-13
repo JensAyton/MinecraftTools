@@ -1,30 +1,53 @@
-mcxform
+mcxform 0.1
 
-Command-line tool to manipulate Minecraft schematics, primarily intended for
-redstone construction.
+Usage: mcxform --help
+       mcxform <outputfile> [commands]
 
-IMPORTANT: the current implementation discards entities and tile entities,
-making it impractical for general use.
+mcxform is a tool for manipulating Minecraft schematics, as used by tools such
+as MCEdit and Redstone Simulator. mcxform works by loading schematics into a
+“working schematic” in memory, performing actions on this working schematic,
+and writing it out when all commands are completed. For example, to place two
+copies of a schematic side by side:
 
-Usage:
-mcxform <outputfile> [commands]
+  mcxform out.schematic --in in.schematic --move 20 0 0 --in in.schematic
 
-<outputfile> is a file name. If it ends in .rdat, a Redstone Simulator rdat
-file is written. Otherwise, a schematic file is written.
+This command loads “in.schematic” into the working schematic at the origin,
+moves the contents of the working schematic 20 steps to the west, and loads
+“in.schematic” at the origin again – which is now 20 steps to the east of the
+original. It then writes the combined result to out.schematic.
 
-[commands] is a series of commands from the following list. In theory any
-sequence is valid, but starting with anything other than --in is pointless.
+NOTES:
+  • mcxform does not preserve entities and tile entities. This is not a
+    problem for redstone circuits, but may be for arbitrary map segments from MCEdit.
+  • mcxform trims away empty space (air blocks) on all sides of the working
+    schematic before saving. This can be exploited to trim a schematic without
+    any other transformations:
+       mcxform trimmed.schematic --in source.schematic
+    There is currently no way to stop it from trimming space.
+  • mcxform can read both schematic files and Redstone Simulator rdat files.
+    However, they are treated somewhat differently. Redstone Simulator reads
+    and writes schematics with north to the left of its window, which I assume
+    is a bug. mcxform loads schematics correctly, and loads rdat files with
+    the top of Redstone Simulator’s window as north. This can lead to
+    surprising results when using both schematics and rdats in one operation.
 
---in <filename>: Load <filename> (an rdat or schematic file) at location
-                 0, 0, 0. If multiple files are loaded, the newest will
-                 overwrite the previous ones, except that air tiles will
-                 not be written over non-air tiles.
---move <x y z>:  Move the already-loaded data. X ranges from west to east,
-                 y from south to north and z from bottom to top.
---flipx:         Flip the schematic horizontally, from east to west.
---flipy:         Flip the schematic vertically, from north to south.
---rotl:          Rotate the schematic left (anti-clockwise as seen from
-                 above) 90°.
---rotr:          Rotate the schematic right (clockwise as seen from above)
-                 90°.
---rot180:        Rotate the schematic 180°.
+COMMANDS:
+--in <filename>:    Load <filename> (a schematic or rdat file) into the
+                    working schematic, at the origin. Non-air blocks in the
+                    file will replace any blocks in the working schematic. Air
+                    blocks in the file will not replace anything.
+--move <x> <y> <z>: Move the blocks of the working schematic the specified
+                    distance along each axis.
+                    <x> is a distance to the west (resulting in new data being
+                        loaded to the east).
+                    <y> is a distance to the south (resulting in new data
+                        being loaded to the north).
+                    <z> is a distance upward (resulting in new data being
+                        loaded below).
+--flipx:            Flip the schematic in the east-west direction.
+--flipy:            Flip the schematic in the north-south direction.
+--rotl:             Rotate the schematic 90 degrees to the left (anti-
+                    clockwise) as seen from above.
+--rotr:             Rotate the schematic 90 degrees to the right (clockwise)
+                    as seen from above.
+--rot180:           Rotate the schematic 180 degrees.
