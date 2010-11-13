@@ -224,7 +224,7 @@
 					"-fobjc-nonfragile-abi2",
 				);
 				PRODUCT_NAME = mcxform;
-				VERSION_MACROS = "VERSION_STRING=\"\\\"0.1\\\"\"";
+				VERSION_MACROS = "VERSION_STRING=\"\\\"0.2\\\"\"";
 			};
 			name = Debug;
 		};
@@ -245,7 +245,7 @@
 					"-fobjc-nonfragile-abi2",
 				);
 				PRODUCT_NAME = mcxform;
-				VERSION_MACROS = "VERSION_STRING=\"\\\"0.1\\\"\"";
+				VERSION_MACROS = "VERSION_STRING=\"\\\"0.2\\\"\"";
 			};
 			name = Release;
 		};
