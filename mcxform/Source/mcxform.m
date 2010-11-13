@@ -438,7 +438,7 @@ static void PrintHelpAndExit(void)
 		   "This command loads “in.schematic” into the working schematic at the origin,\n"
 		   "moves the contents of the working schematic 20 steps to the west, and loads\n"
 		   "“in.schematic” at the origin again – which is now 20 steps to the east of the\n"
-		   "original. It then writes the combined result to out.schematic.\n\n"
+		   "original. It then writes the combined result to “out.schematic”.\n\n"
 		   "NOTES:\n  • mcxform does not preserve entities and tile entities. This is not a\n"
 		   "    problem for redstone circuits, but may be for arbitrary map segments from MCEdit.\n"
 		   "  • mcxform trims away empty space (air blocks) on all sides of the working\n"

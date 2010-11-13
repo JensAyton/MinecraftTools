@@ -14,7 +14,7 @@ copies of a schematic side by side:
 This command loads “in.schematic” into the working schematic at the origin,
 moves the contents of the working schematic 20 steps to the west, and loads
 “in.schematic” at the origin again – which is now 20 steps to the east of the
-original. It then writes the combined result to out.schematic.
+original. It then writes the combined result to “out.schematic”.
 
 NOTES:
   • mcxform does not preserve entities and tile entities. This is not a
