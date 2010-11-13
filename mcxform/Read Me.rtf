@@ -1,0 +1,113 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1038\cocoasubrtf350
+\readonlydoc1{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Monaco;}
+{\colortbl;\red255\green255\blue255;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid1\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid2\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li1440\lin1440 }{\listname ;}\listid1}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11020\viewh18200\viewkind0
+\pard\ql\qnatural\pardirnatural
+
+\f0\fs24 \cf0 mcxform 0.1\
+\
+\pard\tx900\tx1000\ql\qnatural\pardirnatural
+\cf0 Usage:	
+\f1\fs20 mcxform --help
+\f0\fs24 \
+	
+\f1\fs20 mcxform <outputfile> [commands]
+\f0\fs24 \
+\pard\ql\qnatural\pardirnatural
+\cf0 \
+mcxform is a tool for manipulating Minecraft schematics, as used by tools such as MCEdit and Redstone Simulator. mcxform works by loading schematics into a \'93working schematic\'94 in memory, performing actions on this working schematic, and writing it out when all commands are completed. For example, to place two copies of a schematic side by side:\
+\
+\pard\tx720\ql\qnatural\pardirnatural
+\cf0 	
+\f1\fs20 mcxform out.schematic --in in.schematic --move 20 0 0 --in in.schematic
+\f0\fs24 \
+\pard\ql\qnatural\pardirnatural
+\cf0 \
+This command loads \'93in.schematic\'94 into the working schematic at the origin,\
+moves the contents of the working schematic 20 steps to the west, and loads\
+\'93in.schematic\'94 at the origin again \'96 which is now 20 steps to the east of the\
+original. It then writes the combined result to out.schematic.\
+\
+\pard\ql\qnatural\pardirnatural
+
+\b \cf0 Notes:
+\b0 \
+\pard\tx220\tx520\tx820\li520\fi-520\ql\qnatural\pardirnatural
+\ls1\ilvl0\cf0 {\listtext	\'95	}mcxform does not preserve entities and tile entities. This is not a problem for redstone circuits, but may be for arbitrary map segments from MCEdit.\
+{\listtext	\'95	}mcxform trims away empty space (air blocks) on all sides of the working\
+{\listtext	\'95	}schematic before saving. This can be exploited to trim a schematic without any other transformations:\
+\pard\tx220\tx520\tx820\li520\fi-520\ql\qnatural\pardirnatural
+\ls1\ilvl1\cf0 			
+\f1\fs20 mcxform trimmed.schematic --in source.schematic
+\f0\fs24 \
+		There is currently no way to stop it from trimming space.\
+\pard\tx220\tx520\tx820\li520\fi-520\ql\qnatural\pardirnatural
+\ls1\ilvl0\cf0 {\listtext	\'95	}mcxform can read both schematic files and Redstone Simulator rdat files. However, they are treated somewhat differently. Redstone Simulator reads and writes schematics with north to the left of its window, which I assume is a bug. mcxform loads schematics correctly, and loads rdat files with the top of Redstone Simulator\'92s window as north. This can lead to surprising results when using both schematics and rdats in one operation.\
+\pard\ql\qnatural\pardirnatural
+\cf0 \
+\pard\ql\qnatural\pardirnatural
+
+\b \cf0 Commands:
+\b0 \
+\pard\tqr\tx2300\tx2480\li2480\fi-2480\ql\qnatural\pardirnatural
+\cf0 	
+\f1\fs20 --in <filename>:
+\f0\fs24 	Load 
+\f1\fs20 <filename>
+\f0\fs24  (a schematic or rdat file) into the working schematic, at the origin. Non-air blocks in the file will replace any blocks in the working schematic. Air blocks in the file will not replace anything.\
+	
+\f1\fs20 --move <x> <y> <z>:
+\f0\fs24 	Move the blocks of the working schematic the specified distance along each axis.\
+\pard\li3200\fi-420\ql\qnatural\pardirnatural
+
+\f1\fs20 \cf0 <x>
+\f0\fs24  is a distance to the west (resulting in new data being loaded to the east).\
+
+\f1\fs20 <y>
+\f0\fs24  is a distance to the south (resulting in new data being loaded to the north).\
+
+\f1\fs20 <z>
+\f0\fs24  is a distance upward (resulting in new data being loaded below).\
+\pard\tqr\tx2300\tx2480\li2480\fi-2480\ql\qnatural\pardirnatural
+
+\f1\fs20 \cf0 	--flipx:
+\f0\fs24 	Flip the schematic in the east-west direction.\
+
+\f1\fs20 	--flipy:	
+\f0\fs24 Flip the schematic in the north-south direction.\
+
+\f1\fs20 	--rotl:
+\f0\fs24 	Rotate the schematic 90 degrees to the left (anti-clockwise) as seen from above.\
+
+\f1\fs20 	--rotr:
+\f0\fs24 	Rotate the schematic 90 degrees to the right (clockwise) as seen from above.\
+
+\f1\fs20 	--rot180:
+\f0\fs24 	Rotate the schematic 180 degrees.\
+\pard\ql\qnatural\pardirnatural
+\cf0 \
+\pard\ql\qnatural\pardirnatural
+
+\b \cf0 Installation:
+\b0 \
+A full discussion of the installation and use of command line tools is beyond the scope of this document, but here\'92s one way. In your home folder, create a folder called \'93bin\'94, and copy mcxform to it. Then open a terminal window, and enter the following command:\
+\pard\ql\qnatural\pardirnatural
+
+\f1\fs20 \cf0 echo "export PATH=~/bin/:$PATH" > .bash_profile
+\f0\fs24 \
+\
+\pard\ql\qnatural\pardirnatural
+
+\b \cf0 Your plates let me boil them for you:
+\b0 \
+\pard\ql\qnatural\pardirnatural
+
+\fs20 \cf0 Copyright \'a9 2010 Jens Ayton\
+	Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \'93Software\'94), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\
+\
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\
+\
+THE SOFTWARE IS PROVIDED \'93AS IS\'94, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\
+}
