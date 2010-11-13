@@ -13,10 +13,8 @@
 		1A9FB22A1281F913003DD1C3 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A9FB2291281F913003DD1C3 /* libz.dylib */; };
 		1AAD77891288AE90001FB721 /* JAMinecraftSchematic.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD77801288AE90001FB721 /* JAMinecraftSchematic.m */; };
 		1AAD778A1288AE90001FB721 /* JAMinecraftSchematic+RDatIO.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD77821288AE90001FB721 /* JAMinecraftSchematic+RDatIO.m */; };
-		1AAD778B1288AE90001FB721 /* JAMinecraftSchematic+RedstoneHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD77841288AE90001FB721 /* JAMinecraftSchematic+RedstoneHelpers.m */; };
 		1AAD778C1288AE90001FB721 /* JAMinecraftSchematic+SchematicIO.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD77861288AE90001FB721 /* JAMinecraftSchematic+SchematicIO.m */; };
 		1AAD778D1288AE90001FB721 /* JAMinecraftSchematicChunk.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD77881288AE90001FB721 /* JAMinecraftSchematicChunk.m */; };
-		1AAD78281288B93D001FB721 /* JAValueToString.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD78271288B93D001FB721 /* JAValueToString.m */; };
 		1AAD7959128B04C7001FB721 /* JAMinecraftBlockIDs.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD7958128B04C7001FB721 /* JAMinecraftBlockIDs.c */; };
 		8DD76F9A0486AA7600D96B5E /* mcxform.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FB7796FE84155DC02AAC07 /* mcxform.m */; settings = {ATTRIBUTES = (); }; };
 		8DD76F9C0486AA7600D96B5E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FB779EFE84155DC02AAC07 /* Foundation.framework */; };
@@ -198,10 +196,8 @@
 				1A9FB21C1281F8E8003DD1C3 /* NSData+DDGZip.m in Sources */,
 				1AAD77891288AE90001FB721 /* JAMinecraftSchematic.m in Sources */,
 				1AAD778A1288AE90001FB721 /* JAMinecraftSchematic+RDatIO.m in Sources */,
-				1AAD778B1288AE90001FB721 /* JAMinecraftSchematic+RedstoneHelpers.m in Sources */,
 				1AAD778C1288AE90001FB721 /* JAMinecraftSchematic+SchematicIO.m in Sources */,
 				1AAD778D1288AE90001FB721 /* JAMinecraftSchematicChunk.m in Sources */,
-				1AAD78281288B93D001FB721 /* JAValueToString.m in Sources */,
 				1AAD7959128B04C7001FB721 /* JAMinecraftBlockIDs.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -237,9 +233,9 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_GC = required;
-				GCC_MODEL_TUNING = G5;
 				GCC_PREPROCESSOR_DEFINITIONS = NDEBUG;
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = $VERSION_MACROS;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;

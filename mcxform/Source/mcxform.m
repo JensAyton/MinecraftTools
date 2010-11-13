@@ -427,7 +427,32 @@ static void PrintHelpAndExit(void)
 {
 #define INDENT_WIDTH 19
 	
-	printf("mcxform " VERSION_STRING " © 2010 Jens Ayton\n\nusage: mcxform --help\n       mcxform <outputfile> [commands]\n\nmcxform is a tool for manipulating Minecraft schematics, as used by tools such\nas MCEdit and Redstone Simulator. mcxform works by loading schematics into a\n“working schematic” in memory, performing actions on this working schematic,\nand writing it out when all commands are completed. For example, to place two\ncopies of a schematic side by side:\n\n  mcxform out.schematic --in in.schematic --move 20 0 0 --in in.schematic\n\nThis command loads “in.schematic” into the working schematic at the origin,\nmoves the contents of the working schematic 20 steps to the west, and loads\n“in.schematic” at the origin again – which is now 20 steps to the east of the\noriginal. It then writes the combined result to out.schematic.\n\nNOTES:\n  • mcxform does not preserve entities and tile entities. This is not a\n    problem for redstone circuits, but may be for arbitrary map segments from MCEdit.\n  • mcxform trims away empty space (air blocks) on all sides of the working\n    schematic before saving. This can be exploited to trim a schematic without\n    any other transformations:\n       mcxform trimmed.schematic --in source.schematic\n    There is currently no way to stop it from trimming space.\n  • mcxform can read both schematic files and Redstone Simulator rdat files.\n    However, they are treated somewhat differently. Redstone Simulator reads\n    and writes schematics with north to the left of its window, which I assume\n    is a bug. mcxform loads schematics correctly, and loads rdat files with\n    the top of Redstone Simulator’s window as north. This can lead to\n    surprising results when using both schematics and rdats in one operation.\n\nCommands:\n");
+	printf("mcxform " VERSION_STRING "\n\n"
+		   "Usage: mcxform --help\n       mcxform <outputfile> [commands]\n\n"
+		   "mcxform is a tool for manipulating Minecraft schematics, as used by tools such\n"
+		   "as MCEdit and Redstone Simulator. mcxform works by loading schematics into a\n"
+		   "“working schematic” in memory, performing actions on this working schematic,\n"
+		   "and writing it out when all commands are completed. For example, to place two\n"
+		   "copies of a schematic side by side:\n\n"
+		   "  mcxform out.schematic --in in.schematic --move 20 0 0 --in in.schematic\n\n"
+		   "This command loads “in.schematic” into the working schematic at the origin,\n"
+		   "moves the contents of the working schematic 20 steps to the west, and loads\n"
+		   "“in.schematic” at the origin again – which is now 20 steps to the east of the\n"
+		   "original. It then writes the combined result to out.schematic.\n\n"
+		   "NOTES:\n  • mcxform does not preserve entities and tile entities. This is not a\n"
+		   "    problem for redstone circuits, but may be for arbitrary map segments from MCEdit.\n"
+		   "  • mcxform trims away empty space (air blocks) on all sides of the working\n"
+		   "    schematic before saving. This can be exploited to trim a schematic without\n"
+		   "    any other transformations:\n"
+		   "       mcxform trimmed.schematic --in source.schematic\n"
+		   "    There is currently no way to stop it from trimming space.\n"
+		   "  • mcxform can read both schematic files and Redstone Simulator rdat files.\n"
+		   "    However, they are treated somewhat differently. Redstone Simulator reads\n"
+		   "    and writes schematics with north to the left of its window, which I assume\n"
+		   "    is a bug. mcxform loads schematics correctly, and loads rdat files with\n"
+		   "    the top of Redstone Simulator’s window as north. This can lead to\n"
+		   "    surprising results when using both schematics and rdats in one operation.\n\n"
+		   "COMMANDS:\n");
 	
 	for (NSUInteger i = 0; i < kProcessCount; i++)
 	{
