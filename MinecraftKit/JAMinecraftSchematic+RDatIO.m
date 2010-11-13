@@ -58,16 +58,10 @@ enum
 	kRDATCellInfoDoorLive			= 0x10,
 	kRDATCellInfoPressurePlateLive	= 0x01,
 	
-	/*
-		Rotation bits for wall-attachable torches, switches and blocks.
-		These refer to the orientation of the stem/button relative to the
-		centre of the cell; for instance, a torch hanging from a wall south of
-		it will have kRDATCellInfoOrientationSouth.
-	*/
-	kRDATCellInfoOrientationSouth	= 0x20,
-	kRDATCellInfoOrientationNorth	= 0x40,
-	kRDATCellInfoOrientationEast	= 0x60,
-	kRDATCellInfoOrientationWest	= 0x80,
+	kRDATCellInfoOrientationNorth	= 0x20,
+	kRDATCellInfoOrientationSouth	= 0x40,
+	kRDATCellInfoOrientationWest	= 0x60,
+	kRDATCellInfoOrientationEast	= 0x80,
 	kRDATCellInfoOrientationMask	= 0xE0,
 	
 	// Low nybble is signal strength for wires.
@@ -167,7 +161,7 @@ static uint8_t CellInfoOrientationFromDoorMeta(uint8_t meta);
 	{
 		for (location.x = 0; location.x < width; location.x++)
 		{
-			for (location.z = 0; location.z < length; location.z++)
+			for (location.z = length; location.z > 0; location.z--)
 			{
 				[self setCell:CellFromRDATData(*bytes++, *infoBytes++)
 						   at:location];
@@ -223,10 +217,10 @@ static uint8_t CellInfoOrientationFromDoorMeta(uint8_t meta);
 	*bytes++ = 1;
 	*bytes++ = height >> 8;
 	*bytes++ = height & 0xFF;
-	*bytes++ = length >> 8;
-	*bytes++ = length & 0xFF;
 	*bytes++ = width >> 8;
 	*bytes++ = width & 0xFF;
+	*bytes++ = length >> 8;
+	*bytes++ = length & 0xFF;
 	
 	uint8_t *infoBytes = bytes + planeSize;
 	JACellLocation location;
@@ -234,7 +228,7 @@ static uint8_t CellInfoOrientationFromDoorMeta(uint8_t meta);
 	{
 		for (location.x = region.minX; location.x <= region.maxX; location.x++)
 		{
-			for (location.z = region.minZ; location.z <= region.maxZ; location.z++)
+			for (location.z = region.maxZ; location.z >= region.minZ; location.z--)
 			{
 				JAMinecraftCell cell = [self cellAt:location];
 				RDATDataFromCell(cell, bytes, infoBytes);
@@ -274,17 +268,20 @@ static JAMinecraftCell CellFromRDATData(uint8_t type, uint8_t info)
 			if (info & kRDATCellInfoDoorLive)  blockData |= 4;	// open
 			switch (info & kRDATCellInfoOrientationMask)
 			{
-					// East is 0.
-				case kRDATCellInfoOrientationNorth:
-					blockData |= 1;
-					break;
-					
 				case kRDATCellInfoOrientationWest:
-					blockData |= 2;
+					blockData |= kMCInfoDoorOrientationEast;
 					break;
 					
 				case kRDATCellInfoOrientationSouth:
-					blockData |= 3;
+					blockData |= kMCInfoDoorOrientationNorth;
+					break;
+					
+				case kRDATCellInfoOrientationEast:
+					blockData |= kMCInfoDoorOrientationWest;
+					break;
+					
+				case kRDATCellInfoOrientationNorth:
+					blockData |= kMCInfoDoorOrientationSouth;
 					break;
 			}
 			break;
@@ -326,20 +323,20 @@ static uint8_t OrientationFromRDATInfo(uint8_t info)
 {
 	switch (info & kRDATCellInfoOrientationMask)
 	{
-		case kRDATCellInfoOrientationWest:
-			return 1;
-			
 		case kRDATCellInfoOrientationEast:
-			return 2;
+			return kMCInfoMiscOrientationEast;
 			
-		case kRDATCellInfoOrientationNorth:
-			return 3;
+		case kRDATCellInfoOrientationWest:
+			return kMCInfoMiscOrientationWest;
 			
 		case kRDATCellInfoOrientationSouth:
-			return 4;
+			return kMCInfoMiscOrientationSouth;
+			
+		case kRDATCellInfoOrientationNorth:
+			return kMCInfoMiscOrientationNorth;
 			
 		default:
-			return 5;
+			return kMCInfoMiscOrientationFloor;
 	}
 }
 
@@ -410,23 +407,23 @@ void RDATDataFromCell(JAMinecraftCell cell, uint8_t *outType, uint8_t *outInfo)
 
 static uint8_t CellInfoOrientationFromMeta(uint8_t meta)
 {
-	switch (meta & 0x7)
+	switch (meta & kMCInfoMiscOrientationMask)
 	{
-		case 1:
-			return kRDATCellInfoOrientationWest;
-			
-		case 2:
-			return kRDATCellInfoOrientationEast;
-			
-		case 3:
-			return kRDATCellInfoOrientationNorth;
-			
-		case 4:
+		case kMCInfoMiscOrientationSouth:
 			return kRDATCellInfoOrientationSouth;
 			
-			// 5 and 6 are different orientations for ground levers, cosmetic only.
-		case 5:
-		case 6:
+		case kMCInfoMiscOrientationNorth:
+			return kRDATCellInfoOrientationNorth;
+			
+		case kMCInfoMiscOrientationWest:
+			return kRDATCellInfoOrientationWest;
+			
+		case kMCInfoMiscOrientationEast:
+			return kRDATCellInfoOrientationEast;
+			
+			// 5 and 6 are different orientations for ground levers, not reflected in rdat.
+		case kMCInfoMiscOrientationFloor:
+		case kMCInfoLeverOrientationFloorNS:
 			return 0;
 			
 		default:
@@ -437,19 +434,19 @@ static uint8_t CellInfoOrientationFromMeta(uint8_t meta)
 
 static uint8_t CellInfoOrientationFromDoorMeta(uint8_t meta)
 {
-	switch (meta & 0x3)
+	switch (meta & kMCInfoDoorOrientationMask)
 	{
-		case 0:
-			return kRDATCellInfoOrientationEast;
-			
-		case 1:
-			return kRDATCellInfoOrientationNorth;
-			
-		case 2:
+		case kMCInfoDoorOrientationEast:
 			return kRDATCellInfoOrientationWest;
 			
-		case 3:
+		case kMCInfoDoorOrientationNorth:
 			return kRDATCellInfoOrientationSouth;
+			
+		case kMCInfoDoorOrientationWest:
+			return kRDATCellInfoOrientationEast;
+			
+		case kMCInfoDoorOrientationSouth:
+			return kRDATCellInfoOrientationNorth;
 	}
 	
 	__builtin_unreachable();
