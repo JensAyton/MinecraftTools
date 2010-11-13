@@ -41,5 +41,9 @@
 - (id) initWithSchematicData:(NSData *)data error:(NSError **)outError;
 
 - (NSData *) schematicDataWithError:(NSError **)outError;
+- (NSData *) schematicDataForRegion:(JACircuitExtents)region withError:(NSError **)outError;
 
 @end
+
+
+extern NSString * const kJAMinecraftSchematicUTI;	// "com.davidvierra.mcedit.schematic"

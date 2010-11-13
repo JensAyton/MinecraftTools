@@ -28,6 +28,9 @@
 #import "JAMinecraftSchematic+RDatIO.h"
 
 
+NSString * const kJAMinecraftRedstoneSimulatorUTI = @"com.carneiro.mcredsim.rdat";
+
+
 enum
 {
 	kRDATCellAir					= 0,
@@ -180,13 +183,17 @@ static uint8_t CellInfoOrientationFromDoorMeta(uint8_t meta);
 
 - (NSData *) rDatDataWithError:(NSError **)outError
 {
+	return [self rDatDataForRegion:self.extents withError:outError];
+}
+
+
+- (NSData *) rDatDataForRegion:(JACircuitExtents)region withError:(NSError **)outError
+{
 	if (outError != NULL)  *outError = nil;
 	
-	JACircuitExtents extents = self.extents;
-	
-	NSUInteger width = JACircuitExtentsWidth(extents);
-	NSUInteger length = JACircuitExtentsLength(extents);
-	NSUInteger height = JACircuitExtentsHeight(extents);
+	NSUInteger width = JACircuitExtentsWidth(region);
+	NSUInteger length = JACircuitExtentsLength(region);
+	NSUInteger height = JACircuitExtentsHeight(region);
 	
 	if (width > 65535 || length > 65535 || height > 65535)
 	{
@@ -223,11 +230,11 @@ static uint8_t CellInfoOrientationFromDoorMeta(uint8_t meta);
 	
 	uint8_t *infoBytes = bytes + planeSize;
 	JACellLocation location;
-	for (location.y = extents.minY; location.y <= extents.maxY; location.y++)
+	for (location.y = region.minY; location.y <= region.maxY; location.y++)
 	{
-		for (location.x = extents.minX; location.x <= extents.maxX; location.x++)
+		for (location.x = region.minX; location.x <= region.maxX; location.x++)
 		{
-			for (location.z = extents.minZ; location.z <= extents.maxZ; location.z++)
+			for (location.z = region.minZ; location.z <= region.maxZ; location.z++)
 			{
 				JAMinecraftCell cell = [self cellAt:location];
 				RDATDataFromCell(cell, bytes, infoBytes);

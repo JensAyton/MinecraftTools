@@ -27,6 +27,9 @@
 #import "JANBTParser.h"
 
 
+NSString * const kJAMinecraftSchematicUTI = @"com.davidvierra.mcedit.schematic";
+
+
 @implementation JAMinecraftSchematic (SchematicIO)
 
 - (id) initWithSchematicData:(NSData *)data error:(NSError **)outError
@@ -109,13 +112,18 @@
 
 - (NSData *) schematicDataWithError:(NSError **)outError
 {
-	JACircuitExtents extents = self.extents;
+	return [self schematicDataForRegion:self.extents withError:outError];
+}
+
+
+- (NSData *) schematicDataForRegion:(JACircuitExtents)region withError:(NSError **)outError
+{
 	NSMutableDictionary *root = [NSMutableDictionary dictionary];
 	
 	// Note that the concept of width and height differs.
-	NSUInteger width = JACircuitExtentsWidth(extents);
-	NSUInteger length = JACircuitExtentsLength(extents);
-	NSUInteger height = JACircuitExtentsHeight(extents);
+	NSUInteger width = JACircuitExtentsWidth(region);
+	NSUInteger length = JACircuitExtentsLength(region);
+	NSUInteger height = JACircuitExtentsHeight(region);
 	
 	[root ja_setNBTInteger:length type:kJANBTTagShort forKey:@"Length"];
 	[root ja_setNBTInteger:width type:kJANBTTagShort forKey:@"Width"];
@@ -138,11 +146,11 @@
 	uint8_t *metaBytes = blockData.mutableBytes;
 	
 	JACellLocation location;
-	for (location.y = extents.minY; location.y <= extents.maxY; location.y++)
+	for (location.y = region.minY; location.y <= region.maxY; location.y++)
 	{
-		for (location.z = extents.minZ; location.z <= extents.maxZ; location.z++)
+		for (location.z = region.minZ; location.z <= region.maxZ; location.z++)
 		{
-			for (location.x = extents.minX; location.x <= extents.maxX; location.x++)
+			for (location.x = region.minX; location.x <= region.maxX; location.x++)
 			{
 				JAMinecraftCell cell = [self cellAt:location];
 				*blockBytes++ = cell.blockID;

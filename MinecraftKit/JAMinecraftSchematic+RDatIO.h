@@ -33,5 +33,9 @@
 - (id) initWithRDatData:(NSData *)data error:(NSError **)outError;
 
 - (NSData *) rDatDataWithError:(NSError **)outError;
+- (NSData *) rDatDataForRegion:(JACircuitExtents)region withError:(NSError **)outError;
 
 @end
+
+
+extern NSString * const kJAMinecraftRedstoneSimulatorUTI;	// "com.carneiro.mcredsim.rdat"
