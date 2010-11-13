@@ -34,14 +34,13 @@
 #endif
 
 
-/*
-	BlockData bit masks. The meaning of bits depends on the block ID.
-*/
-enum
-{
-	kMCBlockInfoDoorOpen		= 0x04
-};
-
+#pragma mark JAMinecraftCell
+/***** JAMinecraftCell *****
+ *	A single cell of a map or schematic.
+ *	Conceptually, a cell is a location which contains a block. Alternatively,
+ *	you can think of “cell” as a pointless and redundant synonym of “block”
+ *	if you prefer.
+ */
 
 typedef struct JAMinecraftCell
 {
@@ -55,109 +54,59 @@ typedef struct JAMinecraftCell
 
 extern const JAMinecraftCell kJAEmptyCell;
 
-/*
-	Convenience predicates and info extractors.
-*/
-static inline BOOL MCCellIsFullySolid(JAMinecraftCell cell)
-{
-	return MCBlockIDIsFullySolid(cell.blockID);
-}
-
-
-static inline BOOL MCCellIsQuasiSolid(JAMinecraftCell cell)
-{
-	return MCBlockIDIsQuasiSolid(cell.blockID);
-}
-
-
-static inline BOOL MCCellIsSolid(JAMinecraftCell cell)
-{
-	return MCBlockIDIsSolid(cell.blockID);
-}
-
-
-static inline BOOL MCCellIsLiquid(JAMinecraftCell cell)
-{
-	return MCBlockIDIsLiquid(cell.blockID);
-}
-
-
-static inline BOOL MCCellIsItem(JAMinecraftCell cell)
-{
-	return MCBlockIDIsItem(cell.blockID);
-}
-
-
-static inline BOOL MCCellIsAir(JAMinecraftCell cell)
-{
-	return MCBlockIDIsAir(cell.blockID);
-}
-
-
-static inline BOOL MCCellIsPowerSource(JAMinecraftCell cell)
-{
-	return MCBlockIDIsPowerSource(cell.blockID);
-}
-
-
-static inline BOOL MCCellIsPowerSink(JAMinecraftCell cell)
-{
-	return MCBlockIDIsPowerSink(cell.blockID);
-}
-
-
-static inline BOOL MCCellIsPowerActive(JAMinecraftCell cell)
-{
-	return MCBlockIDIsPowerActive(cell.blockID);
-}
-
-
-static inline BOOL MCCellIsVegetable(JAMinecraftCell cell)
-{
-	return MCBlockIDIsVegetable(cell.blockID);
-}
-
-
-static inline BOOL MCCellIsRedstoneTorch(JAMinecraftCell cell)
-{
-	return MCBlockIDIsRedstoneTorch(cell.blockID);
-}
-
+//	Convenience predicates and info extractors.
+static inline BOOL MCCellIsFullySolid(JAMinecraftCell cell) JA_CONST_FUNC;
+static inline BOOL MCCellIsQuasiSolid(JAMinecraftCell cell) JA_CONST_FUNC;
+static inline BOOL MCCellIsSolid(JAMinecraftCell cell) JA_CONST_FUNC;
+static inline BOOL MCCellIsLiquid(JAMinecraftCell cell) JA_CONST_FUNC;
+static inline BOOL MCCellIsItem(JAMinecraftCell cell) JA_CONST_FUNC;
+static inline BOOL MCCellIsAir(JAMinecraftCell cell) JA_CONST_FUNC;
+static inline BOOL MCCellIsPowerSource(JAMinecraftCell cell) JA_CONST_FUNC;
+static inline BOOL MCCellIsPowerSink(JAMinecraftCell cell) JA_CONST_FUNC;
+static inline BOOL MCCellIsPowerActive(JAMinecraftCell cell) JA_CONST_FUNC;
+static inline BOOL MCCellIsVegetable(JAMinecraftCell cell) JA_CONST_FUNC;
+static inline BOOL MCCellIsRedstoneTorch(JAMinecraftCell cell) JA_CONST_FUNC;
 
 // Power level (0-15) for wires only - 0 for power sources.
-static inline uint8_t MCWirePowerLevel(JAMinecraftCell cell)
-{
-	return (cell.blockID == kMCBlockRedstoneWire) ? (cell.blockData & kMCInfoRedstoneWireSignalStrengthMask) : 0;
-}
+static inline uint8_t MCWirePowerLevel(JAMinecraftCell cell) JA_CONST_FUNC;
 
 
-/*
-	Coordinate system:
-	+y is north, -y is south.
-	+x is east, -x is west.
-	+z is up, -z is down (in layers; “up” and “down” might be used for y coords
-	somewhere if I haven’t been pating attention).
-	“Width” refers to an x range, “height” a y range and “depth” a z range.
-	
-	IMPORTANT: this is not the same as Minecraft’s coordinate system. Instead,
-	it’s adapted for top-down interfaces.
-	
-	Minecraft coordinates are:
-	+X is south, -X is north – corresponds to -y.
-	+Y is up, -Y is down – corresponds to z.
-	+Z is west, -Z is east — corresponds to -x.
-*/
+#pragma mark JACellLocation
+/***** JACellLocation *****
+ *	A grid location.
+ *
+ *	The Minecraft coordinate system is right-handed and based on the
+ *	perspective of a character looking due east:
+ *	
+ *	+x is south, -x is north.
+ *	+y is up, -y is down.
+ *	+z is west, -z is east.
+ */
+
 typedef struct
 {
 	NSInteger				x, y, z;
 } JACellLocation;
 
 
-static inline BOOL JACellLocationEqual(JACellLocation a, JACellLocation b)
-{
-	return a.x == b.x && a.y == b.y && a.z == b.z;
-}
+extern const JACellLocation kJAZeroLocation;
 
+static inline BOOL JACellLocationEqual(JACellLocation a, JACellLocation b) JA_CONST_FUNC;
+
+
+#pragma mark JACircuitExtents
+/***** JACircuitExtents *****
+ *	A three-dimensional range of cell locations, describing a cuboid.
+ *	
+ *	If any max value is less than its corresponding min value, the extents are
+ *	considered empty. The constant kJAEmptyExtents describes the extreme case:
+ *	all min values are NSIntegerMax and all max values are NSIntegerMin.
+ *	
+ *	kJAInfiniteExtents is the inverse: all min values are MSIntegerMin and all
+ *	max values are NSIntegerMax.
+ *	
+ *	“Width” refers to an x range, “length” a z range and “height” a y range.
+ */
 
 typedef struct
 {
@@ -167,62 +116,59 @@ typedef struct
 } JACircuitExtents;
 
 
-/*
-	An extents struct is considered empty if any of its max values is less than
-	the corresponding min value.
-	
-	kJAEmptyExtents is the extreme case, with all minima being NSIntegerMax
-	and all maxima being NSIntegerMin.
-*/
 extern const JACircuitExtents kJAEmptyExtents;
-BOOL JACircuitExtentsEmpty(JACircuitExtents extents) JA_CONST_FUNC;
-
+extern const JACircuitExtents kJAZeroExtents;
 extern const JACircuitExtents kJAInfiniteExtents;
+
+
+BOOL JACircuitExtentsEmpty(JACircuitExtents extents) JA_CONST_FUNC;
 
 BOOL JACircuitExtentsEqual(JACircuitExtents a, JACircuitExtents b) JA_CONST_FUNC;
 
-
-static NSUInteger JACircuitExtentsWidth(JACircuitExtents extents)
-{
-	if (!JACircuitExtentsEmpty(extents))  return extents.maxX - extents.minX + 1;
-	else return 0;
-}
+static NSUInteger JACircuitExtentsWidth(JACircuitExtents extents) JA_CONST_FUNC;
+static NSUInteger JACircuitExtentsLength(JACircuitExtents extents) JA_CONST_FUNC;
+static NSUInteger JACircuitExtentsHeight(JACircuitExtents extents) JA_CONST_FUNC;
 
 
-static NSUInteger JACircuitExtentsHeight(JACircuitExtents extents)
-{
-	if (!JACircuitExtentsEmpty(extents))  return extents.maxY - extents.minY + 1;
-	else return 0;
-}
+/*
+	JACircuitExtentsMin() and JACircuitExtentsMax()
+	Return minimum and maximum points of a JACircuitExtents.
+	These do not attempt to handle empty extents, where the concepts of
+	minimum and maximum points are meaningless.
+*/
+static inline JACellLocation JACircuitExtentsMin(JACircuitExtents extents) JA_CONST_FUNC;
+static inline JACellLocation JACircuitExtentsMax(JACircuitExtents extents) JA_CONST_FUNC;
 
-
-static NSUInteger JACircuitExtentsDepth(JACircuitExtents extents)
-{
-	if (!JACircuitExtentsEmpty(extents))  return extents.maxZ - extents.minZ + 1;
-	else return 0;
-}
-
-
-static JACircuitExtents JACircuitExtentsWithLocation(JACellLocation location)
-{
-	return (JACircuitExtents)
-	{
-		location.x, location.x,
-		location.y, location.y,
-		location.z, location.z
-	};
-}
-
+/*
+	JACircuitExtentsWithLocation(JACellLocation location)
+	Returns an extents containing a single location.
+*/
+static JACircuitExtents JACircuitExtentsWithLocation(JACellLocation location) JA_CONST_FUNC;
 
 BOOL JACellLocationWithinExtents(JACellLocation location, JACircuitExtents extents) JA_CONST_FUNC;
 
-
+/*
+	JAExtentsUnion(JACircuitExtents a, JACircuitExtents b)
+	Returns an extents containing all locations described by either a or b,
+	as well as any additional locations required to produce a cuboid.
+	
+	JAExtentsUnionLocation(JACircuitExtents extents, JACellLocation location)
+	Equivalent to JAExtentsUnion(extents, JACircuitExtentsWithLocation(location)).
+*/
 JACircuitExtents JAExtentsUnion(JACircuitExtents a, JACircuitExtents b) JA_CONST_FUNC;
 JACircuitExtents JAExtentsUnionLocation(JACircuitExtents extents, JACellLocation location) JA_CONST_FUNC;
 
+/*
+	JAExtentsIntersection(JACircuitExtents a, JACircuitExtents b)
+	Returns the extents contained by both a and b.
+*/
 JACircuitExtents JAExtentsIntersection(JACircuitExtents a, JACircuitExtents b) JA_CONST_FUNC;
 
 
+#pragma mark JADirection
+/***** JADirection *****
+ *	A cardinal direction.
+ */
 typedef enum
 {
 	kJADirectionNorth,
@@ -349,32 +295,154 @@ JADirection JARotateAntiClockwiseFunc(JADirection direction) JA_CONST_FUNC;
 
 /****** Inline function bodies only beyond this point. ******/
 
+static inline BOOL MCCellIsFullySolid(JAMinecraftCell cell)
+{
+	return MCBlockIDIsFullySolid(cell.blockID);
+}
+
+
+static inline BOOL MCCellIsQuasiSolid(JAMinecraftCell cell)
+{
+	return MCBlockIDIsQuasiSolid(cell.blockID);
+}
+
+
+static inline BOOL MCCellIsSolid(JAMinecraftCell cell)
+{
+	return MCBlockIDIsSolid(cell.blockID);
+}
+
+
+static inline BOOL MCCellIsLiquid(JAMinecraftCell cell)
+{
+	return MCBlockIDIsLiquid(cell.blockID);
+}
+
+
+static inline BOOL MCCellIsItem(JAMinecraftCell cell)
+{
+	return MCBlockIDIsItem(cell.blockID);
+}
+
+
+static inline BOOL MCCellIsAir(JAMinecraftCell cell)
+{
+	return MCBlockIDIsAir(cell.blockID);
+}
+
+
+static inline BOOL MCCellIsPowerSource(JAMinecraftCell cell)
+{
+	return MCBlockIDIsPowerSource(cell.blockID);
+}
+
+
+static inline BOOL MCCellIsPowerSink(JAMinecraftCell cell)
+{
+	return MCBlockIDIsPowerSink(cell.blockID);
+}
+
+
+static inline BOOL MCCellIsPowerActive(JAMinecraftCell cell)
+{
+	return MCBlockIDIsPowerActive(cell.blockID);
+}
+
+
+static inline BOOL MCCellIsVegetable(JAMinecraftCell cell)
+{
+	return MCBlockIDIsVegetable(cell.blockID);
+}
+
+
+static inline BOOL MCCellIsRedstoneTorch(JAMinecraftCell cell)
+{
+	return MCBlockIDIsRedstoneTorch(cell.blockID);
+}
+
+
+static inline uint8_t MCWirePowerLevel(JAMinecraftCell cell)
+{
+	return (cell.blockID == kMCBlockRedstoneWire) ? (cell.blockData & kMCInfoRedstoneWireSignalStrengthMask) : 0;
+}
+
+
+static inline BOOL JACellLocationEqual(JACellLocation a, JACellLocation b)
+{
+	return a.x == b.x && a.y == b.y && a.z == b.z;
+}
+
+
+static NSUInteger JACircuitExtentsWidth(JACircuitExtents extents)
+{
+	if (!JACircuitExtentsEmpty(extents))  return extents.maxX - extents.minX + 1;
+	else return 0;
+}
+
+
+static NSUInteger JACircuitExtentsLength(JACircuitExtents extents)
+{
+	if (!JACircuitExtentsEmpty(extents))  return extents.maxZ - extents.minZ + 1;
+	else return 0;
+}
+
+
+static NSUInteger JACircuitExtentsHeight(JACircuitExtents extents)
+{
+	if (!JACircuitExtentsEmpty(extents))  return extents.maxY - extents.minY + 1;
+	else return 0;
+}
+
+
+static inline JACellLocation JACircuitExtentsMin(JACircuitExtents extents)
+{
+	return (JACellLocation){ extents.minX, extents.minY, extents.minZ };
+}
+
+
+static inline JACellLocation JACircuitExtentsMax(JACircuitExtents extents)
+{
+	return (JACellLocation){ extents.maxX, extents.maxY, extents.maxZ };
+}
+
+
+static JACircuitExtents JACircuitExtentsWithLocation(JACellLocation location)
+{
+	return (JACircuitExtents)
+	{
+		location.x, location.x,
+		location.y, location.y,
+		location.z, location.z
+	};
+}
+
+
 static inline JACellLocation JAStepCellLocationBody(JACellLocation location, JADirection direction)
 {
 	switch (direction)
 	{
 		case kJADirectionNorth:
-			location.y -= 1;
-			break;
-			
-		case kJADirectionSouth:
-			location.y += 1;
-			break;
-			
-		case kJADirectionEast:
-			location.x += 1;
-			break;
-			
-		case kJADirectionWest:
 			location.x -= 1;
 			break;
 			
-		case kJADirectionUp:
+		case kJADirectionSouth:
+			location.x += 1;
+			break;
+			
+		case kJADirectionEast:
+			location.z -= 1;
+			break;
+			
+		case kJADirectionWest:
 			location.z += 1;
 			break;
 			
+		case kJADirectionUp:
+			location.y += 1;
+			break;
+			
 		case kJADirectionDown:
-			location.z -= 1;
+			location.y -= 1;
 			break;
 			
 		case kJADirectionUnknown:

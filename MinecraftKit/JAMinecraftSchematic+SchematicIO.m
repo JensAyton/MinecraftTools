@@ -54,10 +54,10 @@
 	NSDictionary *dict = root.objectValue;
 	
 	NSUInteger width = [[dict objectForKey:@"Width"] integerValue];
-	NSUInteger height = [[dict objectForKey:@"Length"] integerValue];
-	NSUInteger depth = [[dict objectForKey:@"Height"] integerValue];
+	NSUInteger length = [[dict objectForKey:@"Length"] integerValue];
+	NSUInteger height = [[dict objectForKey:@"Height"] integerValue];
 	
-	NSUInteger planeSize = width * height * depth;
+	NSUInteger planeSize = width * length * height;
 	
 	NSData *blockIDs = [[dict objectForKey:@"Blocks"] objectValue];
 	NSData *blockData = [[dict objectForKey:@"Data"] objectValue];
@@ -84,9 +84,9 @@
 	[self beginBulkUpdate];
 	
 	NSUInteger x, y, z;
-	for (z = 0; z < depth; z++)
+	for (y = 0; y < height; y++)
 	{
-		for (y = 0; y < height; y++)
+		for (z = 0; z < length; z++)
 		{
 			for (x = 0; x < width; x++)
 			{
@@ -94,8 +94,9 @@
 				uint8_t meta = *metaBytes++;
 				
 				JAMinecraftCell cell = { .blockID = blockID, .blockData = meta };
+				
 				[self setCell:cell
-						   at:(JACellLocation){height - y, x, z}];	// Coordinate weirdness inherited from MCEdit, which got it from Minecraft.
+						   at:(JACellLocation){x, y, z}];
 			}
 		}
 	}
@@ -113,16 +114,16 @@
 	
 	// Note that the concept of width and height differs.
 	NSUInteger width = JACircuitExtentsWidth(extents);
-	NSUInteger height = JACircuitExtentsWidth(extents);
-	NSUInteger depth = JACircuitExtentsDepth(extents);
+	NSUInteger length = JACircuitExtentsLength(extents);
+	NSUInteger height = JACircuitExtentsHeight(extents);
 	
-	[root ja_setNBTInteger:height type:kJANBTTagShort forKey:@"Length"];
+	[root ja_setNBTInteger:length type:kJANBTTagShort forKey:@"Length"];
 	[root ja_setNBTInteger:width type:kJANBTTagShort forKey:@"Width"];
-	[root ja_setNBTInteger:depth type:kJANBTTagShort forKey:@"Height"];
+	[root ja_setNBTInteger:height type:kJANBTTagShort forKey:@"Height"];
 	
 	[root ja_setNBTString:@"Alpha" forKey:@"Materials"];
 	
-	NSUInteger planeSize = width * height * depth;
+	NSUInteger planeSize = width * length * height;
 	NSMutableData *blockIDs = [NSMutableData dataWithLength:planeSize];
 	NSMutableData *blockData = [NSMutableData dataWithLength:planeSize];
 	if (blockIDs == nil || blockData == nil)
@@ -136,14 +137,14 @@
 	uint8_t *blockBytes = blockIDs.mutableBytes;
 	uint8_t *metaBytes = blockData.mutableBytes;
 	
-	NSUInteger x, y, z;
-	for (z = 0; z < depth; z++)
+	JACellLocation location;
+	for (location.y = extents.minY; location.y <= extents.maxY; location.y++)
 	{
-		for (y = 0; y < height; y++)
+		for (location.z = extents.minZ; location.z <= extents.maxZ; location.z++)
 		{
-			for (x = 0; x < width; x++)
+			for (location.x = extents.minX; location.x <= extents.maxX; location.x++)
 			{
-				JAMinecraftCell cell = [self cellAt:(JACellLocation){height - y, x, z}];
+				JAMinecraftCell cell = [self cellAt:location];
 				*blockBytes++ = cell.blockID;
 				*metaBytes++ = cell.blockData;
 			}

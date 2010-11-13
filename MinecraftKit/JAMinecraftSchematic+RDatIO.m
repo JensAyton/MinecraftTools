@@ -125,13 +125,13 @@ static uint8_t CellInfoOrientationFromDoorMeta(uint8_t meta);
 	}
 	
 	// Read dimensions.
-	NSUInteger width, height, depth;
-	depth = (*bytes++ << 8) + *bytes++;
+	NSUInteger length, width, height;
 	height = (*bytes++ << 8) + *bytes++;
 	width = (*bytes++ << 8) + *bytes++;
+	length = (*bytes++ << 8) + *bytes++;
 	remaining -= 11;
 	
-	NSUInteger planeSize = width * height * depth;
+	NSUInteger planeSize = length * width * height;
 	if (planeSize == 0)
 	{
 		if (outError != nil)  *outError = [NSError errorWithDomain:kJAMinecraftSchematicErrorDomain
@@ -159,15 +159,15 @@ static uint8_t CellInfoOrientationFromDoorMeta(uint8_t meta);
 	[self beginBulkUpdate];
 	
 	const uint8_t *infoBytes = bytes + planeSize;
-	NSUInteger x, y, z;
-	for (z = 0; z < depth; z++)
+	JACellLocation location;
+	for (location.y = 0; location.y < height; location.y++)
 	{
-		for (y = 0; y < height; y++)
+		for (location.x = 0; location.x < width; location.x++)
 		{
-			for (x = 0; x < width; x++)
+			for (location.z = 0; location.z < length; location.z++)
 			{
 				[self setCell:CellFromRDATData(*bytes++, *infoBytes++)
-						  atX:x y:y z:z];
+						   at:location];
 			}
 		}
 	}
@@ -185,10 +185,10 @@ static uint8_t CellInfoOrientationFromDoorMeta(uint8_t meta);
 	JACircuitExtents extents = self.extents;
 	
 	NSUInteger width = JACircuitExtentsWidth(extents);
+	NSUInteger length = JACircuitExtentsLength(extents);
 	NSUInteger height = JACircuitExtentsHeight(extents);
-	NSUInteger depth = JACircuitExtentsDepth(extents);
 	
-	if (width > 65535 || height > 65535 || depth > 65535)
+	if (width > 65535 || length > 65535 || height > 65535)
 	{
 		if (outError != NULL) *outError = [NSError errorWithDomain:kJAMinecraftSchematicErrorDomain
 															  code:kJACircuitErrorDocumentTooLarge
@@ -196,10 +196,10 @@ static uint8_t CellInfoOrientationFromDoorMeta(uint8_t meta);
 		return nil;
 	}
 	
-	NSUInteger planeSize = width * height * depth;
-	size_t length = 11 + planeSize * 2;
+	NSUInteger planeSize = width * length * height;
+	size_t bufferSize = 11 + planeSize * 2;
 	
-	uint8_t *buffer = malloc(length);
+	uint8_t *buffer = malloc(bufferSize);
 	if (buffer == NULL)
 	{
 		if (outError != nil)  *outError = [NSError errorWithDomain:NSOSStatusErrorDomain
@@ -214,22 +214,22 @@ static uint8_t CellInfoOrientationFromDoorMeta(uint8_t meta);
 	*bytes++ = 'd';
 	*bytes++ = 'S';
 	*bytes++ = 1;
-	*bytes++ = depth >> 8;
-	*bytes++ = depth & 0xFF;
 	*bytes++ = height >> 8;
 	*bytes++ = height & 0xFF;
+	*bytes++ = length >> 8;
+	*bytes++ = length & 0xFF;
 	*bytes++ = width >> 8;
 	*bytes++ = width & 0xFF;
 	
 	uint8_t *infoBytes = bytes + planeSize;
-	NSInteger x, y, z;
-	for (z = extents.minZ; z <= extents.maxZ; z++)
+	JACellLocation location;
+	for (location.y = extents.minY; location.y <= extents.maxY; location.y++)
 	{
-		for (y = extents.minY; y <= extents.maxY; y++)
+		for (location.x = extents.minX; location.x <= extents.maxX; location.x++)
 		{
-			for (x = extents.minX; x <= extents.maxX; x++)
+			for (location.z = extents.minZ; location.z <= extents.maxZ; location.z++)
 			{
-				JAMinecraftCell cell = [self cellAtX:x y:y z:z];
+				JAMinecraftCell cell = [self cellAt:location];
 				RDATDataFromCell(cell, bytes, infoBytes);
 				
 				bytes++;
@@ -238,7 +238,7 @@ static uint8_t CellInfoOrientationFromDoorMeta(uint8_t meta);
 		}
 	}
 	
-	return [NSData dataWithBytesNoCopy:buffer length:length freeWhenDone:YES];
+	return [NSData dataWithBytesNoCopy:buffer length:bufferSize freeWhenDone:YES];
 }
 
 @end

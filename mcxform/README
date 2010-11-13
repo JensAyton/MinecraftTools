@@ -1,7 +1,7 @@
 mcxform
 
-Command-line tool to manipulate Minecraft schematics, primarily intended
-for redstone construction.
+Command-line tool to manipulate Minecraft schematics, primarily intended for
+redstone construction.
 
 IMPORTANT: the current implementation discards entities and tile entities,
 making it impractical for general use.
@@ -9,9 +9,8 @@ making it impractical for general use.
 Usage:
 mcxform <outputfile> [commands]
 
-<outputfile> is a file name, which currently must end with .rdat
-(signifying a Redstone Simulator document). The result of the command list
-will be written to this file, unless the resulting schematic is empty.
+<outputfile> is a file name. If it ends in .rdat, a Redstone Simulator rdat
+file is written. Otherwise, a schematic file is written.
 
 [commands] is a series of commands from the following list. In theory any
 sequence is valid, but starting with anything other than --in is pointless.

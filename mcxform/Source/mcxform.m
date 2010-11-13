@@ -33,7 +33,7 @@
 #import "JAValueToString.h"
 
 
-#define DEBUG_LOGGING	1
+#define DEBUG_LOGGING	(!defined(NDEBUG))
 #if DEBUG_LOGGING
 #define LOG Print
 static inline NSString *ExtentsDesc(JACircuitExtents extents)
@@ -192,7 +192,7 @@ int main (int argc, const char * argv[])
 	}
 	else
 	{
-		Print(@"Resulting circuit size is %lu × %lu × %lu.\n", JACircuitExtentsWidth(outputExtents), JACircuitExtentsHeight(outputExtents), JACircuitExtentsDepth(outputExtents));
+		Print(@"Resulting circuit size is %lu × %lu × %lu.\n", JACircuitExtentsLength(outputExtents), JACircuitExtentsWidth(outputExtents), JACircuitExtentsHeight(outputExtents));
 	}
 	
 	NSData *outputData = nil;
@@ -203,8 +203,7 @@ int main (int argc, const char * argv[])
 	}
 	else
 	{
-		EPrint(@"Schematic output is not supported.\n");
-		return EXIT_FAILURE;
+		outputData = [outputCircuit schematicDataWithError:&error];
 	}
 	
 	if (outputData == nil)
@@ -257,9 +256,9 @@ static JAMinecraftSchematic *ProcessMove(JAMinecraftSchematic *currentCircuit, N
 {
 	JACellLocation dst;
 	JACircuitExtents srcExtents = currentCircuit.extents;
-	dst.x = atoll(argv[1]) - srcExtents.minX;
-	dst.y = atoll(argv[2]) - srcExtents.minY;
-	dst.z = atoll(argv[3]) - srcExtents.minY;
+	dst.z = atoll(argv[1]) - srcExtents.minZ;
+	dst.x = atoll(argv[2]) - srcExtents.minX;
+	dst.y = atoll(argv[3]) - srcExtents.minY;
 	
 	JAMinecraftSchematic *moved = [JAMinecraftSchematic new];
 	[moved copyRegion:srcExtents from:currentCircuit at:dst];
@@ -272,11 +271,11 @@ static JAMinecraftSchematic *ProcessFlipX(JAMinecraftSchematic *currentCircuit, 
 {
 	JAMinecraftSchematic *result = [JAMinecraftSchematic new];
 	JACircuitExtents extents = currentCircuit.extents;
+	NSUInteger length = JACircuitExtentsLength(extents);
 	NSUInteger width = JACircuitExtentsWidth(extents);
 	NSUInteger height = JACircuitExtentsHeight(extents);
-	NSUInteger depth = JACircuitExtentsDepth(extents);
 	
-	for (NSUInteger z = 0; z < depth; z++)
+	for (NSUInteger z = 0; z < length; z++)
 	{
 		for (NSUInteger y = 0; y < height; y++)
 		{
@@ -284,7 +283,7 @@ static JAMinecraftSchematic *ProcessFlipX(JAMinecraftSchematic *currentCircuit, 
 			{
 				JACellLocation loc = { extents.minX + x, extents.minY + y, extents.minZ + z };
 				JAMinecraftCell cell = [currentCircuit cellAt:loc];
-				loc.x = extents.maxX - x;
+				loc.z = extents.maxZ - z;
 				MCCellSetOrientation(&cell, JADirectionFlipEastWest(MCCellGetOrientation(cell)));
 				[result setCell:cell at:loc];
 			}
@@ -299,11 +298,11 @@ static JAMinecraftSchematic *ProcessFlipY(JAMinecraftSchematic *currentCircuit, 
 {
 	JAMinecraftSchematic *result = [JAMinecraftSchematic new];
 	JACircuitExtents extents = currentCircuit.extents;
+	NSUInteger length = JACircuitExtentsLength(extents);
 	NSUInteger width = JACircuitExtentsWidth(extents);
 	NSUInteger height = JACircuitExtentsHeight(extents);
-	NSUInteger depth = JACircuitExtentsDepth(extents);
 	
-	for (NSUInteger z = 0; z < depth; z++)
+	for (NSUInteger z = 0; z < length; z++)
 	{
 		for (NSUInteger y = 0; y < height; y++)
 		{
@@ -311,7 +310,7 @@ static JAMinecraftSchematic *ProcessFlipY(JAMinecraftSchematic *currentCircuit, 
 			{
 				JACellLocation loc = { extents.minX + x, extents.minY + y, extents.minZ + z };
 				JAMinecraftCell cell = [currentCircuit cellAt:loc];
-				loc.y = extents.maxY - y;
+				loc.x = extents.maxX - x;
 				MCCellSetOrientation(&cell, JADirectionFlipNorthSouth(MCCellGetOrientation(cell)));
 				[result setCell:cell at:loc];
 			}
@@ -326,11 +325,11 @@ static JAMinecraftSchematic *ProcessRotate180(JAMinecraftSchematic *currentCircu
 {
 	JAMinecraftSchematic *result = [JAMinecraftSchematic new];
 	JACircuitExtents extents = currentCircuit.extents;
+	NSUInteger length = JACircuitExtentsLength(extents);
 	NSUInteger width = JACircuitExtentsWidth(extents);
 	NSUInteger height = JACircuitExtentsHeight(extents);
-	NSUInteger depth = JACircuitExtentsDepth(extents);
 	
-	for (NSUInteger z = 0; z < depth; z++)
+	for (NSUInteger z = 0; z < length; z++)
 	{
 		for (NSUInteger y = 0; y < height; y++)
 		{
@@ -339,7 +338,7 @@ static JAMinecraftSchematic *ProcessRotate180(JAMinecraftSchematic *currentCircu
 				JACellLocation loc = { extents.minX + x, extents.minY + y, extents.minZ + z };
 				JAMinecraftCell cell = [currentCircuit cellAt:loc];
 				loc.x = extents.maxX - x;
-				loc.y = extents.maxY - y;
+				loc.z = extents.maxZ - z;
 				MCCellSetOrientation(&cell, JADirectionFlipNorthSouth(JADirectionFlipEastWest(MCCellGetOrientation(cell))));
 				[result setCell:cell at:loc];
 			}
@@ -354,11 +353,11 @@ static JAMinecraftSchematic *ProcessRotateClockwise(JAMinecraftSchematic *curren
 {
 	JAMinecraftSchematic *result = [JAMinecraftSchematic new];
 	JACircuitExtents extents = currentCircuit.extents;
+	NSUInteger length = JACircuitExtentsLength(extents);
 	NSUInteger width = JACircuitExtentsWidth(extents);
 	NSUInteger height = JACircuitExtentsHeight(extents);
-	NSUInteger depth = JACircuitExtentsDepth(extents);
 	
-	for (NSUInteger z = 0; z < depth; z++)
+	for (NSUInteger z = 0; z < length; z++)
 	{
 		for (NSUInteger y = 0; y < height; y++)
 		{
@@ -366,8 +365,8 @@ static JAMinecraftSchematic *ProcessRotateClockwise(JAMinecraftSchematic *curren
 			{
 				JACellLocation loc = { extents.minX + x, extents.minY + y, extents.minZ + z };
 				JAMinecraftCell cell = [currentCircuit cellAt:loc];
-				loc.y = loc.x;
-				loc.x = extents.maxY - y;
+				loc.z = loc.x;
+				loc.x = extents.maxZ - z;
 				MCCellSetOrientation(&cell, JARotateClockwise(MCCellGetOrientation(cell)));
 				[result setCell:cell at:loc];
 			}
@@ -382,11 +381,11 @@ static JAMinecraftSchematic *ProcessRotateAntiClockwise(JAMinecraftSchematic *cu
 {
 	JAMinecraftSchematic *result = [JAMinecraftSchematic new];
 	JACircuitExtents extents = currentCircuit.extents;
+	NSUInteger length = JACircuitExtentsLength(extents);
 	NSUInteger width = JACircuitExtentsWidth(extents);
 	NSUInteger height = JACircuitExtentsHeight(extents);
-	NSUInteger depth = JACircuitExtentsDepth(extents);
 	
-	for (NSUInteger z = 0; z < depth; z++)
+	for (NSUInteger z = 0; z < length; z++)
 	{
 		for (NSUInteger y = 0; y < height; y++)
 		{
@@ -394,8 +393,8 @@ static JAMinecraftSchematic *ProcessRotateAntiClockwise(JAMinecraftSchematic *cu
 			{
 				JACellLocation loc = { extents.minX + x, extents.minY + y, extents.minZ + z };
 				JAMinecraftCell cell = [currentCircuit cellAt:loc];
-				loc.x = loc.y;
-				loc.y = extents.maxX - x;
+				loc.x = loc.z;
+				loc.z = extents.maxX - x;
 				MCCellSetOrientation(&cell, JARotateAntiClockwise(MCCellGetOrientation(cell)));
 				[result setCell:cell at:loc];
 			}

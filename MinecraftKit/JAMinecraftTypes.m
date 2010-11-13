@@ -26,16 +26,18 @@
 #include "JAMinecraftTypes.h"
 
 
-const JAMinecraftCell kJAEmptyCell = { .blockID = kMCBlockAir };
+const JAMinecraftCell kJAEmptyCell = { .blockID = kMCBlockAir, .blockData = 0 };
+const JACellLocation kJAZeroLocation = { 0, 0, 0 };
 const JACircuitExtents kJAEmptyExtents = { NSIntegerMax, NSIntegerMin, NSIntegerMax, NSIntegerMin, NSIntegerMax, NSIntegerMin };
+const JACircuitExtents kJAZeroExtents = { 0, 0, 0, 0, 0, 0 };
 const JACircuitExtents kJAInfiniteExtents = { NSIntegerMin, NSIntegerMax, NSIntegerMin, NSIntegerMax, NSIntegerMin, NSIntegerMax };
 
 
 BOOL JACircuitExtentsEmpty(JACircuitExtents extents)
 {
 	return	extents.maxX < extents.minX ||
-	extents.maxY < extents.minY ||
-	extents.maxZ < extents.minZ;
+			extents.maxY < extents.minY ||
+			extents.maxZ < extents.minZ;
 }
 
 
@@ -60,6 +62,9 @@ BOOL JACellLocationWithinExtents(JACellLocation location, JACircuitExtents exten
 
 JACircuitExtents JAExtentsUnion(JACircuitExtents a, JACircuitExtents b)
 {
+	if (JACircuitExtentsEmpty(a))  return b;
+	if (JACircuitExtentsEmpty(b))  return a;
+	
 	return (JACircuitExtents)
 	{
 		MIN(a.minX, b.minX), MAX(a.maxX, b.maxX),

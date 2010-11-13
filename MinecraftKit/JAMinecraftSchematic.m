@@ -303,7 +303,7 @@ static inline NSUInteger RepresentedDistance(levels)
 }
 
 
-- (uint16_t) width
+- (NSUInteger) width
 {
 	return JACircuitExtentsWidth(self.extents);
 }
@@ -315,25 +315,25 @@ static inline NSUInteger RepresentedDistance(levels)
 }
 
 
-- (uint16_t) height
+- (NSUInteger) length
+{
+	return JACircuitExtentsLength(self.extents);
+}
+
+
++ (NSSet *) keyPathsForValuesAffectingLengh
+{
+	return [NSSet setWithObject:@"extents"];
+}
+
+
+- (NSUInteger) height
 {
 	return JACircuitExtentsHeight(self.extents);
 }
 
 
 + (NSSet *) keyPathsForValuesAffectingHeight
-{
-	return [NSSet setWithObject:@"extents"];
-}
-
-
-- (uint16_t) depth
-{
-	return JACircuitExtentsDepth(self.extents);
-}
-
-
-+ (NSSet *) keyPathsForValuesAffectingDepths
 {
 	return [NSSet setWithObject:@"extents"];
 }

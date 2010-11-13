@@ -46,9 +46,9 @@
 }
 
 @property (readonly) JACircuitExtents extents;
-@property (readonly) uint16_t width;
-@property (readonly) uint16_t height;
-@property (readonly) uint16_t depth;
+@property (readonly) NSUInteger width;
+@property (readonly) NSUInteger length;
+@property (readonly) NSUInteger height;
 
 - (JAMinecraftCell) cellAt:(JACellLocation)location;
 - (void) setCell:(JAMinecraftCell)cell at:(JACellLocation)location;

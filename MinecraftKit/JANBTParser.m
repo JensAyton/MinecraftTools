@@ -654,6 +654,49 @@ static NSString *IndentString(NSUInteger count)
 {
 	return [self debugDescriptionWithIndentLevel:0];
 }
+
+
+- (NSString *) description
+{
+	JANBTTagType type = self.type;
+	NSMutableString *result = [NSMutableString stringWithFormat:@"<%@ %p>{%@", self.class, self, NameFromTagType(type)];
+	NSString *name = self.name;
+	if (name != nil)  [result appendFormat:@" \"%@\"", name];
+	
+	switch (type)
+	{
+		case kJANBTTagEnd:
+			break;
+			
+		case kJANBTTagByte:
+		case kJANBTTagShort:
+		case kJANBTTagInt:
+		case kJANBTTagLong:
+			[result appendFormat:@": %lli", self.integerValue];
+			break;
+			
+		case kJANBTTagFloat:
+		case kJANBTTagDouble:
+			[result appendFormat:@": %g", self.doubleValue];
+			break;
+			
+		case kJANBTTagByteArray:
+			[result appendFormat:@": %lu bytes", [self.objectValue length]];
+			break;
+			
+		case kJANBTTagString:
+			[result appendFormat:@": \"%@\"", self.objectValue];
+			break;
+			
+		case kJANBTTagList:
+		case kJANBTTagCompound:
+			[result appendFormat:@": %lu items", [self.objectValue count]];
+			break;
+	}
+	
+	[result appendString:@"}"];
+	return result;
+}
 #endif
 
 @end
