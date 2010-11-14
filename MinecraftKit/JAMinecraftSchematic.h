@@ -29,57 +29,22 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#import "JAMinecraftTypes.h"
+#import "JAMinecraftBlockStore.h"
 
 @class JAMinecraftSchematicInnerNode;
 
 
-@interface JAMinecraftSchematic: NSObject
-{
-@private
-	MCGridExtents					_extents;
-	JAMinecraftSchematicInnerNode	*_root;
-	MCGridExtents					_dirtyExtents;
-	uint32_t						_bulkLevel;
-	BOOL							_extentsAreAccurate;
-	uint8_t							_levels;
-}
-
-@property (readonly) MCGridExtents extents;
-@property (readonly) NSUInteger width;
-@property (readonly) NSUInteger length;
-@property (readonly) NSUInteger height;
+@interface JAMinecraftSchematic: JAMinecraftBlockStore
 
 /*
-	Minimum and maximum layer: highest and lowest y coordinates in which
-	blocks may be added without going over 128 blocks high. The schematic may
-	use any 128-block high subrange. For an empty schematic, these are
-	NSIntegerMin and NSIntegerMax!
+	For schematics, any y range may be used, so the minimum layer is 127
+	layers below the highest used y coordinate, and the maximum layer is 127
+	layers below the lowest used y coordinate.
+	
+	For empty schematics, these are NSIntegerMin and NSIntegerMax!
 */
 @property (readonly) NSInteger minimumLayer;
 @property (readonly) NSInteger maximumLayer;
-
-- (MCCell) cellAt:(MCGridCoordinates)location;
-- (void) setCell:(MCCell)cell at:(MCGridCoordinates)location;
-
-- (MCCell) cellAtX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z;
-- (void) setCell:(MCCell)cell atX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z;
-
-/*
-	Bulk updates: while a bulk update is in progress, changes are coalesced into
-	a dirty region, which is then posted as a singe notification when bulk
-	updating ends.
-	Bulk updates can be nested, in which case the notification will be sent
-	when the outermost bulk update ends.
-*/
-- (void) beginBulkUpdate;
-- (void) endBulkUpdate;
-
-- (BOOL) bulkUpdateInProgress;
-
-#ifndef NDEBUG
-- (NSUInteger) bulkUpdateNestingLevel;
-#endif
 
 /*
 	TODO: implement an -eraseRegion:(MCGridExtents)region; which empties a
@@ -94,10 +59,6 @@
 - (void) copyRegion:(MCGridExtents)region from:(JAMinecraftSchematic *)sourceCircuit at:(MCGridCoordinates)location;
 
 @end
-
-
-extern NSString * const kJAMinecraftSchematicChangedNotification;
-extern NSString * const kJAMinecraftSchematicChangedExtents;	// userInfo dictionary key whose value is an NSValue containing a MCGridExtents object.
 
 
 extern NSString * const kJAMinecraftSchematicErrorDomain;

@@ -36,16 +36,7 @@
 #endif
 
 
-enum
-{
-	kMaxPermittedHeight = 128
-};
-
-
 NSString * const kJAMinecraftSchematicErrorDomain			= @"se.ayton.jens JAMinecraftSchematic ErrorDomain";
-
-NSString * const kJAMinecraftSchematicChangedNotification	= @"se.ayton.jens JAMinecraftSchematic Changed";
-NSString * const kJAMinecraftSchematicChangedExtents		= @"kJAMinecraftSchematicChangedExtents";
 
 
 typedef struct
@@ -76,7 +67,7 @@ typedef BOOL (^JAMinecraftSchematicChunkIterator)(JAMinecraftSchematicChunk *chu
 #if LOGGING
 - (void) dumpStructureWithLevel:(NSUInteger)level
 					 statistics:(DumpStatistics *)stats
-						   base:(JACellLocation)base
+						   base:(MCGridCoordinates)base
 						   size:(NSUInteger)size;
 #endif
 
@@ -86,6 +77,13 @@ typedef BOOL (^JAMinecraftSchematicChunkIterator)(JAMinecraftSchematicChunk *chu
 
 
 @interface JAMinecraftSchematic ()
+{
+@private
+	MCGridExtents					_extents;
+	JAMinecraftSchematicInnerNode	*_root;
+	BOOL							_extentsAreAccurate;
+	uint8_t							_levels;
+}
 
 //	Space spanned by octree, regardless of "fullness" of cells.
 @property (readonly) MCGridExtents totalExtents;
@@ -114,10 +112,6 @@ typedef BOOL (^JAMinecraftSchematicChunkIterator)(JAMinecraftSchematicChunk *chu
 - (BOOL) forEachChunkInRegion:(MCGridExtents)bounds do:(JAMinecraftSchematicChunkIterator)iterator;
 - (BOOL) forEachChunkDo:(JAMinecraftSchematicChunkIterator)iterator;
 
-- (void) postChangeNotification:(MCGridExtents)changedExtents;
-- (void) noteChangeInExtents:(MCGridExtents)changedExtents;
-- (void) noteChangeInLocation:(MCGridCoordinates)changedLocation;
-
 @end
 
 
@@ -140,7 +134,6 @@ static inline NSUInteger RepresentedDistance(levels)
 		
 		_extents = kMCEmptyExtents;
 		_extentsAreAccurate = YES;
-		_dirtyExtents = kMCEmptyExtents;
 		
 #if LOGGING
 		[self dumpStructure];
@@ -191,54 +184,6 @@ static inline NSUInteger RepresentedDistance(levels)
 		[self noteChangeInLocation:location];
 	}
 }
-
-
-- (MCCell) cellAtX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z
-{
-	return [self cellAt:(MCGridCoordinates){ x, y, z }];
-}
-
-
-- (void) setCell:(MCCell)cell atX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z
-{
-	[self setCell:cell at:(MCGridCoordinates){ x, y, z }];
-}
-
-
-- (void) beginBulkUpdate
-{
-	_bulkLevel++;
-}
-
-
-- (void) endBulkUpdate
-{
-	NSAssert1(_bulkLevel != 0, @"%s called when no bulk updates are in progress. Ensure calls are balanced.", __FUNCTION__);
-	
-	if (--_bulkLevel == 0)
-	{
-		[self postChangeNotification:_dirtyExtents];
-		_dirtyExtents = kMCEmptyExtents;
-		
-#if LOGGING
-		[self dumpStructure];
-#endif
-	}
-}
-
-
-- (BOOL) bulkUpdateInProgress
-{
-	return _bulkLevel != 0;
-}
-
-
-#ifndef NDEBUG
-- (NSUInteger) bulkUpdateNestingLevel
-{
-	return _bulkLevel;
-}
-#endif
 
 
 - (void) copyRegion:(MCGridExtents)region from:(JAMinecraftSchematic *)sourceCircuit at:(MCGridCoordinates)location
@@ -309,48 +254,12 @@ static inline NSUInteger RepresentedDistance(levels)
 }
 
 
-- (NSUInteger) width
-{
-	return MCGridExtentsWidth(self.extents);
-}
-
-
-+ (NSSet *) keyPathsForValuesAffectingWidth
-{
-	return [NSSet setWithObject:@"extents"];
-}
-
-
-- (NSUInteger) length
-{
-	return MCGridExtentsLength(self.extents);
-}
-
-
-+ (NSSet *) keyPathsForValuesAffectingLengh
-{
-	return [NSSet setWithObject:@"extents"];
-}
-
-
-- (NSUInteger) height
-{
-	return MCGridExtentsHeight(self.extents);
-}
-
-
-+ (NSSet *) keyPathsForValuesAffectingHeight
-{
-	return [NSSet setWithObject:@"extents"];
-}
-
-
 - (NSInteger) minimumLayer
 {
 	MCGridExtents extents = self.extents;
 	if (MCGridExtentsEmpty(extents))  return NSIntegerMin;
-	if (self.extents.maxY < NSIntegerMin + kMaxPermittedHeight)  return NSIntegerMin;
-	return self.extents.maxY - kMaxPermittedHeight + 1;
+	if (self.extents.maxY < NSIntegerMin + kMCBlockStoreMaximumPermittedHeight)  return NSIntegerMin;
+	return self.extents.maxY - kMCBlockStoreMaximumPermittedHeight + 1;
 }
 
 
@@ -364,8 +273,8 @@ static inline NSUInteger RepresentedDistance(levels)
 {
 	MCGridExtents extents = self.extents;
 	if (MCGridExtentsEmpty(extents))  return NSIntegerMax;
-	if (self.extents.minY > NSIntegerMax - kMaxPermittedHeight)  return NSIntegerMax;
-	return self.extents.minY + kMaxPermittedHeight - 1;
+	if (self.extents.minY > NSIntegerMax - kMCBlockStoreMaximumPermittedHeight)  return NSIntegerMax;
+	return self.extents.minY + kMCBlockStoreMaximumPermittedHeight - 1;
 }
 
 
@@ -526,7 +435,7 @@ static inline NSUInteger RepresentedDistance(levels)
 //	return;
 	DumpStatistics stats = {0};
 	MCGridExtents totalExtents = self.totalExtents;
-	JACellLocation base = { totalExtents.minX, totalExtents.minY, totalExtents.minZ };
+	MCGridCoordinates base = { totalExtents.minX, totalExtents.minY, totalExtents.minZ };
 	NSUInteger size = totalExtents.maxX - totalExtents.minX + 1;
 	
 	LOG(@"{");
@@ -558,47 +467,6 @@ static inline NSUInteger RepresentedDistance(levels)
 - (BOOL) forEachChunkDo:(JAMinecraftSchematicChunkIterator)iterator
 {
 	return [self forEachChunkInRegion:kMCInfiniteExtents do:iterator];
-}
-
-
-- (void) postChangeNotification:(MCGridExtents)changedExtents
-{
-	if (!MCGridExtentsEmpty(changedExtents))
-	{
-		NSValue *extentsObj = [NSValue value:&changedExtents withObjCType:@encode(MCGridExtents)];
-		[[NSNotificationCenter defaultCenter] postNotificationName:kJAMinecraftSchematicChangedNotification
-															object:self
-														  userInfo:[NSDictionary dictionaryWithObject:extentsObj
-																							   forKey:kJAMinecraftSchematicChangedExtents]];
-		
-		LOG(@"Change notification posted for %@", JA_ENCODE(changedExtents));
-	}
-}
-
-
-- (void) noteChangeInExtents:(MCGridExtents)changedExtents
-{
-	if (_bulkLevel != 0)
-	{
-		_dirtyExtents = MCGridExtentsUnion(_dirtyExtents, changedExtents);
-	}
-	else
-	{
-		[self postChangeNotification:changedExtents];
-	}
-}
-
-
-- (void) noteChangeInLocation:(MCGridCoordinates)changedLocation
-{
-	if (_bulkLevel != 0)
-	{
-		_dirtyExtents = MCGridExtentsUnionWithLocation(_dirtyExtents, changedLocation);
-	}
-	else
-	{
-		[self postChangeNotification:MCGridExtentsWithCoordinates(changedLocation)];
-	}
 }
 
 @end
@@ -639,7 +507,7 @@ static inline NSUInteger RepresentedDistance(levels)
 #if LOGGING
 - (void) dumpStructureWithLevel:(NSUInteger)level
 					 statistics:(DumpStatistics *)stats
-						   base:(JACellLocation)base
+						   base:(MCGridCoordinates)base
 						   size:(NSUInteger)size
 {
 	stats->innerNodeCount++;
@@ -655,7 +523,7 @@ static inline NSUInteger RepresentedDistance(levels)
 	
 	for (NSUInteger i = 0; i < 8; i++)
 	{
-		JACellLocation subBase = base;
+		MCGridCoordinates subBase = base;
 		if (i & 1) subBase.x += halfSize;
 		if (i & 2) subBase.y += halfSize;
 		if (i & 4) subBase.z += halfSize;
