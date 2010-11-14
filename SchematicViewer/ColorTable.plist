@@ -1,0 +1,94 @@
+(
+	(255, 255, 255),	// Air
+	(200, 200, 200),	// Smooth stone
+	(60, 200, 60),		// Grass
+	(100, 75, 64),		// Dirt
+	(128, 128, 128),	// Cobblestone
+	(175, 126, 46),		// Wood
+	(160, 230, 50),		// Sapling
+	(64, 64, 64),		// Bedrock
+	(64, 64, 255),		// Water
+	(0, 0, 255),		// Stationary water
+	(255, 128, 0),		// Lava
+	(255, 64, 0),		// Stationary lava
+	(255, 230, 128),	// Sand
+	(160, 140, 150),	// Gravel
+	(200, 200, 128),	// Gold ore
+	(200, 160, 128),	// Iron ore
+	(160, 160, 200),	// Coal “ore”
+	(128, 100, 32),		// Log
+	(160, 230, 50),		// Leaves
+	(255, 230, 50),		// Sponge
+	(180, 255, 255),	// Glass
+	(0, 0, 0),			// Unused in alpha
+	(0, 0, 0),			// Unused in alpha
+	(0, 0, 0),			// Unused in alpha
+	(0, 0, 0),			// Unused in alpha
+	(0, 0, 0),			// Unused in alpha
+	(0, 0, 0),			// Unused in alpha
+	(0, 0, 0),			// Unused in alpha
+	(0, 0, 0),			// Unused in alpha
+	(0, 0, 0),			// Unused in alpha
+	(0, 0, 0),			// Unused in alpha
+	(0, 0, 0),			// Unused in alpha
+	(0, 0, 0),			// Unused in alpha
+	(0, 0, 0),			// Unused in alpha
+	(0, 0, 0),			// Unused in alpha
+	(220, 220, 220),	// Wool
+	(0, 0, 0),			// Unused in alpha
+	(255, 255, 128),	// Yellow flower
+	(255, 128, 128),	// Red flower
+	(170, 128, 128),	// Brown mushroom
+	(255, 70, 60),		// Red mushroom
+	(255, 235, 0),		// Gold block
+	(200, 220, 220),	// Iron block
+	(210, 210, 210),	// Double step
+	(210, 210, 210),	// Single step
+	(200, 60, 30),		// Brick
+	(255, 0, 0),		// TNT
+	(175, 126, 46),		// Bookshelf
+	(100, 128, 100),	// Cossy mobblestone
+	(40, 0, 40),		// Obsidian
+	(255, 255, 180),	// Torch
+	(255, 180, 0),		// Fire
+	(100, 100, 128),	// Mob spawner
+	(175, 126, 46),		// Wooden stairs
+	(150, 90, 40),		// Chest
+	(180, 0, 0),		// Redstone wire
+	(128, 160, 200),	// Diamond “ore”
+	(128, 180, 255),	// Diamond block
+	(150, 90, 40),		// Workbench
+	(160, 230, 50),		// Crops
+	(80, 50, 40),		// Soil
+	(180, 180, 180),	// Furnace
+	(180, 180, 180),	// Burning furnace
+	(175, 126, 46),		// Sign post
+	(175, 126, 46),		// Wooden door
+	(175, 126, 46),		// Ladder
+	(170, 170, 180),	// Minecart track
+	(128, 128, 128),	// Cobblestone stairs
+	(175, 126, 46),		// Wall sign
+	(175, 126, 46),		// Lever
+	(200, 200, 200),	// Stone pressure plate
+	(100, 100, 100),	// Iron door
+	(175, 126, 46),		// Wooden pressure plate
+	(255, 180, 180),	// Redstone ore
+	(255, 180, 180),	// Glowing redstone ore
+	(64, 0, 0),			// Redstone torch (off)
+	(255, 0, 0),		// Redstone torch (on)
+	(200, 200, 200),	// Stone button
+	(220, 240, 255),	// Snow
+	(160, 170, 200),	// Ice
+	(220, 240, 255),	// Snow block
+	(40, 160, 0),		// Cactus
+	(190, 190, 220),	// Clay
+	(150, 240, 110),	// Reed
+	(150, 90, 40),		// Jukebox
+	(175, 126, 46),		// Fence
+	(255, 160, 0),		// Pumpkin
+	(160, 50, 50),		// Netherstone
+	(80, 64, 50),		// Slow sand
+	(255, 240, 128),	// Lightstone
+	(170, 30, 120),		// Portal
+	(255, 160, 0)		// Jack-o-lantern
+)

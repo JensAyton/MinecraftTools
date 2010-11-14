@@ -1,0 +1,10 @@
+Example/test bed for JAMinecraftGridView.
+
+This application can read and write schematic and rdat file, and display them
+as a grid, one layer at a time. The grid shows solid blocks as, er, solid
+blocks, quasi-solid blocs as outlines and items as inset sqares. The block
+types are colour coded.
+
+The rendering and scaling is implemented in JASchematicViewerView.m, a
+subclass of JAMinecraftGridView. All other interaction, including selection
+and scrolling, are handled by JAMinecraftGridView.
