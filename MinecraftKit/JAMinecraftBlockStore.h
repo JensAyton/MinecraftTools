@@ -58,10 +58,10 @@ enum
 - (void) beginBulkUpdate;
 - (void) endBulkUpdate;
 
-- (BOOL) bulkUpdateInProgress;
+@property (readonly) BOOL bulkUpdateInProgress;
 
 #ifndef NDEBUG
-- (NSUInteger) bulkUpdateNestingLevel;
+@property (readonly) NSUInteger bulkUpdateNestingLevel;
 #endif
 
 

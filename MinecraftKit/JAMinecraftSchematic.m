@@ -26,12 +26,18 @@
 #import "JAValueToString.h"
 
 
-#define LOGGING		(0 && !defined(NDEBUG))
+// Verbose logging of internal structure changes and reference counting.
+#define LOGGING		(1 && !defined(NDEBUG))
+
 
 #if LOGGING
-#define LOG NSLog
+static void Log(NSString *format, ...);
+static void LogIndent(void);
+static void LogOutdent(void);
 #else
-#define LOG(...)  do {} while (0)
+#define Log(...)  do {} while (0)
+#define LogIndent()  do {} while (0)
+#define LogOutdent()  do {} while (0)
 #endif
 
 
@@ -49,39 +55,9 @@ typedef struct
 {
 	NSUInteger						innerNodeCount;
 	NSUInteger						leafNodeCount;
-	NSUInteger						deepestLevel;
 } DumpStatistics;
 
 
-#if OLD_CHUNKS
-typedef BOOL (^JAMinecraftSchematicChunkIterator)(JAMinecraftSchematicChunk *chunk, MCGridCoordinates base);
-
-
-/*
-	The schematic is organized as an octree _rootLevel levels deep. Completely
-	empty areas are represented as nil children. Leaf nodes are
-	JAMinecraftSchematicChunks; inner nodes are JAMinecraftSchematicInnerNodes.
-	
-	JAMinecraftSchematicInnerNode is essentially a struct, but implemented as a
-	class for uniformity and garabage collection.
-*/
-@interface JAMinecraftSchematicInnerNode: NSObject
-{
-@public
-	__strong id						children[8];
-}
-
-#if LOGGING
-- (void) dumpStructureWithLevel:(NSUInteger)level
-					 statistics:(DumpStatistics *)stats
-						   base:(MCGridCoordinates)base
-						   size:(NSUInteger)size;
-#endif
-
-- (BOOL) forEachChunkWithBase:(MCGridCoordinates)base size:(NSInteger)size perform:(JAMinecraftSchematicChunkIterator)iterator bounds:(MCGridExtents)bounds;
-
-@end
-#else
 typedef struct InnerNode InnerNode;
 typedef struct Chunk Chunk;
 struct InnerNode
@@ -128,41 +104,32 @@ static BOOL ChunkSetCell(Chunk *chunk, NSInteger x, NSInteger y, NSInteger z, MC
 
 
 typedef BOOL (^JAMinecraftSchematicChunkIterator)(Chunk *chunk, MCGridCoordinates base);
-#endif
 
 
 @interface JAMinecraftSchematic ()
 {
 @private
 	MCGridExtents					_extents;
-#if OLD_CHUNKS
-	JAMinecraftSchematicInnerNode	*_root;
-#else
 	InnerNode						*_root;
-#endif
 	BOOL							_extentsAreAccurate;
 	uint8_t							_rootLevel;
 }
 
-//	Space spanned by octree, regardless of "fullness" of cells.
+//	Space spanned by octree, regardless of "fullness” of cells.
 @property (readonly) MCGridExtents totalExtents;
 
-/*	Find appropriate chunk for "location" in octree.
-	"base" is set to coordinates of chunk's 0, 0, 0 if a chunk is returned,
+/*	Find appropriate chunk for “location” in octree.
+	“base” is set to coordinates of chunk's 0, 0, 0 if a chunk is returned,
 	otherwise untouched.
-	If "createIfNeeded" is YES, the chunk and any intermediate nodes will be
+	If “createIfNeeded” is YES, the chunk and any intermediate nodes will be
 	created if they aren't there already.
+	If “makeWriteable” is YES, the chunk and all intermediate nodes will be
+	copied if they have multiple references, making it safe to write.
 */
-#if OLD_CHUNKS
-- (JAMinecraftSchematicChunk *) resolveChunkAt:(MCGridCoordinates)location
-							   baseCoordinates:(MCGridCoordinates *)base
-								createIfNeeded:(BOOL)createIfNeeded;
-#else
 - (Chunk *) resolveChunkAt:(MCGridCoordinates)location
 		   baseCoordinates:(MCGridCoordinates *)base
 			createIfNeeded:(BOOL)createIfNeeded
 			 makeWriteable:(BOOL)makeWriteable;
-#endif
 
 - (void) growOctree;
 
@@ -195,33 +162,23 @@ static inline NSUInteger RepresentedDistance(levels)
 	{
 		// One level, initially with nil children.
 		_rootLevel = 1;
-#if OLD_CHUNKS
-		_root = [JAMinecraftSchematicInnerNode new];
-#else
 		_root = AllocInnerNode(_rootLevel);
-#endif
-		LOG(@"Creating root inner node %p", _root);
+		Log(@"Creating root inner node %p", _root);
 		
 		_extents = kMCEmptyExtents;
 		_extentsAreAccurate = YES;
-		
-#if LOGGING
-		[self dumpStructure];
-#endif
 	}
 	
 	return self;
 }
 
 
-#if !OLD_CHUNKS
 - (void) finalize
 {
 	InnerNode *root = _root;
 	NSUInteger level = _rootLevel;
 	dispatch_async(dispatch_get_main_queue(), ^{ ReleaseInnerNode(root, level); });
 }
-#endif
 
 
 - (id) copyWithZone:(NSZone *)zone
@@ -245,16 +202,6 @@ static inline NSUInteger RepresentedDistance(levels)
 
 - (MCCell) cellAt:(MCGridCoordinates)location
 {
-#if OLD_CHUNKS
-	MCGridCoordinates base;
-	JAMinecraftSchematicChunk *chunk = [self resolveChunkAt:location
-											baseCoordinates:&base
-											 createIfNeeded:NO];
-	
-	if (chunk == nil)  return kJAEmptyCell;
-	
-	return [chunk chunkCellAtX:location.x - base.x y:location.y - base.y z:location.z - base.z];
-#else
 	MCGridCoordinates base;
 	Chunk *chunk = [self resolveChunkAt:location
 						baseCoordinates:&base
@@ -263,34 +210,11 @@ static inline NSUInteger RepresentedDistance(levels)
 	if (chunk == NULL)  return kJAEmptyCell;
 	
 	return ChunkGetCell(chunk, location.x - base.x, location.y - base.y, location.z - base.z);
-#endif
 }
 
 
 - (void) setCell:(MCCell)cell at:(MCGridCoordinates)location
 {
-#if OLD_CHUNKS
-	MCGridCoordinates base;
-	JAMinecraftSchematicChunk *chunk = [self resolveChunkAt:location
-											baseCoordinates:&base
-											 createIfNeeded:!MCCellIsAir(cell)];
-	
-	if (chunk != nil)
-	{
-		BOOL changeAffectsExtents = YES;
-		if (changeAffectsExtents)  [self willChangeValueForKey:@"extents"];
-		
-		[chunk setChunkCell:cell atX:location.x - base.x y:location.y - base.y z:location.z - base.z];
-		
-		if (changeAffectsExtents)
-		{
-			_extentsAreAccurate = NO;
-			[self didChangeValueForKey:@"extents"];
-		}
-		
-		[self noteChangeInLocation:location];
-	}
-#else
 	MCGridCoordinates base;
 	Chunk *chunk = [self resolveChunkAt:location
 						baseCoordinates:&base
@@ -312,18 +236,17 @@ static inline NSUInteger RepresentedDistance(levels)
 		}
 	}
 	[self noteChangeInLocation:location];
-#endif
 }
 
 
 - (void) copyRegion:(MCGridExtents)region from:(JAMinecraftSchematic *)sourceCircuit at:(MCGridCoordinates)location
 {
-#if OLD_CHUNKS
 	if (MCGridExtentsEmpty(region))  return;
 	
 	MCGridCoordinates offset = { location.x - region.minX, location.y - region.minY, location.z - region.minZ };
 	
-	[sourceCircuit forEachChunkInRegion:region do:^(JAMinecraftSchematicChunk *chunk, MCGridCoordinates base)
+	// FIXME: should COW chunks/subtrees if appropriately aligned.
+	[sourceCircuit forEachChunkInRegion:region do:^(Chunk *chunk, MCGridCoordinates base)
 	{
 		NSUInteger bx, by, bz;
 		MCGridCoordinates loc;
@@ -353,9 +276,6 @@ static inline NSUInteger RepresentedDistance(levels)
 		
 		return YES;
 	}];
-#else
-	[NSException raise:NSGenericException format:@"Need to reimplement %s", __FUNCTION__];
-#endif
 }
 
 
@@ -365,22 +285,6 @@ static inline NSUInteger RepresentedDistance(levels)
 	{
 		__block MCGridExtents result = kMCEmptyExtents;
 		
-#if OLD_CHUNKS
-		[self forEachChunkDo:^(JAMinecraftSchematicChunk *chunk, MCGridCoordinates base) {
-			MCGridExtents chunkExtents = chunk.extents;
-			if (!MCGridExtentsEmpty(chunkExtents))
-			{
-				result.minX = MIN(result.minX, chunkExtents.minX + base.x);
-				result.maxX = MAX(result.maxX, chunkExtents.maxX + base.x);
-				result.minY = MIN(result.minY, chunkExtents.minY + base.y);
-				result.maxY = MAX(result.maxY, chunkExtents.maxY + base.y);
-				result.minZ = MIN(result.minZ, chunkExtents.minZ + base.z);
-				result.maxZ = MAX(result.maxZ, chunkExtents.maxZ + base.z);
-			}
-			
-			return YES;
-		}];
-#else
 		[self forEachChunkDo:^(Chunk *chunk, MCGridCoordinates base) {
 			MCGridExtents chunkExtents = ChunkGetExtents(chunk);
 			if (!MCGridExtentsEmpty(chunkExtents))
@@ -395,7 +299,6 @@ static inline NSUInteger RepresentedDistance(levels)
 			
 			return YES;
 		}];
-#endif
 		
 		_extents = result;
 		_extentsAreAccurate = YES;
@@ -445,108 +348,6 @@ static inline NSUInteger RepresentedDistance(levels)
 }
 
 
-#if OLD_CHUNKS
-- (JAMinecraftSchematicChunk *) resolveChunkAt:(MCGridCoordinates)location
-							   baseCoordinates:(MCGridCoordinates *)base
-								createIfNeeded:(BOOL)createIfNeeded
-{
-	NSUInteger maxDistance = MAX(ABS(location.x), MAX(ABS(location.y), ABS(location.z)));
-	
-//	LOG(@"Resolving %@", JA_ENCODE(location));
-	
-	NSUInteger repDistance = RepresentedDistance(_rootLevel);
-	if (repDistance <= maxDistance)
-	{
-		if (!createIfNeeded)  return nil;
-		
-		do
-		{
-			[self growOctree];
-			repDistance = RepresentedDistance(_rootLevel);
-		} while (repDistance <= maxDistance);
-	}
-	
-	NSInteger baseX = -repDistance, baseY = -repDistance, baseZ = -repDistance;
-	NSUInteger size = repDistance * 2;
-	
-	JAMinecraftSchematicInnerNode *node = _root;
-	NSUInteger levels = _rootLevel;
-	
-	unsigned nextIndex;
-	
-	for (;;)
-	{
-		nextIndex = 0;
-		NSInteger halfSize = size >> 1;
-		
-		if (location.x >= baseX + halfSize)
-		{
-			baseX += halfSize;
-			nextIndex |= 1;
-		}
-		if (location.y >= baseY + halfSize)
-		{
-			baseY += halfSize;
-			nextIndex |= 2;
-		}
-		if (location.z >= baseZ + halfSize)
-		{
-			baseZ += halfSize;
-			nextIndex |= 4;
-		}
-		
-		size = halfSize;
-		
-		if (--levels == 0)
-		{
-			NSAssert1(size == kJAMinecraftSchematicChunkSize, @"Subdivision logic failure: size is %lu", size);
-			break;
-		}
-		
-		JAMinecraftSchematicInnerNode *child = node->children[nextIndex];
-		if (child == nil)
-		{
-			if (!createIfNeeded)  return nil;
-			child = [JAMinecraftSchematicInnerNode new];
-			LOG(@"Creating inner node %p at (%li, %li, %li)", child, baseX, baseY, baseZ);
-			if (child == nil)  [NSException raise:NSMallocException format:@"Out of memory"];
-			node->children[nextIndex] = child;
-		}
-		node = child;
-	}
-	
-	JAMinecraftSchematicChunk *chunk = node->children[nextIndex];
-	if (chunk == nil)
-	{
-		if (!createIfNeeded)  return nil;
-		chunk = [JAMinecraftSchematicChunk new];
-#if LOGGING
-#ifndef NDEBUG
-		chunk.label = [NSString stringWithFormat:@"(%li, %li, %li)", baseX, baseY, baseZ];
-#endif
-		LOG(@"Creating chunk %p at (%li, %li, %li)", chunk, baseX, baseY, baseZ);
-#endif
-		if (chunk == nil)  [NSException raise:NSMallocException format:@"Out of memory"];
-		node->children[nextIndex] = chunk;
-#if LOGGING
-		[self dumpStructure];
-#endif
-	}
-	else
-	{
-	//	LOG(@"Resolved chunk %p at (%li, %li, %li)", chunk, baseX, baseY, baseZ);
-	}
-
-	
-	if (base != nil)
-	{
-		base->x = baseX;
-		base->y = baseY;
-		base->z = baseZ;
-	}
-	return chunk;
-}
-#else
 - (Chunk *) resolveChunkAt:(MCGridCoordinates)location
 		   baseCoordinates:(MCGridCoordinates *)base
 			createIfNeeded:(BOOL)createIfNeeded
@@ -615,14 +416,14 @@ static inline NSUInteger RepresentedDistance(levels)
 		{
 			if (!createIfNeeded)  return NULL;
 			child = AllocInnerNode(level);
-			LOG(@"Creating inner node %p at (%li, %li, %li)", child, baseX, baseY, baseZ);
+			Log(@"Creating inner node %p at (%li, %li, %li)", child, baseX, baseY, baseZ);
 			if (child == nil)  [NSException raise:NSMallocException format:@"Out of memory"];
 			node->children.inner[nextIndex] = child;
 		}
 		if (makeWriteable && child->refCount > 1)
 		{
 			InnerNode *newChild = CopyInnerNode(child, level);
-			LOG(@"Copying inner node %p to %p at (%li, %li, %li)", child, newChild, baseX, baseY, baseZ);
+			Log(@"Copying inner node %p to %p at (%li, %li, %li)", child, newChild, baseX, baseY, baseZ);
 			ReleaseInnerNode(child, level);
 			child = newChild;
 			node->children.inner[nextIndex] = child;
@@ -635,7 +436,7 @@ static inline NSUInteger RepresentedDistance(levels)
 	{
 		if (!createIfNeeded)  return NULL;
 		chunk = AllocChunk();
-		LOG(@"Creating chunk %p at (%li, %li, %li)", chunk, baseX, baseY, baseZ);
+		Log(@"Creating chunk %p at (%li, %li, %li)", chunk, baseX, baseY, baseZ);
 		
 		if (chunk == nil)  [NSException raise:NSMallocException format:@"Out of memory"];
 		node->children.leaves[nextIndex] = chunk;
@@ -643,7 +444,7 @@ static inline NSUInteger RepresentedDistance(levels)
 	else if (makeWriteable && chunk->refCount > 1)
 	{
 		Chunk *newChunk = CopyChunk(chunk);
-		LOG(@"Copying chunk %p to %p at (%li, %li, %li)", chunk, newChunk, baseX, baseY, baseZ);
+		Log(@"Copying chunk %p to %p at (%li, %li, %li)", chunk, newChunk, baseX, baseY, baseZ);
 		ReleaseChunk(chunk);
 		chunk = newChunk;
 		node->children.leaves[nextIndex] = chunk;
@@ -657,38 +458,18 @@ static inline NSUInteger RepresentedDistance(levels)
 	}
 	return chunk;
 }
-#endif
 
 
 - (void) growOctree
 {
 	[self willChangeValueForKey:@"totalExtents"];
 	
-#if OLD_CHUNKS
-	JAMinecraftSchematicInnerNode *newRoot = [JAMinecraftSchematicInnerNode new];
-	if (newRoot == nil)  [NSException raise:NSMallocException format:@"Out of memory"];
-	LOG(@"Creating root inner node %p", _root);
-	
-	for (unsigned i = 0; i < 8; i++)
-	{
-		if (_root->children[i] != nil)
-		{
-			JAMinecraftSchematicInnerNode *intermediate = [JAMinecraftSchematicInnerNode new];
-			LOG(@"Creating intermediate inner node %p", intermediate);
-			if (intermediate == nil)  [NSException raise:NSMallocException format:@"Out of memory"];
-			intermediate->children[i ^ 7] = _root->children[i];
-			newRoot->children[i] = intermediate;
-		}
-	}
-	
-	_root = newRoot;
-	_rootLevel++;
-#else
-	LOG(@"Growing octree from level %u to level %u", _rootLevel, _rootLevel + 1);
+	Log(@"Growing octree from level %u to level %u", _rootLevel, _rootLevel + 1);
+	LogIndent();
 	
 	InnerNode *newRoot = AllocInnerNode(_rootLevel + 1);
 	if (newRoot == NULL)  [NSException raise:NSMallocException format:@"Out of memory"];
-	LOG(@"Creating root inner node %p [level %lu]", newRoot, newRoot->level);
+	Log(@"Creating root inner node %p [level %lu]", newRoot, newRoot->level);
 	
 	InnerNode *oldRoot = _root;
 	
@@ -697,7 +478,7 @@ static inline NSUInteger RepresentedDistance(levels)
 		if (oldRoot->children.inner[i] != nil)
 		{
 			InnerNode *intermediate = AllocInnerNode(_rootLevel);
-			LOG(@"Creating intermediate inner node %p [level %lu]", intermediate, intermediate->level);
+			Log(@"Creating intermediate inner node %p [level %lu]", intermediate, intermediate->level);
 			if (intermediate == NULL)  [NSException raise:NSMallocException format:@"Out of memory"];
 			
 			if (_rootLevel > 1)  intermediate->children.inner[i ^ 7] = COWInnerNode(_root->children.inner[i], _rootLevel - 1);
@@ -709,30 +490,71 @@ static inline NSUInteger RepresentedDistance(levels)
 	ReleaseInnerNode(_root, _rootLevel);
 	_root = newRoot;
 	_rootLevel++;
-#endif
 	
 	[self didChangeValueForKey:@"totalExtents"];
 	
 #if LOGGING
 	MCGridExtents totalExtents = [self totalExtents];
-	LOG(@"Grew octree to level %u, encompassing %@", _rootLevel, JA_ENCODE(totalExtents));
-	[self dumpStructure];
+	Log(@"Grew octree to level %u, encompassing %@", _rootLevel, JA_ENCODE(totalExtents));
 #endif
+	
+	LogOutdent();
 }
 
 
 #if LOGGING
+
+static void DumpNodeStructure(InnerNode *node, NSUInteger level, DumpStatistics *stats, MCGridCoordinates base, NSUInteger size)
+{
+	stats->innerNodeCount++;
+	LogIndent();
+	
+	NSUInteger halfSize = size >> 1;
+	if (node->refCount != 1)  Log(@"Node %p [refcount: %lu]", node, node->refCount);
+	else  Log(@"Node %p", node);
+	
+	for (NSUInteger i = 0; i < 8; i++)
+	{
+		MCGridCoordinates subBase = base;
+		if (i & 1) subBase.x += halfSize;
+		if (i & 2) subBase.y += halfSize;
+		if (i & 4) subBase.z += halfSize;
+		
+		NSString *prefix = [NSString stringWithFormat:@"%lu %@: ", i, JA_ENCODE(subBase)];
+		
+		void *child = node->children.inner[i];
+		if (child == NULL)  Log(@"%@null", prefix);
+		else if (level > 1)
+		{
+			Log(@"%@{", prefix);
+			DumpNodeStructure(child, level - 1, stats, subBase, halfSize);
+		}
+		else
+		{
+			stats->leafNodeCount++;
+			Chunk *chunk = child;
+			if (chunk->refCount == 1)  Log(@"%@Chunk %p", prefix, chunk);
+			else  Log(@"%@Chunk %p [refcount: %u]", prefix, chunk, chunk->refCount);
+		}
+	}
+	
+	LogOutdent();
+	Log(@"}");
+}
+
+
 - (void) dumpStructure
 {
-#if OLD_CHUNKS
 	DumpStatistics stats = {0};
 	MCGridExtents totalExtents = self.totalExtents;
-	MCGridCoordinates base = { totalExtents.minX, totalExtents.minY, totalExtents.minZ };
-	NSUInteger size = totalExtents.maxX - totalExtents.minX + 1;
+	MCGridCoordinates base = MCGridExtentsMinimum(totalExtents);
+	NSUInteger size = MCGridExtentsWidth(totalExtents);
 	
-	LOG(@"{");
-	[_root dumpStructureWithLevel:0 statistics:&stats base:base size:size];
+	Log(@"{");
 	
+	DumpNodeStructure(_root, _rootLevel, &stats, base, size);
+	
+	// Calculate Maximum inner node and leaf count for this level of octree.
 	NSUInteger maxInnerNodes = 0;
 	NSUInteger maxLeafNodes = 1;
 	for (NSUInteger i = 0; i < _rootLevel; i++)
@@ -741,14 +563,22 @@ static inline NSUInteger RepresentedDistance(levels)
 		maxLeafNodes *= 8;
 	}
 	
-	LOG(@"Levels: %u. Inner nodes: %lu of %lu (%.2f %%). Leaf nodes: %lu of %lu (%.2f %%).", _rootLevel, stats.innerNodeCount, maxInnerNodes, (float)stats.innerNodeCount / maxInnerNodes * 100.0f, stats.leafNodeCount, maxLeafNodes, (float)stats.leafNodeCount / maxLeafNodes* 100.0f);
-#endif
+	NSLog(@"Levels: %u. Inner nodes: %lu of %lu (%.2f %%). Leaf nodes: %lu of %lu (%.2f %%).", _rootLevel, stats.innerNodeCount, maxInnerNodes, (float)stats.innerNodeCount / maxInnerNodes * 100.0f, stats.leafNodeCount, maxLeafNodes, (float)stats.leafNodeCount / maxLeafNodes* 100.0f);
 }
+
+
+- (void) endBulkUpdate
+{
+	[super endBulkUpdate];
+	if (!self.bulkUpdateInProgress)
+	{
+		[self dumpStructure];
+	}
+}
+
 #endif
 
 
-#if OLD_CHUNKS
-#else
 static BOOL ForEachChunk(InnerNode *node, MCGridCoordinates base, NSUInteger size, NSUInteger level, MCGridExtents bounds, JAMinecraftSchematicChunkIterator iterator, BOOL makeWriteable)
 {
 	NSCParameterAssert(node != NULL);
@@ -801,7 +631,6 @@ static BOOL ForEachChunk(InnerNode *node, MCGridCoordinates base, NSUInteger siz
 	
 	return YES;
 }
-#endif
 
 
 - (BOOL) forEachChunkInRegion:(MCGridExtents)bounds do:(JAMinecraftSchematicChunkIterator)iterator
@@ -810,11 +639,7 @@ static BOOL ForEachChunk(InnerNode *node, MCGridCoordinates base, NSUInteger siz
 	MCGridCoordinates base = { totalExtents.minX, totalExtents.minY, totalExtents.minZ };
 	NSUInteger size = totalExtents.maxX - totalExtents.minX + 1;
 	
-#if OLD_CHUNKS
-	return [_root forEachChunkWithBase:base size:size perform:iterator bounds:bounds];
-#else
 	return ForEachChunk(_root, base, size, _rootLevel, bounds, iterator, NO);
-#endif
 }
 
 
@@ -826,95 +651,9 @@ static BOOL ForEachChunk(InnerNode *node, MCGridCoordinates base, NSUInteger siz
 @end
 
 
-#if OLD_CHUNKS
-@implementation JAMinecraftSchematicInnerNode
-
-- (BOOL) forEachChunkWithBase:(MCGridCoordinates)base size:(NSInteger)size perform:(JAMinecraftSchematicChunkIterator)iterator bounds:(MCGridExtents)bounds_
-{
-	MCGridExtents bounds = bounds_;
-	NSInteger halfSize = size >> 1;
-	BOOL result = YES;
-	
-	for (NSUInteger i = 0; i < 8; i++)
-	{
-		id child = children[i];
-		if (child != nil)
-		{
-			MCGridCoordinates subBase = base;
-			if (i & 1) subBase.x += halfSize;
-			if (i & 2) subBase.y += halfSize;
-			if (i & 4) subBase.z += halfSize;
-			
-			if (subBase.x <= bounds.maxX && bounds.minX <= (subBase.x + halfSize) &&
-				subBase.y <= bounds.maxY && bounds.minY <= (subBase.y + halfSize) &&
-				subBase.z <= bounds.maxZ && bounds.minZ <= (subBase.z + halfSize))
-			{
-				result = [child forEachChunkWithBase:subBase size:halfSize perform:iterator bounds:bounds];
-				if (!result)  return NO;
-			}
-		}
-	}
-	
-	return result;
-}
-
-
 #if LOGGING
-- (void) dumpStructureWithLevel:(NSUInteger)level
-					 statistics:(DumpStatistics *)stats
-						   base:(MCGridCoordinates)base
-						   size:(NSUInteger)size
-{
-	stats->innerNodeCount++;
-	stats->deepestLevel = MAX(stats->deepestLevel, level);
-	
-	NSMutableString *indent = [NSMutableString string];
-	for (NSUInteger i = 0; i < level; i++)
-	{
-		[indent appendString:@"  "];
-	}
-	
-	NSUInteger halfSize = size >> 1;
-	
-	for (NSUInteger i = 0; i < 8; i++)
-	{
-		MCGridCoordinates subBase = base;
-		if (i & 1) subBase.x += halfSize;
-		if (i & 2) subBase.y += halfSize;
-		if (i & 4) subBase.z += halfSize;
-		
-		NSString *prefix = [NSString stringWithFormat:@"%@  %lu %@: ", indent, i, JA_ENCODE(subBase)];
-		
-		id child = children[i];
-		if (child == nil)  LOG(@"%@nil", prefix);
-		else if ([child isKindOfClass:[JAMinecraftSchematicInnerNode class]])
-		{
-			LOG(@"%@{", prefix);
-			[child dumpStructureWithLevel:level + 1 statistics:stats base:subBase size:halfSize];
-		}
-		else
-		{
-			stats->leafNodeCount++;
-			LOG(@"%@%@", prefix, child);
-		}
-	}
-	
-	LOG(@"%@}", indent);
-}
-#endif
-
-@end
-
-
-@implementation JAMinecraftSchematicChunk (JAMinecraftSchematicExtensions)
-
-- (BOOL) forEachChunkWithBase:(MCGridCoordinates)base size:(NSInteger)size perform:(JAMinecraftSchematicChunkIterator)iterator bounds:(MCGridExtents)bounds
-{
-	// Caller is responsible for applying bounds.
-	return iterator(self, base);
-}
-
-@end
+static NSUInteger sLiveInnerNodes = 0;
+static NSUInteger sLiveChunks = 0;
 #endif
 
 
@@ -925,6 +664,10 @@ static inline InnerNode *AllocInnerNode(NSUInteger level)
 #ifndef NDEBUG
 	result->level = level;
 #endif
+#if LOGGING
+	sLiveInnerNodes++;
+#endif
+	
 	return result;
 }
 
@@ -935,6 +678,11 @@ static inline Chunk *AllocChunk(void)
 	result->refCount = 1;
 	result->extents = kMCEmptyExtents;
 	result->extentsAreAccurate = YES;
+	
+#if LOGGING
+	sLiveChunks++;
+#endif
+	
 	return result;
 }
 
@@ -942,23 +690,27 @@ static inline Chunk *AllocChunk(void)
 static inline void FreeInnerNode(InnerNode *node, NSUInteger level)
 {
 	NSCParameterAssert(node != NULL && node->level == level);
-	LOG(@"Freeing inner node %p [level %lu]", node, node->level);
+	
+	Log(@"Freeing inner node %p [level %lu, live count -> %lu]", node, node->level, --sLiveInnerNodes);
+	LogIndent();
 	
 	for (unsigned i = 0; i < 8; i++)
 	{
 		if (node->children.inner[i] != NULL)
 		{
-			if (level > 1)  ReleaseInnerNode(node->children.inner[i], level - 1);
-			else  ReleaseChunk(node->children.leaves[i]);
+			if (level == 1)  ReleaseChunk(node->children.leaves[i]);
+			else  ReleaseInnerNode(node->children.inner[i], level - 1);
 		}
 	}
 	free(node);
+	
+	LogOutdent();
 }
 
 
 static inline void FreeChunk(Chunk *chunk)
 {
-	LOG(@"Freeing chunk %p", chunk);
+	Log(@"Freeing chunk %p [live count -> %lu]", chunk, --sLiveChunks);
 	free(chunk);
 }
 
@@ -1026,21 +778,33 @@ static Chunk *CopyChunk(Chunk *chunk)
 
 static void ReleaseInnerNode(InnerNode *node, NSUInteger level)
 {
-	NSCParameterAssert(node != NULL);
+	NSCParameterAssert(node != NULL && level == node->level);
+	
+	Log(@"Releasing inner node %p [refcount %lu->%lu, level %lu]", node, node->refCount, node->refCount - 1, node->level);
+	LogIndent();
+	
 	if (--node->refCount == 0)
 	{
 		FreeInnerNode(node, level);
 	}
+	
+	LogOutdent();
 }
 
 
 static void ReleaseChunk(Chunk *chunk)
 {
 	NSCParameterAssert(chunk != NULL);
+	
+	Log(@"Releasing chunk %p [refcount %u->%u]", chunk, chunk->refCount, chunk->refCount - 1);
+	LogIndent();
+	
 	if (--chunk->refCount == 0)
 	{
 		FreeChunk(chunk);
 	}
+	
+	LogOutdent();
 }
 
 
@@ -1116,3 +880,31 @@ static BOOL ChunkSetCell(Chunk *chunk, NSInteger x, NSInteger y, NSInteger z, MC
 	chunk->extentsAreAccurate = NO;
 	return YES;
 }
+
+
+#if LOGGING
+static NSString *sLogIndentation = @"";
+
+
+static void Log(NSString *format, ...)
+{
+	va_list args;
+	va_start(args, format);
+	NSString *message = [sLogIndentation stringByAppendingString:[[NSString alloc] initWithFormat:format arguments:args]];
+	va_end(args);
+	
+	printf("%s\n", [message UTF8String]);
+}
+
+
+static void LogIndent(void)
+{
+	sLogIndentation = [sLogIndentation stringByAppendingString:@"  "];
+}
+
+
+static void LogOutdent(void)
+{
+	if (sLogIndentation.length > 1)  sLogIndentation = [sLogIndentation substringFromIndex:2];
+}
+#endif

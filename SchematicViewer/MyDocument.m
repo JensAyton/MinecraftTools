@@ -242,8 +242,13 @@
 		
 		To verify that something’s happening, enable the LOGGING macro in
 		JAMinecraftSchematic.m. The expected result is some messages about
-		nodes being created, followed by nodes being released when the copy
-		is garbage-collected.
+		nodes being created, followed by a dump of the internal storage
+		hierarchy of the schematic, then messages about nodes being released
+		when the copy is garbage-collected.
+		
+		In the internal storage hierarchy dump, most chunks will either have
+		a refcount of 2 or be descended from an inner node with a refcount of
+		2.
 		
 		Change the following #if 1 to #if 0 to see what would happen if the
 		COW didn’t work.
@@ -274,6 +279,7 @@
 	if (scribbleCount < 5)  scribbleCount = 5;
 	NSLog(@"Scribbling %lu times...", scribbleCount);
 	
+	[copy beginBulkUpdate];
 	while (scribbleCount--)
 	{
 		MCGridCoordinates coords =
@@ -287,6 +293,7 @@
 		
 		[copy setCell:cell at:coords];
 	}
+	[copy endBulkUpdate];
 	
 	[self.schematicView setNeedsDisplay:YES];
 	
