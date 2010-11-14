@@ -27,7 +27,7 @@
 
 
 // Verbose logging of internal structure changes and reference counting.
-#define LOGGING		(1 && !defined(NDEBUG))
+#define LOGGING		(0 && !defined(NDEBUG))
 
 
 #if LOGGING
