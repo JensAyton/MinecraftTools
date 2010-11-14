@@ -69,8 +69,8 @@ enum
 };
 
 
-static JAMinecraftCell CellFromRDATData(uint8_t type, uint8_t info);
-void RDATDataFromCell(JAMinecraftCell cell, uint8_t *type, uint8_t *info);
+static MCCell CellFromRDATData(uint8_t type, uint8_t info);
+void RDATDataFromCell(MCCell cell, uint8_t *type, uint8_t *info);
 
 static uint8_t OrientationFromRDATInfo(uint8_t info);
 static uint8_t CellInfoOrientationFromMeta(uint8_t meta);
@@ -156,7 +156,7 @@ static uint8_t CellInfoOrientationFromDoorMeta(uint8_t meta);
 	[self beginBulkUpdate];
 	
 	const uint8_t *infoBytes = bytes + planeSize;
-	JACellLocation location;
+	MCGridCoordinates location;
 	for (location.y = 0; location.y < height; location.y++)
 	{
 		for (location.x = 0; location.x < width; location.x++)
@@ -181,13 +181,13 @@ static uint8_t CellInfoOrientationFromDoorMeta(uint8_t meta);
 }
 
 
-- (NSData *) rDatDataForRegion:(JACircuitExtents)region withError:(NSError **)outError
+- (NSData *) rDatDataForRegion:(MCGridExtents)region withError:(NSError **)outError
 {
 	if (outError != NULL)  *outError = nil;
 	
-	NSUInteger width = JACircuitExtentsWidth(region);
-	NSUInteger length = JACircuitExtentsLength(region);
-	NSUInteger height = JACircuitExtentsHeight(region);
+	NSUInteger width = MCGridExtentsWidth(region);
+	NSUInteger length = MCGridExtentsLength(region);
+	NSUInteger height = MCGridExtentsHeight(region);
 	
 	if (width > 65535 || length > 65535 || height > 65535)
 	{
@@ -223,14 +223,14 @@ static uint8_t CellInfoOrientationFromDoorMeta(uint8_t meta);
 	*bytes++ = length & 0xFF;
 	
 	uint8_t *infoBytes = bytes + planeSize;
-	JACellLocation location;
+	MCGridCoordinates location;
 	for (location.y = region.minY; location.y <= region.maxY; location.y++)
 	{
 		for (location.x = region.minX; location.x <= region.maxX; location.x++)
 		{
 			for (location.z = region.maxZ; location.z >= region.minZ; location.z--)
 			{
-				JAMinecraftCell cell = [self cellAt:location];
+				MCCell cell = [self cellAt:location];
 				RDATDataFromCell(cell, bytes, infoBytes);
 				
 				bytes++;
@@ -245,7 +245,7 @@ static uint8_t CellInfoOrientationFromDoorMeta(uint8_t meta);
 @end
 
 
-static JAMinecraftCell CellFromRDATData(uint8_t type, uint8_t info)
+static MCCell CellFromRDATData(uint8_t type, uint8_t info)
 {
 	uint8_t blockID = 0;
 	uint8_t blockData = 0;
@@ -315,7 +315,7 @@ static JAMinecraftCell CellFromRDATData(uint8_t type, uint8_t info)
 			break;
 	}
 	
-	return (JAMinecraftCell){ .blockID = blockID, .blockData = blockData };
+	return (MCCell){ .blockID = blockID, .blockData = blockData };
 }
 
 
@@ -341,7 +341,7 @@ static uint8_t OrientationFromRDATInfo(uint8_t info)
 }
 
 
-void RDATDataFromCell(JAMinecraftCell cell, uint8_t *outType, uint8_t *outInfo)
+void RDATDataFromCell(MCCell cell, uint8_t *outType, uint8_t *outInfo)
 {
 	NSCParameterAssert(outType != NULL && outInfo != NULL);
 	

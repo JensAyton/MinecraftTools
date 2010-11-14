@@ -56,7 +56,7 @@ typedef struct
 } DumpStatistics;
 
 
-typedef BOOL (^JAMinecraftSchematicChunkIterator)(JAMinecraftSchematicChunk *chunk, JACellLocation base);
+typedef BOOL (^JAMinecraftSchematicChunkIterator)(JAMinecraftSchematicChunk *chunk, MCGridCoordinates base);
 
 
 /*
@@ -80,7 +80,7 @@ typedef BOOL (^JAMinecraftSchematicChunkIterator)(JAMinecraftSchematicChunk *chu
 						   size:(NSUInteger)size;
 #endif
 
-- (BOOL) forEachChunkWithBase:(JACellLocation)base size:(NSInteger)size perform:(JAMinecraftSchematicChunkIterator)iterator bounds:(JACircuitExtents)bounds;
+- (BOOL) forEachChunkWithBase:(MCGridCoordinates)base size:(NSInteger)size perform:(JAMinecraftSchematicChunkIterator)iterator bounds:(MCGridExtents)bounds;
 
 @end
 
@@ -88,7 +88,7 @@ typedef BOOL (^JAMinecraftSchematicChunkIterator)(JAMinecraftSchematicChunk *chu
 @interface JAMinecraftSchematic ()
 
 //	Space spanned by octree, regardless of "fullness" of cells.
-@property (readonly) JACircuitExtents totalExtents;
+@property (readonly) MCGridExtents totalExtents;
 
 /*	Find appropriate chunk for "location" in octree.
 	"base" is set to coordinates of chunk's 0, 0, 0 if a chunk is returned,
@@ -96,8 +96,8 @@ typedef BOOL (^JAMinecraftSchematicChunkIterator)(JAMinecraftSchematicChunk *chu
 	If "createIfNeeded" is YES, the chunk and any intermediate nodes will be
 	created if they aren't there already.
 */
-- (JAMinecraftSchematicChunk *) resolveChunkAt:(JACellLocation)location
-							   baseCoordinates:(JACellLocation *)base
+- (JAMinecraftSchematicChunk *) resolveChunkAt:(MCGridCoordinates)location
+							   baseCoordinates:(MCGridCoordinates *)base
 								createIfNeeded:(BOOL)createIfNeeded;
 
 - (void) growOctree;
@@ -111,12 +111,12 @@ typedef BOOL (^JAMinecraftSchematicChunkIterator)(JAMinecraftSchematicChunk *chu
 	The return value of the last invocation is returned.
 	The order of iteration is not specified.
  */
-- (BOOL) forEachChunkInRegion:(JACircuitExtents)bounds do:(JAMinecraftSchematicChunkIterator)iterator;
+- (BOOL) forEachChunkInRegion:(MCGridExtents)bounds do:(JAMinecraftSchematicChunkIterator)iterator;
 - (BOOL) forEachChunkDo:(JAMinecraftSchematicChunkIterator)iterator;
 
-- (void) postChangeNotification:(JACircuitExtents)changedExtents;
-- (void) noteChangeInExtents:(JACircuitExtents)changedExtents;
-- (void) noteChangeInLocation:(JACellLocation)changedLocation;
+- (void) postChangeNotification:(MCGridExtents)changedExtents;
+- (void) noteChangeInExtents:(MCGridExtents)changedExtents;
+- (void) noteChangeInLocation:(MCGridCoordinates)changedLocation;
 
 @end
 
@@ -138,9 +138,9 @@ static inline NSUInteger RepresentedDistance(levels)
 		LOG(@"Creating root inner node %p", _root);
 		_levels = 1;
 		
-		_extents = kJAEmptyExtents;
+		_extents = kMCEmptyExtents;
 		_extentsAreAccurate = YES;
-		_dirtyExtents = kJAEmptyExtents;
+		_dirtyExtents = kMCEmptyExtents;
 		
 #if LOGGING
 		[self dumpStructure];
@@ -151,9 +151,9 @@ static inline NSUInteger RepresentedDistance(levels)
 }
 
 
-- (JAMinecraftCell) cellAt:(JACellLocation)location
+- (MCCell) cellAt:(MCGridCoordinates)location
 {
-	JACellLocation base;
+	MCGridCoordinates base;
 	JAMinecraftSchematicChunk *chunk = [self resolveChunkAt:location
 											baseCoordinates:&base
 											 createIfNeeded:NO];
@@ -164,16 +164,16 @@ static inline NSUInteger RepresentedDistance(levels)
 }
 
 
-- (void) setCell:(JAMinecraftCell)cell at:(JACellLocation)location
+- (void) setCell:(MCCell)cell at:(MCGridCoordinates)location
 {
-	JACellLocation base;
+	MCGridCoordinates base;
 	JAMinecraftSchematicChunk *chunk = [self resolveChunkAt:location
 											baseCoordinates:&base
 											 createIfNeeded:!MCCellIsAir(cell)];
 	
 	if (chunk != nil)
 	{
-		BOOL changeInExtents = JACellLocationWithinExtents(location, _extents);
+		BOOL changeInExtents = MCGridLocationIsWithinExtents(location, _extents);
 		BOOL changeAffectsExtents = (MCCellIsAir(cell) == changeInExtents) || !_extentsAreAccurate;
 		
 		changeAffectsExtents = YES;
@@ -193,15 +193,15 @@ static inline NSUInteger RepresentedDistance(levels)
 }
 
 
-- (JAMinecraftCell) cellAtX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z
+- (MCCell) cellAtX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z
 {
-	return [self cellAt:(JACellLocation){ x, y, z }];
+	return [self cellAt:(MCGridCoordinates){ x, y, z }];
 }
 
 
-- (void) setCell:(JAMinecraftCell)cell atX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z
+- (void) setCell:(MCCell)cell atX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z
 {
-	[self setCell:cell at:(JACellLocation){ x, y, z }];
+	[self setCell:cell at:(MCGridCoordinates){ x, y, z }];
 }
 
 
@@ -218,7 +218,7 @@ static inline NSUInteger RepresentedDistance(levels)
 	if (--_bulkLevel == 0)
 	{
 		[self postChangeNotification:_dirtyExtents];
-		_dirtyExtents = kJAEmptyExtents;
+		_dirtyExtents = kMCEmptyExtents;
 		
 #if LOGGING
 		[self dumpStructure];
@@ -241,16 +241,16 @@ static inline NSUInteger RepresentedDistance(levels)
 #endif
 
 
-- (void) copyRegion:(JACircuitExtents)region from:(JAMinecraftSchematic *)sourceCircuit at:(JACellLocation)location
+- (void) copyRegion:(MCGridExtents)region from:(JAMinecraftSchematic *)sourceCircuit at:(MCGridCoordinates)location
 {
-	if (JACircuitExtentsEmpty(region))  return;
+	if (MCGridExtentsEmpty(region))  return;
 	
-	JACellLocation offset = { location.x - region.minX, location.y - region.minY, location.z - region.minZ };
+	MCGridCoordinates offset = { location.x - region.minX, location.y - region.minY, location.z - region.minZ };
 	
-	[sourceCircuit forEachChunkInRegion:region do:^(JAMinecraftSchematicChunk *chunk, JACellLocation base)
+	[sourceCircuit forEachChunkInRegion:region do:^(JAMinecraftSchematicChunk *chunk, MCGridCoordinates base)
 	{
 		NSUInteger bx, by, bz;
-		JACellLocation loc;
+		MCGridCoordinates loc;
 		
 		for (bz = 0; bz < kJAMinecraftSchematicChunkSize; bz++)
 		{
@@ -262,12 +262,12 @@ static inline NSUInteger RepresentedDistance(levels)
 				{
 					loc.x = base.x + bx;
 					
-					if (JACellLocationWithinExtents(loc, region))
+					if (MCGridLocationIsWithinExtents(loc, region))
 					{
-						JAMinecraftCell cell = [sourceCircuit cellAt:loc];
+						MCCell cell = [sourceCircuit cellAt:loc];
 						if (cell.blockID != kMCBlockAir)
 						{
-							JACellLocation dstloc = { loc.x + offset.x, loc.y + offset.y, loc.z + offset.z };
+							MCGridCoordinates dstloc = { loc.x + offset.x, loc.y + offset.y, loc.z + offset.z };
 							[self setCell:cell at:dstloc];
 						}
 					}
@@ -280,15 +280,15 @@ static inline NSUInteger RepresentedDistance(levels)
 }
 
 
-- (JACircuitExtents) extents
+- (MCGridExtents) extents
 {
 	if (!_extentsAreAccurate)
 	{
-		__block JACircuitExtents result = kJAEmptyExtents;
+		__block MCGridExtents result = kMCEmptyExtents;
 		
-		[self forEachChunkDo:^(JAMinecraftSchematicChunk *chunk, JACellLocation base) {
-			JACircuitExtents chunkExtents = chunk.extents;
-			if (!JACircuitExtentsEmpty(chunkExtents))
+		[self forEachChunkDo:^(JAMinecraftSchematicChunk *chunk, MCGridCoordinates base) {
+			MCGridExtents chunkExtents = chunk.extents;
+			if (!MCGridExtentsEmpty(chunkExtents))
 			{
 				result.minX = MIN(result.minX, chunkExtents.minX + base.x);
 				result.maxX = MAX(result.maxX, chunkExtents.maxX + base.x);
@@ -311,7 +311,7 @@ static inline NSUInteger RepresentedDistance(levels)
 
 - (NSUInteger) width
 {
-	return JACircuitExtentsWidth(self.extents);
+	return MCGridExtentsWidth(self.extents);
 }
 
 
@@ -323,7 +323,7 @@ static inline NSUInteger RepresentedDistance(levels)
 
 - (NSUInteger) length
 {
-	return JACircuitExtentsLength(self.extents);
+	return MCGridExtentsLength(self.extents);
 }
 
 
@@ -335,7 +335,7 @@ static inline NSUInteger RepresentedDistance(levels)
 
 - (NSUInteger) height
 {
-	return JACircuitExtentsHeight(self.extents);
+	return MCGridExtentsHeight(self.extents);
 }
 
 
@@ -347,8 +347,8 @@ static inline NSUInteger RepresentedDistance(levels)
 
 - (NSInteger) minimumLayer
 {
-	JACircuitExtents extents = self.extents;
-	if (JACircuitExtentsEmpty(extents))  return NSIntegerMin;
+	MCGridExtents extents = self.extents;
+	if (MCGridExtentsEmpty(extents))  return NSIntegerMin;
 	if (self.extents.maxY < NSIntegerMin + kMaxPermittedHeight)  return NSIntegerMin;
 	return self.extents.maxY - kMaxPermittedHeight + 1;
 }
@@ -362,8 +362,8 @@ static inline NSUInteger RepresentedDistance(levels)
 
 - (NSInteger) maximumLayer
 {
-	JACircuitExtents extents = self.extents;
-	if (JACircuitExtentsEmpty(extents))  return NSIntegerMax;
+	MCGridExtents extents = self.extents;
+	if (MCGridExtentsEmpty(extents))  return NSIntegerMax;
 	if (self.extents.minY > NSIntegerMax - kMaxPermittedHeight)  return NSIntegerMax;
 	return self.extents.minY + kMaxPermittedHeight - 1;
 }
@@ -375,18 +375,18 @@ static inline NSUInteger RepresentedDistance(levels)
 }
 
 
-- (JACircuitExtents) totalExtents
+- (MCGridExtents) totalExtents
 {
 	NSInteger distance = (1 << (_levels - 1)) * kJAMinecraftSchematicChunkSize;
 	NSInteger max = distance - 1;
 	NSInteger min = -distance;
 	
-	return (JACircuitExtents) { min, max, min, max, min, max };
+	return (MCGridExtents) { min, max, min, max, min, max };
 }
 
 
-- (JAMinecraftSchematicChunk *) resolveChunkAt:(JACellLocation)location
-							   baseCoordinates:(JACellLocation *)base
+- (JAMinecraftSchematicChunk *) resolveChunkAt:(MCGridCoordinates)location
+							   baseCoordinates:(MCGridCoordinates *)base
 								createIfNeeded:(BOOL)createIfNeeded
 {
 	NSUInteger maxDistance = MAX(ABS(location.x), MAX(ABS(location.y), ABS(location.z)));
@@ -513,7 +513,7 @@ static inline NSUInteger RepresentedDistance(levels)
 	[self didChangeValueForKey:@"totalExtents"];
 	
 #if LOGGING
-	JACircuitExtents totalExtents = [self totalExtents];
+	MCGridExtents totalExtents = [self totalExtents];
 	LOG(@"Growing octree to level %u, encompassing %@", _levels, JA_ENCODE(totalExtents));
 	[self dumpStructure];
 #endif
@@ -525,7 +525,7 @@ static inline NSUInteger RepresentedDistance(levels)
 {
 //	return;
 	DumpStatistics stats = {0};
-	JACircuitExtents totalExtents = self.totalExtents;
+	MCGridExtents totalExtents = self.totalExtents;
 	JACellLocation base = { totalExtents.minX, totalExtents.minY, totalExtents.minZ };
 	NSUInteger size = totalExtents.maxX - totalExtents.minX + 1;
 	
@@ -545,10 +545,10 @@ static inline NSUInteger RepresentedDistance(levels)
 #endif
 
 
-- (BOOL) forEachChunkInRegion:(JACircuitExtents)bounds do:(JAMinecraftSchematicChunkIterator)iterator
+- (BOOL) forEachChunkInRegion:(MCGridExtents)bounds do:(JAMinecraftSchematicChunkIterator)iterator
 {
-	JACircuitExtents totalExtents = self.totalExtents;
-	JACellLocation base = { totalExtents.minX, totalExtents.minY, totalExtents.minZ };
+	MCGridExtents totalExtents = self.totalExtents;
+	MCGridCoordinates base = { totalExtents.minX, totalExtents.minY, totalExtents.minZ };
 	NSUInteger size = totalExtents.maxX - totalExtents.minX + 1;
 	
 	return [_root forEachChunkWithBase:base size:size perform:iterator bounds:bounds];
@@ -557,15 +557,15 @@ static inline NSUInteger RepresentedDistance(levels)
 
 - (BOOL) forEachChunkDo:(JAMinecraftSchematicChunkIterator)iterator
 {
-	return [self forEachChunkInRegion:kJAInfiniteExtents do:iterator];
+	return [self forEachChunkInRegion:kMCInfiniteExtents do:iterator];
 }
 
 
-- (void) postChangeNotification:(JACircuitExtents)changedExtents
+- (void) postChangeNotification:(MCGridExtents)changedExtents
 {
-	if (!JACircuitExtentsEmpty(changedExtents))
+	if (!MCGridExtentsEmpty(changedExtents))
 	{
-		NSValue *extentsObj = [NSValue value:&changedExtents withObjCType:@encode(JACircuitExtents)];
+		NSValue *extentsObj = [NSValue value:&changedExtents withObjCType:@encode(MCGridExtents)];
 		[[NSNotificationCenter defaultCenter] postNotificationName:kJAMinecraftSchematicChangedNotification
 															object:self
 														  userInfo:[NSDictionary dictionaryWithObject:extentsObj
@@ -576,11 +576,11 @@ static inline NSUInteger RepresentedDistance(levels)
 }
 
 
-- (void) noteChangeInExtents:(JACircuitExtents)changedExtents
+- (void) noteChangeInExtents:(MCGridExtents)changedExtents
 {
 	if (_bulkLevel != 0)
 	{
-		_dirtyExtents = JAExtentsUnion(_dirtyExtents, changedExtents);
+		_dirtyExtents = MCGridExtentsUnion(_dirtyExtents, changedExtents);
 	}
 	else
 	{
@@ -589,15 +589,15 @@ static inline NSUInteger RepresentedDistance(levels)
 }
 
 
-- (void) noteChangeInLocation:(JACellLocation)changedLocation
+- (void) noteChangeInLocation:(MCGridCoordinates)changedLocation
 {
 	if (_bulkLevel != 0)
 	{
-		_dirtyExtents = JAExtentsUnionLocation(_dirtyExtents, changedLocation);
+		_dirtyExtents = MCGridExtentsUnionWithLocation(_dirtyExtents, changedLocation);
 	}
 	else
 	{
-		[self postChangeNotification:JACircuitExtentsWithLocation(changedLocation)];
+		[self postChangeNotification:MCGridExtentsWithCoordinates(changedLocation)];
 	}
 }
 
@@ -606,9 +606,9 @@ static inline NSUInteger RepresentedDistance(levels)
 
 @implementation JAMinecraftSchematicInnerNode
 
-- (BOOL) forEachChunkWithBase:(JACellLocation)base size:(NSInteger)size perform:(JAMinecraftSchematicChunkIterator)iterator bounds:(JACircuitExtents)bounds_
+- (BOOL) forEachChunkWithBase:(MCGridCoordinates)base size:(NSInteger)size perform:(JAMinecraftSchematicChunkIterator)iterator bounds:(MCGridExtents)bounds_
 {
-	JACircuitExtents bounds = bounds_;
+	MCGridExtents bounds = bounds_;
 	NSInteger halfSize = size >> 1;
 	BOOL result = YES;
 	
@@ -617,7 +617,7 @@ static inline NSUInteger RepresentedDistance(levels)
 		id child = children[i];
 		if (child != nil)
 		{
-			JACellLocation subBase = base;
+			MCGridCoordinates subBase = base;
 			if (i & 1) subBase.x += halfSize;
 			if (i & 2) subBase.y += halfSize;
 			if (i & 4) subBase.z += halfSize;
@@ -685,7 +685,7 @@ static inline NSUInteger RepresentedDistance(levels)
 
 @implementation JAMinecraftSchematicChunk (JAMinecraftSchematicExtensions)
 
-- (BOOL) forEachChunkWithBase:(JACellLocation)base size:(NSInteger)size perform:(JAMinecraftSchematicChunkIterator)iterator bounds:(JACircuitExtents)bounds
+- (BOOL) forEachChunkWithBase:(MCGridCoordinates)base size:(NSInteger)size perform:(JAMinecraftSchematicChunkIterator)iterator bounds:(MCGridExtents)bounds
 {
 	// Caller is responsible for applying bounds.
 	return iterator(self, base);

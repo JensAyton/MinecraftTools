@@ -30,7 +30,7 @@
 
 @class JAMinecraftSchematic;
 
-typedef void (^JAMCSchematicRenderCB)(JAMinecraftSchematic *schematic, JACellLocation location, NSRect drawingRect);
+typedef void (^JAMCSchematicRenderCB)(JAMinecraftSchematic *schematic, MCGridCoordinates location, NSRect drawingRect);
 
 
 // FIXME: do something sane about this.
@@ -57,8 +57,8 @@ enum
 	
 	uint8_t					_dragAction;
 	
-	JACellLocation			_selectionAnchor;
-	JACircuitExtents		_selection;
+	MCGridCoordinates			_selectionAnchor;
+	MCGridExtents		_selection;
 	NSTimer					*_selectionUpdateTimer;
 	
 	NSUInteger				_zoomLevel;
@@ -72,7 +72,7 @@ enum
 @property (nonatomic) NSPoint scrollCenter;
 @property (nonatomic) NSUInteger currentLayer;
 
-@property (nonatomic) JACircuitExtents selection;
+@property (nonatomic) MCGridExtents selection;
 
 @property (nonatomic) NSUInteger zoomLevel;
 @property (nonatomic, readonly) NSUInteger maximumZoomLevel;
@@ -86,10 +86,10 @@ enum
 	to drawing space, the y coordinate is ignored (i.e., everything is
 	projected onto the drawing plane).
 */
-- (JACellLocation) cellLocationFromPoint:(NSPoint)point;
-- (JACircuitExtents) extentsFromRect:(NSRect)rect;
-- (NSRect) rectFromCellLocation:(JACellLocation)location;
-- (NSRect) rectFromExtents:(JACircuitExtents)extents;	// Returns NSZeroRect for empty extents.
+- (MCGridCoordinates) cellLocationFromPoint:(NSPoint)point;
+- (MCGridExtents) extentsFromRect:(NSRect)rect;
+- (NSRect) rectFromCellLocation:(MCGridCoordinates)location;
+- (NSRect) rectFromExtents:(MCGridExtents)extents;	// Returns NSZeroRect for empty extents.
 
 // Projection primitives supporting fractional cell-space coordinates.
 - (NSPoint) projectToFlattenedCellSpace:(NSPoint)point;

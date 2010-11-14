@@ -26,14 +26,14 @@
 #include "JAMinecraftTypes.h"
 
 
-const JAMinecraftCell kJAEmptyCell = { .blockID = kMCBlockAir, .blockData = 0 };
-const JACellLocation kJAZeroLocation = { 0, 0, 0 };
-const JACircuitExtents kJAEmptyExtents = { NSIntegerMax, NSIntegerMin, NSIntegerMax, NSIntegerMin, NSIntegerMax, NSIntegerMin };
-const JACircuitExtents kJAZeroExtents = { 0, 0, 0, 0, 0, 0 };
-const JACircuitExtents kJAInfiniteExtents = { NSIntegerMin, NSIntegerMax, NSIntegerMin, NSIntegerMax, NSIntegerMin, NSIntegerMax };
+const MCCell kJAEmptyCell = { .blockID = kMCBlockAir, .blockData = 0 };
+const MCGridCoordinates kJAZeroLocation = { 0, 0, 0 };
+const MCGridExtents kMCEmptyExtents = { NSIntegerMax, NSIntegerMin, NSIntegerMax, NSIntegerMin, NSIntegerMax, NSIntegerMin };
+const MCGridExtents kMCZeroExtents = { 0, 0, 0, 0, 0, 0 };
+const MCGridExtents kMCInfiniteExtents = { NSIntegerMin, NSIntegerMax, NSIntegerMin, NSIntegerMax, NSIntegerMin, NSIntegerMax };
 
 
-BOOL JACircuitExtentsEmpty(JACircuitExtents extents)
+BOOL MCGridExtentsEmpty(MCGridExtents extents)
 {
 	return	extents.maxX < extents.minX ||
 			extents.maxY < extents.minY ||
@@ -41,7 +41,7 @@ BOOL JACircuitExtentsEmpty(JACircuitExtents extents)
 }
 
 
-BOOL JACircuitExtentsEqual(JACircuitExtents a, JACircuitExtents b)
+BOOL MCGridExtentsEqual(MCGridExtents a, MCGridExtents b)
 {
 	return a.minX == b.minX &&
 		   a.maxX == b.maxX &&
@@ -52,7 +52,7 @@ BOOL JACircuitExtentsEqual(JACircuitExtents a, JACircuitExtents b)
 }
 
 
-BOOL JACellLocationWithinExtents(JACellLocation location, JACircuitExtents extents)
+BOOL MCGridLocationIsWithinExtents(MCGridCoordinates location, MCGridExtents extents)
 {
 	return	extents.minX <= location.x && location.x <= extents.maxX &&
 			extents.minY <= location.y && location.y <= extents.maxY &&
@@ -60,12 +60,12 @@ BOOL JACellLocationWithinExtents(JACellLocation location, JACircuitExtents exten
 }
 
 
-JACircuitExtents JAExtentsUnion(JACircuitExtents a, JACircuitExtents b)
+MCGridExtents MCGridExtentsUnion(MCGridExtents a, MCGridExtents b)
 {
-	if (JACircuitExtentsEmpty(a))  return b;
-	if (JACircuitExtentsEmpty(b))  return a;
+	if (MCGridExtentsEmpty(a))  return b;
+	if (MCGridExtentsEmpty(b))  return a;
 	
-	return (JACircuitExtents)
+	return (MCGridExtents)
 	{
 		MIN(a.minX, b.minX), MAX(a.maxX, b.maxX),
 		MIN(a.minY, b.minY), MAX(a.maxY, b.maxY),
@@ -74,15 +74,15 @@ JACircuitExtents JAExtentsUnion(JACircuitExtents a, JACircuitExtents b)
 }
 
 
-JACircuitExtents JAExtentsUnionLocation(JACircuitExtents extents, JACellLocation location)
+MCGridExtents MCGridExtentsUnionWithLocation(MCGridExtents extents, MCGridCoordinates location)
 {
-	return JAExtentsUnion(extents, JACircuitExtentsWithLocation(location));
+	return MCGridExtentsUnion(extents, MCGridExtentsWithCoordinates(location));
 }
 
 
-JACircuitExtents JAExtentsIntersection(JACircuitExtents a, JACircuitExtents b)
+MCGridExtents MCGridExtentsIntersection(MCGridExtents a, MCGridExtents b)
 {
-	return (JACircuitExtents)
+	return (MCGridExtents)
 	{
 		MAX(a.minX, b.minX), MIN(a.maxX, b.maxX),
 		MAX(a.minY, b.minY), MIN(a.maxY, b.maxY),
@@ -91,56 +91,56 @@ JACircuitExtents JAExtentsIntersection(JACircuitExtents a, JACircuitExtents b)
 }
 
 
-JACellLocation JAStepCellLocationFunc(JACellLocation location, JADirection direction)
+MCGridCoordinates MCStepCoordinatesFunc(MCGridCoordinates location, MCDirection direction)
 {
-	NSCParameterAssert(direction <= kJADirectionDown);
-	return JAStepCellLocationBody(location, direction);
+	NSCParameterAssert(direction <= kMCDirectionDown);
+	return MCStepCoordinatesBody(location, direction);
 }
 
 
-JADirection JAFlipDirectionFunc(JADirection direction)
+MCDirection MCDirectionFlipFunc(MCDirection direction)
 {
-	NSCParameterAssert(direction <= kJADirectionUnknown);
-	return JAFlipDirectionBody(direction);
+	NSCParameterAssert(direction <= kMCDirectionUnknown);
+	return MCDirectionFlipBody(direction);
 }
 
 
-JADirection JADirectionFlipNorthSouthFunc(JADirection direction)
+MCDirection MCDirectionFlipNorthSouthFunc(MCDirection direction)
 {
-	NSCParameterAssert(direction <= kJADirectionUnknown);
-	return JADirectionFlipNorthSouthBody(direction);
+	NSCParameterAssert(direction <= kMCDirectionUnknown);
+	return MCDirectionFlipNorthSouthBody(direction);
 }
 
 
-JADirection JADirectionFlipEastWestFunc(JADirection direction)
+MCDirection MCDirectionFlipEastWestFunc(MCDirection direction)
 {
-	NSCParameterAssert(direction <= kJADirectionUnknown);
-	return JADirectionFlipEastWestBody(direction);
+	NSCParameterAssert(direction <= kMCDirectionUnknown);
+	return MCDirectionFlipEastWestBody(direction);
 }
 
 
-JADirection JADirectionFlipUpDownFunc(JADirection direction)
+MCDirection MCDirectionFlipUpDownFunc(MCDirection direction)
 {
-	NSCParameterAssert(direction <= kJADirectionUnknown);
-	return JADirectionFlipUpDownBody(direction);
+	NSCParameterAssert(direction <= kMCDirectionUnknown);
+	return MCDirectionFlipUpDownBody(direction);
 }
 
 
-JADirection JARotateClockwiseFunc(JADirection direction)
+MCDirection MCRotateClockwiseFunc(MCDirection direction)
 {
-	NSCParameterAssert(direction <= kJADirectionUnknown);
-	return JARotateClockwiseBody(direction);
+	NSCParameterAssert(direction <= kMCDirectionUnknown);
+	return MCRotateClockwiseBody(direction);
 }
 
 
-JADirection JARotateAntiClockwiseFunc(JADirection direction)
+MCDirection MCRotateAntiClockwiseFunc(MCDirection direction)
 {
-	NSCParameterAssert(direction <= kJADirectionUnknown);
-	return JARotateClockwiseBody(JAFlipDirectionBody(direction));
+	NSCParameterAssert(direction <= kMCDirectionUnknown);
+	return MCRotateClockwiseBody(MCDirectionFlipBody(direction));
 }
 
 
-JADirection MCCellGetOrientation(JAMinecraftCell cell)
+MCDirection MCCellGetOrientation(MCCell cell)
 {
 	uint8_t blockData = cell.blockData;
 	switch (cell.blockID)
@@ -153,24 +153,24 @@ JADirection MCCellGetOrientation(JAMinecraftCell cell)
 			switch (blockData & kMCInfoMiscOrientationMask)
 			{
 				case kMCInfoMiscOrientationWest:
-					return kJADirectionWest;
+					return kMCDirectionWest;
 					
 				case kMCInfoMiscOrientationEast:
-					return kJADirectionEast;
+					return kMCDirectionEast;
 					
 				case kMCInfoMiscOrientationNorth:
-					return kJADirectionNorth;
+					return kMCDirectionNorth;
 					
 				case kMCInfoMiscOrientationSouth:
-					return kJADirectionSouth;
+					return kMCDirectionSouth;
 					
 					// 5 and 6 are different orientations for ground levers, with different effects on wires. Needs special handling.
 				case kMCInfoMiscOrientationFloor:
 				case kMCInfoLeverOrientationFloorNS:
-					return kJADirectionDown;
+					return kMCDirectionDown;
 					
 				default:
-					return kJADirectionUnknown;
+					return kMCDirectionUnknown;
 			}
 			
 		case kMCBlockWoodenDoor:
@@ -178,16 +178,16 @@ JADirection MCCellGetOrientation(JAMinecraftCell cell)
 			switch (blockData & kMCInfoDoorOrientationMask)
 			{
 				case kMCInfoDoorOrientationEast:
-					return kJADirectionEast;
+					return kMCDirectionEast;
 					
 				case kMCInfoDoorOrientationNorth:
-					return kJADirectionNorth;
+					return kMCDirectionNorth;
 					
 				case kMCInfoDoorOrientationWest:
-					return kJADirectionWest;
+					return kMCDirectionWest;
 					
 				case kMCInfoDoorOrientationSouth:
-					return kJADirectionSouth;
+					return kMCDirectionSouth;
 			}
 			__builtin_unreachable();
 			
@@ -196,19 +196,19 @@ JADirection MCCellGetOrientation(JAMinecraftCell cell)
 			switch (blockData & kMCInfoStairOrientationMask)
 			{
 				case kMCInfoStairOrientationSouth:
-					return kJADirectionSouth;
+					return kMCDirectionSouth;
 					
 				case kMCInfoStairOrientationNorth:
-					return kJADirectionNorth;
+					return kMCDirectionNorth;
 					
 				case kMCInfoStairOrientationWest:
-					return kJADirectionWest;
+					return kMCDirectionWest;
 					
 				case kMCInfoStairOrientationEast:
-					return kJADirectionEast;
+					return kMCDirectionEast;
 					
 				default:
-					return kJADirectionUnknown;
+					return kMCDirectionUnknown;
 			}
 			
 		case kMCBlockLadder:
@@ -216,28 +216,28 @@ JADirection MCCellGetOrientation(JAMinecraftCell cell)
 			switch (blockData & kMCInfoLadderOrientationMask)
 			{
 				case kMCInfoLadderOrientationEast:
-					return kJADirectionEast;
+					return kMCDirectionEast;
 					
 				case kMCInfoLadderOrientationWest:
-					return kJADirectionWest;
+					return kMCDirectionWest;
 					
 				case kMCInfoLadderOrientationNorth:
-					return kJADirectionNorth;
+					return kMCDirectionNorth;
 					
 				case kMCInfoLadderOrientationSouth:
-					return kJADirectionSouth;
+					return kMCDirectionSouth;
 					
 				default:
-					return kJADirectionUnknown;
+					return kMCDirectionUnknown;
 			}
 			
 		default:
-			return kJADirectionUnknown;
+			return kMCDirectionUnknown;
 	}
 }
 
 
-void MCCellSetOrientation(JAMinecraftCell *cell, JADirection orientation)
+void MCCellSetOrientation(MCCell *cell, MCDirection orientation)
 {
 	NSCParameterAssert(cell != NULL);
 	
@@ -254,23 +254,23 @@ void MCCellSetOrientation(JAMinecraftCell *cell, JADirection orientation)
 			mask = kMCInfoMiscOrientationMask;
 			switch (orientation)
 			{
-				case kJADirectionNorth:
+				case kMCDirectionNorth:
 					value = kMCInfoMiscOrientationNorth;
 					break;
 					
-				case kJADirectionSouth:
+				case kMCDirectionSouth:
 					value = kMCInfoMiscOrientationSouth;
 					break;
 					
-				case kJADirectionEast:
+				case kMCDirectionEast:
 					value = kMCInfoMiscOrientationEast;
 					break;
 				
-				case kJADirectionWest:
+				case kMCDirectionWest:
 					value = kMCInfoMiscOrientationWest;
 					break;
 					
-				case kJADirectionDown:
+				case kMCDirectionDown:
 				default:
 					if (cell->blockID == kMCBlockLever)
 					{
@@ -299,19 +299,19 @@ void MCCellSetOrientation(JAMinecraftCell *cell, JADirection orientation)
 			mask = kMCInfoDoorOrientationMask;
 			switch (orientation)
 			{
-				case kJADirectionSouth:
+				case kMCDirectionSouth:
 					value = kMCInfoDoorOrientationSouth;
 					break;
 					
-				case kJADirectionEast:
+				case kMCDirectionEast:
 					value = kMCInfoDoorOrientationEast;
 					break;
 					
-				case kJADirectionWest:
+				case kMCDirectionWest:
 					value = kMCInfoDoorOrientationWest;
 					break;
 					
-				case kJADirectionNorth:
+				case kMCDirectionNorth:
 				default:
 					value = kMCInfoDoorOrientationNorth;
 					break;
@@ -323,19 +323,19 @@ void MCCellSetOrientation(JAMinecraftCell *cell, JADirection orientation)
 			mask = kMCInfoStairOrientationMask;
 				switch (orientation)
 			{
-				case kJADirectionSouth:
+				case kMCDirectionSouth:
 					value = kMCInfoStairOrientationSouth;
 					break;
 					
-				case kJADirectionEast:
+				case kMCDirectionEast:
 					value = kMCInfoStairOrientationEast;
 					break;
 					
-				case kJADirectionWest:
+				case kMCDirectionWest:
 					value = kMCInfoStairOrientationWest;
 					break;
 					
-				case kJADirectionNorth:
+				case kMCDirectionNorth:
 				default:
 					value = kMCInfoStairOrientationNorth;
 					break;
@@ -347,19 +347,19 @@ void MCCellSetOrientation(JAMinecraftCell *cell, JADirection orientation)
 			mask = kMCInfoLadderOrientationMask;
 			switch (orientation)
 			{
-				case kJADirectionSouth:
+				case kMCDirectionSouth:
 					value = kMCInfoLadderOrientationSouth;
 					break;
 					
-				case kJADirectionEast:
+				case kMCDirectionEast:
 					value = kMCInfoLadderOrientationEast;
 					break;
 					
-				case kJADirectionWest:
+				case kMCDirectionWest:
 					value = kMCInfoLadderOrientationWest;
 					break;
 					
-				case kJADirectionNorth:
+				case kMCDirectionNorth:
 				default:
 					value = kMCInfoLadderOrientationNorth;
 					break;

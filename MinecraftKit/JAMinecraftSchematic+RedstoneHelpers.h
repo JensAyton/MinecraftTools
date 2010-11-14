@@ -32,7 +32,7 @@
 @interface JAMinecraftSchematic (RedstoneHelpers)
 
 // “Torch” consistently refers to redstone torches.
-- (BOOL) cellIsBlockWithSideTorchAt:(JACellLocation)location;
-- (BOOL) cellIsBlockWithTopTorchAt:(JACellLocation)location;
+- (BOOL) cellIsBlockWithSideTorchAt:(MCGridCoordinates)location;
+- (BOOL) cellIsBlockWithTopTorchAt:(MCGridCoordinates)location;
 
 @end

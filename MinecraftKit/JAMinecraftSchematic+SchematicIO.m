@@ -96,10 +96,10 @@ NSString * const kJAMinecraftSchematicUTI = @"com.davidvierra.mcedit.schematic";
 				uint8_t blockID = *blockBytes++;
 				uint8_t meta = *metaBytes++;
 				
-				JAMinecraftCell cell = { .blockID = blockID, .blockData = meta };
+				MCCell cell = { .blockID = blockID, .blockData = meta };
 				
 				[self setCell:cell
-						   at:(JACellLocation){x, y, z}];
+						   at:(MCGridCoordinates){x, y, z}];
 			}
 		}
 	}
@@ -116,14 +116,14 @@ NSString * const kJAMinecraftSchematicUTI = @"com.davidvierra.mcedit.schematic";
 }
 
 
-- (NSData *) schematicDataForRegion:(JACircuitExtents)region withError:(NSError **)outError
+- (NSData *) schematicDataForRegion:(MCGridExtents)region withError:(NSError **)outError
 {
 	NSMutableDictionary *root = [NSMutableDictionary dictionary];
 	
 	// Note that the concept of width and height differs.
-	NSUInteger width = JACircuitExtentsWidth(region);
-	NSUInteger length = JACircuitExtentsLength(region);
-	NSUInteger height = JACircuitExtentsHeight(region);
+	NSUInteger width = MCGridExtentsWidth(region);
+	NSUInteger length = MCGridExtentsLength(region);
+	NSUInteger height = MCGridExtentsHeight(region);
 	
 	[root ja_setNBTInteger:length type:kJANBTTagShort forKey:@"Length"];
 	[root ja_setNBTInteger:width type:kJANBTTagShort forKey:@"Width"];
@@ -145,14 +145,14 @@ NSString * const kJAMinecraftSchematicUTI = @"com.davidvierra.mcedit.schematic";
 	uint8_t *blockBytes = blockIDs.mutableBytes;
 	uint8_t *metaBytes = blockData.mutableBytes;
 	
-	JACellLocation location;
+	MCGridCoordinates location;
 	for (location.y = region.minY; location.y <= region.maxY; location.y++)
 	{
 		for (location.z = region.minZ; location.z <= region.maxZ; location.z++)
 		{
 			for (location.x = region.minX; location.x <= region.maxX; location.x++)
 			{
-				JAMinecraftCell cell = [self cellAt:location];
+				MCCell cell = [self cellAt:location];
 				*blockBytes++ = cell.blockID;
 				*metaBytes++ = cell.blockData;
 			}

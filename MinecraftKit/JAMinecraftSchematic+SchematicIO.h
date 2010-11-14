@@ -41,7 +41,7 @@
 - (id) initWithSchematicData:(NSData *)data error:(NSError **)outError;
 
 - (NSData *) schematicDataWithError:(NSError **)outError;
-- (NSData *) schematicDataForRegion:(JACircuitExtents)region withError:(NSError **)outError;
+- (NSData *) schematicDataForRegion:(MCGridExtents)region withError:(NSError **)outError;
 
 @end
 

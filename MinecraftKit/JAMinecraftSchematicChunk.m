@@ -38,7 +38,7 @@ static inline unsigned Offset(unsigned x, unsigned y, unsigned z)
 }
 
 
-- (JAMinecraftCell) chunkCellAtX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z
+- (MCCell) chunkCellAtX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z
 {
 	NSParameterAssert(0 <= x && x < kJAMinecraftSchematicChunkSize &&
 					  0 <= y && y < kJAMinecraftSchematicChunkSize &&
@@ -48,7 +48,7 @@ static inline unsigned Offset(unsigned x, unsigned y, unsigned z)
 }
 
 
-- (void) setChunkCell:(JAMinecraftCell)cell atX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z
+- (void) setChunkCell:(MCCell)cell atX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z
 {
 	NSParameterAssert(0 <= x && x < kJAMinecraftSchematicChunkSize &&
 					  0 <= y && y < kJAMinecraftSchematicChunkSize &&
@@ -61,7 +61,7 @@ static inline unsigned Offset(unsigned x, unsigned y, unsigned z)
 }
 
 
-- (JACircuitExtents) extents
+- (MCGridExtents) extents
 {
 	if (_extentsAreAccurate)  return _extents;
 	
@@ -89,9 +89,9 @@ static inline unsigned Offset(unsigned x, unsigned y, unsigned z)
 		}
 	}
 	
-	JACircuitExtents result;
-	if (minX != UINT_MAX)  result = (JACircuitExtents){ minX, maxX, minY, maxY, minZ, maxZ };
-	else  result = kJAEmptyExtents;
+	MCGridExtents result;
+	if (minX != UINT_MAX)  result = (MCGridExtents){ minX, maxX, minY, maxY, minZ, maxZ };
+	else  result = kMCEmptyExtents;
 	
 	_extents = result;
 	_extentsAreAccurate = YES;

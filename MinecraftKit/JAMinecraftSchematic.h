@@ -37,15 +37,15 @@
 @interface JAMinecraftSchematic: NSObject
 {
 @private
-	JACircuitExtents				_extents;
+	MCGridExtents					_extents;
 	JAMinecraftSchematicInnerNode	*_root;
-	JACircuitExtents				_dirtyExtents;
+	MCGridExtents					_dirtyExtents;
 	uint32_t						_bulkLevel;
 	BOOL							_extentsAreAccurate;
 	uint8_t							_levels;
 }
 
-@property (readonly) JACircuitExtents extents;
+@property (readonly) MCGridExtents extents;
 @property (readonly) NSUInteger width;
 @property (readonly) NSUInteger length;
 @property (readonly) NSUInteger height;
@@ -59,11 +59,11 @@
 @property (readonly) NSInteger minimumLayer;
 @property (readonly) NSInteger maximumLayer;
 
-- (JAMinecraftCell) cellAt:(JACellLocation)location;
-- (void) setCell:(JAMinecraftCell)cell at:(JACellLocation)location;
+- (MCCell) cellAt:(MCGridCoordinates)location;
+- (void) setCell:(MCCell)cell at:(MCGridCoordinates)location;
 
-- (JAMinecraftCell) cellAtX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z;
-- (void) setCell:(JAMinecraftCell)cell atX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z;
+- (MCCell) cellAtX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z;
+- (void) setCell:(MCCell)cell atX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z;
 
 /*
 	Bulk updates: while a bulk update is in progress, changes are coalesced into
@@ -82,7 +82,7 @@
 #endif
 
 /*
-	TODO: implement an -eraseRegion:(JACircuitExtents)region; which empties a
+	TODO: implement an -eraseRegion:(MCGridExtents)region; which empties a
 	region, removing nodes where possible.
 */
 
@@ -91,13 +91,13 @@
 	IMPORTANT: air blocks are ignored, not copied. Erase the target region
 	first if you want that behaviour.
 */
-- (void) copyRegion:(JACircuitExtents)region from:(JAMinecraftSchematic *)sourceCircuit at:(JACellLocation)location;
+- (void) copyRegion:(MCGridExtents)region from:(JAMinecraftSchematic *)sourceCircuit at:(MCGridCoordinates)location;
 
 @end
 
 
 extern NSString * const kJAMinecraftSchematicChangedNotification;
-extern NSString * const kJAMinecraftSchematicChangedExtents;	// userInfo dictionary key whose value is an NSValue containing a JACircuitExtents object.
+extern NSString * const kJAMinecraftSchematicChangedExtents;	// userInfo dictionary key whose value is an NSValue containing a MCGridExtents object.
 
 
 extern NSString * const kJAMinecraftSchematicErrorDomain;

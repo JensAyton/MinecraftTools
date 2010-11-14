@@ -27,24 +27,24 @@
 
 @implementation JAMinecraftSchematic (RedstoneHelpers)
 
-- (BOOL) cellIsBlockWithSideTorchAt:(JACellLocation)location
+- (BOOL) cellIsBlockWithSideTorchAt:(MCGridCoordinates)location
 {
 	if (!MCCellIsFullySolid([self cellAt:location]))  return NO;
 	
-	if (MCCellIsRedstoneTorch([self cellAt:JACellNorth(location)]))  return YES;
-	if (MCCellIsRedstoneTorch([self cellAt:JACellSouth(location)]))  return YES;
-	if (MCCellIsRedstoneTorch([self cellAt:JACellEast(location)]))  return YES;
-	if (MCCellIsRedstoneTorch([self cellAt:JACellWest(location)]))  return YES;
+	if (MCCellIsRedstoneTorch([self cellAt:MCCoordinatesNorthOf(location)]))  return YES;
+	if (MCCellIsRedstoneTorch([self cellAt:MCCoordinatesSouthOf(location)]))  return YES;
+	if (MCCellIsRedstoneTorch([self cellAt:MCCoordinatesEastOf(location)]))  return YES;
+	if (MCCellIsRedstoneTorch([self cellAt:MCCoordinatesWestOf(location)]))  return YES;
 	
 	return NO;
 }
 
 
-- (BOOL) cellIsBlockWithTopTorchAt:(JACellLocation)location
+- (BOOL) cellIsBlockWithTopTorchAt:(MCGridCoordinates)location
 {
 	if (!MCCellIsFullySolid([self cellAt:location]))  return NO;
 	
-	if (MCCellIsRedstoneTorch([self cellAt:JACellAbove(location)]))  return YES;
+	if (MCCellIsRedstoneTorch([self cellAt:MCCoordinatesAbove(location)]))  return YES;
 	
 	return NO;
 }

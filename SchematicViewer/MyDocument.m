@@ -168,7 +168,7 @@
 	}
 	else if (action == @selector(copy:) || action == @selector(cut:))
 	{
-		enabled = !JACircuitExtentsEmpty(self.schematicView.selection);
+		enabled = !MCGridExtentsEmpty(self.schematicView.selection);
 	}
 	else if (action == @selector(paste:))
 	{
@@ -185,7 +185,7 @@
 
 - (IBAction) copy:(id)sender
 {
-	JACircuitExtents selection = self.schematicView.selection;
+	MCGridExtents selection = self.schematicView.selection;
 	NSData *data = [self.schematic schematicDataForRegion:selection withError:NULL];
 	if (data == nil)
 	{
@@ -204,7 +204,7 @@
 	[self copy:sender];
 	// FIXME: clear selected area with undo.
 	NSLog(@"Pretend selected area was just cleared!");
-	self.schematicView.selection = kJAEmptyExtents;
+	self.schematicView.selection = kMCEmptyExtents;
 }
 
 

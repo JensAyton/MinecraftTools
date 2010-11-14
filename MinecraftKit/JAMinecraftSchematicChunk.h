@@ -41,16 +41,16 @@ enum
 @interface JAMinecraftSchematicChunk: NSObject
 {
 @private
-	JACircuitExtents			_extents;
+	MCGridExtents			_extents;
 	BOOL						_extentsAreAccurate;
 	
-	JAMinecraftCell				_cells[kJAMinecraftSchematicCellsPerChunk];
+	MCCell				_cells[kJAMinecraftSchematicCellsPerChunk];
 }
 
 /*	Extents of non-empty space within chunk.
-	If the entire chunk is empty, kJAEmptyExtents.
+	If the entire chunk is empty, kMCEmptyExtents.
 */
-@property (readonly, nonatomic) JACircuitExtents extents;
+@property (readonly, nonatomic) MCGridExtents extents;
 
 #ifndef NDEBUG
 @property (copy) NSString *label;
@@ -59,7 +59,7 @@ enum
 /*	Unlike the JAMinecraftSchematic equivalents, these will cause an assertion/
 	undefined behaviour for out-of-bounds indices.
 */
-- (JAMinecraftCell) chunkCellAtX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z;
-- (void) setChunkCell:(JAMinecraftCell)cell atX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z;
+- (MCCell) chunkCellAtX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z;
+- (void) setChunkCell:(MCCell)cell atX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z;
 
 @end

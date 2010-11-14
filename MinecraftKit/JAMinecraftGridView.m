@@ -91,7 +91,7 @@
 @property (readonly, nonatomic) NSRect virtualBounds;
 
 // 3D cell location with proper rounding of grid lines.
-- (JACellLocation) cellLocationForPointInWindow:(NSPoint)pointInWindow;
+- (MCGridCoordinates) cellLocationForPointInWindow:(NSPoint)pointInWindow;
 
 @end
 
@@ -112,13 +112,13 @@
 		_verticalScroller.target = self;
 		[self addSubview:_verticalScroller];
 		
-		_selection = kJAEmptyExtents;
+		_selection = kMCEmptyExtents;
 		
 		_zoomLevel = self.defaultZoomLevel;
 		[self performSwitchZoomLevel];
 		
 		// Set trivial basic render callback.
-		self.renderCallback = ^(JAMinecraftSchematic *schematic, JACellLocation location, NSRect drawingRect)
+		self.renderCallback = ^(JAMinecraftSchematic *schematic, MCGridCoordinates location, NSRect drawingRect)
 		{
 			if ([schematic cellAt:location].blockID == kMCBlockAir)  [[NSColor whiteColor] set];
 			else  [[NSColor blueColor] set];
@@ -185,15 +185,15 @@
 }
 
 
-- (JACircuitExtents) selection
+- (MCGridExtents) selection
 {
 	return _selection;
 }
 
 
-- (void) setSelection:(JACircuitExtents)value
+- (void) setSelection:(MCGridExtents)value
 {
-	if (!JACircuitExtentsEqual(value, _selection))
+	if (!MCGridExtentsEqual(value, _selection))
 	{
 		_selection = value;
 		[self setNeedsDisplay:YES];
@@ -311,9 +311,9 @@
 	if (JA_EXPECT_NOT(_renderCallback == NULL))  return;
 	
 	JAMinecraftSchematic *schematic = self.schematic;
-	JACircuitExtents targetExtents = [self extentsFromRect:rect];
+	MCGridExtents targetExtents = [self extentsFromRect:rect];
 	
-	JACellLocation location = { .y = self.currentLayer };
+	MCGridCoordinates location = { .y = self.currentLayer };
 	NSGraphicsContext *gCtxt = [NSGraphicsContext currentContext];
 	
 	// Iterate over the cells.
@@ -451,7 +451,7 @@
 	{
 		_dragAction = kDragSelect;
 		_selectionAnchor = [self cellLocationForPointInWindow:event.locationInWindow];
-		self.selection = kJAEmptyExtents;
+		self.selection = kMCEmptyExtents;
 		[self updateSelectionTimer];
 	}
 	else
@@ -602,9 +602,9 @@
 
 - (void) updateSelectionForPoint:(NSPoint)pointInWindow
 {
-	JACellLocation loc = [self cellLocationForPointInWindow:pointInWindow];
+	MCGridCoordinates loc = [self cellLocationForPointInWindow:pointInWindow];
 	
-	JACircuitExtents newSelection =
+	MCGridExtents newSelection =
 	{
 		MIN(loc.x, _selectionAnchor.x), MAX(loc.x, _selectionAnchor.x),
 		MIN(loc.y, _selectionAnchor.y), MAX(loc.y, _selectionAnchor.y),
@@ -618,10 +618,10 @@
 
 - (BOOL) hasVisibleSelection
 {
-	JACircuitExtents selection = self.selection;
+	MCGridExtents selection = self.selection;
 	NSUInteger currentLayer = self.currentLayer;
 	
-	return !JACircuitExtentsEmpty(selection) && selection.minY <= currentLayer && currentLayer <= selection.maxY;
+	return !MCGridExtentsEmpty(selection) && selection.minY <= currentLayer && currentLayer <= selection.maxY;
 }
 
 
@@ -704,8 +704,8 @@
 
 - (IBAction) scrollToCenter:(id)sender
 {
-	JACircuitExtents extents = self.schematic.extents;
-	if (!JACircuitExtentsEmpty(extents))
+	MCGridExtents extents = self.schematic.extents;
+	if (!MCGridExtentsEmpty(extents))
 	{
 		self.scrollCenter = (NSPoint)
 		{
@@ -753,7 +753,7 @@
 	NSRect contentFrame = self.innerFrame;
 	NSRect virtualBounds = self.virtualBounds;
 	
-	BOOL enabled = !JACircuitExtentsEmpty(self.schematic.extents);
+	BOOL enabled = !MCGridExtentsEmpty(self.schematic.extents);
 	if (enabled)
 	{
 		[_horizontalScroller setEnabled:contentFrame.size.width < virtualBounds.size.width];
@@ -1034,9 +1034,9 @@
 
 - (NSRect) nonEmptyContentFrame
 {
-	JACircuitExtents extents = self.schematic.extents;
+	MCGridExtents extents = self.schematic.extents;
 	
-	if (!JACircuitExtentsEmpty(extents))
+	if (!MCGridExtentsEmpty(extents))
 	{
 		NSRect rect = [self rectFromExtents:extents];
 		rect = NSInsetRect(rect, -_gridWidth, -_gridWidth);
@@ -1097,20 +1097,20 @@
 }
 
 
-- (JACellLocation) cellLocationFromPoint:(NSPoint)point
+- (MCGridCoordinates) cellLocationFromPoint:(NSPoint)point
 {
 	NSPoint projected = [self projectToFlattenedCellSpace:point];
-	return (JACellLocation){ ceil(projected.y), self.currentLayer, ceil(projected.x) };
+	return (MCGridCoordinates){ ceil(projected.y), self.currentLayer, ceil(projected.x) };
 }
 
 
-- (JACircuitExtents) extentsFromRect:(NSRect)rect
+- (MCGridExtents) extentsFromRect:(NSRect)rect
 {
 	// Note that min and max are swapped, because the coordinate schemes run in opposite directions.
-	JACellLocation minl = [self cellLocationFromPoint:(NSPoint){ NSMaxX(rect), NSMaxY(rect) }];
-	JACellLocation maxl = [self cellLocationFromPoint:(NSPoint){ NSMinX(rect), NSMinY(rect) }];
+	MCGridCoordinates minl = [self cellLocationFromPoint:(NSPoint){ NSMaxX(rect), NSMaxY(rect) }];
+	MCGridCoordinates maxl = [self cellLocationFromPoint:(NSPoint){ NSMinX(rect), NSMinY(rect) }];
 	
-	return (JACircuitExtents)
+	return (MCGridExtents)
 	{
 		minl.x, maxl.x,
 		minl.y, maxl.y,
@@ -1139,7 +1139,7 @@
 }
 
 
-- (NSRect) rectFromCellLocation:(JACellLocation)location
+- (NSRect) rectFromCellLocation:(MCGridCoordinates)location
 {
 	NSPoint origin = [self projectFromFlattenedCellSpace:(NSPoint){ location.z, location.x }];
 	origin = [self convertPointToBase:origin];
@@ -1154,23 +1154,23 @@
 }
 
 
-- (NSRect) rectFromExtents:(JACircuitExtents)extents
+- (NSRect) rectFromExtents:(MCGridExtents)extents
 {
-	if (JACircuitExtentsEmpty(extents))  return NSZeroRect;
+	if (MCGridExtentsEmpty(extents))  return NSZeroRect;
 	
-	NSRect rect = [self rectFromCellLocation:JACircuitExtentsMax(extents)];
+	NSRect rect = [self rectFromCellLocation:MCGridExtentsMaximum(extents)];
 	
-	rect.size.width = JACircuitExtentsLength(extents) * (_cellSize + _gridWidth) - _gridWidth;
-	rect.size.height = JACircuitExtentsWidth(extents) * (_cellSize + _gridWidth) - _gridWidth;
+	rect.size.width = MCGridExtentsLength(extents) * (_cellSize + _gridWidth) - _gridWidth;
+	rect.size.height = MCGridExtentsWidth(extents) * (_cellSize + _gridWidth) - _gridWidth;
 	
 	return rect;
 }
 
 
-- (JACellLocation) cellLocationForPointInWindow:(NSPoint)pointInWindow
+- (MCGridCoordinates) cellLocationForPointInWindow:(NSPoint)pointInWindow
 {
 	NSPoint pointInView = [self convertPoint:pointInWindow fromView:nil];
-	JACellLocation loc = [self cellLocationFromPoint:pointInView];
+	MCGridCoordinates loc = [self cellLocationFromPoint:pointInView];
 	return loc;
 }
 

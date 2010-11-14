@@ -33,46 +33,54 @@
 #define JA_CONST_FUNC __attribute__((const))
 #endif
 
+#ifndef JA_EXPECT
+#define JA_EXPECT(x) __builtin_expect((x), 1)
+#endif
 
-#pragma mark JAMinecraftCell
-/***** JAMinecraftCell *****
+#ifndef JA_EXPECT_NOT
+#define JA_EXPECT_NOT(x) __builtin_expect((x), 0)
+#endif
+
+
+#pragma mark MCCell
+/***** MCCell *****
  *	A single cell of a map or schematic.
  *	Conceptually, a cell is a location which contains a block. Alternatively,
  *	you can think of “cell” as a pointless and redundant synonym of “block”
  *	if you prefer.
  */
 
-typedef struct JAMinecraftCell
+typedef struct MCCell
 {
 	/*	Block IDs and block data straight from Minecraft.
 		See JAMinecraftBlockIDs.h and http://www.minecraftwiki.net/wiki/Data_values
 	*/
 	uint8_t					blockID;
 	uint8_t					blockData;
-} JAMinecraftCell;
+} MCCell;
 
 
-extern const JAMinecraftCell kJAEmptyCell;
+extern const MCCell kJAEmptyCell;
 
 //	Convenience predicates and info extractors.
-static inline BOOL MCCellIsFullySolid(JAMinecraftCell cell) JA_CONST_FUNC;
-static inline BOOL MCCellIsQuasiSolid(JAMinecraftCell cell) JA_CONST_FUNC;
-static inline BOOL MCCellIsSolid(JAMinecraftCell cell) JA_CONST_FUNC;
-static inline BOOL MCCellIsLiquid(JAMinecraftCell cell) JA_CONST_FUNC;
-static inline BOOL MCCellIsItem(JAMinecraftCell cell) JA_CONST_FUNC;
-static inline BOOL MCCellIsAir(JAMinecraftCell cell) JA_CONST_FUNC;
-static inline BOOL MCCellIsPowerSource(JAMinecraftCell cell) JA_CONST_FUNC;
-static inline BOOL MCCellIsPowerSink(JAMinecraftCell cell) JA_CONST_FUNC;
-static inline BOOL MCCellIsPowerActive(JAMinecraftCell cell) JA_CONST_FUNC;
-static inline BOOL MCCellIsVegetable(JAMinecraftCell cell) JA_CONST_FUNC;
-static inline BOOL MCCellIsRedstoneTorch(JAMinecraftCell cell) JA_CONST_FUNC;
+static inline BOOL MCCellIsFullySolid(MCCell cell) JA_CONST_FUNC;
+static inline BOOL MCCellIsQuasiSolid(MCCell cell) JA_CONST_FUNC;
+static inline BOOL MCCellIsSolid(MCCell cell) JA_CONST_FUNC;
+static inline BOOL MCCellIsLiquid(MCCell cell) JA_CONST_FUNC;
+static inline BOOL MCCellIsItem(MCCell cell) JA_CONST_FUNC;
+static inline BOOL MCCellIsAir(MCCell cell) JA_CONST_FUNC;
+static inline BOOL MCCellIsPowerSource(MCCell cell) JA_CONST_FUNC;
+static inline BOOL MCCellIsPowerSink(MCCell cell) JA_CONST_FUNC;
+static inline BOOL MCCellIsPowerActive(MCCell cell) JA_CONST_FUNC;
+static inline BOOL MCCellIsVegetable(MCCell cell) JA_CONST_FUNC;
+static inline BOOL MCCellIsRedstoneTorch(MCCell cell) JA_CONST_FUNC;
 
 // Power level (0-15) for wires only - 0 for power sources.
-static inline uint8_t MCWirePowerLevel(JAMinecraftCell cell) JA_CONST_FUNC;
+static inline uint8_t MCWirePowerLevel(MCCell cell) JA_CONST_FUNC;
 
 
-#pragma mark JACellLocation
-/***** JACellLocation *****
+#pragma mark MCGridCoordinates
+/***** MCGridCoordinates *****
  *	A grid location.
  *
  *	The Minecraft coordinate system is right-handed and based on the
@@ -86,23 +94,23 @@ static inline uint8_t MCWirePowerLevel(JAMinecraftCell cell) JA_CONST_FUNC;
 typedef struct
 {
 	NSInteger				x, y, z;
-} JACellLocation;
+} MCGridCoordinates;
 
 
-extern const JACellLocation kJAZeroLocation;
+extern const MCGridCoordinates kJAZeroLocation;
 
-static inline BOOL JACellLocationEqual(JACellLocation a, JACellLocation b) JA_CONST_FUNC;
+static inline BOOL MCGridCoordinatesEqual(MCGridCoordinates a, MCGridCoordinates b) JA_CONST_FUNC;
 
 
-#pragma mark JACircuitExtents
-/***** JACircuitExtents *****
+#pragma mark MCGridExtents
+/***** MCGridExtents *****
  *	A three-dimensional range of cell locations, describing a cuboid.
  *	
  *	If any max value is less than its corresponding min value, the extents are
- *	considered empty. The constant kJAEmptyExtents describes the extreme case:
+ *	considered empty. The constant kMCEmptyExtents describes the extreme case:
  *	all min values are NSIntegerMax and all max values are NSIntegerMin.
  *	
- *	kJAInfiniteExtents is the inverse: all min values are MSIntegerMin and all
+ *	kMCInfiniteExtents is the inverse: all min values are MSIntegerMin and all
  *	max values are NSIntegerMax.
  *	
  *	“Width” refers to an x range, “length” a z range and “height” a y range.
@@ -113,73 +121,73 @@ typedef struct
 	NSInteger				minX, maxX,
 							minY, maxY,
 							minZ, maxZ;
-} JACircuitExtents;
+} MCGridExtents;
 
 
-extern const JACircuitExtents kJAEmptyExtents;
-extern const JACircuitExtents kJAZeroExtents;
-extern const JACircuitExtents kJAInfiniteExtents;
+extern const MCGridExtents kMCEmptyExtents;
+extern const MCGridExtents kMCZeroExtents;
+extern const MCGridExtents kMCInfiniteExtents;
 
 
-BOOL JACircuitExtentsEmpty(JACircuitExtents extents) JA_CONST_FUNC;
+BOOL MCGridExtentsEmpty(MCGridExtents extents) JA_CONST_FUNC;
 
-BOOL JACircuitExtentsEqual(JACircuitExtents a, JACircuitExtents b) JA_CONST_FUNC;
+BOOL MCGridExtentsEqual(MCGridExtents a, MCGridExtents b) JA_CONST_FUNC;
 
-static NSUInteger JACircuitExtentsWidth(JACircuitExtents extents) JA_CONST_FUNC;
-static NSUInteger JACircuitExtentsLength(JACircuitExtents extents) JA_CONST_FUNC;
-static NSUInteger JACircuitExtentsHeight(JACircuitExtents extents) JA_CONST_FUNC;
+static NSUInteger MCGridExtentsWidth(MCGridExtents extents) JA_CONST_FUNC;
+static NSUInteger MCGridExtentsLength(MCGridExtents extents) JA_CONST_FUNC;
+static NSUInteger MCGridExtentsHeight(MCGridExtents extents) JA_CONST_FUNC;
 
 
 /*
-	JACircuitExtentsMin() and JACircuitExtentsMax()
-	Return minimum and maximum points of a JACircuitExtents.
+	MCGridExtentsMinimum() and MCGridExtentsMaximum()
+	Return minimum and maximum points of a MCGridExtents.
 	These do not attempt to handle empty extents, where the concepts of
 	minimum and maximum points are meaningless.
 */
-static inline JACellLocation JACircuitExtentsMin(JACircuitExtents extents) JA_CONST_FUNC;
-static inline JACellLocation JACircuitExtentsMax(JACircuitExtents extents) JA_CONST_FUNC;
+static inline MCGridCoordinates MCGridExtentsMinimum(MCGridExtents extents) JA_CONST_FUNC;
+static inline MCGridCoordinates MCGridExtentsMaximum(MCGridExtents extents) JA_CONST_FUNC;
 
 /*
-	JACircuitExtentsWithLocation(JACellLocation location)
+	MCGridExtentsWithCoordinates(MCGridCoordinates location)
 	Returns an extents containing a single location.
 */
-static JACircuitExtents JACircuitExtentsWithLocation(JACellLocation location) JA_CONST_FUNC;
+static MCGridExtents MCGridExtentsWithCoordinates(MCGridCoordinates location) JA_CONST_FUNC;
 
-BOOL JACellLocationWithinExtents(JACellLocation location, JACircuitExtents extents) JA_CONST_FUNC;
+BOOL MCGridLocationIsWithinExtents(MCGridCoordinates location, MCGridExtents extents) JA_CONST_FUNC;
 
 /*
-	JAExtentsUnion(JACircuitExtents a, JACircuitExtents b)
+	MCGridExtentsUnion(MCGridExtents a, MCGridExtents b)
 	Returns an extents containing all locations described by either a or b,
 	as well as any additional locations required to produce a cuboid.
 	
-	JAExtentsUnionLocation(JACircuitExtents extents, JACellLocation location)
-	Equivalent to JAExtentsUnion(extents, JACircuitExtentsWithLocation(location)).
+	MCGridExtentsUnionWithLocation(MCGridExtents extents, MCGridCoordinates location)
+	Equivalent to MCGridExtentsUnion(extents, MCGridExtentsWithCoordinates(location)).
 */
-JACircuitExtents JAExtentsUnion(JACircuitExtents a, JACircuitExtents b) JA_CONST_FUNC;
-JACircuitExtents JAExtentsUnionLocation(JACircuitExtents extents, JACellLocation location) JA_CONST_FUNC;
+MCGridExtents MCGridExtentsUnion(MCGridExtents a, MCGridExtents b) JA_CONST_FUNC;
+MCGridExtents MCGridExtentsUnionWithLocation(MCGridExtents extents, MCGridCoordinates location) JA_CONST_FUNC;
 
 /*
-	JAExtentsIntersection(JACircuitExtents a, JACircuitExtents b)
+	MCGridExtentsIntersection(MCGridExtents a, MCGridExtents b)
 	Returns the extents contained by both a and b.
 */
-JACircuitExtents JAExtentsIntersection(JACircuitExtents a, JACircuitExtents b) JA_CONST_FUNC;
+MCGridExtents MCGridExtentsIntersection(MCGridExtents a, MCGridExtents b) JA_CONST_FUNC;
 
 
-#pragma mark JADirection
-/***** JADirection *****
+#pragma mark MCDirection
+/***** MCDirection *****
  *	A cardinal direction.
  */
 typedef enum
 {
-	kJADirectionNorth,
-	kJADirectionSouth,
-	kJADirectionEast,
-	kJADirectionWest,
-	kJADirectionUp,
-	kJADirectionDown,
+	kMCDirectionNorth,
+	kMCDirectionSouth,
+	kMCDirectionEast,
+	kMCDirectionWest,
+	kMCDirectionUp,
+	kMCDirectionDown,
 	
-	kJADirectionUnknown
-} JADirection;
+	kMCDirectionUnknown
+} MCDirection;
 
 
 /*
@@ -187,7 +195,7 @@ typedef enum
 	decode the various orientation representations used by different block types.
 	Caveats:
 	* For levers, there are two possible floor orientations, which are both
-	  reported as kJADirectionDown. East/west levers and north/south levers
+	  reported as kMCDirectionDown. East/west levers and north/south levers
 	  provide power in different ways. Code dealing with power propagation
 	  will need to examine the block data directly.
 	  MCCellSetOrientation() will preserve the distinction.
@@ -197,8 +205,8 @@ typedef enum
 	MCCellSetOrientation() has no effect on non-orientable blocks. Invalid
 	values will be mapped to down or north.
 */
-JADirection MCCellGetOrientation(JAMinecraftCell cell) JA_CONST_FUNC;
-void MCCellSetOrientation(JAMinecraftCell *cell, JADirection orientation);
+MCDirection MCCellGetOrientation(MCCell cell) JA_CONST_FUNC;
+void MCCellSetOrientation(MCCell *cell, MCDirection orientation);
 
 
 /*
@@ -209,206 +217,206 @@ void MCCellSetOrientation(JAMinecraftCell *cell, JADirection orientation);
 
 
 #if NDEBUG
-#define INLINEABLE_DIRECTION(d)  (__builtin_constant_p(d) && d <= kJADirectionUnknown)
+#define INLINEABLE_DIRECTION(d)  (__builtin_constant_p(d) && d <= kMCDirectionUnknown)
 #else
 #define INLINEABLE_DIRECTION(d)  0
 #endif
 
 
 /*
-	JAStepCellLocation(JACellLocation location, JADirection direction)
+	MCStepCoordinates(MCGridCoordinates location, MCDirection direction)
 	Move the location one step in the specified direction.
 */
-#define JAStepCellLocation(loc, dir)  (INLINEABLE_DIRECTION(dir) ? JAStepCellLocationBody(loc, dir) : JAStepCellLocationFunc(loc, dir))
-static inline JACellLocation JAStepCellLocationBody(JACellLocation location, JADirection direction) JA_CONST_FUNC;
-JACellLocation JAStepCellLocationFunc(JACellLocation location, JADirection direction) JA_CONST_FUNC;
+#define MCStepCoordinates(loc, dir)  (INLINEABLE_DIRECTION(dir) ? MCStepCoordinatesBody(loc, dir) : MCStepCoordinatesFunc(loc, dir))
+static inline MCGridCoordinates MCStepCoordinatesBody(MCGridCoordinates location, MCDirection direction) JA_CONST_FUNC;
+MCGridCoordinates MCStepCoordinatesFunc(MCGridCoordinates location, MCDirection direction) JA_CONST_FUNC;
 
 
 /*
-	JACellNorth(JACellLocation location)
-	JACellSouth(JACellLocation location)
-	JACellEast(JACellLocation location)
-	JACellWest(JACellLocation location)
-	JACellAbove(JACellLocation location)
-	JACellBelow(JACellLocation location)
+	MCCoordinatesNorthOf(MCGridCoordinates location)
+	MCCoordinatesSouthOf(MCGridCoordinates location)
+	MCCoordinatesEastOf(MCGridCoordinates location)
+	MCCoordinatesWestOf(MCGridCoordinates location)
+	MCCoordinatesAbove(MCGridCoordinates location)
+	MCCoordinatesBelow(MCGridCoordinates location)
 	
 	Constant steps in each of the six cardinal directions.
 */
-static inline JACellLocation JACellNorth(JACellLocation location) JA_CONST_FUNC;
-static inline JACellLocation JACellSouth(JACellLocation location) JA_CONST_FUNC;
-static inline JACellLocation JACellEast(JACellLocation location) JA_CONST_FUNC;
-static inline JACellLocation JACellWest(JACellLocation location) JA_CONST_FUNC;
-static inline JACellLocation JACellAbove(JACellLocation location) JA_CONST_FUNC;
-static inline JACellLocation JACellBelow(JACellLocation location) JA_CONST_FUNC;
+static inline MCGridCoordinates MCCoordinatesNorthOf(MCGridCoordinates location) JA_CONST_FUNC;
+static inline MCGridCoordinates MCCoordinatesSouthOf(MCGridCoordinates location) JA_CONST_FUNC;
+static inline MCGridCoordinates MCCoordinatesEastOf(MCGridCoordinates location) JA_CONST_FUNC;
+static inline MCGridCoordinates MCCoordinatesWestOf(MCGridCoordinates location) JA_CONST_FUNC;
+static inline MCGridCoordinates MCCoordinatesAbove(MCGridCoordinates location) JA_CONST_FUNC;
+static inline MCGridCoordinates MCCoordinatesBelow(MCGridCoordinates location) JA_CONST_FUNC;
 
 
 /*
-	JADirection JAFlipDirection(JADirection direction)
+	MCDirection MCDirectionFlip(MCDirection direction)
 	Reverse a direction.
 */
-#define JAFlipDirection(dir)  (INLINEABLE_DIRECTION(dir) ? JAFlipDirectionBody(dir) : JAFlipDirectionFunc(dir))
-static inline JADirection JAFlipDirectionBody(JADirection direction) JA_CONST_FUNC;
-JADirection JAFlipDirectionFunc(JADirection direction) JA_CONST_FUNC;
+#define MCDirectionFlip(dir)  (INLINEABLE_DIRECTION(dir) ? MCDirectionFlipBody(dir) : MCDirectionFlipFunc(dir))
+static inline MCDirection MCDirectionFlipBody(MCDirection direction) JA_CONST_FUNC;
+MCDirection MCDirectionFlipFunc(MCDirection direction) JA_CONST_FUNC;
 
 
 /*
-	JADirection JADirectionFlipNorthSouth(JADirection direction)
+	MCDirection MCDirectionFlipNorthSouth(MCDirection direction)
 	Reverse a direction if it is north or south.
 */
-#define JADirectionFlipNorthSouth(dir)  (INLINEABLE_DIRECTION(dir) ? JADirectionFlipNorthSouthBody(dir) : JADirectionFlipNorthSouthFunc(dir))
-static inline JADirection JADirectionFlipNorthSouthBody(JADirection direction) JA_CONST_FUNC;
-JADirection JADirectionFlipNorthSouthFunc(JADirection direction) JA_CONST_FUNC;
+#define MCDirectionFlipNorthSouth(dir)  (INLINEABLE_DIRECTION(dir) ? MCDirectionFlipNorthSouthBody(dir) : MCDirectionFlipNorthSouthFunc(dir))
+static inline MCDirection MCDirectionFlipNorthSouthBody(MCDirection direction) JA_CONST_FUNC;
+MCDirection MCDirectionFlipNorthSouthFunc(MCDirection direction) JA_CONST_FUNC;
 
 
 /*
-	JADirection JADirectionFlipEastWest(JADirection direction)
+	MCDirection MCDirectionFlipEastWest(MCDirection direction)
 	Reverse a direction if it is east or west.
 */
-#define JADirectionFlipEastWest(dir)  (INLINEABLE_DIRECTION(dir) ? JADirectionFlipEastWestBody(dir) : JADirectionFlipEastWestFunc(dir))
-static inline JADirection JADirectionFlipEastWestBody(JADirection direction) JA_CONST_FUNC;
-JADirection JADirectionFlipEastWestFunc(JADirection direction) JA_CONST_FUNC;
+#define MCDirectionFlipEastWest(dir)  (INLINEABLE_DIRECTION(dir) ? MCDirectionFlipEastWestBody(dir) : MCDirectionFlipEastWestFunc(dir))
+static inline MCDirection MCDirectionFlipEastWestBody(MCDirection direction) JA_CONST_FUNC;
+MCDirection MCDirectionFlipEastWestFunc(MCDirection direction) JA_CONST_FUNC;
 
 
 /*
-	JADirection JADirectionFlipUpDown(JADirection direction)
+	MCDirection MCDirectionFlipUpDown(MCDirection direction)
 	Reverse a direction if it is up or don.
 */
-#define JADirectionFlipUpDown(dir)  (INLINEABLE_DIRECTION(dir) ? JADirectionFlipUpDownBody(dir) : JADirectionFlipUpDownFunc(dir))
-static inline JADirection JADirectionFlipUpDownBody(JADirection direction) JA_CONST_FUNC;
-JADirection JADirectionFlipUpDownFunc(JADirection direction) JA_CONST_FUNC;
+#define MCDirectionFlipUpDown(dir)  (INLINEABLE_DIRECTION(dir) ? MCDirectionFlipUpDownBody(dir) : MCDirectionFlipUpDownFunc(dir))
+static inline MCDirection MCDirectionFlipUpDownBody(MCDirection direction) JA_CONST_FUNC;
+MCDirection MCDirectionFlipUpDownFunc(MCDirection direction) JA_CONST_FUNC;
 
 /*
-	JADirection JARotateClockwise(JADirection direction)
+	MCDirection MCRotateClockwise(MCDirection direction)
 	Rotates a direction 90° clockwise. Has no effect on up or down directions.
 */
-#define JARotateClockwise(dir)  (INLINEABLE_DIRECTION(dir) ? JARotateClockwiseBody(dir) : JARotateClockwiseFunc(dir))
-static inline JADirection JARotateClockwiseBody(JADirection direction) JA_CONST_FUNC;
-JADirection JARotateClockwiseFunc(JADirection direction) JA_CONST_FUNC;
+#define MCRotateClockwise(dir)  (INLINEABLE_DIRECTION(dir) ? MCRotateClockwiseBody(dir) : MCRotateClockwiseFunc(dir))
+static inline MCDirection MCRotateClockwiseBody(MCDirection direction) JA_CONST_FUNC;
+MCDirection MCRotateClockwiseFunc(MCDirection direction) JA_CONST_FUNC;
 
 /*
-	JADirection JARotateAntiClockwise(JADirection direction)
+	MCDirection MCRotateAntiClockwise(MCDirection direction)
 	Rotates a direction 90° anticlockwise. Has no effect on up or down directions.
 */
-#define JARotateAntiClockwise(dir)  (INLINEABLE_DIRECTION(dir) ? JARotateClockwiseBody(JAFlipDirectionBody(dir)) : JARotateAntiClockwiseFunc(dir))
-JADirection JARotateAntiClockwiseFunc(JADirection direction) JA_CONST_FUNC;
+#define MCRotateAntiClockwise(dir)  (INLINEABLE_DIRECTION(dir) ? MCRotateClockwiseBody(MCDirectionFlipBody(dir)) : MCRotateAntiClockwiseFunc(dir))
+MCDirection MCRotateAntiClockwiseFunc(MCDirection direction) JA_CONST_FUNC;
 
 
 /****** Inline function bodies only beyond this point. ******/
 
-static inline BOOL MCCellIsFullySolid(JAMinecraftCell cell)
+static inline BOOL MCCellIsFullySolid(MCCell cell)
 {
 	return MCBlockIDIsFullySolid(cell.blockID);
 }
 
 
-static inline BOOL MCCellIsQuasiSolid(JAMinecraftCell cell)
+static inline BOOL MCCellIsQuasiSolid(MCCell cell)
 {
 	return MCBlockIDIsQuasiSolid(cell.blockID);
 }
 
 
-static inline BOOL MCCellIsSolid(JAMinecraftCell cell)
+static inline BOOL MCCellIsSolid(MCCell cell)
 {
 	return MCBlockIDIsSolid(cell.blockID);
 }
 
 
-static inline BOOL MCCellIsLiquid(JAMinecraftCell cell)
+static inline BOOL MCCellIsLiquid(MCCell cell)
 {
 	return MCBlockIDIsLiquid(cell.blockID);
 }
 
 
-static inline BOOL MCCellIsItem(JAMinecraftCell cell)
+static inline BOOL MCCellIsItem(MCCell cell)
 {
 	return MCBlockIDIsItem(cell.blockID);
 }
 
 
-static inline BOOL MCCellIsAir(JAMinecraftCell cell)
+static inline BOOL MCCellIsAir(MCCell cell)
 {
 	return MCBlockIDIsAir(cell.blockID);
 }
 
 
-static inline BOOL MCCellIsPowerSource(JAMinecraftCell cell)
+static inline BOOL MCCellIsPowerSource(MCCell cell)
 {
 	return MCBlockIDIsPowerSource(cell.blockID);
 }
 
 
-static inline BOOL MCCellIsPowerSink(JAMinecraftCell cell)
+static inline BOOL MCCellIsPowerSink(MCCell cell)
 {
 	return MCBlockIDIsPowerSink(cell.blockID);
 }
 
 
-static inline BOOL MCCellIsPowerActive(JAMinecraftCell cell)
+static inline BOOL MCCellIsPowerActive(MCCell cell)
 {
 	return MCBlockIDIsPowerActive(cell.blockID);
 }
 
 
-static inline BOOL MCCellIsVegetable(JAMinecraftCell cell)
+static inline BOOL MCCellIsVegetable(MCCell cell)
 {
 	return MCBlockIDIsVegetable(cell.blockID);
 }
 
 
-static inline BOOL MCCellIsRedstoneTorch(JAMinecraftCell cell)
+static inline BOOL MCCellIsRedstoneTorch(MCCell cell)
 {
 	return MCBlockIDIsRedstoneTorch(cell.blockID);
 }
 
 
-static inline uint8_t MCWirePowerLevel(JAMinecraftCell cell)
+static inline uint8_t MCWirePowerLevel(MCCell cell)
 {
 	return (cell.blockID == kMCBlockRedstoneWire) ? (cell.blockData & kMCInfoRedstoneWireSignalStrengthMask) : 0;
 }
 
 
-static inline BOOL JACellLocationEqual(JACellLocation a, JACellLocation b)
+static inline BOOL MCGridCoordinatesEqual(MCGridCoordinates a, MCGridCoordinates b)
 {
 	return a.x == b.x && a.y == b.y && a.z == b.z;
 }
 
 
-static NSUInteger JACircuitExtentsWidth(JACircuitExtents extents)
+static NSUInteger MCGridExtentsWidth(MCGridExtents extents)
 {
-	if (!JACircuitExtentsEmpty(extents))  return extents.maxX - extents.minX + 1;
+	if (!MCGridExtentsEmpty(extents))  return extents.maxX - extents.minX + 1;
 	else return 0;
 }
 
 
-static NSUInteger JACircuitExtentsLength(JACircuitExtents extents)
+static NSUInteger MCGridExtentsLength(MCGridExtents extents)
 {
-	if (!JACircuitExtentsEmpty(extents))  return extents.maxZ - extents.minZ + 1;
+	if (!MCGridExtentsEmpty(extents))  return extents.maxZ - extents.minZ + 1;
 	else return 0;
 }
 
 
-static NSUInteger JACircuitExtentsHeight(JACircuitExtents extents)
+static NSUInteger MCGridExtentsHeight(MCGridExtents extents)
 {
-	if (!JACircuitExtentsEmpty(extents))  return extents.maxY - extents.minY + 1;
+	if (!MCGridExtentsEmpty(extents))  return extents.maxY - extents.minY + 1;
 	else return 0;
 }
 
 
-static inline JACellLocation JACircuitExtentsMin(JACircuitExtents extents)
+static inline MCGridCoordinates MCGridExtentsMinimum(MCGridExtents extents)
 {
-	return (JACellLocation){ extents.minX, extents.minY, extents.minZ };
+	return (MCGridCoordinates){ extents.minX, extents.minY, extents.minZ };
 }
 
 
-static inline JACellLocation JACircuitExtentsMax(JACircuitExtents extents)
+static inline MCGridCoordinates MCGridExtentsMaximum(MCGridExtents extents)
 {
-	return (JACellLocation){ extents.maxX, extents.maxY, extents.maxZ };
+	return (MCGridCoordinates){ extents.maxX, extents.maxY, extents.maxZ };
 }
 
 
-static JACircuitExtents JACircuitExtentsWithLocation(JACellLocation location)
+static MCGridExtents MCGridExtentsWithCoordinates(MCGridCoordinates location)
 {
-	return (JACircuitExtents)
+	return (MCGridExtents)
 	{
 		location.x, location.x,
 		location.y, location.y,
@@ -417,35 +425,35 @@ static JACircuitExtents JACircuitExtentsWithLocation(JACellLocation location)
 }
 
 
-static inline JACellLocation JAStepCellLocationBody(JACellLocation location, JADirection direction)
+static inline MCGridCoordinates MCStepCoordinatesBody(MCGridCoordinates location, MCDirection direction)
 {
 	switch (direction)
 	{
-		case kJADirectionNorth:
+		case kMCDirectionNorth:
 			location.x -= 1;
 			break;
 			
-		case kJADirectionSouth:
+		case kMCDirectionSouth:
 			location.x += 1;
 			break;
 			
-		case kJADirectionEast:
+		case kMCDirectionEast:
 			location.z -= 1;
 			break;
 			
-		case kJADirectionWest:
+		case kMCDirectionWest:
 			location.z += 1;
 			break;
 			
-		case kJADirectionUp:
+		case kMCDirectionUp:
 			location.y += 1;
 			break;
 			
-		case kJADirectionDown:
+		case kMCDirectionDown:
 			location.y -= 1;
 			break;
 			
-		case kJADirectionUnknown:
+		case kMCDirectionUnknown:
 			break;
 	}
 	
@@ -453,80 +461,80 @@ static inline JACellLocation JAStepCellLocationBody(JACellLocation location, JAD
 }
 
 
-static inline JACellLocation JACellNorth(JACellLocation location)
+static inline MCGridCoordinates MCCoordinatesNorthOf(MCGridCoordinates location)
 {
-	return JAStepCellLocationBody(location, kJADirectionNorth);
+	return MCStepCoordinatesBody(location, kMCDirectionNorth);
 }
 
 
-static inline JACellLocation JACellSouth(JACellLocation location)
+static inline MCGridCoordinates MCCoordinatesSouthOf(MCGridCoordinates location)
 {
-	return JAStepCellLocationBody(location, kJADirectionSouth);
+	return MCStepCoordinatesBody(location, kMCDirectionSouth);
 }
 
 
-static inline JACellLocation JACellEast(JACellLocation location)
+static inline MCGridCoordinates MCCoordinatesEastOf(MCGridCoordinates location)
 {
-	return JAStepCellLocationBody(location, kJADirectionEast);
+	return MCStepCoordinatesBody(location, kMCDirectionEast);
 }
 
 
-static inline JACellLocation JACellWest(JACellLocation location)
+static inline MCGridCoordinates MCCoordinatesWestOf(MCGridCoordinates location)
 {
-	return JAStepCellLocationBody(location, kJADirectionWest);
+	return MCStepCoordinatesBody(location, kMCDirectionWest);
 }
 
 
-static inline JACellLocation JACellAbove(JACellLocation location)
+static inline MCGridCoordinates MCCoordinatesAbove(MCGridCoordinates location)
 {
-	return JAStepCellLocationBody(location, kJADirectionUp);
+	return MCStepCoordinatesBody(location, kMCDirectionUp);
 }
 
 
-static inline JACellLocation JACellBelow(JACellLocation location)
+static inline MCGridCoordinates MCCoordinatesBelow(MCGridCoordinates location)
 {
-	return JAStepCellLocationBody(location, kJADirectionDown);
+	return MCStepCoordinatesBody(location, kMCDirectionDown);
 }
 
 
-static inline JADirection JAFlipDirectionBody(JADirection direction)
+static inline MCDirection MCDirectionFlipBody(MCDirection direction)
 {
 	switch (direction)
 	{
-		case kJADirectionNorth:
-			return kJADirectionSouth;
+		case kMCDirectionNorth:
+			return kMCDirectionSouth;
 			
-		case kJADirectionSouth:
-			return kJADirectionNorth;
+		case kMCDirectionSouth:
+			return kMCDirectionNorth;
 			
-		case kJADirectionEast:
-			return kJADirectionWest;
+		case kMCDirectionEast:
+			return kMCDirectionWest;
 			
-		case kJADirectionWest:
-			return kJADirectionEast;
+		case kMCDirectionWest:
+			return kMCDirectionEast;
 			
-		case kJADirectionUp:
-			return kJADirectionDown;
+		case kMCDirectionUp:
+			return kMCDirectionDown;
 			
-		case kJADirectionDown:
-			return kJADirectionUp;
+		case kMCDirectionDown:
+			return kMCDirectionUp;
 			
-		case kJADirectionUnknown:
+		case kMCDirectionUnknown:
 			break;
 	}
-	return kJADirectionUnknown;
+	return kMCDirectionUnknown;
 }
 
 
-static inline JADirection JADirectionFlipNorthSouthBody(JADirection direction)
+static inline MCDirection MCDirectionFlipNorthSouthBody(MCDirection direction)
 {
 	switch (direction)
 	{
-		case kJADirectionNorth:
-			return kJADirectionSouth;
+		case kMCDirectionNorth:
+			return kMCDirectionSouth;
 			
-		case kJADirectionSouth:
-			return kJADirectionNorth;
+		case kMCDirectionSouth:
+			return kMCDirectionNorth;
 			
 		default:
 			return direction;
@@ -534,15 +542,15 @@ static inline JADirection JADirectionFlipNorthSouthBody(JADirection direction)
 }
 
 
-static inline JADirection JADirectionFlipEastWestBody(JADirection direction)
+static inline MCDirection MCDirectionFlipEastWestBody(MCDirection direction)
 {
 	switch (direction)
 	{
-		case kJADirectionEast:
-			return kJADirectionWest;
+		case kMCDirectionEast:
+			return kMCDirectionWest;
 			
-		case kJADirectionWest:
-			return kJADirectionEast;
+		case kMCDirectionWest:
+			return kMCDirectionEast;
 			
 		default:
 			return direction;
@@ -550,15 +558,15 @@ static inline JADirection JADirectionFlipEastWestBody(JADirection direction)
 }
 
 
-static inline JADirection JADirectionFlipUpDownBody(JADirection direction)
+static inline MCDirection MCDirectionFlipUpDownBody(MCDirection direction)
 {
 	switch (direction)
 	{
-		case kJADirectionUp:
-			return kJADirectionDown;
+		case kMCDirectionUp:
+			return kMCDirectionDown;
 			
-		case kJADirectionDown:
-			return kJADirectionUp;
+		case kMCDirectionDown:
+			return kMCDirectionUp;
 			
 		default:
 			return direction;
@@ -566,27 +574,27 @@ static inline JADirection JADirectionFlipUpDownBody(JADirection direction)
 }
 
 
-static inline JADirection JARotateClockwiseBody(JADirection direction)
+static inline MCDirection MCRotateClockwiseBody(MCDirection direction)
 {
 	switch (direction)
 	{
-		case kJADirectionNorth:
-			return kJADirectionEast;
+		case kMCDirectionNorth:
+			return kMCDirectionEast;
 			
-		case kJADirectionSouth:
-			return kJADirectionWest;
+		case kMCDirectionSouth:
+			return kMCDirectionWest;
 			
-		case kJADirectionEast:
-			return kJADirectionSouth;
+		case kMCDirectionEast:
+			return kMCDirectionSouth;
 			
-		case kJADirectionWest:
-			return kJADirectionNorth;
+		case kMCDirectionWest:
+			return kMCDirectionNorth;
 			
-		case kJADirectionUp:
-		case kJADirectionDown:
-		case kJADirectionUnknown:
+		case kMCDirectionUp:
+		case kMCDirectionDown:
+		case kMCDirectionUnknown:
 			break;
 	}
 	
-	return kJADirectionUnknown;
+	return kMCDirectionUnknown;
 }
