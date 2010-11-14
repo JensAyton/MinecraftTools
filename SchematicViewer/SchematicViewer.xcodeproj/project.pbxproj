@@ -13,7 +13,6 @@
 		1A52C34C128F710B006E2D65 /* JAMinecraftSchematic+RedstoneHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A52C330128F710B006E2D65 /* JAMinecraftSchematic+RedstoneHelpers.m */; };
 		1A52C34D128F710B006E2D65 /* JAMinecraftSchematic+SchematicIO.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A52C332128F710B006E2D65 /* JAMinecraftSchematic+SchematicIO.m */; };
 		1A52C34E128F710B006E2D65 /* JAMinecraftSchematic.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A52C334128F710B006E2D65 /* JAMinecraftSchematic.m */; };
-		1A52C34F128F710B006E2D65 /* JAMinecraftSchematicChunk.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A52C336128F710B006E2D65 /* JAMinecraftSchematicChunk.m */; };
 		1A52C350128F710B006E2D65 /* JAMinecraftTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A52C338128F710B006E2D65 /* JAMinecraftTypes.m */; };
 		1A52C351128F710B006E2D65 /* JANBTParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A52C33A128F710B006E2D65 /* JANBTParser.m */; };
 		1A52C352128F710B006E2D65 /* JAValueToString.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A52C33C128F710B006E2D65 /* JAValueToString.m */; };
@@ -24,6 +23,7 @@
 		1A52C43F128F71D8006E2D65 /* JASchematicViewerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A52C43E128F71D8006E2D65 /* JASchematicViewerView.m */; };
 		1A52C456128F7574006E2D65 /* ColorTable.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1A52C455128F7574006E2D65 /* ColorTable.plist */; };
 		1A52C5F2128FF602006E2D65 /* README in Resources */ = {isa = PBXBuildFile; fileRef = 1A52C5F1128FF602006E2D65 /* README */; };
+		1A52C87B129036CF006E2D65 /* JAMinecraftBlockStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A52C87A129036CF006E2D65 /* JAMinecraftBlockStore.m */; };
 		1DDD582C0DA1D0D100B32029 /* MyDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58280DA1D0D100B32029 /* MyDocument.xib */; };
 		1DDD582D0DA1D0D100B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD582A0DA1D0D100B32029 /* MainMenu.xib */; };
 		8D15AC2C0486D014006FF6A4 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */; };
@@ -49,8 +49,6 @@
 		1A52C332128F710B006E2D65 /* JAMinecraftSchematic+SchematicIO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "JAMinecraftSchematic+SchematicIO.m"; sourceTree = "<group>"; };
 		1A52C333128F710B006E2D65 /* JAMinecraftSchematic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAMinecraftSchematic.h; sourceTree = "<group>"; };
 		1A52C334128F710B006E2D65 /* JAMinecraftSchematic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAMinecraftSchematic.m; sourceTree = "<group>"; };
-		1A52C335128F710B006E2D65 /* JAMinecraftSchematicChunk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAMinecraftSchematicChunk.h; sourceTree = "<group>"; };
-		1A52C336128F710B006E2D65 /* JAMinecraftSchematicChunk.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAMinecraftSchematicChunk.m; sourceTree = "<group>"; };
 		1A52C337128F710B006E2D65 /* JAMinecraftTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAMinecraftTypes.h; sourceTree = "<group>"; };
 		1A52C338128F710B006E2D65 /* JAMinecraftTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAMinecraftTypes.m; sourceTree = "<group>"; };
 		1A52C339128F710B006E2D65 /* JANBTParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTParser.h; sourceTree = "<group>"; };
@@ -67,6 +65,8 @@
 		1A52C43E128F71D8006E2D65 /* JASchematicViewerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JASchematicViewerView.m; sourceTree = "<group>"; };
 		1A52C455128F7574006E2D65 /* ColorTable.plist */ = {isa = PBXFileReference; explicitFileType = text.plist; fileEncoding = 4; path = ColorTable.plist; sourceTree = "<group>"; };
 		1A52C5F1128FF602006E2D65 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		1A52C879129036CF006E2D65 /* JAMinecraftBlockStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAMinecraftBlockStore.h; sourceTree = "<group>"; };
+		1A52C87A129036CF006E2D65 /* JAMinecraftBlockStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAMinecraftBlockStore.m; sourceTree = "<group>"; };
 		1DDD58290DA1D0D100B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MyDocument.xib; sourceTree = "<group>"; };
 		1DDD582B0DA1D0D100B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		2564AD2C0F5327BB00F57823 /* SchematicViewer_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SchematicViewer_Prefix.pch; sourceTree = "<group>"; };
@@ -145,6 +145,8 @@
 		1A52C375128F7174006E2D65 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				1A52C879129036CF006E2D65 /* JAMinecraftBlockStore.h */,
+				1A52C87A129036CF006E2D65 /* JAMinecraftBlockStore.m */,
 				1A52C329128F710B006E2D65 /* JAMinecraftBlockIDs.c */,
 				1A52C32A128F710B006E2D65 /* JAMinecraftBlockIDs.h */,
 				1A52C32D128F710B006E2D65 /* JAMinecraftSchematic+RDatIO.h */,
@@ -155,8 +157,6 @@
 				1A52C332128F710B006E2D65 /* JAMinecraftSchematic+SchematicIO.m */,
 				1A52C333128F710B006E2D65 /* JAMinecraftSchematic.h */,
 				1A52C334128F710B006E2D65 /* JAMinecraftSchematic.m */,
-				1A52C335128F710B006E2D65 /* JAMinecraftSchematicChunk.h */,
-				1A52C336128F710B006E2D65 /* JAMinecraftSchematicChunk.m */,
 				1A52C337128F710B006E2D65 /* JAMinecraftTypes.h */,
 				1A52C338128F710B006E2D65 /* JAMinecraftTypes.m */,
 			);
@@ -308,13 +308,13 @@
 				1A52C34C128F710B006E2D65 /* JAMinecraftSchematic+RedstoneHelpers.m in Sources */,
 				1A52C34D128F710B006E2D65 /* JAMinecraftSchematic+SchematicIO.m in Sources */,
 				1A52C34E128F710B006E2D65 /* JAMinecraftSchematic.m in Sources */,
-				1A52C34F128F710B006E2D65 /* JAMinecraftSchematicChunk.m in Sources */,
 				1A52C350128F710B006E2D65 /* JAMinecraftTypes.m in Sources */,
 				1A52C351128F710B006E2D65 /* JANBTParser.m in Sources */,
 				1A52C352128F710B006E2D65 /* JAValueToString.m in Sources */,
 				1A52C355128F710B006E2D65 /* NSData+DDGZip.m in Sources */,
 				1A52C369128F7144006E2D65 /* IsKeyDown.c in Sources */,
 				1A52C43F128F71D8006E2D65 /* JASchematicViewerView.m in Sources */,
+				1A52C87B129036CF006E2D65 /* JAMinecraftBlockStore.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -389,7 +389,10 @@
 				GCC_ENABLE_OBJC_GC = required;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = SchematicViewer_Prefix.pch;
-				GCC_PREPROCESSOR_DEFINITIONS = NDEBUG;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					NS_BLOCK_ASSERTIONS,
+					NDEBUG,
+				);
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "SchematicViewer-Info.plist";

@@ -231,4 +231,66 @@
 	NSLog(@"Pretend something was just pasted!");
 }
 
+
+- (IBAction) scribble:(id)sender
+{
+	/*
+		To test JAMinecraftSchematic’s copy-on-write mechanism, make a copy
+		of the schematic and make some random changes in the current layer,
+		then force a redraw. This should have *no visible effect* in the
+		application.
+		
+		To verify that something’s happening, enable the LOGGING macro in
+		JAMinecraftSchematic.m. The expected result is some messages about
+		nodes being created, followed by nodes being released when the copy
+		is garbage-collected.
+		
+		Change the following #if 1 to #if 0 to see what would happen if the
+		COW didn’t work.
+	*/
+	
+#if 1
+	JAMinecraftSchematic *copy = [self.schematic copy];
+#else
+	JAMinecraftSchematic *copy = self.schematic;
+#endif
+	
+	if (copy == nil)
+	{
+		NSLog(@"Scribble failed: could not copy schematic.");
+		NSBeep();
+		return;
+	}
+	
+	MCGridExtents extents = copy.extents;
+	if (MCGridExtentsEmpty(extents))
+	{
+		// Reasonable fallback.
+		extents = (MCGridExtents){ -10, 10, -10, 10, -10, 10 };
+	}
+	
+	srandomdev();
+	NSUInteger scribbleCount = MCGridExtentsLength(extents) * MCGridExtentsWidth(extents) / 50;
+	if (scribbleCount < 5)  scribbleCount = 5;
+	NSLog(@"Scribbling %lu times...", scribbleCount);
+	
+	while (scribbleCount--)
+	{
+		MCGridCoordinates coords =
+		{
+			random() % MCGridExtentsWidth(extents),
+			self.currentLayer,
+			random() % MCGridExtentsLength(extents)
+		};
+		
+		MCCell cell = { random() % (kMCBlockJackOLantern + 1), 0 };
+		
+		[copy setCell:cell at:coords];
+	}
+	
+	[self.schematicView setNeedsDisplay:YES];
+	
+	NSLog(@"Scribbling complete.");
+}
+
 @end

@@ -7,6 +7,15 @@
 	height and depth properties represent the axis-aligned bounding box of all
 	non-air blocks.
 	
+	Performance characteristics:
+	• Reads are O(log n), where n is the size on the longest side.
+	• Writes are generally also O(log n).
+	• Copying is O(1) (in both time and memory), with O(n) deferred costs
+	  amortized across writes. (In other words, it’s hierarchically copy-on-
+	  write). For example, it is cheap to make a copy of the schematic and
+	  make a single-block edit, and this is the recommended way of implementing
+	  undoable editing.
+	
 	
 	Copyright © 2010 Jens Ayton
 	
@@ -34,7 +43,7 @@
 @class JAMinecraftSchematicInnerNode;
 
 
-@interface JAMinecraftSchematic: JAMinecraftBlockStore
+@interface JAMinecraftSchematic: JAMinecraftBlockStore <NSCopying>
 
 /*
 	For schematics, any y range may be used, so the minimum layer is 127

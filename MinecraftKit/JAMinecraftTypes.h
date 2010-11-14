@@ -62,6 +62,9 @@ typedef struct MCCell
 
 extern const MCCell kJAEmptyCell;
 
+static inline BOOL MCCellsEqual(MCCell a, MCCell b) JA_CONST_FUNC;
+
+
 //	Convenience predicates and info extractors.
 static inline BOOL MCCellIsFullySolid(MCCell cell) JA_CONST_FUNC;
 static inline BOOL MCCellIsQuasiSolid(MCCell cell) JA_CONST_FUNC;
@@ -302,6 +305,12 @@ MCDirection MCRotateAntiClockwiseFunc(MCDirection direction) JA_CONST_FUNC;
 
 
 /****** Inline function bodies only beyond this point. ******/
+
+static inline BOOL MCCellsEqual(MCCell a, MCCell b)
+{
+	return a.blockID == b.blockID && a.blockData == b.blockData;
+}
+
 
 static inline BOOL MCCellIsFullySolid(MCCell cell)
 {

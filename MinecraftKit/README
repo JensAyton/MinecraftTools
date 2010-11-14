@@ -6,3 +6,7 @@ MIT license.
 JAMinecraftBlockIDs.h and JAMinecraftBlockIDs.c are plain C and should work
 from C++. The rest is bleeding-edge Objective-C – it requires Apple-Clang 1.5,
 Snow Leopard, x86_64 and garbage collection.
+
+Debug facilities are controlled by the NDEBUG macro: define it for faster
+code. It is assumed that if NDEBUG is defined, NS_BLOCK_ASSERTIONS will also
+be defined.

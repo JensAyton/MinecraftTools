@@ -66,7 +66,7 @@ enum
 	NSInteger				_gridWidth;
 }
 
-@property (nonatomic) JAMinecraftSchematic *schematic;
+@property (nonatomic, assign) JAMinecraftSchematic *schematic;
 
 // Scroll location, in floating-point cell coordinates.
 @property (nonatomic) NSPoint scrollCenter;

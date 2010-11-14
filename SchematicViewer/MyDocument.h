@@ -43,4 +43,6 @@
 - (IBAction) zoomIn:(id)sender;
 - (IBAction) zoomOut:(id)sender;
 
+- (IBAction) scribble:(id)sender;
+
 @end
