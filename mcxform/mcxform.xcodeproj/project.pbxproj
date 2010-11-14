@@ -49,8 +49,6 @@
 		1AAD77801288AE90001FB721 /* JAMinecraftSchematic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAMinecraftSchematic.m; sourceTree = "<group>"; };
 		1AAD77811288AE90001FB721 /* JAMinecraftSchematic+RDatIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "JAMinecraftSchematic+RDatIO.h"; sourceTree = "<group>"; };
 		1AAD77821288AE90001FB721 /* JAMinecraftSchematic+RDatIO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "JAMinecraftSchematic+RDatIO.m"; sourceTree = "<group>"; };
-		1AAD77831288AE90001FB721 /* JAMinecraftSchematic+RedstoneHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "JAMinecraftSchematic+RedstoneHelpers.h"; sourceTree = "<group>"; };
-		1AAD77841288AE90001FB721 /* JAMinecraftSchematic+RedstoneHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "JAMinecraftSchematic+RedstoneHelpers.m"; sourceTree = "<group>"; };
 		1AAD77851288AE90001FB721 /* JAMinecraftSchematic+SchematicIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "JAMinecraftSchematic+SchematicIO.h"; sourceTree = "<group>"; };
 		1AAD77861288AE90001FB721 /* JAMinecraftSchematic+SchematicIO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "JAMinecraftSchematic+SchematicIO.m"; sourceTree = "<group>"; };
 		1AAD78261288B93D001FB721 /* JAValueToString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAValueToString.h; sourceTree = "<group>"; };
@@ -115,8 +113,6 @@
 				1AAD77801288AE90001FB721 /* JAMinecraftSchematic.m */,
 				1AAD77811288AE90001FB721 /* JAMinecraftSchematic+RDatIO.h */,
 				1AAD77821288AE90001FB721 /* JAMinecraftSchematic+RDatIO.m */,
-				1AAD77831288AE90001FB721 /* JAMinecraftSchematic+RedstoneHelpers.h */,
-				1AAD77841288AE90001FB721 /* JAMinecraftSchematic+RedstoneHelpers.m */,
 				1AAD77851288AE90001FB721 /* JAMinecraftSchematic+SchematicIO.h */,
 				1AAD77861288AE90001FB721 /* JAMinecraftSchematic+SchematicIO.m */,
 				1A9FB1E11281F88B003DD1C3 /* JAMinecraftBlockIDs.h */,

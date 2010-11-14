@@ -1,7 +1,7 @@
 /*
 	JAMinecraftGridView.h
 	
-	Abstract overhead grid view for Minecraft schematic data.
+	Abstract overhead grid view for Minecraft map data.
 	
 	
 	Copyright © 2010 Jens Ayton
@@ -28,9 +28,9 @@
 #import <Cocoa/Cocoa.h>
 #import "JAMinecraftTypes.h"
 
-@class JAMinecraftSchematic;
+@class JAMinecraftBlockStore;
 
-typedef void (^JAMCSchematicRenderCB)(JAMinecraftSchematic *schematic, MCGridCoordinates location, NSRect drawingRect);
+typedef void (^JAMCGridViewRenderCB)(JAMinecraftBlockStore *store, MCGridCoordinates location, NSRect drawingRect);
 
 
 // FIXME: do something sane about this.
@@ -45,7 +45,7 @@ enum
 @interface JAMinecraftGridView: NSView
 {
 @private
-	JAMinecraftSchematic	*_schematic;
+	JAMinecraftBlockStore	*_store;
 	
 	NSScroller				*_horizontalScroller;
 	NSScroller				*_verticalScroller;
@@ -53,12 +53,12 @@ enum
 	NSPoint					_scrollCenter;
 	NSUInteger				_currentLayer;
 	
-	JAMCSchematicRenderCB	_renderCallback;
+	JAMCGridViewRenderCB	_renderCallback;
 	
 	uint8_t					_dragAction;
 	
-	MCGridCoordinates			_selectionAnchor;
-	MCGridExtents		_selection;
+	MCGridCoordinates		_selectionAnchor;
+	MCGridExtents			_selection;
 	NSTimer					*_selectionUpdateTimer;
 	
 	NSUInteger				_zoomLevel;
@@ -66,7 +66,7 @@ enum
 	NSInteger				_gridWidth;
 }
 
-@property (nonatomic, assign) JAMinecraftSchematic *schematic;
+@property (nonatomic, assign) JAMinecraftBlockStore *store;
 
 // Scroll location, in floating-point cell coordinates.
 @property (nonatomic) NSPoint scrollCenter;
@@ -102,7 +102,7 @@ enum
 	Rendering: the render callback is a block called for each cell that needs
 	rendering. It may be swapped out at any time.
 */
-@property (nonatomic, copy) JAMCSchematicRenderCB renderCallback;
+@property (nonatomic, copy) JAMCGridViewRenderCB renderCallback;
 
 /*
 	Zooming: zoomable views should override maximumZoomLevel as well as these.
@@ -116,14 +116,14 @@ enum
 - (NSUInteger) gridWidthForZoomLevel:(NSUInteger)zoomLevel;
 
 /*
-	There are two grid colours, one for cells inside the schematic’s extents
+	There are two grid colours, one for cells inside the store’s extents
 	and one for the outside area.
 */
 @property (nonatomic, readonly) NSColor *gridColorInDefinedArea;
 @property (nonatomic, readonly) NSColor *gridColorOutsideDefinedArea;
 
 /*
-	Infinite canvas (default: yes) allows scrolling outside the schematic’s
+	Infinite canvas (default: yes) allows scrolling outside the store’s
 	extents. Non-infinite mode isn’t fully implemented yet; in particular,
 	when the view is resized from larger than the content to smaller, the
 	content should be scrolled so no outside area is shown.

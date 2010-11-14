@@ -10,7 +10,7 @@
 		1A52C349128F710B006E2D65 /* JAMinecraftBlockIDs.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A52C329128F710B006E2D65 /* JAMinecraftBlockIDs.c */; };
 		1A52C34A128F710B006E2D65 /* JAMinecraftGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A52C32C128F710B006E2D65 /* JAMinecraftGridView.m */; };
 		1A52C34B128F710B006E2D65 /* JAMinecraftSchematic+RDatIO.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A52C32E128F710B006E2D65 /* JAMinecraftSchematic+RDatIO.m */; };
-		1A52C34C128F710B006E2D65 /* JAMinecraftSchematic+RedstoneHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A52C330128F710B006E2D65 /* JAMinecraftSchematic+RedstoneHelpers.m */; };
+		1A52C34C128F710B006E2D65 /* JAMinecraftBlockStore+RedstoneHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A52C330128F710B006E2D65 /* JAMinecraftBlockStore+RedstoneHelpers.m */; };
 		1A52C34D128F710B006E2D65 /* JAMinecraftSchematic+SchematicIO.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A52C332128F710B006E2D65 /* JAMinecraftSchematic+SchematicIO.m */; };
 		1A52C34E128F710B006E2D65 /* JAMinecraftSchematic.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A52C334128F710B006E2D65 /* JAMinecraftSchematic.m */; };
 		1A52C350128F710B006E2D65 /* JAMinecraftTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A52C338128F710B006E2D65 /* JAMinecraftTypes.m */; };
@@ -43,8 +43,8 @@
 		1A52C32C128F710B006E2D65 /* JAMinecraftGridView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAMinecraftGridView.m; sourceTree = "<group>"; };
 		1A52C32D128F710B006E2D65 /* JAMinecraftSchematic+RDatIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "JAMinecraftSchematic+RDatIO.h"; sourceTree = "<group>"; };
 		1A52C32E128F710B006E2D65 /* JAMinecraftSchematic+RDatIO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "JAMinecraftSchematic+RDatIO.m"; sourceTree = "<group>"; };
-		1A52C32F128F710B006E2D65 /* JAMinecraftSchematic+RedstoneHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "JAMinecraftSchematic+RedstoneHelpers.h"; sourceTree = "<group>"; };
-		1A52C330128F710B006E2D65 /* JAMinecraftSchematic+RedstoneHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "JAMinecraftSchematic+RedstoneHelpers.m"; sourceTree = "<group>"; };
+		1A52C32F128F710B006E2D65 /* JAMinecraftBlockStore+RedstoneHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "JAMinecraftBlockStore+RedstoneHelpers.h"; sourceTree = "<group>"; };
+		1A52C330128F710B006E2D65 /* JAMinecraftBlockStore+RedstoneHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "JAMinecraftBlockStore+RedstoneHelpers.m"; sourceTree = "<group>"; };
 		1A52C331128F710B006E2D65 /* JAMinecraftSchematic+SchematicIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "JAMinecraftSchematic+SchematicIO.h"; sourceTree = "<group>"; };
 		1A52C332128F710B006E2D65 /* JAMinecraftSchematic+SchematicIO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "JAMinecraftSchematic+SchematicIO.m"; sourceTree = "<group>"; };
 		1A52C333128F710B006E2D65 /* JAMinecraftSchematic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAMinecraftSchematic.h; sourceTree = "<group>"; };
@@ -151,8 +151,8 @@
 				1A52C32A128F710B006E2D65 /* JAMinecraftBlockIDs.h */,
 				1A52C32D128F710B006E2D65 /* JAMinecraftSchematic+RDatIO.h */,
 				1A52C32E128F710B006E2D65 /* JAMinecraftSchematic+RDatIO.m */,
-				1A52C32F128F710B006E2D65 /* JAMinecraftSchematic+RedstoneHelpers.h */,
-				1A52C330128F710B006E2D65 /* JAMinecraftSchematic+RedstoneHelpers.m */,
+				1A52C32F128F710B006E2D65 /* JAMinecraftBlockStore+RedstoneHelpers.h */,
+				1A52C330128F710B006E2D65 /* JAMinecraftBlockStore+RedstoneHelpers.m */,
 				1A52C331128F710B006E2D65 /* JAMinecraftSchematic+SchematicIO.h */,
 				1A52C332128F710B006E2D65 /* JAMinecraftSchematic+SchematicIO.m */,
 				1A52C333128F710B006E2D65 /* JAMinecraftSchematic.h */,
@@ -305,7 +305,7 @@
 				1A52C349128F710B006E2D65 /* JAMinecraftBlockIDs.c in Sources */,
 				1A52C34A128F710B006E2D65 /* JAMinecraftGridView.m in Sources */,
 				1A52C34B128F710B006E2D65 /* JAMinecraftSchematic+RDatIO.m in Sources */,
-				1A52C34C128F710B006E2D65 /* JAMinecraftSchematic+RedstoneHelpers.m in Sources */,
+				1A52C34C128F710B006E2D65 /* JAMinecraftBlockStore+RedstoneHelpers.m in Sources */,
 				1A52C34D128F710B006E2D65 /* JAMinecraftSchematic+SchematicIO.m in Sources */,
 				1A52C34E128F710B006E2D65 /* JAMinecraftSchematic.m in Sources */,
 				1A52C350128F710B006E2D65 /* JAMinecraftTypes.m in Sources */,

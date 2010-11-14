@@ -1,5 +1,5 @@
 /*
-	JAMinecraftSchematic+RedstoneHelpers.m
+	JAMinecraftBlockStore+RedstoneHelpers.m
 	
 	Copyright © 2010 Jens Ayton
 	
@@ -22,10 +22,10 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#import "JAMinecraftSchematic+RedstoneHelpers.h"
+#import "JAMinecraftBlockStore+RedstoneHelpers.h"
 
 
-@implementation JAMinecraftSchematic (RedstoneHelpers)
+@implementation JAMinecraftBlockStore (RedstoneHelpers)
 
 - (BOOL) cellIsBlockWithSideTorchAt:(MCGridCoordinates)location
 {

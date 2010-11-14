@@ -24,7 +24,7 @@
 */
 
 #import "JAMinecraftGridView.h"
-#import "JAMinecraftSchematic.h"
+#import "JAMinecraftBlockStore.h"
 #import "IsKeyDown.h"
 
 
@@ -118,9 +118,9 @@
 		[self performSwitchZoomLevel];
 		
 		// Set trivial basic render callback.
-		self.renderCallback = ^(JAMinecraftSchematic *schematic, MCGridCoordinates location, NSRect drawingRect)
+		self.renderCallback = ^(JAMinecraftBlockStore *store, MCGridCoordinates location, NSRect drawingRect)
 		{
-			if ([schematic cellAt:location].blockID == kMCBlockAir)  [[NSColor whiteColor] set];
+			if ([store cellAt:location].blockID == kMCBlockAir)  [[NSColor whiteColor] set];
 			else  [[NSColor blueColor] set];
 			[NSBezierPath fillRect:drawingRect];
 		};
@@ -150,22 +150,21 @@
 }
 
 
-- (JAMinecraftSchematic *) schematic
+- (JAMinecraftBlockStore *) store
 {
-	return _schematic;
+	return _store;
 }
 
 
-- (void) setSchematic:(JAMinecraftSchematic *)schematic
+- (void) setStore:(JAMinecraftBlockStore *)store
 {
-	if (schematic != _schematic)
+	if (store != _store)
 	{
 		NSNotificationCenter *nctr = [NSNotificationCenter defaultCenter];
-		[nctr removeObserver:self name:nil object:_schematic];
-		[nctr addObserver:self selector:@selector(blockStoreChanged:) name:kJAMinecraftBlockStoreChangedNotification object:schematic];
+		[nctr removeObserver:self name:nil object:_store];
+		[nctr addObserver:self selector:@selector(blockStoreChanged:) name:kJAMinecraftBlockStoreChangedNotification object:store];
 		
-		_schematic = schematic;
-		[self scrollToCenter:nil];
+		_store = store;
 		
 		[self setNeedsDisplay:YES];
 	}
@@ -216,13 +215,13 @@
 }
 
 
-- (JAMCSchematicRenderCB) renderCallback
+- (JAMCGridViewRenderCB) renderCallback
 {
 	return _renderCallback;
 }
 
 
-- (void) setRenderCallback:(JAMCSchematicRenderCB)value
+- (void) setRenderCallback:(JAMCGridViewRenderCB)value
 {
 	if (value != _renderCallback)
 	{
@@ -325,7 +324,7 @@
 {
 	if (JA_EXPECT_NOT(_renderCallback == NULL))  return;
 	
-	JAMinecraftSchematic *schematic = self.schematic;
+	JAMinecraftBlockStore *store = self.store;
 	MCGridExtents targetExtents = [self extentsFromRect:rect];
 	
 	MCGridCoordinates location = { .y = self.currentLayer };
@@ -340,7 +339,7 @@
 			
 			[gCtxt saveGraphicsState];
 			[NSBezierPath clipRect:cellRect];
-			_renderCallback(schematic, location, cellRect);
+			_renderCallback(store, location, cellRect);
 			[gCtxt restoreGraphicsState];
 		}
 	}
@@ -719,7 +718,7 @@
 
 - (IBAction) scrollToCenter:(id)sender
 {
-	MCGridExtents extents = self.schematic.extents;
+	MCGridExtents extents = self.store.extents;
 	if (!MCGridExtentsEmpty(extents))
 	{
 		self.scrollCenter = (NSPoint)
@@ -768,7 +767,7 @@
 	NSRect contentFrame = self.innerFrame;
 	NSRect virtualBounds = self.virtualBounds;
 	
-	BOOL enabled = !MCGridExtentsEmpty(self.schematic.extents);
+	BOOL enabled = !MCGridExtentsEmpty(self.store.extents);
 	if (enabled)
 	{
 		[_horizontalScroller setEnabled:contentFrame.size.width < virtualBounds.size.width];
@@ -1049,7 +1048,7 @@
 
 - (NSRect) nonEmptyContentFrame
 {
-	MCGridExtents extents = self.schematic.extents;
+	MCGridExtents extents = self.store.extents;
 	
 	if (!MCGridExtentsEmpty(extents))
 	{

@@ -64,9 +64,10 @@
 	
 	[controller.window setContentBorderThickness:34 forEdge:NSMinYEdge];
 	
-	[self.schematicView bind:@"schematic"
+	[self.schematicView bind:@"store"
 					toObject:self withKeyPath:@"schematic"
 					 options:nil];
+	[self.schematicView scrollToCenter:nil];
 }
 
 

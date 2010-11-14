@@ -1,8 +1,8 @@
 /*
-	JAMinecraftSchematic+RedstoneHelpers.h
+	JAMinecraftBlockStore+RedstoneHelpers.h
 	
 	Convenience methods for dealing with redstone circuits in
-	JAMinecraftSchematics.
+	JAMinecraftBlockStores.
 	
 	
 	Copyright © 2010 Jens Ayton
@@ -29,7 +29,7 @@
 #import "JAMinecraftSchematic.h"
 
 
-@interface JAMinecraftSchematic (RedstoneHelpers)
+@interface JAMinecraftBlockStore (RedstoneHelpers)
 
 // “Torch” consistently refers to redstone torches.
 - (BOOL) cellIsBlockWithSideTorchAt:(MCGridCoordinates)location;

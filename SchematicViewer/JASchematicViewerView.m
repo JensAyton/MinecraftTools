@@ -105,7 +105,7 @@ static const NSUInteger kDefaultZoomLevel = 3;
 		[colors addObject:red];
 	}
 	
-	self.renderCallback = ^(JAMinecraftSchematic *schematic, MCGridCoordinates location, NSRect cellRect)
+	self.renderCallback = ^(JAMinecraftBlockStore *schematic, MCGridCoordinates location, NSRect cellRect)
 	{
 		MCCell cell = [schematic cellAt:location];
 		
@@ -134,8 +134,6 @@ static const NSUInteger kDefaultZoomLevel = 3;
 		{
 			[blockColor set];
 			cellRect = NSInsetRect(cellRect, cellRect.size.width / 4, cellRect.size.width / 4);
-		//	NSBezierPath *path = [NSBezierPath bezierPathWithOvalInRect:cellRect];
-		//	[path fill];
 			[NSBezierPath fillRect:cellRect];
 		}
 	};
