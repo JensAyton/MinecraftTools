@@ -55,10 +55,11 @@
 @property (readonly) NSInteger minimumLayer;
 @property (readonly) NSInteger maximumLayer;
 
-/*
-	TODO: implement an -eraseRegion:(MCGridExtents)region; which empties a
-	region, removing nodes where possible.
+/*	
+	Fill the specified region with a uniform block type.
 */
+- (void) fillRegion:(MCGridExtents)region withCell:(MCCell)cell;
+
 
 /*
 	Copy blocks from another schematic.

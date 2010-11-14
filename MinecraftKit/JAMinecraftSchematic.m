@@ -239,6 +239,33 @@ static inline NSUInteger RepresentedDistance(levels)
 }
 
 
+/*	FIXME: optimize for filling with air by removing blocks.
+	Optimize for other cases by reusing a chunk of completely-filled data to
+	replace any nil leaves, and trees of nodes leading to said chunk for
+	larger areas.
+*/
+- (void) fillRegion:(MCGridExtents)region withCell:(MCCell)cell
+{
+	if (MCGridExtentsEmpty(region))  return;
+	
+	[self beginBulkUpdate];
+	
+	MCGridCoordinates location;
+	for (location.z = region.minZ; location.z <= region.maxZ; location.z++)
+	{
+		for (location.y = region.minY; location.y <= region.maxY; location.y++)
+		{
+			for (location.x = region.minX; location.x <= region.maxX; location.x++)
+			{
+				[self setCell:cell at:location];
+			}
+		}	
+	}
+	
+	[self endBulkUpdate];
+}
+
+
 - (void) copyRegion:(MCGridExtents)region from:(JAMinecraftSchematic *)sourceCircuit at:(MCGridCoordinates)location
 {
 	if (MCGridExtentsEmpty(region))  return;

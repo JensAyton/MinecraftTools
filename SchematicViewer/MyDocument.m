@@ -30,6 +30,15 @@
 #import "JASchematicViewerView.h"
 
 
+@interface MyDocument ()
+
+// General, reversible undo mechanism.
+- (void) saveSchematicForUndoWithName:(NSString *)undoActionName;
+- (void) undoSchematicChangeWithOldSchematic:(JAMinecraftSchematic *)oldSchematic selection:(MCGridExtents)oldSelection;
+
+@end
+
+
 @implementation MyDocument
 
 - (id) init
@@ -166,7 +175,7 @@
 	{
 		enabled = 0 < self.schematicView.zoomLevel;
 	}
-	else if (action == @selector(copy:) || action == @selector(cut:))
+	else if (action == @selector(copy:) || action == @selector(cut:) || action == @selector(delete:))
 	{
 		enabled = !MCGridExtentsEmpty(self.schematicView.selection);
 	}
@@ -202,8 +211,8 @@
 - (IBAction) cut:(id)sender
 {
 	[self copy:sender];
-	// FIXME: clear selected area with undo.
-	NSLog(@"Pretend selected area was just cleared!");
+	[self saveSchematicForUndoWithName:NSLocalizedString(@"Cut", @"Cut user interface action.")];
+	[self.schematic fillRegion:self.schematicView.selection withCell:(MCCell){ kMCBlockAir, 0 }];
 	self.schematicView.selection = kMCEmptyExtents;
 }
 
@@ -229,6 +238,33 @@
 	
 	// FIXME: floating selections, undo, actual pasting.
 	NSLog(@"Pretend something was just pasted!");
+}
+
+
+- (IBAction) delete:(id)sender
+{
+	[self saveSchematicForUndoWithName:NSLocalizedString(@"Delete", @"Delete user interface action.")];
+	[self.schematic fillRegion:self.schematicView.selection withCell:(MCCell){ kMCBlockAir, 0 }];
+}
+
+
+- (void) saveSchematicForUndoWithName:(NSString *)undoActionName
+{
+	NSUndoManager *undoMgr = self.undoManager;
+	[undoMgr setActionName:undoActionName];
+	[[undoMgr prepareWithInvocationTarget:self] undoSchematicChangeWithOldSchematic:[self.schematic copy] selection:self.schematicView.selection];
+}
+
+
+- (void) undoSchematicChangeWithOldSchematic:(JAMinecraftSchematic *)oldSchematic selection:(MCGridExtents)oldSelection
+{
+	JAMinecraftSchematic *currentSchematic = self.schematic;
+	MCGridExtents currentSelection = self.schematicView.selection;
+	
+	self.schematic = oldSchematic;
+	self.schematicView.selection = oldSelection;
+	
+	[[self.undoManager prepareWithInvocationTarget:self] undoSchematicChangeWithOldSchematic:currentSchematic selection:currentSelection];
 }
 
 

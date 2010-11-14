@@ -160,11 +160,25 @@
 {
 	if (schematic != _schematic)
 	{
+		NSNotificationCenter *nctr = [NSNotificationCenter defaultCenter];
+		[nctr removeObserver:self name:nil object:_schematic];
+		[nctr addObserver:self selector:@selector(blockStoreChanged:) name:kJAMinecraftBlockStoreChangedNotification object:schematic];
+		
 		_schematic = schematic;
 		[self scrollToCenter:nil];
 		
 		[self setNeedsDisplay:YES];
 	}
+}
+
+
+- (void) blockStoreChanged:(NSNotification *)notification
+{
+	NSValue *extentsVal = [notification.userInfo objectForKey:kJAMinecraftBlockStoreChangedExtents];
+	MCGridExtents extents;
+	[extentsVal getValue:&extents];
+	
+	[self setNeedsDisplayInRect:[self rectFromExtents:extents]];
 }
 
 
@@ -196,6 +210,7 @@
 	if (!MCGridExtentsEqual(value, _selection))
 	{
 		_selection = value;
+		[self updateSelectionTimer];
 		[self setNeedsDisplay:YES];
 	}
 }
