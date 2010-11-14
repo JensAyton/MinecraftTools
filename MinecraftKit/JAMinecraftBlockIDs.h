@@ -58,7 +58,7 @@ enum
 	kMCBlockRedMushroom						= 40,
 	kMCBlockGoldBlock						= 41,
 	kMCBlockIronBlock						= 42,
-	kMCBlockDoubleStep						= 43,	// Two half-steps on top of eac other.
+	kMCBlockDoubleStep						= 43,	// Two half-steps on top of each other.
 	kMCBlockSingleStep						= 44,	// A single half-step.
 	kMCBlockBrick							= 45,
 	kMCBlockTNT								= 46,
