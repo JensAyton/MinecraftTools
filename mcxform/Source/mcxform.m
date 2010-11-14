@@ -205,12 +205,12 @@ int main (int argc, const char * argv[])
 	MCGridExtents outputExtents = outputCircuit.extents;
 	if (MCGridExtentsEmpty(outputExtents))
 	{
-		Print(@"Resulting circuit is empty, not writing.\n");
+		Print(@"Resulting schematic is empty, not writing.\n");
 		return EXIT_SUCCESS;
 	}
 	else
 	{
-		Print(@"Resulting circuit size is %lu × %lu × %lu.\n", MCGridExtentsLength(outputExtents), MCGridExtentsWidth(outputExtents), MCGridExtentsHeight(outputExtents));
+		Print(@"Resulting schematic size is %lu × %lu × %lu.\n", MCGridExtentsLength(outputExtents), MCGridExtentsWidth(outputExtents), MCGridExtentsHeight(outputExtents));
 	}
 	
 	NSData *outputData = nil;
@@ -226,7 +226,7 @@ int main (int argc, const char * argv[])
 	
 	if (outputData == nil)
 	{
-		EPrint(@"Could not write circuit data.\n");
+		EPrint(@"Could not write schematic data.\n");
 		return EXIT_FAILURE;
 	}
 	

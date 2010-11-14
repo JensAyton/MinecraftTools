@@ -116,14 +116,14 @@ enum
 - (NSUInteger) gridWidthForZoomLevel:(NSUInteger)zoomLevel;
 
 /*
-	There are two grid colours, one for cells inside the circuit’s extents and
-	one for the outside area.
+	There are two grid colours, one for cells inside the schematic’s extents
+	and one for the outside area.
 */
 @property (nonatomic, readonly) NSColor *gridColorInDefinedArea;
 @property (nonatomic, readonly) NSColor *gridColorOutsideDefinedArea;
 
 /*
-	Infinite canvas (default: yes) allows scrolling outside the circuit’s
+	Infinite canvas (default: yes) allows scrolling outside the schematic’s
 	extents. Non-infinite mode isn’t fully implemented yet; in particular,
 	when the view is resized from larger than the content to smaller, the
 	content should be scrolled so no outside area is shown.

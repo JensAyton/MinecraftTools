@@ -156,11 +156,11 @@
 }
 
 
-- (void) setSchematic:(JAMinecraftSchematic *)circuit
+- (void) setSchematic:(JAMinecraftSchematic *)schematic
 {
-	if (circuit != _schematic)
+	if (schematic != _schematic)
 	{
-		_schematic = circuit;
+		_schematic = schematic;
 		[self scrollToCenter:nil];
 		
 		[self setNeedsDisplay:YES];

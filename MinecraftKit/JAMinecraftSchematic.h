@@ -87,7 +87,7 @@
 */
 
 /*
-	Copy blocks from another circuit.
+	Copy blocks from another schematic.
 	IMPORTANT: air blocks are ignored, not copied. Erase the target region
 	first if you want that behaviour.
 */

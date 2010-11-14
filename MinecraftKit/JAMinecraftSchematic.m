@@ -60,7 +60,7 @@ typedef BOOL (^JAMinecraftSchematicChunkIterator)(JAMinecraftSchematicChunk *chu
 
 
 /*
-	The circuit is organized as an octree _levels levels deep. Completely
+	The schematic is organized as an octree _levels levels deep. Completely
 	empty areas are represented as nil children. Leaf nodes are
 	JAMinecraftSchematicChunks; inner nodes are JAMinecraftSchematicInnerNodes.
 	
