@@ -50,6 +50,15 @@
 @property (readonly) NSUInteger length;
 @property (readonly) NSUInteger height;
 
+/*
+	Minimum and maximum layer: highest and lowest y coordinates in which
+	blocks may be added without going over 128 blocks high. The schematic may
+	use any 128-block high subrange. For an empty schematic, these are
+	NSIntegerMin and NSIntegerMax!
+*/
+@property (readonly) NSInteger minimumLayer;
+@property (readonly) NSInteger maximumLayer;
+
 - (JAMinecraftCell) cellAt:(JACellLocation)location;
 - (void) setCell:(JAMinecraftCell)cell at:(JACellLocation)location;
 

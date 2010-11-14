@@ -36,6 +36,12 @@
 #endif
 
 
+enum
+{
+	kMaxPermittedHeight = 128
+};
+
+
 NSString * const kJAMinecraftSchematicErrorDomain			= @"se.ayton.jens JAMinecraftSchematic ErrorDomain";
 
 NSString * const kJAMinecraftSchematicChangedNotification	= @"se.ayton.jens JAMinecraftSchematic Changed";
@@ -334,6 +340,36 @@ static inline NSUInteger RepresentedDistance(levels)
 
 
 + (NSSet *) keyPathsForValuesAffectingHeight
+{
+	return [NSSet setWithObject:@"extents"];
+}
+
+
+- (NSInteger) minimumLayer
+{
+	JACircuitExtents extents = self.extents;
+	if (JACircuitExtentsEmpty(extents))  return NSIntegerMin;
+	if (self.extents.maxY < NSIntegerMin + kMaxPermittedHeight)  return NSIntegerMin;
+	return self.extents.maxY - kMaxPermittedHeight + 1;
+}
+
+
++ (NSSet *) keyPathsForValuesAffectingMinimumLayer
+{
+	return [NSSet setWithObject:@"extents"];
+}
+
+
+- (NSInteger) maximumLayer
+{
+	JACircuitExtents extents = self.extents;
+	if (JACircuitExtentsEmpty(extents))  return NSIntegerMax;
+	if (self.extents.minY > NSIntegerMax - kMaxPermittedHeight)  return NSIntegerMax;
+	return self.extents.minY + kMaxPermittedHeight - 1;
+}
+
+
++ (NSSet *) keyPathsForValuesAffectingMaximumLayer
 {
 	return [NSSet setWithObject:@"extents"];
 }
