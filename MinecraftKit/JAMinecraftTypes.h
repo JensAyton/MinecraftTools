@@ -140,6 +140,8 @@ static NSUInteger MCGridExtentsWidth(MCGridExtents extents) JA_CONST_FUNC;
 static NSUInteger MCGridExtentsLength(MCGridExtents extents) JA_CONST_FUNC;
 static NSUInteger MCGridExtentsHeight(MCGridExtents extents) JA_CONST_FUNC;
 
+static MCGridExtents MCOffsetGridExtents(MCGridExtents extents, NSInteger dx, NSInteger dy, NSInteger dz) JA_CONST_FUNC;
+
 
 /*
 	MCGridExtentsMinimum() and MCGridExtentsMaximum()
@@ -408,6 +410,18 @@ static NSUInteger MCGridExtentsHeight(MCGridExtents extents)
 {
 	if (!MCGridExtentsEmpty(extents))  return extents.maxY - extents.minY + 1;
 	else return 0;
+}
+
+
+static MCGridExtents MCOffsetGridExtents(MCGridExtents extents, NSInteger dx, NSInteger dy, NSInteger dz)
+{
+	extents.minX += dx;
+	extents.maxX += dx;
+	extents.minY += dy;
+	extents.maxY += dy;
+	extents.minZ += dz;
+	extents.maxZ += dz;
+	return extents;
 }
 
 
