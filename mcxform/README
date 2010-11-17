@@ -1,4 +1,4 @@
-mcxform 0.2
+mcxform 0.3
 
 Usage: mcxform --help
        mcxform <outputfile> [commands]
@@ -54,5 +54,7 @@ COMMANDS:
 
 
 Version history:
+0.3  Fixed file corruption when writing schematics with more than 65535 blocks
+     in total.
 0.2  Fixed rdat read/write support.
 0.1  Initial release.
