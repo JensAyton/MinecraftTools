@@ -174,7 +174,7 @@ static void ThrowSubclassResponsibility(const char *func) __attribute__((noretur
 
 - (void) copyRegion:(MCGridExtents)region from:(JAMinecraftBlockStore *)source at:(MCGridCoordinates)target
 {
-	if (MCGridExtentsEmpty(region))  return;
+	if (MCGridExtentsEmpty(region) || source == nil)  return;
 	
 	MCGridCoordinates offset = { target.x - region.minX, target.y - region.minY, target.z - region.minZ };
 	
@@ -187,8 +187,8 @@ static void ThrowSubclassResponsibility(const char *func) __attribute__((noretur
 		{
 			for (location.x = region.minX; location.x <= region.maxX; location.x++)
 			{
-				MCCell cell = [source cellAtX:location.x - offset.x y:location.y - offset.y z:location.z - offset.z];
-				if (!MCCellIsAir(cell))  [self setCell:cell at:location];
+				MCCell cell = [source cellAt:location];
+				if (!MCCellIsAir(cell))  [self setCell:cell atX:location.x - offset.x y:location.y - offset.y z:location.z - offset.z];
 			}
 		}	
 	}
