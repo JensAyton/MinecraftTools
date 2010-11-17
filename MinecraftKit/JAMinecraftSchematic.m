@@ -176,8 +176,13 @@ static inline NSUInteger RepresentedDistance(levels)
 - (void) finalize
 {
 	InnerNode *root = _root;
-	NSUInteger level = _rootLevel;
-	dispatch_async(dispatch_get_main_queue(), ^{ ReleaseInnerNode(root, level); });
+	if (root != NULL)
+	{
+		NSUInteger level = _rootLevel;
+		dispatch_async(dispatch_get_main_queue(), ^{ ReleaseInnerNode(root, level); });
+	}
+	
+	[super finalize];
 }
 
 
@@ -239,6 +244,7 @@ static inline NSUInteger RepresentedDistance(levels)
 }
 
 
+#if 0
 /*	FIXME: optimize for filling with air by removing blocks.
 	Optimize for other cases by reusing a chunk of completely-filled data to
 	replace any nil leaves, and trees of nodes leading to said chunk for
@@ -246,64 +252,58 @@ static inline NSUInteger RepresentedDistance(levels)
 */
 - (void) fillRegion:(MCGridExtents)region withCell:(MCCell)cell
 {
-	if (MCGridExtentsEmpty(region))  return;
-	
-	[self beginBulkUpdate];
-	
-	MCGridCoordinates location;
-	for (location.z = region.minZ; location.z <= region.maxZ; location.z++)
-	{
-		for (location.y = region.minY; location.y <= region.maxY; location.y++)
-		{
-			for (location.x = region.minX; location.x <= region.maxX; location.x++)
-			{
-				[self setCell:cell at:location];
-			}
-		}	
-	}
-	
-	[self endBulkUpdate];
+	[super fillRegion:region withCell:cell];
 }
+#endif
 
 
-- (void) copyRegion:(MCGridExtents)region from:(JAMinecraftSchematic *)sourceCircuit at:(MCGridCoordinates)location
+#if 0
+- (void) copyRegion:(MCGridExtents)region from:(JAMinecraftBlockStore *)source at:(MCGridCoordinates)location
 {
 	if (MCGridExtentsEmpty(region))  return;
 	
-	MCGridCoordinates offset = { location.x - region.minX, location.y - region.minY, location.z - region.minZ };
-	
-	// FIXME: should COW chunks/subtrees if appropriately aligned.
-	[sourceCircuit forEachChunkInRegion:region do:^(Chunk *chunk, MCGridCoordinates base)
+	if ([source isKindOfClass:[JAMinecraftSchematic class]])
 	{
-		NSUInteger bx, by, bz;
-		MCGridCoordinates loc;
+		MCGridCoordinates offset = { location.x - region.minX, location.y - region.minY, location.z - region.minZ };
 		
-		for (bz = 0; bz < kJAMinecraftSchematicChunkSize; bz++)
+		// FIXME: should COW chunks/subtrees if appropriately aligned.
+		[source forEachChunkInRegion:region do:^(Chunk *chunk, MCGridCoordinates base)
 		{
-			loc.z = base.z + bz;
-			for (by = 0; by < kJAMinecraftSchematicChunkSize; by++)
+			NSUInteger bx, by, bz;
+			MCGridCoordinates loc;
+			
+			for (bz = 0; bz < kJAMinecraftSchematicChunkSize; bz++)
 			{
-				loc.y = base.y + by;
-				for (bx = 0; bx < kJAMinecraftSchematicChunkSize; bx++)
+				loc.z = base.z + bz;
+				for (by = 0; by < kJAMinecraftSchematicChunkSize; by++)
 				{
-					loc.x = base.x + bx;
-					
-					if (MCGridLocationIsWithinExtents(loc, region))
+					loc.y = base.y + by;
+					for (bx = 0; bx < kJAMinecraftSchematicChunkSize; bx++)
 					{
-						MCCell cell = [sourceCircuit cellAt:loc];
-						if (cell.blockID != kMCBlockAir)
+						loc.x = base.x + bx;
+						
+						if (MCGridLocationIsWithinExtents(loc, region))
 						{
-							MCGridCoordinates dstloc = { loc.x + offset.x, loc.y + offset.y, loc.z + offset.z };
-							[self setCell:cell at:dstloc];
+							MCCell cell = [sourceCircuit cellAt:loc];
+							if (cell.blockID != kMCBlockAir)
+							{
+								MCGridCoordinates dstloc = { loc.x + offset.x, loc.y + offset.y, loc.z + offset.z };
+								[self setCell:cell at:dstloc];
+							}
 						}
 					}
 				}
 			}
-		}
-		
-		return YES;
-	}];
+			
+			return YES;
+		}];
+	}
+	else
+	{
+		[super copyRegion:region from:source at:location];
+	}
 }
+#endif
 
 
 - (MCGridExtents) extents

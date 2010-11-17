@@ -55,19 +55,6 @@
 @property (readonly) NSInteger minimumLayer;
 @property (readonly) NSInteger maximumLayer;
 
-/*	
-	Fill the specified region with a uniform block type.
-*/
-- (void) fillRegion:(MCGridExtents)region withCell:(MCCell)cell;
-
-
-/*
-	Copy blocks from another schematic.
-	IMPORTANT: air blocks are ignored, not copied. Erase the target region
-	first if you want that behaviour.
-*/
-- (void) copyRegion:(MCGridExtents)region from:(JAMinecraftSchematic *)sourceCircuit at:(MCGridCoordinates)location;
-
 @end
 
 

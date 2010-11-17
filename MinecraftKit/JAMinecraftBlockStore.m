@@ -148,6 +148,55 @@ static void ThrowSubclassResponsibility(const char *func) __attribute__((noretur
 }
 
 
+#pragma mark Edit actions
+
+- (void) fillRegion:(MCGridExtents)region withCell:(MCCell)cell
+{
+	if (MCGridExtentsEmpty(region))  return;
+	
+	[self beginBulkUpdate];
+	
+	MCGridCoordinates location;
+	for (location.z = region.minZ; location.z <= region.maxZ; location.z++)
+	{
+		for (location.y = region.minY; location.y <= region.maxY; location.y++)
+		{
+			for (location.x = region.minX; location.x <= region.maxX; location.x++)
+			{
+				[self setCell:cell at:location];
+			}
+		}	
+	}
+	
+	[self endBulkUpdate];
+}
+
+
+- (void) copyRegion:(MCGridExtents)region from:(JAMinecraftBlockStore *)source at:(MCGridCoordinates)target
+{
+	if (MCGridExtentsEmpty(region))  return;
+	
+	MCGridCoordinates offset = { target.x - region.minX, target.y - region.minY, target.z - region.minZ };
+	
+	[self beginBulkUpdate];
+	
+	MCGridCoordinates location;
+	for (location.z = region.minZ; location.z <= region.maxZ; location.z++)
+	{
+		for (location.y = region.minY; location.y <= region.maxY; location.y++)
+		{
+			for (location.x = region.minX; location.x <= region.maxX; location.x++)
+			{
+				MCCell cell = [source cellAtX:location.x - offset.x y:location.y - offset.y z:location.z - offset.z];
+				if (!MCCellIsAir(cell))  [self setCell:cell at:location];
+			}
+		}	
+	}
+	
+	[self endBulkUpdate];
+}
+
+
 #if 0
 // Using category here causes spurious “@synthesize not allowed in a category’s implementation” errors with apple-clang 1.5
 @end
