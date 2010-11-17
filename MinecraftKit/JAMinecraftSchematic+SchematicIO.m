@@ -125,8 +125,8 @@ NSString * const kJAMinecraftSchematicUTI = @"com.davidvierra.mcedit.schematic";
 	NSUInteger length = MCGridExtentsLength(region);
 	NSUInteger height = MCGridExtentsHeight(region);
 	
-	[root ja_setNBTInteger:length type:kJANBTTagShort forKey:@"Length"];
 	[root ja_setNBTInteger:width type:kJANBTTagShort forKey:@"Width"];
+	[root ja_setNBTInteger:length type:kJANBTTagShort forKey:@"Length"];
 	[root ja_setNBTInteger:height type:kJANBTTagShort forKey:@"Height"];
 	
 	[root ja_setNBTString:@"Alpha" forKey:@"Materials"];

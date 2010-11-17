@@ -416,7 +416,7 @@ static void WriteShort(NSMutableData *data, uint16_t shortVal)
 }
 
 
-static void WriteInt(NSMutableData *data, uint16_t intVal)
+static void WriteInt(NSMutableData *data, uint32_t intVal)
 {
 	int8_t intBytes[] =
 	{
@@ -449,7 +449,7 @@ static void WriteLong(NSMutableData *data, uint64_t longVal)
 static void WriteString(NSMutableData *data, NSString *string)
 {
 	NSData *stringData = [string dataUsingEncoding:NSUTF8StringEncoding];
-	WriteShort(data, string.length);
+	WriteShort(data, stringData.length);
 	[data appendData:stringData];
 }
 
