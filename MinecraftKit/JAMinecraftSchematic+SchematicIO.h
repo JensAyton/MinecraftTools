@@ -1,8 +1,8 @@
 /*
 	JAMinecraftSchematic+SchematicIO.h
 	
-	Support for importing schematic files, the de facto standard interchange
-	format for partial Minecraft maps.
+	Support for importing and exporting schematic files, the de facto standard
+	interchange format for partial Minecraft maps.
 	
 	For format documentation, see:
 	http://www.minecraftwiki.net/wiki/Schematic_File_Format
