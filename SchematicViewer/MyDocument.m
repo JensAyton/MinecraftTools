@@ -119,7 +119,7 @@
 
 + (NSSet *) keyPathsForValuesAffectingCurrentLayer
 {
-	return [NSSet setWithObject:@"schematicView.visibleLayer"];
+	return [NSSet setWithObject:@"schematicView.currentLayer"];
 }
 
 
