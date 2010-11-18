@@ -113,6 +113,16 @@ typedef BOOL (^JAMinecraftSchematicChunkIterator)(Chunk *chunk, MCGridCoordinate
 	InnerNode						*_root;
 	BOOL							_extentsAreAccurate;
 	uint8_t							_rootLevel;
+	
+	/*
+		Access cache for quicker sequential reads.
+		TODO: keep track of path through tree to cached chunk. This will allow
+		fast access to adjacent chunks, and use of cache on write (by checking
+		for COWed ancestor nodes).
+	*/
+	BOOL							_cacheIsValid;
+	Chunk							*_cachedChunk;
+	MCGridCoordinates				_cacheBase;
 }
 
 //	Space spanned by octree, regardless of "fullness” of cells.
@@ -375,11 +385,40 @@ static inline NSUInteger RepresentedDistance(levels)
 }
 
 
+#define PROFILE_CACHE 1
+
 - (Chunk *) resolveChunkAt:(MCGridCoordinates)location
-		   baseCoordinates:(MCGridCoordinates *)base
+		   baseCoordinates:(MCGridCoordinates *)outBase
 			createIfNeeded:(BOOL)createIfNeeded
 			 makeWriteable:(BOOL)makeWriteable
 {
+	// Use cache if possible.
+	if (!makeWriteable && _cacheIsValid)
+	{
+		MCGridExtents cacheExtents = (MCGridExtents)
+		{
+			_cacheBase.x, _cacheBase.x + kJAMinecraftSchematicChunkSize - 1,
+			_cacheBase.y, _cacheBase.y + kJAMinecraftSchematicChunkSize - 1,
+			_cacheBase.z, _cacheBase.z + kJAMinecraftSchematicChunkSize - 1
+		};
+		BOOL hit = MCGridLocationIsWithinExtents(location, cacheExtents);
+		
+#if PROFILE_CACHE
+		static NSUInteger cacheAttempts = 0, cacheHits = 0;
+		if (hit)  cacheHits++;
+		if ((cacheAttempts++ % 100) == 0)
+		{
+			printf("Cache hits: %lu of %lu (%g %%)\n", cacheHits, cacheAttempts, (float)cacheHits / cacheAttempts * 100.0);
+		}
+#endif
+		
+		if (hit)
+		{
+			if (outBase != NULL)  *outBase = _cacheBase;
+			return _cachedChunk;
+		}
+	}
+	
 	// maxDistance: how far out we are from the origin along the longest axis.
 	NSUInteger maxDistance = MAX(ABS(location.x), MAX(ABS(location.y), ABS(location.z)));
 	
@@ -477,12 +516,17 @@ static inline NSUInteger RepresentedDistance(levels)
 		node->children.leaves[nextIndex] = chunk;
 	}
 	
-	if (base != NULL)
+	MCGridCoordinates base = { baseX, baseY, baseZ };
+	
+	if (outBase != NULL)
 	{
-		base->x = baseX;
-		base->y = baseY;
-		base->z = baseZ;
+		*outBase = base;
 	}
+	
+	_cacheIsValid = YES;
+	_cachedChunk = chunk;
+	_cacheBase = base;
+	
 	return chunk;
 }
 
