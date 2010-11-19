@@ -105,10 +105,8 @@ static const NSUInteger kDefaultZoomLevel = 3;
 		[colors addObject:red];
 	}
 	
-	self.renderCallback = ^(JAMinecraftBlockStore *schematic, MCGridCoordinates location, NSRect cellRect)
+	self.renderCallback = ^(JAMinecraftBlockStore *schematic, MCCell cell, MCGridCoordinates location, NSRect cellRect)
 	{
-		MCCell cell = [schematic cellAt:location];
-		
 		NSColor *blockColor = [colors objectAtIndex:cell.blockID];
 		if (MCCellIsFullySolid(cell) || MCCellIsLiquid(cell) || MCCellIsAir(cell))
 		{

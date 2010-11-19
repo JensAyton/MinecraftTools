@@ -34,6 +34,8 @@
 
 #define DEBUG_DRAWING				0
 
+#define USE_BACKGROUND_CACHE		1
+
 
 @interface JAMinecraftGridView ()
 
@@ -118,9 +120,9 @@
 		[self performSwitchZoomLevel];
 		
 		// Set trivial basic render callback.
-		self.renderCallback = ^(JAMinecraftBlockStore *store, MCGridCoordinates location, NSRect drawingRect)
+		self.renderCallback = ^(JAMinecraftBlockStore *store, MCCell cell, MCGridCoordinates location, NSRect drawingRect)
 		{
-			if ([store cellAt:location].blockID == kMCBlockAir)  [[NSColor whiteColor] set];
+			if (cell.blockID == kMCBlockAir)  [[NSColor whiteColor] set];
 			else  [[NSColor blueColor] set];
 			[NSBezierPath fillRect:drawingRect];
 		};
@@ -243,6 +245,37 @@
 }
 
 
+- (void) drawFillPatternForCellType:(MCCell)cell inRect:(NSRect)rect
+{
+	_renderCallback(self.store, cell, (MCGridCoordinates){ NSIntegerMin, NSIntegerMin, NSIntegerMin }, rect);
+}
+
+
+- (NSColor *) defaultFillColorForCellType:(MCCell)cell
+{
+	NSRect patternRect = (NSRect){{ 0, 0 }, { _cellSize, _cellSize }};
+	NSImage *patternImage = [[NSImage alloc] initWithSize:patternRect.size];
+	
+	[patternImage lockFocus];
+	[self drawFillPatternForCellType:cell inRect:patternRect];
+	[patternImage unlockFocus];
+	
+	return [NSColor colorWithPatternImage:patternImage];
+}
+
+
+- (NSColor *) airFillColorOutsideDefinedArea
+{
+	return [self defaultFillColorForCellType:kJAEmptyCell];
+}
+
+
+- (NSColor *) groundFillColorOutsideDefinedArea
+{
+	return [self defaultFillColorForCellType:(MCCell){ kMCBlockSmoothStone, 0 }];
+}
+
+
 - (BOOL) infiniteCanvas
 {
 	return YES;
@@ -289,13 +322,55 @@
 }
 
 
+- (NSColor *) buildCellPatternWithFillColor:(NSColor *)fillColor gridColor:(NSColor *)gridColor
+{
+	NSSize patternSize = { _cellSize + _gridWidth, _cellSize + _gridWidth };
+	
+	NSImage *patternImage = [[NSImage alloc] initWithSize:patternSize];
+	[patternImage lockFocus];
+	
+	[gridColor set];
+	NSRect fullRect = (NSRect){{ 0, 0 }, patternSize };
+	[NSBezierPath fillRect:fullRect];
+	
+	[fillColor set];
+	NSRect innerRect = (NSRect){{ 0, 0 }, { _cellSize, _cellSize }};
+	[NSBezierPath fillRect:innerRect];
+	
+	[patternImage unlockFocus];
+	return [NSColor colorWithPatternImage:patternImage];
+}
+
+
+- (NSColor *) emptyPattern
+{
+	if (_emptyPattern == nil)
+	{
+		_emptyPattern = [self buildCellPatternWithFillColor:self.airFillColorOutsideDefinedArea gridColor:self.gridColorOutsideDefinedArea];
+	}
+	
+	return _emptyPattern;
+}
+
+
 - (void) drawBasicsAndClipToDirtyRect:(NSRect)dirtyRect
 {
 	/*	Fill background with grid colour; we will then overdraw this with cells.
 		This also fills the area behind the scroll bars, fulfilling our claim
 		to be opaque without relying on the NSScrollers being opaque.
 	*/
+	
+#if USE_BACKGROUND_CACHE
+	[[self emptyPattern] set];
+	NSPoint phase = [self rectFromCellLocation:kMCZeroCoordinates].origin;
+	phase.x += self.frame.origin.x;
+	phase.y += self.frame.origin.y;
+	
+	[NSGraphicsContext currentContext].patternPhase = phase;
+#else
 	[self.gridColorOutsideDefinedArea set];
+#endif
+	
 	[NSBezierPath fillRect:dirtyRect];
 	
 	// Fill in corner between scroll bars.
@@ -326,20 +401,23 @@
 	
 	JAMinecraftBlockStore *store = self.store;
 	MCGridExtents targetExtents = [self extentsFromRect:rect];
+#if USE_BACKGROUND_CACHE
+	targetExtents = MCGridExtentsIntersection(targetExtents, store.extents);
+#endif
 	
-	MCGridCoordinates location = { .y = self.currentLayer };
+	MCGridCoordinates coords = { .y = self.currentLayer };
 	NSGraphicsContext *gCtxt = [NSGraphicsContext currentContext];
 	
 	// Iterate over the cells.
-	for (location.z = targetExtents.minZ; location.z <= targetExtents.maxZ; location.z++)
+	for (coords.z = targetExtents.minZ; coords.z <= targetExtents.maxZ; coords.z++)
 	{
-		for (location.x = targetExtents.minX; location.x <= targetExtents.maxX; location.x++)
+		for (coords.x = targetExtents.minX; coords.x <= targetExtents.maxX; coords.x++)
 		{
-			NSRect cellRect = [self rectFromCellLocation:location];
+			NSRect cellRect = [self rectFromCellLocation:coords];
 			
 			[gCtxt saveGraphicsState];
 			[NSBezierPath clipRect:cellRect];
-			_renderCallback(store, location, cellRect);
+			_renderCallback(store, [store cellAt:coords], coords, cellRect);
 			[gCtxt restoreGraphicsState];
 		}
 	}
@@ -973,6 +1051,7 @@
 	
 	_cellSize = [self cellSizeForZoomLevel:_zoomLevel];
 	_gridWidth = [self gridWidthForZoomLevel:_zoomLevel];
+	_emptyPattern = nil;
 	
 	[self updateScrollers];
 	[self setNeedsDisplay:YES];
