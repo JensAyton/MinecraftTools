@@ -30,7 +30,7 @@
 #define LOGGING			(0 && !defined(NDEBUG))
 
 // Logging of access cache hit rate.
-#define PROFILE_CACHE	1
+#define PROFILE_CACHE	0
 
 
 #if LOGGING
