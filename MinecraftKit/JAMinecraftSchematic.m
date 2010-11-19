@@ -27,7 +27,10 @@
 
 
 // Verbose logging of internal structure changes and reference counting.
-#define LOGGING		(0 && !defined(NDEBUG))
+#define LOGGING			(0 && !defined(NDEBUG))
+
+// Logging of access cache hit rate.
+#define PROFILE_CACHE	1
 
 
 #if LOGGING
@@ -381,8 +384,6 @@ static inline NSUInteger RepresentedDistance(levels)
 	return (MCGridExtents) { min, max, min, max, min, max };
 }
 
-
-#define PROFILE_CACHE 1
 
 - (Chunk *) resolveChunkAt:(MCGridCoordinates)location
 		   baseCoordinates:(MCGridCoordinates *)outBase
