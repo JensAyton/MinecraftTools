@@ -100,14 +100,14 @@ typedef struct
 } MCGridCoordinates;
 
 
-extern const MCGridCoordinates kJAZeroLocation;
+extern const MCGridCoordinates kMCZeroCoordinates;
 
 static inline BOOL MCGridCoordinatesEqual(MCGridCoordinates a, MCGridCoordinates b) JA_CONST_FUNC;
 
 
 #pragma mark MCGridExtents
 /***** MCGridExtents *****
- *	A three-dimensional range of cell locations, describing a cuboid.
+ *	A three-dimensional range of cell coordinates, describing a cuboid.
  *	
  *	If any max value is less than its corresponding min value, the extents are
  *	considered empty. The constant kMCEmptyExtents describes the extreme case:
@@ -153,23 +153,24 @@ static inline MCGridCoordinates MCGridExtentsMinimum(MCGridExtents extents) JA_C
 static inline MCGridCoordinates MCGridExtentsMaximum(MCGridExtents extents) JA_CONST_FUNC;
 
 /*
-	MCGridExtentsWithCoordinates(MCGridCoordinates location)
-	Returns an extents containing a single location.
+	MCGridExtentsWithCoordinates(MCGridCoordinates coords)
+	Returns an extents struct encompassing a single cell at the specified
+	coordinates.
 */
-static MCGridExtents MCGridExtentsWithCoordinates(MCGridCoordinates location) JA_CONST_FUNC;
+static MCGridExtents MCGridExtentsWithCoordinates(MCGridCoordinates coords) JA_CONST_FUNC;
 
-BOOL MCGridLocationIsWithinExtents(MCGridCoordinates location, MCGridExtents extents) JA_CONST_FUNC;
+BOOL MCGridCoordinatesAreWithinExtents(MCGridCoordinates coords, MCGridExtents extents) JA_CONST_FUNC;
 
 /*
 	MCGridExtentsUnion(MCGridExtents a, MCGridExtents b)
-	Returns an extents containing all locations described by either a or b,
-	as well as any additional locations required to produce a cuboid.
+	Returns an extents containing all coordinates described by either a or b,
+	as well as any additional coordinates required to produce a cuboid.
 	
-	MCGridExtentsUnionWithLocation(MCGridExtents extents, MCGridCoordinates location)
-	Equivalent to MCGridExtentsUnion(extents, MCGridExtentsWithCoordinates(location)).
+	MCGridExtentsUnionWithCoordinates(MCGridExtents extents, MCGridCoordinates coords)
+	Equivalent to MCGridExtentsUnion(extents, MCGridExtentsWithCoordinates(coords)).
 */
 MCGridExtents MCGridExtentsUnion(MCGridExtents a, MCGridExtents b) JA_CONST_FUNC;
-MCGridExtents MCGridExtentsUnionWithLocation(MCGridExtents extents, MCGridCoordinates location) JA_CONST_FUNC;
+MCGridExtents MCGridExtentsUnionWithCoordinates(MCGridExtents extents, MCGridCoordinates coords) JA_CONST_FUNC;
 
 /*
 	MCGridExtentsIntersection(MCGridExtents a, MCGridExtents b)
@@ -229,30 +230,30 @@ void MCCellSetOrientation(MCCell *cell, MCDirection orientation);
 
 
 /*
-	MCStepCoordinates(MCGridCoordinates location, MCDirection direction)
-	Move the location one step in the specified direction.
+	MCStepCoordinates(MCGridCoordinates coords, MCDirection direction)
+	Increment the coordinates one step in the specified direction.
 */
 #define MCStepCoordinates(loc, dir)  (INLINEABLE_DIRECTION(dir) ? MCStepCoordinatesBody(loc, dir) : MCStepCoordinatesFunc(loc, dir))
-static inline MCGridCoordinates MCStepCoordinatesBody(MCGridCoordinates location, MCDirection direction) JA_CONST_FUNC;
-MCGridCoordinates MCStepCoordinatesFunc(MCGridCoordinates location, MCDirection direction) JA_CONST_FUNC;
+static inline MCGridCoordinates MCStepCoordinatesBody(MCGridCoordinates coords, MCDirection direction) JA_CONST_FUNC;
+MCGridCoordinates MCStepCoordinatesFunc(MCGridCoordinates coords, MCDirection direction) JA_CONST_FUNC;
 
 
 /*
-	MCCoordinatesNorthOf(MCGridCoordinates location)
-	MCCoordinatesSouthOf(MCGridCoordinates location)
-	MCCoordinatesEastOf(MCGridCoordinates location)
-	MCCoordinatesWestOf(MCGridCoordinates location)
-	MCCoordinatesAbove(MCGridCoordinates location)
-	MCCoordinatesBelow(MCGridCoordinates location)
+	MCCoordinatesNorthOf(MCGridCoordinates coords)
+	MCCoordinatesSouthOf(MCGridCoordinates coords)
+	MCCoordinatesEastOf(MCGridCoordinates coords)
+	MCCoordinatesWestOf(MCGridCoordinates coords)
+	MCCoordinatesAbove(MCGridCoordinates coords)
+	MCCoordinatesBelow(MCGridCoordinates coords)
 	
 	Constant steps in each of the six cardinal directions.
 */
-static inline MCGridCoordinates MCCoordinatesNorthOf(MCGridCoordinates location) JA_CONST_FUNC;
-static inline MCGridCoordinates MCCoordinatesSouthOf(MCGridCoordinates location) JA_CONST_FUNC;
-static inline MCGridCoordinates MCCoordinatesEastOf(MCGridCoordinates location) JA_CONST_FUNC;
-static inline MCGridCoordinates MCCoordinatesWestOf(MCGridCoordinates location) JA_CONST_FUNC;
-static inline MCGridCoordinates MCCoordinatesAbove(MCGridCoordinates location) JA_CONST_FUNC;
-static inline MCGridCoordinates MCCoordinatesBelow(MCGridCoordinates location) JA_CONST_FUNC;
+static inline MCGridCoordinates MCCoordinatesNorthOf(MCGridCoordinates coords) JA_CONST_FUNC;
+static inline MCGridCoordinates MCCoordinatesSouthOf(MCGridCoordinates coords) JA_CONST_FUNC;
+static inline MCGridCoordinates MCCoordinatesEastOf(MCGridCoordinates coords) JA_CONST_FUNC;
+static inline MCGridCoordinates MCCoordinatesWestOf(MCGridCoordinates coords) JA_CONST_FUNC;
+static inline MCGridCoordinates MCCoordinatesAbove(MCGridCoordinates coords) JA_CONST_FUNC;
+static inline MCGridCoordinates MCCoordinatesBelow(MCGridCoordinates coords) JA_CONST_FUNC;
 
 
 /*
@@ -437,86 +438,86 @@ static inline MCGridCoordinates MCGridExtentsMaximum(MCGridExtents extents)
 }
 
 
-static MCGridExtents MCGridExtentsWithCoordinates(MCGridCoordinates location)
+static MCGridExtents MCGridExtentsWithCoordinates(MCGridCoordinates coords)
 {
 	return (MCGridExtents)
 	{
-		location.x, location.x,
-		location.y, location.y,
-		location.z, location.z
+		coords.x, coords.x,
+		coords.y, coords.y,
+		coords.z, coords.z
 	};
 }
 
 
-static inline MCGridCoordinates MCStepCoordinatesBody(MCGridCoordinates location, MCDirection direction)
+static inline MCGridCoordinates MCStepCoordinatesBody(MCGridCoordinates coords, MCDirection direction)
 {
 	switch (direction)
 	{
 		case kMCDirectionNorth:
-			location.x -= 1;
+			coords.x -= 1;
 			break;
 			
 		case kMCDirectionSouth:
-			location.x += 1;
+			coords.x += 1;
 			break;
 			
 		case kMCDirectionEast:
-			location.z -= 1;
+			coords.z -= 1;
 			break;
 			
 		case kMCDirectionWest:
-			location.z += 1;
+			coords.z += 1;
 			break;
 			
 		case kMCDirectionUp:
-			location.y += 1;
+			coords.y += 1;
 			break;
 			
 		case kMCDirectionDown:
-			location.y -= 1;
+			coords.y -= 1;
 			break;
 			
 		case kMCDirectionUnknown:
 			break;
 	}
 	
-	return location;
+	return coords;
 }
 
 
-static inline MCGridCoordinates MCCoordinatesNorthOf(MCGridCoordinates location)
+static inline MCGridCoordinates MCCoordinatesNorthOf(MCGridCoordinates coords)
 {
-	return MCStepCoordinatesBody(location, kMCDirectionNorth);
+	return MCStepCoordinatesBody(coords, kMCDirectionNorth);
 }
 
 
-static inline MCGridCoordinates MCCoordinatesSouthOf(MCGridCoordinates location)
+static inline MCGridCoordinates MCCoordinatesSouthOf(MCGridCoordinates coords)
 {
-	return MCStepCoordinatesBody(location, kMCDirectionSouth);
+	return MCStepCoordinatesBody(coords, kMCDirectionSouth);
 }
 
 
-static inline MCGridCoordinates MCCoordinatesEastOf(MCGridCoordinates location)
+static inline MCGridCoordinates MCCoordinatesEastOf(MCGridCoordinates coords)
 {
-	return MCStepCoordinatesBody(location, kMCDirectionEast);
+	return MCStepCoordinatesBody(coords, kMCDirectionEast);
 }
 
 
-static inline MCGridCoordinates MCCoordinatesWestOf(MCGridCoordinates location)
+static inline MCGridCoordinates MCCoordinatesWestOf(MCGridCoordinates coords)
 {
-	return MCStepCoordinatesBody(location, kMCDirectionWest);
+	return MCStepCoordinatesBody(coords, kMCDirectionWest);
 }
 
 
-static inline MCGridCoordinates MCCoordinatesAbove(MCGridCoordinates location)
+static inline MCGridCoordinates MCCoordinatesAbove(MCGridCoordinates coords)
 {
-	return MCStepCoordinatesBody(location, kMCDirectionUp);
+	return MCStepCoordinatesBody(coords, kMCDirectionUp);
 }
 
 
-static inline MCGridCoordinates MCCoordinatesBelow(MCGridCoordinates location)
+static inline MCGridCoordinates MCCoordinatesBelow(MCGridCoordinates coords)
 {
-	return MCStepCoordinatesBody(location, kMCDirectionDown);
+	return MCStepCoordinatesBody(coords, kMCDirectionDown);
 }
 
 

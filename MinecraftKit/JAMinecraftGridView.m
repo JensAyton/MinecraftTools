@@ -379,7 +379,7 @@
 - (void) drawDebugStuffInDirtyRect:(NSRect)dirtyRect
 {
 	// Draw blue cross at origin. The offset is to get on the top side of the cell.
-	NSPoint pt = [self rectFromCellLocation:kJAZeroLocation].origin;
+	NSPoint pt = [self rectFromCellLocation:kMCZeroCoordinates].origin;
 	pt.x += (_cellSize + _gridWidth) - 0.5 * _gridWidth;
 	pt.y += (_cellSize + _gridWidth) - 0.5 * _gridWidth;
 	NSBezierPath *path = [NSBezierPath new];
@@ -1058,7 +1058,7 @@
 	}
 	else
 	{
-		NSRect rect = [self rectFromCellLocation:kJAZeroLocation];
+		NSRect rect = [self rectFromCellLocation:kMCZeroCoordinates];
 		rect.size = NSZeroSize;
 		return rect;
 	}

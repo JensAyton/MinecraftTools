@@ -12,6 +12,8 @@
 NSString * const kJAMinecraftBlockStoreChangedNotification	= @"se.ayton.jens JAMinecraftBlockStore Changed";
 NSString * const kJAMinecraftBlockStoreChangedExtents		= @"kJAMinecraftBlockStoreChangedExtents";
 
+NSString * const kJAMinecraftBlockStoreErrorDomain			= @"se.ayton.jens JAMinecraftBlockStore ErrorDomain";
+
 
 @interface JAMinecraftBlockStore ()
 {
@@ -139,7 +141,7 @@ static void ThrowSubclassResponsibility(const char *func) __attribute__((noretur
 {
 	if (_bulkLevel != 0)
 	{
-		_dirtyExtents = MCGridExtentsUnionWithLocation(_dirtyExtents, changedLocation);
+		_dirtyExtents = MCGridExtentsUnionWithCoordinates(_dirtyExtents, changedLocation);
 	}
 	else
 	{

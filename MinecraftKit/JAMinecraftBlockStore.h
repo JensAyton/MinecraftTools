@@ -99,3 +99,17 @@ enum
 
 extern NSString * const kJAMinecraftBlockStoreChangedNotification;
 extern NSString * const kJAMinecraftBlockStoreChangedExtents;	// userInfo dictionary key whose value is an NSValue containing a MCGridExtents object.
+
+
+extern NSString * const kJAMinecraftBlockStoreErrorDomain;
+
+enum
+{
+	kJABlockStoreErrorNoError,
+	kJABlockStoreErrorNilData,
+	kJABlockStoreErrorWrongFileFormat,
+	kJABlockStoreErrorUnknownFormatVersion,
+	kJABlockStoreErrorTruncatedData,
+	kJABlockStoreErrorEmptyDocument,
+	kJABlockStoreErrorDocumentTooLarge
+};

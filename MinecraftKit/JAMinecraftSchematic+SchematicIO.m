@@ -38,8 +38,8 @@ NSString * const kJAMinecraftSchematicUTI = @"com.davidvierra.mcedit.schematic";
 	
 	if (data == nil)
 	{
-		if (outError != nil)  *outError = [NSError errorWithDomain:kJAMinecraftSchematicErrorDomain
-															  code:kJACircuitErrorNilData
+		if (outError != nil)  *outError = [NSError errorWithDomain:kJAMinecraftBlockStoreErrorDomain
+															  code:kJABlockStoreErrorNilData
 														  userInfo:nil];
 		return nil;
 	}
@@ -48,8 +48,8 @@ NSString * const kJAMinecraftSchematicUTI = @"com.davidvierra.mcedit.schematic";
 	
 	if (root.type != kJANBTTagCompound || ![root.name isEqualToString:@"Schematic"])
 	{
-		if (outError != nil)  *outError = [NSError errorWithDomain:kJAMinecraftSchematicErrorDomain
-															  code:kJACircuitErrorWrongFileFormat
+		if (outError != nil)  *outError = [NSError errorWithDomain:kJAMinecraftBlockStoreErrorDomain
+															  code:kJABlockStoreErrorWrongFileFormat
 														  userInfo:nil];
 		return nil;
 	}
@@ -66,8 +66,8 @@ NSString * const kJAMinecraftSchematicUTI = @"com.davidvierra.mcedit.schematic";
 	NSData *blockData = [[dict objectForKey:@"Data"] objectValue];
 	if (![blockIDs isKindOfClass:[NSData class]] || ![blockData isKindOfClass:[NSData class]] || blockIDs.length < planeSize || blockData.length < planeSize)
 	{
-		if (outError != nil)  *outError = [NSError errorWithDomain:kJAMinecraftSchematicErrorDomain
-															  code:kJACircuitErrorTruncatedData
+		if (outError != nil)  *outError = [NSError errorWithDomain:kJAMinecraftBlockStoreErrorDomain
+															  code:kJABlockStoreErrorTruncatedData
 														  userInfo:nil];
 		return nil;
 	}

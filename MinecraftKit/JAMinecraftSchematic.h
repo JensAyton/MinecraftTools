@@ -56,17 +56,3 @@
 @property (readonly) NSInteger maximumLayer;
 
 @end
-
-
-extern NSString * const kJAMinecraftSchematicErrorDomain;
-
-enum
-{
-	kJACircuitErrorNoError,
-	kJACircuitErrorNilData,
-	kJACircuitErrorWrongFileFormat,
-	kJACircuitErrorUnknownFormatVersion,
-	kJACircuitErrorTruncatedData,
-	kJACircuitErrorEmptyDocument,
-	kJACircuitErrorDocumentTooLarge
-};

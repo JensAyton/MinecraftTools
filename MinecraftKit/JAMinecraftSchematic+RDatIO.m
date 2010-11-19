@@ -85,8 +85,8 @@ static uint8_t CellInfoOrientationFromDoorMeta(uint8_t meta);
 	
 	if (data == nil)
 	{
-		if (outError != nil)  *outError = [NSError errorWithDomain:kJAMinecraftSchematicErrorDomain
-															  code:kJACircuitErrorNilData
+		if (outError != nil)  *outError = [NSError errorWithDomain:kJAMinecraftBlockStoreErrorDomain
+															  code:kJABlockStoreErrorNilData
 														  userInfo:nil];
 		return nil;
 	}
@@ -107,16 +107,16 @@ static uint8_t CellInfoOrientationFromDoorMeta(uint8_t meta);
 	
 	if (!headerOK)
 	{
-		if (outError != nil)  *outError = [NSError errorWithDomain:kJAMinecraftSchematicErrorDomain
-															  code:kJACircuitErrorWrongFileFormat
+		if (outError != nil)  *outError = [NSError errorWithDomain:kJAMinecraftBlockStoreErrorDomain
+															  code:kJABlockStoreErrorWrongFileFormat
 														  userInfo:nil];
 		return nil;
 	}
 	
 	if (*bytes++ != 1)
 	{
-		if (outError != nil)  *outError = [NSError errorWithDomain:kJAMinecraftSchematicErrorDomain
-															  code:kJACircuitErrorUnknownFormatVersion
+		if (outError != nil)  *outError = [NSError errorWithDomain:kJAMinecraftBlockStoreErrorDomain
+															  code:kJABlockStoreErrorUnknownFormatVersion
 														  userInfo:nil];
 		return nil;
 	}
@@ -131,15 +131,15 @@ static uint8_t CellInfoOrientationFromDoorMeta(uint8_t meta);
 	NSUInteger planeSize = length * width * height;
 	if (planeSize == 0)
 	{
-		if (outError != nil)  *outError = [NSError errorWithDomain:kJAMinecraftSchematicErrorDomain
-															  code:kJACircuitErrorEmptyDocument
+		if (outError != nil)  *outError = [NSError errorWithDomain:kJAMinecraftBlockStoreErrorDomain
+															  code:kJABlockStoreErrorEmptyDocument
 														  userInfo:nil];
 		return nil;
 	}
 	if (remaining < planeSize * 2)
 	{
-		if (outError != nil)  *outError = [NSError errorWithDomain:kJAMinecraftSchematicErrorDomain
-															  code:kJACircuitErrorTruncatedData
+		if (outError != nil)  *outError = [NSError errorWithDomain:kJAMinecraftBlockStoreErrorDomain
+															  code:kJABlockStoreErrorTruncatedData
 														  userInfo:nil];
 		return nil;
 	}
@@ -191,8 +191,8 @@ static uint8_t CellInfoOrientationFromDoorMeta(uint8_t meta);
 	
 	if (width > 65535 || length > 65535 || height > 65535)
 	{
-		if (outError != NULL) *outError = [NSError errorWithDomain:kJAMinecraftSchematicErrorDomain
-															  code:kJACircuitErrorDocumentTooLarge
+		if (outError != NULL) *outError = [NSError errorWithDomain:kJAMinecraftBlockStoreErrorDomain
+															  code:kJABlockStoreErrorDocumentTooLarge
 														  userInfo:[NSDictionary dictionaryWithObject:NSLocalizedString(@"This document is too large to be stored in RDAT format. RDAT format is limited to 65535 blocks in each dimension.", NULL) forKey:NSLocalizedFailureReasonErrorKey]];
 		return nil;
 	}

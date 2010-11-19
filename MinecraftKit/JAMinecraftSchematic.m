@@ -48,9 +48,6 @@ enum
 };
 
 
-NSString * const kJAMinecraftSchematicErrorDomain			= @"se.ayton.jens JAMinecraftSchematic ErrorDomain";
-
-
 typedef struct
 {
 	NSUInteger						innerNodeCount;
@@ -292,7 +289,7 @@ static inline NSUInteger RepresentedDistance(levels)
 					{
 						loc.x = base.x + bx;
 						
-						if (MCGridLocationIsWithinExtents(loc, region))
+						if (MCGridCoordinatesAreWithinExtents(loc, region))
 						{
 							MCCell cell = [sourceCircuit cellAt:loc];
 							if (cell.blockID != kMCBlockAir)
@@ -401,7 +398,7 @@ static inline NSUInteger RepresentedDistance(levels)
 			_cacheBase.y, _cacheBase.y + kJAMinecraftSchematicChunkSize - 1,
 			_cacheBase.z, _cacheBase.z + kJAMinecraftSchematicChunkSize - 1
 		};
-		BOOL hit = MCGridLocationIsWithinExtents(location, cacheExtents);
+		BOOL hit = MCGridCoordinatesAreWithinExtents(location, cacheExtents);
 		
 #if PROFILE_CACHE
 		static NSUInteger cacheAttempts = 0, cacheHits = 0;

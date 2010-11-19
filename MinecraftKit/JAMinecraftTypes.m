@@ -27,7 +27,7 @@
 
 
 const MCCell kJAEmptyCell = { .blockID = kMCBlockAir, .blockData = 0 };
-const MCGridCoordinates kJAZeroLocation = { 0, 0, 0 };
+const MCGridCoordinates kMCZeroCoordinates = { 0, 0, 0 };
 const MCGridExtents kMCEmptyExtents = { NSIntegerMax, NSIntegerMin, NSIntegerMax, NSIntegerMin, NSIntegerMax, NSIntegerMin };
 const MCGridExtents kMCZeroExtents = { 0, 0, 0, 0, 0, 0 };
 const MCGridExtents kMCInfiniteExtents = { NSIntegerMin, NSIntegerMax, NSIntegerMin, NSIntegerMax, NSIntegerMin, NSIntegerMax };
@@ -52,7 +52,7 @@ BOOL MCGridExtentsEqual(MCGridExtents a, MCGridExtents b)
 }
 
 
-BOOL MCGridLocationIsWithinExtents(MCGridCoordinates location, MCGridExtents extents)
+BOOL MCGridCoordinatesAreWithinExtents(MCGridCoordinates location, MCGridExtents extents)
 {
 	return	extents.minX <= location.x && location.x <= extents.maxX &&
 			extents.minY <= location.y && location.y <= extents.maxY &&
@@ -74,7 +74,7 @@ MCGridExtents MCGridExtentsUnion(MCGridExtents a, MCGridExtents b)
 }
 
 
-MCGridExtents MCGridExtentsUnionWithLocation(MCGridExtents extents, MCGridCoordinates location)
+MCGridExtents MCGridExtentsUnionWithCoordinates(MCGridExtents extents, MCGridCoordinates location)
 {
 	return MCGridExtentsUnion(extents, MCGridExtentsWithCoordinates(location));
 }
