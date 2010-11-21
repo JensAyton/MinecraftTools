@@ -3,9 +3,13 @@
 	
 	The JAMinecraftSchematic class represents an infiniteish three-dimensional
 	matrix of cells containing Minecraft blocks. Data is stored in a sparse
-	structure where large areas of air take no memory. The extents, width,
-	height and depth properties represent the axis-aligned bounding box of all
-	non-air blocks.
+	structure where large areas of empty space take no memory.
+	
+	“Empty space” is defined as air from ground level up, and smooth stone
+	below ground level.
+	
+	The extents, width, height and depth properties represent the axis-aligned
+	bounding box of all non-empty blocks.
 	
 	Performance characteristics:
 	• Reads are O(log n), where n is the size on the longest side.
@@ -46,13 +50,14 @@
 @interface JAMinecraftSchematic: JAMinecraftBlockStore <NSCopying>
 
 /*
-	For schematics, any y range may be used, so the minimum layer is 127
-	layers below the highest used y coordinate, and the maximum layer is 127
-	layers below the lowest used y coordinate.
+	NOTE: changing the ground level will change the virtual content of “empty
+	space” in the schematic (see header comment), but not the actual content
+	of non-empty space.
 	
-	For empty schematics, these are NSIntegerMin and NSIntegerMax!
+	Since this distinction makes little sense to a user, changing ground level
+	for a schematic that has been shown is unhelpful. It should be set once
+	when loading the schematic.
 */
-@property (readonly) NSInteger minimumLayer;
-@property (readonly) NSInteger maximumLayer;
+@property (readwrite) NSInteger groundLevel;
 
 @end

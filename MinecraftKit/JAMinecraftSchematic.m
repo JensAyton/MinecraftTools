@@ -46,8 +46,8 @@ static void LogOutdent(void);
 
 enum
 {
-	kJAMinecraftSchematicChunkSize		= 8,
-	kJAMinecraftSchematicCellsPerChunk	= kJAMinecraftSchematicChunkSize * kJAMinecraftSchematicChunkSize * kJAMinecraftSchematicChunkSize
+	kChunkSize		= 8,
+	kJAMinecraftSchematicCellsPerChunk	= kChunkSize * kChunkSize * kChunkSize
 };
 
 
@@ -85,7 +85,8 @@ struct Chunk
 
 
 static inline InnerNode *AllocInnerNode(NSUInteger level);
-static inline Chunk *AllocChunk(void);
+static Chunk *AllocChunk(void);
+static Chunk *MakeChunk(NSInteger baseY, NSInteger groundLevel);	// Create a chunk and fill it with stone or air as appropriate depending on ground level.
 
 // Copy-on-write.
 static InnerNode *COWInnerNode(InnerNode *node, NSUInteger level);
@@ -102,6 +103,9 @@ static MCGridExtents ChunkGetExtents(Chunk *chunk);
 static MCCell ChunkGetCell(Chunk *chunk, NSInteger x, NSInteger y, NSInteger z);
 static BOOL ChunkSetCell(Chunk *chunk, NSInteger x, NSInteger y, NSInteger z, MCCell cell);	// Returns true if cell is changed.
 
+// Fill a complete cell.
+static void FillChunk(Chunk *chunk, MCCell cell);
+
 
 typedef BOOL (^JAMinecraftSchematicChunkIterator)(Chunk *chunk, MCGridCoordinates base);
 
@@ -109,8 +113,10 @@ typedef BOOL (^JAMinecraftSchematicChunkIterator)(Chunk *chunk, MCGridCoordinate
 @interface JAMinecraftSchematic ()
 {
 @private
-	MCGridExtents					_extents;
 	InnerNode						*_root;
+	MCGridExtents					_extents;
+	NSInteger						_groundLevel;
+	
 	BOOL							_extentsAreAccurate;
 	uint8_t							_rootLevel;
 	
@@ -160,7 +166,7 @@ typedef BOOL (^JAMinecraftSchematicChunkIterator)(Chunk *chunk, MCGridCoordinate
 
 static inline NSUInteger RepresentedDistance(levels)
 {
-	return (1 << (levels - 1)) * kJAMinecraftSchematicChunkSize;
+	return (1 << (levels - 1)) * kChunkSize;
 }
 
 
@@ -222,7 +228,12 @@ static inline NSUInteger RepresentedDistance(levels)
 						baseCoordinates:&base
 						 createIfNeeded:NO
 						  makeWriteable:NO];
-	if (chunk == NULL)  return kJAEmptyCell;
+	
+	if (chunk == NULL)
+	{
+		if (location.y >= self.groundLevel)  return (MCCell){ kMCBlockAir, 0 };
+		else  return (MCCell){ kMCBlockSmoothStone, 0 };
+	}
 	
 	return ChunkGetCell(chunk, location.x - base.x, location.y - base.y, location.z - base.z);
 }
@@ -239,6 +250,8 @@ static inline NSUInteger RepresentedDistance(levels)
 	BOOL changed = NO;
 	if (chunk != nil)
 	{
+		NSAssert(chunk->refCount == 1, @"resolveChunkAt:... returned a shared chunk for setCell:at:");
+		
 		BOOL changeAffectsExtents = YES;	// FIXME: smartness
 		
 		changed = ChunkSetCell(chunk, location.x - base.x, location.y - base.y, location.z - base.z, cell);
@@ -282,13 +295,13 @@ static inline NSUInteger RepresentedDistance(levels)
 			NSUInteger bx, by, bz;
 			MCGridCoordinates loc;
 			
-			for (bz = 0; bz < kJAMinecraftSchematicChunkSize; bz++)
+			for (bz = 0; bz < kChunkSize; bz++)
 			{
 				loc.z = base.z + bz;
-				for (by = 0; by < kJAMinecraftSchematicChunkSize; by++)
+				for (by = 0; by < kChunkSize; by++)
 				{
 					loc.y = base.y + by;
-					for (bx = 0; bx < kJAMinecraftSchematicChunkSize; bx++)
+					for (bx = 0; bx < kChunkSize; bx++)
 					{
 						loc.x = base.x + bx;
 						
@@ -375,9 +388,32 @@ static inline NSUInteger RepresentedDistance(levels)
 }
 
 
+- (NSInteger) groundLevel
+{
+	return _groundLevel;
+}
+
+
+- (void) setGroundLevel:(NSInteger)value
+{
+	if (value != _groundLevel)
+	{
+		MCGridExtents changedRegion =
+		{
+			NSIntegerMin, NSIntegerMax,
+			MIN(value, _groundLevel), MAX(value, _groundLevel),
+			NSIntegerMin, NSIntegerMax
+		};
+		
+		_groundLevel = value;
+		[self noteChangeInExtents:changedRegion];
+	}
+}
+
+
 - (MCGridExtents) totalExtents
 {
-	NSInteger distance = (1 << (_rootLevel - 1)) * kJAMinecraftSchematicChunkSize;
+	NSInteger distance = (1 << (_rootLevel - 1)) * kChunkSize;
 	NSInteger max = distance - 1;
 	NSInteger min = -distance;
 	
@@ -395,9 +431,9 @@ static inline NSUInteger RepresentedDistance(levels)
 	{
 		MCGridExtents cacheExtents = (MCGridExtents)
 		{
-			_cacheBase.x, _cacheBase.x + kJAMinecraftSchematicChunkSize - 1,
-			_cacheBase.y, _cacheBase.y + kJAMinecraftSchematicChunkSize - 1,
-			_cacheBase.z, _cacheBase.z + kJAMinecraftSchematicChunkSize - 1
+			_cacheBase.x, _cacheBase.x + kChunkSize - 1,
+			_cacheBase.y, _cacheBase.y + kChunkSize - 1,
+			_cacheBase.z, _cacheBase.z + kChunkSize - 1
 		};
 		BOOL hit = MCGridCoordinatesAreWithinExtents(location, cacheExtents);
 		
@@ -471,7 +507,7 @@ static inline NSUInteger RepresentedDistance(levels)
 		
 		if (--level == 0)
 		{
-			NSAssert1(size == kJAMinecraftSchematicChunkSize, @"Subdivision logic failure: size is %lu", size);
+			NSAssert1(size == kChunkSize, @"Subdivision logic failure: size is %lu", size);
 			break;
 		}
 		
@@ -499,7 +535,7 @@ static inline NSUInteger RepresentedDistance(levels)
 	if (chunk == NULL)
 	{
 		if (!createIfNeeded)  return NULL;
-		chunk = AllocChunk();
+		chunk = MakeChunk(baseY, _groundLevel);
 		Log(@"Creating chunk %p at (%li, %li, %li)", chunk, baseX, baseY, baseZ);
 		
 		if (chunk == nil)  [NSException raise:NSMallocException format:@"Out of memory"];
@@ -726,9 +762,18 @@ static NSUInteger sLiveChunks = 0;
 #endif
 
 
+static inline off_t Offset(unsigned x, unsigned y, unsigned z)  __attribute__((const, always_inline));
+static inline off_t Offset(unsigned x, unsigned y, unsigned z)
+{
+	return (z * kChunkSize + y) * kChunkSize + x;
+}
+
+
 static inline InnerNode *AllocInnerNode(NSUInteger level)
 {
 	InnerNode *result = calloc(sizeof(InnerNode), 1);
+	if (result == NULL)  [NSException raise:NSMallocException format:@"Out of memory"];
+	
 	result->refCount = 1;
 #ifndef NDEBUG
 	result->level = level;
@@ -741,9 +786,11 @@ static inline InnerNode *AllocInnerNode(NSUInteger level)
 }
 
 
-static inline Chunk *AllocChunk(void)
+static Chunk *AllocChunk(void)
 {
 	Chunk *result = calloc(sizeof(Chunk), 1);
+	if (result == NULL)  [NSException raise:NSMallocException format:@"Out of memory"];
+	
 	result->refCount = 1;
 	result->extents = kMCEmptyExtents;
 	result->extentsAreAccurate = YES;
@@ -751,6 +798,38 @@ static inline Chunk *AllocChunk(void)
 #if LOGGING
 	sLiveChunks++;
 #endif
+	
+	return result;
+}
+
+
+static Chunk *MakeChunk(NSInteger baseY, NSInteger groundLevel)
+{
+	Chunk *result = AllocChunk();
+	
+	if (baseY < groundLevel)
+	{
+		MCCell stoneCell = { kMCBlockSmoothStone, 0 };
+		if (baseY + kChunkSize < groundLevel)
+		{
+			FillChunk(result, stoneCell);
+		}
+		else
+		{
+			unsigned maxY = groundLevel - baseY;
+			for (unsigned z = 0; z < kChunkSize; z++)
+			{
+				for (unsigned y = 0; y < maxY; y++)
+				{
+					unsigned offset = Offset(0, y, z);
+					for (unsigned x = 0; x < kChunkSize; x++)
+					{
+						result->cells[offset++] = stoneCell;
+					}
+				}
+			}
+		}
+	}
 	
 	return result;
 }
@@ -877,13 +956,6 @@ static void ReleaseChunk(Chunk *chunk)
 }
 
 
-static inline unsigned Offset(unsigned x, unsigned y, unsigned z)  __attribute__((const, always_inline));
-static inline unsigned Offset(unsigned x, unsigned y, unsigned z)
-{
-	return (z * kJAMinecraftSchematicChunkSize + y) * kJAMinecraftSchematicChunkSize + x;
-}
-
-
 static MCGridExtents ChunkGetExtents(Chunk *chunk)
 {
 	NSCParameterAssert(chunk != NULL);
@@ -896,11 +968,11 @@ static MCGridExtents ChunkGetExtents(Chunk *chunk)
 		unsigned maxZ = 0, minZ = UINT_MAX;
 		
 		unsigned x, y, z;
-		for (z = 0; z < kJAMinecraftSchematicChunkSize; z++)
+		for (z = 0; z < kChunkSize; z++)
 		{
-			for (y = 0; y < kJAMinecraftSchematicChunkSize; y++)
+			for (y = 0; y < kChunkSize; y++)
 			{
-				for (x = 0; x < kJAMinecraftSchematicChunkSize; x++)
+				for (x = 0; x < kChunkSize; x++)
 				{
 					if (!MCCellIsAir(chunk->cells[Offset(x, y, z)]))
 					{
@@ -927,9 +999,9 @@ static MCGridExtents ChunkGetExtents(Chunk *chunk)
 static MCCell ChunkGetCell(Chunk *chunk, NSInteger x, NSInteger y, NSInteger z)
 {
 	NSCParameterAssert(chunk != NULL &&
-					   0 <= x && x < kJAMinecraftSchematicChunkSize &&
-					   0 <= y && y < kJAMinecraftSchematicChunkSize &&
-					   0 <= z && z < kJAMinecraftSchematicChunkSize);
+					   0 <= x && x < kChunkSize &&
+					   0 <= y && y < kChunkSize &&
+					   0 <= z && z < kChunkSize);
 	
 	return chunk->cells[Offset(x, y, z)];
 }
@@ -938,9 +1010,9 @@ static MCCell ChunkGetCell(Chunk *chunk, NSInteger x, NSInteger y, NSInteger z)
 static BOOL ChunkSetCell(Chunk *chunk, NSInteger x, NSInteger y, NSInteger z, MCCell cell)
 {
 	NSCParameterAssert(chunk != NULL &&
-					   0 <= x && x < kJAMinecraftSchematicChunkSize &&
-					   0 <= y && y < kJAMinecraftSchematicChunkSize &&
-					   0 <= z && z < kJAMinecraftSchematicChunkSize);
+					   0 <= x && x < kChunkSize &&
+					   0 <= y && y < kChunkSize &&
+					   0 <= z && z < kChunkSize);
 	
 	unsigned offset = Offset(x, y, z);
 	if (MCCellsEqual(chunk->cells[offset], cell))  return NO;
@@ -948,6 +1020,15 @@ static BOOL ChunkSetCell(Chunk *chunk, NSInteger x, NSInteger y, NSInteger z, MC
 	chunk->cells[offset] = cell;
 	chunk->extentsAreAccurate = NO;
 	return YES;
+}
+
+
+static void FillChunk(Chunk *chunk, MCCell cell)
+{
+	NSCParameterAssert(chunk != NULL);
+	
+	MCCell pattern[8] = { cell, cell, cell, cell, cell, cell, cell, cell };
+	memset_pattern16(chunk->cells, &pattern, sizeof chunk->cells / 16);
 }
 
 

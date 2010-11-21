@@ -45,6 +45,12 @@ enum
 @property (readonly) NSInteger minimumLayer;
 @property (readonly) NSInteger maximumLayer;
 
+/*
+	Lowest Y coordinate where undefined space is assumed to be air; below this,
+	it’s assumed to be smooth stone.
+*/
+@property (readonly) NSInteger groundLevel;
+
 - (MCCell) cellAt:(MCGridCoordinates)location;
 - (void) setCell:(MCCell)cell at:(MCGridCoordinates)location;
 

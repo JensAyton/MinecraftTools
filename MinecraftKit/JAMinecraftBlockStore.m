@@ -42,6 +42,12 @@ static void ThrowSubclassResponsibility(const char *func) __attribute__((noretur
 }
 
 
+- (NSInteger) groundLevel
+{
+	return 0;
+}
+
+
 #pragma mark Subclass responsibilities
 
 - (MCGridExtents) extents

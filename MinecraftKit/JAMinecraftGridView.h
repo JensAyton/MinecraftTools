@@ -51,7 +51,7 @@ enum
 	NSScroller				*_verticalScroller;
 	
 	NSPoint					_scrollCenter;
-	NSUInteger				_currentLayer;
+	NSInteger				_currentLayer;
 	
 	JAMCGridViewRenderCB	_renderCallback;
 	
@@ -65,14 +65,14 @@ enum
 	NSInteger				_cellSize;
 	NSInteger				_gridWidth;
 	
-	NSColor					*_emptyPattern;
+	NSColor					*_emptyOutsidePattern;
 }
 
 @property (nonatomic, assign) JAMinecraftBlockStore *store;
 
 // Scroll location, in floating-point cell coordinates.
 @property (nonatomic) NSPoint scrollCenter;
-@property (nonatomic) NSUInteger currentLayer;
+@property (nonatomic) NSInteger currentLayer;
 
 @property (nonatomic) MCGridExtents selection;
 
@@ -145,6 +145,15 @@ enum
 @property (nonatomic, readonly) NSColor *groundFillColorOutsideDefinedArea;
 
 - (void) drawFillPatternForCellType:(MCCell)cell inRect:(NSRect)rect;
+
+/*
+	Force an update of various cached drawing state. Currently, this means the
+	cell and grid metrics and the fill colours defined above.
+	
+	This is implicitly called when changing the zoom level, visible layer or
+	render callback.
+*/
+- (void) invalidateDrawingCaches;
 
 /*
 	Infinite canvas (default: yes) allows scrolling outside the store’s

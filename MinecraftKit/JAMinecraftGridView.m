@@ -47,6 +47,8 @@
 - (void) drawDebugStuffInDirtyRect:(NSRect)dirtyRect;
 #endif
 
+@property (readonly, nonatomic) NSColor *emptyOutsidePattern;
+
 // Selection
 - (BOOL) hasVisibleSelection;
 - (BOOL) isFocusedForSelection;
@@ -134,17 +136,19 @@
 
 #pragma mark Basic property accessors
 
-- (NSUInteger) currentLayer
+- (NSInteger) currentLayer
 {
 	return _currentLayer;
 }
 
 
-- (void) setCurrentLayer:(NSUInteger)value
+- (void) setCurrentLayer:(NSInteger)value
 {
 	if (_currentLayer != value)
 	{
 		_currentLayer = value;
+		[self invalidateDrawingCaches];
+		
 		[self setNeedsDisplay:YES];
 		
 		[self updateDrag:nil];
@@ -342,14 +346,18 @@
 }
 
 
-- (NSColor *) emptyPattern
+- (NSColor *) emptyOutsidePattern
 {
-	if (_emptyPattern == nil)
+	if (_emptyOutsidePattern == nil)
 	{
-		_emptyPattern = [self buildCellPatternWithFillColor:self.airFillColorOutsideDefinedArea gridColor:self.gridColorOutsideDefinedArea];
+		NSColor *fillColor = nil;
+		if (self.currentLayer >= self.store.groundLevel)  fillColor = self.airFillColorOutsideDefinedArea;
+		else  fillColor = self.groundFillColorOutsideDefinedArea;
+		
+		_emptyOutsidePattern = [self buildCellPatternWithFillColor:fillColor gridColor:self.gridColorOutsideDefinedArea];
 	}
 	
-	return _emptyPattern;
+	return _emptyOutsidePattern;
 }
 
 
@@ -361,7 +369,7 @@
 	*/
 	
 #if USE_BACKGROUND_CACHE
-	[[self emptyPattern] set];
+	[self.emptyOutsidePattern set];
 	NSPoint phase = [self rectFromCellLocation:kMCZeroCoordinates].origin;
 	phase.x += self.frame.origin.x;
 	phase.y += self.frame.origin.y;
@@ -1045,14 +1053,35 @@
 }
 
 
+-(BOOL) validateZoomLevel:(id *)ioValue error:(NSError **)outError
+{
+	NSInteger value = [*ioValue integerValue];
+	NSInteger newValue = value;
+	
+	newValue = MAX(newValue, 0);
+	newValue = MIN(newValue, self.maximumZoomLevel);
+	
+	if (newValue != value)
+	{
+		*ioValue = [NSNumber numberWithInteger:newValue];
+	}
+	return YES;
+}
+
+
+- (void) invalidateDrawingCaches
+{
+	_cellSize = [self cellSizeForZoomLevel:_zoomLevel];
+	_gridWidth = [self gridWidthForZoomLevel:_zoomLevel];
+	_emptyOutsidePattern = nil;
+}
+
+
 - (void) performSwitchZoomLevel
 {
 	[self switchToZoomLevel:_zoomLevel];
 	
-	_cellSize = [self cellSizeForZoomLevel:_zoomLevel];
-	_gridWidth = [self gridWidthForZoomLevel:_zoomLevel];
-	_emptyPattern = nil;
-	
+	[self invalidateDrawingCaches];
 	[self updateScrollers];
 	[self setNeedsDisplay:YES];
 }
@@ -1060,7 +1089,7 @@
 
 - (void) switchToZoomLevel:(NSUInteger)zoomLevel
 {
-	
+	// Subclass hook.
 }
 
 
