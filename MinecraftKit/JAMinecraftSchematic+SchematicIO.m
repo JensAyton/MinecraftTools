@@ -30,6 +30,17 @@
 NSString * const kJAMinecraftSchematicUTI = @"com.davidvierra.mcedit.schematic";
 
 
+static NSString * const kSchematicKey	= @"Schematic";
+static NSString * const kMaterialsKey	= @"Materials";
+static NSString * const kMaterialsAlpha	= @"Alpha";
+static NSString * const kWidthKey		= @"Width";
+static NSString * const kLengthKey		= @"Length";
+static NSString * const kHeightKey		= @"Height";
+static NSString * const kBlocksKey		= @"Blocks";
+static NSString * const kDataKey		= @"Data";
+static NSString * const kGroundLevelKey	= @"se.jens.ayton GroundLevel";
+
+
 @implementation JAMinecraftSchematic (SchematicIO)
 
 - (id) initWithSchematicData:(NSData *)data error:(NSError **)outError
@@ -46,7 +57,7 @@ NSString * const kJAMinecraftSchematicUTI = @"com.davidvierra.mcedit.schematic";
 	
 	JANBTTag *root = [JANBTParser parseData:data];
 	
-	if (root.type != kJANBTTagCompound || ![root.name isEqualToString:@"Schematic"])
+	if (root.type != kJANBTTagCompound || ![root.name isEqualToString:kSchematicKey])
 	{
 		if (outError != nil)  *outError = [NSError errorWithDomain:kJAMinecraftBlockStoreErrorDomain
 															  code:kJABlockStoreErrorWrongFileFormat
@@ -56,14 +67,14 @@ NSString * const kJAMinecraftSchematicUTI = @"com.davidvierra.mcedit.schematic";
 	
 	NSDictionary *dict = root.objectValue;
 	
-	NSUInteger width = [[dict objectForKey:@"Width"] integerValue];
-	NSUInteger length = [[dict objectForKey:@"Length"] integerValue];
-	NSUInteger height = [[dict objectForKey:@"Height"] integerValue];
+	NSUInteger width = [[dict objectForKey:kWidthKey] integerValue];
+	NSUInteger length = [[dict objectForKey:kLengthKey] integerValue];
+	NSUInteger height = [[dict objectForKey:kHeightKey] integerValue];
 	
 	NSUInteger planeSize = width * length * height;
 	
-	NSData *blockIDs = [[dict objectForKey:@"Blocks"] objectValue];
-	NSData *blockData = [[dict objectForKey:@"Data"] objectValue];
+	NSData *blockIDs = [[dict objectForKey:kBlocksKey] objectValue];
+	NSData *blockData = [[dict objectForKey:kDataKey] objectValue];
 	if (![blockIDs isKindOfClass:[NSData class]] || ![blockData isKindOfClass:[NSData class]] || blockIDs.length < planeSize || blockData.length < planeSize)
 	{
 		if (outError != nil)  *outError = [NSError errorWithDomain:kJAMinecraftBlockStoreErrorDomain
@@ -104,7 +115,9 @@ NSString * const kJAMinecraftSchematicUTI = @"com.davidvierra.mcedit.schematic";
 		}
 	}
 	
-	[self findNaturalGroundLevel];
+	JANBTTag *groundLevel = [dict objectForKey:kGroundLevelKey];
+	if (groundLevel.integerType)  self.groundLevel = groundLevel.integerValue;
+	else  [self findNaturalGroundLevel];
 	
 	[self endBulkUpdate];
 	
@@ -127,11 +140,12 @@ NSString * const kJAMinecraftSchematicUTI = @"com.davidvierra.mcedit.schematic";
 	NSUInteger length = MCGridExtentsLength(region);
 	NSUInteger height = MCGridExtentsHeight(region);
 	
-	[root ja_setNBTInteger:width type:kJANBTTagShort forKey:@"Width"];
-	[root ja_setNBTInteger:length type:kJANBTTagShort forKey:@"Length"];
-	[root ja_setNBTInteger:height type:kJANBTTagShort forKey:@"Height"];
+	[root ja_setNBTInteger:width type:kJANBTTagShort forKey:kWidthKey];
+	[root ja_setNBTInteger:length type:kJANBTTagShort forKey:kLengthKey];
+	[root ja_setNBTInteger:height type:kJANBTTagShort forKey:kHeightKey];
 	
-	[root ja_setNBTString:@"Alpha" forKey:@"Materials"];
+	[root ja_setNBTInteger:self.groundLevel forKey:kGroundLevelKey];
+	[root ja_setNBTString:kMaterialsAlpha forKey:kMaterialsKey];
 	
 	NSUInteger planeSize = width * length * height;
 	NSMutableData *blockIDs = [NSMutableData dataWithLength:planeSize];
@@ -161,10 +175,10 @@ NSString * const kJAMinecraftSchematicUTI = @"com.davidvierra.mcedit.schematic";
 		}
 	}
 	
-	[root ja_setNBTByteArray:blockIDs forKey:@"Blocks"];
-	[root ja_setNBTByteArray:blockData forKey:@"Data"];
+	[root ja_setNBTByteArray:blockIDs forKey:kBlocksKey];
+	[root ja_setNBTByteArray:blockData forKey:kDataKey];
 	
-	JANBTTag *nbtRoot = [root ja_asNBTTagWithName:@"Schematic"];
+	JANBTTag *nbtRoot = [root ja_asNBTTagWithName:kSchematicKey];
 	return [JANBTEncoder encodeTag:nbtRoot];
 }
 
