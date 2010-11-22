@@ -377,6 +377,13 @@
 					"-fobjc-nonfragile-abi2",
 				);
 				PRODUCT_NAME = SchematicViewer;
+				WARNING_CFLAGS = (
+					"-Wall",
+					"-Wextra",
+					"-Wno-unused-parameter",
+					"-Wno-unused-function",
+					"-Wno-missing-field-initializers",
+				);
 			};
 			name = Debug;
 		};

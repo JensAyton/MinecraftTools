@@ -828,7 +828,7 @@ static void UnexpectedEOF(void)
 		return nil;
 	}
 	
-	if (self = [super init])
+	if ((self = [super init]))
 	{
 		_data = [data retain];
 		_bytes = data.bytes;

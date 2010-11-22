@@ -253,6 +253,13 @@
 				);
 				PRODUCT_NAME = mcxform;
 				VERSION_MACROS = "VERSION_STRING=\"\\\"0.3\\\"\"";
+				WARNING_CFLAGS = (
+					"-Wall",
+					"-Wextra",
+					"-Wno-unused-parameter",
+					"-Wno-unused-function",
+					"-Wno-missing-field-initializers",
+				);
 			};
 			name = Release;
 		};

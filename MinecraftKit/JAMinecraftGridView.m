@@ -134,6 +134,12 @@
 }
 
 
++ (BOOL) accessInstanceVariablesDirectly
+{
+	return NO;
+}
+
+
 #pragma mark Basic property accessors
 
 - (NSInteger) currentLayer
@@ -719,7 +725,7 @@
 - (BOOL) hasVisibleSelection
 {
 	MCGridExtents selection = self.selection;
-	NSUInteger currentLayer = self.currentLayer;
+	NSInteger currentLayer = self.currentLayer;
 	
 	return !MCGridExtentsEmpty(selection) && selection.minY <= currentLayer && currentLayer <= selection.maxY;
 }
@@ -1055,10 +1061,10 @@
 
 -(BOOL) validateZoomLevel:(id *)ioValue error:(NSError **)outError
 {
-	NSInteger value = [*ioValue integerValue];
-	NSInteger newValue = value;
+	NSUInteger value = [*ioValue unsignedIntegerValue];
+	NSUInteger newValue = value;
 	
-	newValue = MAX(newValue, 0);
+	newValue = MAX(newValue, 0U);
 	newValue = MIN(newValue, self.maximumZoomLevel);
 	
 	if (newValue != value)

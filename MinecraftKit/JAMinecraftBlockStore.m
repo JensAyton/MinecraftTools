@@ -48,6 +48,12 @@ static void ThrowSubclassResponsibility(const char *func) __attribute__((noretur
 }
 
 
++ (BOOL) accessInstanceVariablesDirectly
+{
+	return NO;
+}
+
+
 #pragma mark Subclass responsibilities
 
 - (MCGridExtents) extents

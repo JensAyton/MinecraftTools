@@ -122,7 +122,7 @@ static uint8_t CellInfoOrientationFromDoorMeta(uint8_t meta);
 	}
 	
 	// Read dimensions.
-	NSUInteger length, width, height;
+	NSInteger length, width, height;
 	height = (*bytes++ << 8) + *bytes++;
 	width = (*bytes++ << 8) + *bytes++;
 	length = (*bytes++ << 8) + *bytes++;

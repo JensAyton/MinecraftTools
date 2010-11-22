@@ -179,7 +179,7 @@ int main (int argc, const char * argv[])
 			
 			if (match)
 			{
-				if (argc <= process->minArgs)
+				if ((unsigned)argc <= process->minArgs)
 				{
 					EPrint(@"Not enough arguments to command %s.\n", arg);
 					return EXIT_FAILURE;
