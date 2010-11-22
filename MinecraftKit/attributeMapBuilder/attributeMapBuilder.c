@@ -38,9 +38,6 @@
 #include <string.h>
 
 
-#define KLastBlockID kMCBlockJackOLantern
-
-
 static const uint8_t kFullySolidIDs[] =
 {
 	kMCBlockSmoothStone,
@@ -209,7 +206,7 @@ int main (int argc, const char * argv[])
 		classification, and all unknown block IDs don’t.
 	*/
 	unsigned i;
-	for (i = 1; i < KLastBlockID; i++)
+	for (i = 1; i < kMCLastBlockID; i++)
 	{
 		JAMCBlockIDMetadata attr = attributeMap[i] & 0x0F;
 		if (attr == 0)
@@ -228,7 +225,7 @@ int main (int argc, const char * argv[])
 		JAMCBlockIDMetadata attr = attributeMap[i];
 		if (attr < 0)
 		{
-			fprintf(stderr, "Error: block ID %u is beyond KLastBlockID, but has attributes set (0x%X).\n", i, attr);
+			fprintf(stderr, "Error: block ID %u is beyond kMCLastBlockID, but has attributes set (0x%X).\n", i, attr);
 			exit(EXIT_FAILURE);
 		}
 	}

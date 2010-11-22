@@ -112,6 +112,9 @@ enum
 };
 
 
+#define kMCLastBlockID kMCBlockJackOLantern
+
+
 /*
 	BlockData bit masks. The meaning of bits depends on the block ID.
 	Names ending with “Mask” are multi-bit values.

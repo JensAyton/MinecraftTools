@@ -57,7 +57,15 @@
 	Since this distinction makes little sense to a user, changing ground level
 	for a schematic that has been shown is unhelpful. It should be set once
 	when loading the schematic.
+	
+	-findNaturalGroundLevel makes a best guess for an appropriate ground level
+	by assigning positive weights to “ground-like” block types and negative
+	weights to “above-ground-like” ones, and finding the lowest level with
+	a zero or negative overall weight. Empty chunks are ignored in this
+	calculation.
 */
 @property (readwrite) NSInteger groundLevel;
+
+- (void) findNaturalGroundLevel;
 
 @end

@@ -630,6 +630,196 @@ static void PerformFill(InnerNode *node, unsigned level, MCGridExtents fillRegio
 }
 
 
+
+/*
+	Assign a weight to each block type. Positive weights are “ground-like”,
+	and negative weights are “above-ground-like”. Needs testing with a
+	greater variety of circuits to tweak weights. These are pretty
+	arbitrary.
+
+	The general idea is that the floor level of a house or cave should be
+	considered ground level, even if there’s another floor/rock layer
+	above.
+
+	Reference weights:
+	-8: air, vegetation (logs are weaker since they’re also building
+	    materials), most non-block items (which appear as “things in air”
+	-4: blocky objects (workbenches etc.)
+	-2: building materials
+	 6: typical ground blocks
+	 8: ore blocks
+ */
+const int8_t kGroundLevelWeights[256] =
+{
+	-8,		// Air
+	4,		// Smooth stone
+	6,		// Grass
+	6,		// Dirt
+	-2,		// Cobblestone
+	-2,		// Wood (planks)
+	-8,		// Sapling
+	8,		// Bedrock
+	-2,		// Water
+	-1,		// Stationary water
+	
+	2,		// Lava
+	4,		// Stationary lava
+	6,		// Sand
+	6,		// Gravel
+	8,		// Gold ore
+	8,		// Iron ore
+	8,		// Coal “ore”
+	-6,		// Log
+	-8,		// Leaves
+	0,		// Sponge
+	
+	-2,		// Glass
+	0,		// unused range
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	
+	0,
+	0,
+	0,
+	0,
+	0,
+	-2,		// Cloth
+	0,		// unused
+	-8,		// Yellow flower
+	-8,		// Red flower
+	1,		// Brown mushroom
+	
+	1,		// Red mushroom
+	-2,		// Gold block
+	-2,		// Iron block
+	2,		// Double step
+	0,		// Single step
+	-2,		// Brick
+	-2,		// TNT
+	-4,		// Bookshelf
+	0,		// Mossy cobblestone
+	0,		// Obsidian
+	
+	-8,		// Torch
+	-8,		// Fire
+	-4,		// Mob spawner
+	-2,		// Wooden stairs
+	-4,		// Chest
+	-8,		// Redstone wire
+	8,		// Diamond “ore”
+	-2,		// Diamond block
+	-4,		// Workbench
+	-8,		// Crops
+	
+	6,		// Soil
+	-4,		// Furnace
+	-4,		// Burning furnace
+	-8,		// Signpost
+	-8,		// Wooden door
+	-8,		// Ladder
+	-8,		// Minecraft track
+	-2,		// Wooden stairs
+	-8,		// Wall sign
+	-8,		// Lever
+	
+	-8,		// Stone pressure plate
+	-8,		// Iron door
+	-8,		// Woodne pressure plate
+	8,		// Redstone ore
+	8,		// Glowing redstone ore
+	-8,		// Redstone torch (off)
+	-8,		// Redstone torch (on)
+	-8,		// Stone button
+	-8,		// Snow
+	-8,		// Ice
+	
+	-2,		// Snow block
+	-8,		// Cactus
+	2,		// Clay
+	-8,		// Reed
+	-4,		// Jukebox
+	-8,		// Fence
+	-4,		// Pumpkin
+	6,		// Netherstone
+	6,		// Slow sand
+	-1,		// Lightstone - technically a “ground” block, but generally over empty space
+	
+	-4,		// Portal
+	-4,		// Jack-o-lantern
+	
+	0
+};
+
+enum
+{
+	kLastWeight = kMCBlockJackOLantern
+};
+
+
+- (void) findNaturalGroundLevel
+{
+	MCGridExtents extents = self.extents;
+	if (MCGridExtentsEmpty(extents))  return;
+	if (kLastWeight != kMCLastBlockID)
+	{
+		NSLog(@"WARNING: %s requires its weight table to be updated. Ground level determination may be off.", __FUNCTION__);
+	}
+	
+	// Round minY and maxY outward to chunk boundaries.
+	NSInteger minY = extents.minY / kChunkSize * kChunkSize;
+	NSInteger maxY = (extents.maxY + kChunkSize) / kChunkSize * kChunkSize;
+	NSUInteger levelCount = maxY - minY;
+	NSInteger weightArray[levelCount];
+	memset(weightArray, 0, sizeof weightArray);
+	
+	NSInteger *weights = weightArray;	// Can’t refer to array from inside block.
+	
+	[self forEachChunkDo:^(Chunk *chunk, MCGridCoordinates base)
+	{
+		for (NSInteger y = 0; y < kChunkSize; y++)
+		{
+			NSInteger weight = 0;
+			
+			for (NSInteger z = 0; z < kChunkSize; z++)
+			{
+				for (NSInteger x = 0; x < kChunkSize; x++)
+				{
+					MCCell cell = ChunkGetCell(chunk, x, y, z);
+					weight += kGroundLevelWeights[cell.blockID];
+				}
+			}
+			
+			off_t yIndex = y + base.y - minY;
+			NSAssert(yIndex < (off_t)levelCount, @"Level range logic error");
+			weights[yIndex] += weight;
+		}
+		
+		return YES;
+	}];
+	
+	// Find first negative weight.
+	NSUInteger groundIndex;
+	for (groundIndex = 0; groundIndex < levelCount; groundIndex++)
+	{
+		if (weights[groundIndex] < 0)  break;
+	}
+	
+	// Work backwards past any zeros, which are equally groundy and ungroundy
+	while (groundIndex > 1 && weights[groundIndex - 1] < 1)
+	{
+		groundIndex--;
+	}
+	
+	self.groundLevel = minY + groundIndex;
+}
+
+
 - (MCGridExtents) totalExtents
 {
 	NSInteger distance = (1 << (_rootLevel - 1)) * kChunkSize;

@@ -104,6 +104,8 @@ NSString * const kJAMinecraftSchematicUTI = @"com.davidvierra.mcedit.schematic";
 		}
 	}
 	
+	[self findNaturalGroundLevel];
+	
 	[self endBulkUpdate];
 	
 	return self;
