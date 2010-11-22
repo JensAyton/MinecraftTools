@@ -132,9 +132,9 @@ extern const MCGridExtents kMCZeroExtents;
 extern const MCGridExtents kMCInfiniteExtents;
 
 
-BOOL MCGridExtentsEmpty(MCGridExtents extents) JA_CONST_FUNC;
+static BOOL MCGridExtentsEmpty(MCGridExtents extents) JA_CONST_FUNC;
 
-BOOL MCGridExtentsEqual(MCGridExtents a, MCGridExtents b) JA_CONST_FUNC;
+static BOOL MCGridExtentsEqual(MCGridExtents a, MCGridExtents b) JA_CONST_FUNC;
 
 static NSUInteger MCGridExtentsWidth(MCGridExtents extents) JA_CONST_FUNC;
 static NSUInteger MCGridExtentsLength(MCGridExtents extents) JA_CONST_FUNC;
@@ -156,10 +156,11 @@ static inline MCGridCoordinates MCGridExtentsMaximum(MCGridExtents extents) JA_C
 	MCGridExtentsWithCoordinates(MCGridCoordinates coords)
 	Returns an extents struct encompassing a single cell at the specified
 	coordinates.
-*/
+ */
 static MCGridExtents MCGridExtentsWithCoordinates(MCGridCoordinates coords) JA_CONST_FUNC;
+static MCGridExtents MCGridExtentsWithCoordinatesAndSize(MCGridCoordinates coords, NSUInteger sizeX, NSUInteger sizeY, NSUInteger sizeZ) JA_CONST_FUNC;
 
-BOOL MCGridCoordinatesAreWithinExtents(MCGridCoordinates coords, MCGridExtents extents) JA_CONST_FUNC;
+static BOOL MCGridCoordinatesAreWithinExtents(MCGridCoordinates coords, MCGridExtents extents) JA_CONST_FUNC;
 
 /*
 	MCGridExtentsUnion(MCGridExtents a, MCGridExtents b)
@@ -171,6 +172,12 @@ BOOL MCGridCoordinatesAreWithinExtents(MCGridCoordinates coords, MCGridExtents e
 */
 MCGridExtents MCGridExtentsUnion(MCGridExtents a, MCGridExtents b) JA_CONST_FUNC;
 MCGridExtents MCGridExtentsUnionWithCoordinates(MCGridExtents extents, MCGridCoordinates coords) JA_CONST_FUNC;
+
+/*
+	MCGridExtentsIntersect(MCGridExtents a, MCGridExtents b)
+	YES if a and b overlap.
+*/
+BOOL MCGridExtentsIntersect(MCGridExtents a, MCGridExtents b) JA_CONST_FUNC;
 
 /*
 	MCGridExtentsIntersection(MCGridExtents a, MCGridExtents b)
@@ -426,6 +433,25 @@ static MCGridExtents MCOffsetGridExtents(MCGridExtents extents, NSInteger dx, NS
 }
 
 
+static BOOL MCGridExtentsEmpty(MCGridExtents extents)
+{
+	return	extents.maxX < extents.minX ||
+	extents.maxY < extents.minY ||
+	extents.maxZ < extents.minZ;
+}
+
+
+static BOOL MCGridExtentsEqual(MCGridExtents a, MCGridExtents b)
+{
+	return a.minX == b.minX &&
+	a.maxX == b.maxX &&
+	a.minY == b.minY &&
+	a.maxY == b.maxY &&
+	a.minZ == b.minZ &&
+	a.maxZ == b.maxZ;
+}
+
+
 static inline MCGridCoordinates MCGridExtentsMinimum(MCGridExtents extents)
 {
 	return (MCGridCoordinates){ extents.minX, extents.minY, extents.minZ };
@@ -446,6 +472,25 @@ static MCGridExtents MCGridExtentsWithCoordinates(MCGridCoordinates coords)
 		coords.y, coords.y,
 		coords.z, coords.z
 	};
+}
+
+
+static MCGridExtents MCGridExtentsWithCoordinatesAndSize(MCGridCoordinates coords, NSUInteger sizeX, NSUInteger sizeY, NSUInteger sizeZ)
+{
+	return (MCGridExtents)
+	{
+		coords.x, coords.x + sizeX - 1,
+		coords.y, coords.y + sizeY - 1,
+		coords.z, coords.z + sizeZ - 1
+	};
+}
+
+
+static BOOL MCGridCoordinatesAreWithinExtents(MCGridCoordinates location, MCGridExtents extents)
+{
+	return	extents.minX <= location.x && location.x <= extents.maxX &&
+	extents.minY <= location.y && location.y <= extents.maxY &&
+	extents.minZ <= location.z && location.z <= extents.maxZ;
 }
 
 

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1A52C8B712903870006E2D65 /* JAMinecraftBlockStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A52C8B612903870006E2D65 /* JAMinecraftBlockStore.m */; };
 		1A52CA6712933835006E2D65 /* JAValueToString.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A52CA6612933835006E2D65 /* JAValueToString.m */; };
+		1A54A7A9129B214500977657 /* JAHashEnumeration.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A54A7A8129B214500977657 /* JAHashEnumeration.m */; };
 		1A9FB1ED1281F88B003DD1C3 /* JAMinecraftTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A9FB1E31281F88B003DD1C3 /* JAMinecraftTypes.m */; };
 		1A9FB21B1281F8E8003DD1C3 /* JANBTParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A9FB2181281F8E8003DD1C3 /* JANBTParser.m */; };
 		1A9FB21C1281F8E8003DD1C3 /* NSData+DDGZip.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A9FB21A1281F8E8003DD1C3 /* NSData+DDGZip.m */; };
@@ -40,6 +41,8 @@
 		1A52C8B612903870006E2D65 /* JAMinecraftBlockStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAMinecraftBlockStore.m; sourceTree = "<group>"; };
 		1A52CA6512933835006E2D65 /* JAValueToString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAValueToString.h; sourceTree = "<group>"; };
 		1A52CA6612933835006E2D65 /* JAValueToString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAValueToString.m; sourceTree = "<group>"; };
+		1A54A7A7129B214500977657 /* JAHashEnumeration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAHashEnumeration.h; sourceTree = "<group>"; };
+		1A54A7A8129B214500977657 /* JAHashEnumeration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAHashEnumeration.m; sourceTree = "<group>"; };
 		1A9FB1E11281F88B003DD1C3 /* JAMinecraftBlockIDs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAMinecraftBlockIDs.h; sourceTree = "<group>"; };
 		1A9FB1E21281F88B003DD1C3 /* JAMinecraftTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAMinecraftTypes.h; sourceTree = "<group>"; };
 		1A9FB1E31281F88B003DD1C3 /* JAMinecraftTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAMinecraftTypes.m; sourceTree = "<group>"; };
@@ -128,6 +131,8 @@
 				1A9FB21A1281F8E8003DD1C3 /* NSData+DDGZip.m */,
 				1A52CA6512933835006E2D65 /* JAValueToString.h */,
 				1A52CA6612933835006E2D65 /* JAValueToString.m */,
+				1A54A7A7129B214500977657 /* JAHashEnumeration.h */,
+				1A54A7A8129B214500977657 /* JAHashEnumeration.m */,
 			);
 			name = MinecraftKit;
 			path = ../MinecraftKit;
@@ -201,6 +206,7 @@
 				1AAD7959128B04C7001FB721 /* JAMinecraftBlockIDs.c in Sources */,
 				1A52C8B712903870006E2D65 /* JAMinecraftBlockStore.m in Sources */,
 				1A52CA6712933835006E2D65 /* JAValueToString.m in Sources */,
+				1A54A7A9129B214500977657 /* JAHashEnumeration.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -218,7 +224,10 @@
 				GCC_ENABLE_OBJC_GC = required;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = $VERSION_MACROS;
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
+					"DEBUG_MCSCHEMATIC=1",
+					$VERSION_MACROS,
+				);
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INSTALL_PATH = /usr/local/bin;
@@ -227,6 +236,7 @@
 					"-fobjc-nonfragile-abi2",
 				);
 				PRODUCT_NAME = mcxform;
+				RUN_CLANG_STATIC_ANALYZER = YES;
 				VERSION_MACROS = "VERSION_STRING=\"\\\"0.3\\\"\"";
 			};
 			name = Debug;
@@ -243,7 +253,10 @@
 					NS_BLOCK_ASSERTIONS,
 					NDEBUG,
 				);
-				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = $VERSION_MACROS;
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
+					"DEBUG_MCSCHEMATIC=0",
+					$VERSION_MACROS,
+				);
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INSTALL_PATH = /usr/local/bin;
@@ -252,6 +265,7 @@
 					"-fobjc-nonfragile-abi2",
 				);
 				PRODUCT_NAME = mcxform;
+				RUN_CLANG_STATIC_ANALYZER = YES;
 				VERSION_MACROS = "VERSION_STRING=\"\\\"0.3\\\"\"";
 				WARNING_CFLAGS = (
 					"-Wall",

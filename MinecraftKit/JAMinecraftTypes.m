@@ -33,33 +33,6 @@ const MCGridExtents kMCZeroExtents = { 0, 0, 0, 0, 0, 0 };
 const MCGridExtents kMCInfiniteExtents = { NSIntegerMin, NSIntegerMax, NSIntegerMin, NSIntegerMax, NSIntegerMin, NSIntegerMax };
 
 
-BOOL MCGridExtentsEmpty(MCGridExtents extents)
-{
-	return	extents.maxX < extents.minX ||
-			extents.maxY < extents.minY ||
-			extents.maxZ < extents.minZ;
-}
-
-
-BOOL MCGridExtentsEqual(MCGridExtents a, MCGridExtents b)
-{
-	return a.minX == b.minX &&
-		   a.maxX == b.maxX &&
-		   a.minY == b.minY &&
-		   a.maxY == b.maxY &&
-		   a.minZ == b.minZ &&
-		   a.maxZ == b.maxZ;
-}
-
-
-BOOL MCGridCoordinatesAreWithinExtents(MCGridCoordinates location, MCGridExtents extents)
-{
-	return	extents.minX <= location.x && location.x <= extents.maxX &&
-			extents.minY <= location.y && location.y <= extents.maxY &&
-			extents.minZ <= location.z && location.z <= extents.maxZ;
-}
-
-
 MCGridExtents MCGridExtentsUnion(MCGridExtents a, MCGridExtents b)
 {
 	if (MCGridExtentsEmpty(a))  return b;
@@ -88,6 +61,25 @@ MCGridExtents MCGridExtentsIntersection(MCGridExtents a, MCGridExtents b)
 		MAX(a.minY, b.minY), MIN(a.maxY, b.maxY),
 		MAX(a.minZ, b.minZ), MIN(a.maxZ, b.maxZ)
 	};
+}
+
+
+BOOL MCGridExtentsIntersect(MCGridExtents a_, MCGridExtents b_)
+{
+	MCGridExtents a = a_, b = b_;
+	
+	if (MCGridExtentsEmpty(a) || MCGridExtentsEmpty(b))  return NO;
+	
+#if 0
+	return	a.minX <= b.maxX && b.minX <= a.maxX &&
+			a.minY <= b.maxY && b.minY <= a.maxY &&
+			a.minZ <= b.maxZ && b.minZ <= a.maxZ;
+#else
+	if (!(a.minX <= b.maxX && b.minX <= a.maxX))  return NO;
+	if (!(a.minY <= b.maxY && b.minY <= a.maxY))  return NO;
+	if (!(a.minZ <= b.maxZ && b.minZ <= a.maxZ))  return NO;
+	return YES;
+#endif
 }
 
 

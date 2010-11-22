@@ -24,6 +24,7 @@
 		1A52C456128F7574006E2D65 /* ColorTable.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1A52C455128F7574006E2D65 /* ColorTable.plist */; };
 		1A52C5F2128FF602006E2D65 /* README in Resources */ = {isa = PBXBuildFile; fileRef = 1A52C5F1128FF602006E2D65 /* README */; };
 		1A52C87B129036CF006E2D65 /* JAMinecraftBlockStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A52C87A129036CF006E2D65 /* JAMinecraftBlockStore.m */; };
+		1A54A704129B166600977657 /* JAHashEnumeration.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A54A703129B166600977657 /* JAHashEnumeration.m */; };
 		1DDD582C0DA1D0D100B32029 /* MyDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58280DA1D0D100B32029 /* MyDocument.xib */; };
 		1DDD582D0DA1D0D100B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD582A0DA1D0D100B32029 /* MainMenu.xib */; };
 		8D15AC2C0486D014006FF6A4 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */; };
@@ -67,6 +68,8 @@
 		1A52C5F1128FF602006E2D65 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		1A52C879129036CF006E2D65 /* JAMinecraftBlockStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAMinecraftBlockStore.h; sourceTree = "<group>"; };
 		1A52C87A129036CF006E2D65 /* JAMinecraftBlockStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAMinecraftBlockStore.m; sourceTree = "<group>"; };
+		1A54A702129B166600977657 /* JAHashEnumeration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAHashEnumeration.h; sourceTree = "<group>"; };
+		1A54A703129B166600977657 /* JAHashEnumeration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAHashEnumeration.m; sourceTree = "<group>"; };
 		1DDD58290DA1D0D100B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MyDocument.xib; sourceTree = "<group>"; };
 		1DDD582B0DA1D0D100B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		2564AD2C0F5327BB00F57823 /* SchematicViewer_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SchematicViewer_Prefix.pch; sourceTree = "<group>"; };
@@ -174,6 +177,8 @@
 				1A52C33C128F710B006E2D65 /* JAValueToString.m */,
 				1A52C344128F710B006E2D65 /* NSData+DDGZip.h */,
 				1A52C345128F710B006E2D65 /* NSData+DDGZip.m */,
+				1A54A702129B166600977657 /* JAHashEnumeration.h */,
+				1A54A703129B166600977657 /* JAHashEnumeration.m */,
 			);
 			name = Utility;
 			sourceTree = "<group>";
@@ -315,6 +320,7 @@
 				1A52C369128F7144006E2D65 /* IsKeyDown.c in Sources */,
 				1A52C43F128F71D8006E2D65 /* JASchematicViewerView.m in Sources */,
 				1A52C87B129036CF006E2D65 /* JAMinecraftBlockStore.m in Sources */,
+				1A54A704129B166600977657 /* JAHashEnumeration.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

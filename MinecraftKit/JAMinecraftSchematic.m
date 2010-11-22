@@ -26,17 +26,32 @@
 #import "JAValueToString.h"
 
 
+// Base debug features: validate node types and levels. Required for logging and instance tracking.
+#ifndef DEBUG_MCSCHEMATIC
+#define DEBUG_MCSCHEMATIC		!defined(NDEBUG)
+#endif
+
 // Verbose logging of internal structure changes and reference counting.
-#define LOGGING			(0 && !defined(NDEBUG))
+#define LOGGING					(0 && DEBUG_MCSCHEMATIC)
+#define LOG_STRUCTURE			(0 && LOGGING)
+
+// Tracking of node instances; dump from debugger by calling p JAMCSchematicDump().
+#define TRACK_NODE_INSTANCES	(1 && DEBUG_MCSCHEMATIC)
 
 // Logging of access cache hit rate.
-#define PROFILE_CACHE	0
+#define PROFILE_CACHE			0
 
+
+#if LOGGING || TRACK_NODE_INSTANCES
+static void DoLog(NSString *format, ...);
+static void DoLogIndent(void);
+static void DoLogOutdent(void);
+#endif
 
 #if LOGGING
-static void Log(NSString *format, ...);
-static void LogIndent(void);
-static void LogOutdent(void);
+#define Log DoLog
+#define LogIndent DoLogIndent
+#define LogOutdent DoLogOutdent
 #else
 #define Log(...)  do {} while (0)
 #define LogIndent()  do {} while (0)
@@ -46,7 +61,7 @@ static void LogOutdent(void);
 
 enum
 {
-	kChunkSize		= 8,
+	kChunkSize		= 4,
 	kJAMinecraftSchematicCellsPerChunk	= kChunkSize * kChunkSize * kChunkSize
 };
 
@@ -62,10 +77,11 @@ typedef struct InnerNode InnerNode;
 typedef struct Chunk Chunk;
 struct InnerNode
 {
-	NSUInteger					refCount;
-#ifndef NDEBUG
+#if DEBUG_MCSCHEMATIC
+	uint32_t					tag;
 	NSUInteger					level;	// For sanity checking.
 #endif
+	NSUInteger					refCount;
 	
 	union
 	{
@@ -76,12 +92,26 @@ struct InnerNode
 
 struct Chunk
 {
+#if DEBUG_MCSCHEMATIC
+	uint32_t					tag;
+#endif
 	uint16_t					refCount;
 	
 	BOOL						extentsAreAccurate;
 	MCGridExtents				extents;
 	MCCell						cells[kJAMinecraftSchematicCellsPerChunk];
 };
+
+
+#if DEBUG_MCSCHEMATIC
+enum
+{
+	kTagInnerNode = 'node',
+	kTagChunk = 'chnk',
+	kTagDeadInnerNode = 'xnod',
+	kTagDeadChunk = 'xchk'
+};
+#endif
 
 
 static inline InnerNode *AllocInnerNode(NSUInteger level);
@@ -103,8 +133,16 @@ static MCGridExtents ChunkGetExtents(Chunk *chunk);
 static MCCell ChunkGetCell(Chunk *chunk, NSInteger x, NSInteger y, NSInteger z);
 static BOOL ChunkSetCell(Chunk *chunk, NSInteger x, NSInteger y, NSInteger z, MCCell cell);	// Returns true if cell is changed.
 
-// Fill a complete cell.
-static void FillChunk(Chunk *chunk, MCCell cell);
+// Recursively test if node’s children are all null. Does not test effective emptiness of chunks.
+static BOOL NodeIsEmpty(InnerNode *node, unsigned level);
+
+// Slightly higher-level accessors which infer type from level.
+static void *COWNode(void *node, unsigned level);
+static void ReleaseNode(void *node, unsigned level);
+static NSUInteger GetNodeRefCount(void *node, unsigned level);
+
+static void FillCompleteChunk(Chunk *chunk, MCCell cell);
+static void FillPartialChunk(Chunk *chunk, MCCell cell, MCGridExtents extents);
 
 
 typedef BOOL (^JAMinecraftSchematicChunkIterator)(Chunk *chunk, MCGridCoordinates base);
@@ -267,17 +305,198 @@ static inline NSUInteger RepresentedDistance(levels)
 }
 
 
-#if 0
-/*	FIXME: optimize for filling with air by removing blocks.
-	Optimize for other cases by reusing a chunk of completely-filled data to
-	replace any nil leaves, and trees of nodes leading to said chunk for
-	larger areas.
+/*
+	Given a cache array for PerformFill() and a level, return the fully-filled
+	node for that level.
+	The caller need _not_ copy or COW the result.
 */
+static void *GetTemplateNode(void **filledNodeCache, unsigned level, MCCell cell)
+{
+	if (filledNodeCache[level] != NULL)
+	{
+		if (level > 0)
+		{
+			return COWInnerNode(filledNodeCache[level], level);
+		}
+		else
+		{
+			void *result = filledNodeCache[level];
+			// Assignment is to minimize copies in case of retain count overflow.
+			filledNodeCache[level] = COWChunk(result);
+			return result;
+		}
+
+	}
+	else if (level == 0)
+	{
+		Chunk *level0 = AllocChunk();
+		Log(@"Reifing cache level %u as %p", level, level0);
+		FillCompleteChunk(level0, cell);
+		filledNodeCache[0] = level0;
+		return level0;
+	}
+	else
+	{
+		InnerNode *result = AllocInnerNode(level);
+		Log(@"Reifing cache level %u as %p", level, result);
+		for (unsigned i = 0; i < 8; i++)
+		{
+			result->children.inner[i] = GetTemplateNode(filledNodeCache, level - 1, cell);
+		}
+		
+		filledNodeCache[level] = result;
+		return result;
+	}
+}
+
+
+static void PerformFill(InnerNode *node, unsigned level, MCGridExtents fillRegion_, MCCell cell, void **filledNodeCache, MCGridCoordinates base, NSUInteger size, NSInteger groundLevel, BOOL isAir, BOOL isStone)
+{
+	MCGridExtents fillRegion = fillRegion_;
+	NSUInteger halfSize = size / 2;
+	unsigned subLevel = level - 1;
+	
+	Log(@"Filling node %p [level %u]", node, level);
+	LogIndent();
+	
+	for (unsigned i = 0; i < 8; i++)
+	{
+		// Find extents of ith child.
+		MCGridCoordinates subBase = base;
+		if (i & 1) subBase.x += halfSize;
+		if (i & 2) subBase.y += halfSize;
+		if (i & 4) subBase.z += halfSize;
+		
+		//	Determine whether this child is entirely within the fill region.
+		BOOL completelyEnclosed = NO;
+		if (MCGridCoordinatesAreWithinExtents(subBase, fillRegion))
+		{
+			MCGridCoordinates max = { subBase.x + halfSize - 1, subBase.y + halfSize - 1, subBase.z + halfSize - 1 };
+			completelyEnclosed = MCGridCoordinatesAreWithinExtents(max, fillRegion);
+		}
+		
+		// If the child is completely enclosed, we want to replace it.
+		if (completelyEnclosed)
+		{
+			BOOL emptySpace = isAir && subBase.y >= groundLevel || isStone && (NSInteger)(subBase.y + halfSize - 1) < groundLevel;
+			
+			void *templateNode;
+			if (emptySpace)
+			{
+				// Empty space - use a null node.
+				templateNode = NULL;
+			}
+			else
+			{
+				// Use template node.
+				// FIXME: if ground level isn’t chunk-aligned, we miss some opportunities to delete nodes.
+				
+				templateNode = GetTemplateNode(filledNodeCache, subLevel, cell);
+			}
+			
+			if (node->children.inner[i] != NULL)
+			{
+				if (level > 1)
+				{
+					Log(@"Replacing inner node %p [level %u] with %p [refcount %u]", node->children.inner[i], subLevel, templateNode, GetNodeRefCount(templateNode, subLevel));
+					ReleaseInnerNode(node->children.inner[i], subLevel);
+					node->children.inner[i] = templateNode;
+				}
+				else
+				{
+					Log(@"Replacing chunk %p with %p [refcount %u]", node->children.leaves[i], templateNode, GetNodeRefCount(templateNode, subLevel));
+					ReleaseChunk(node->children.leaves[i]);
+					node->children.leaves[i] = templateNode;
+				}
+			}
+		}
+		else
+		{
+			MCGridExtents subExtents = MCGridExtentsWithCoordinatesAndSize(subBase, halfSize, halfSize, halfSize);
+			if (MCGridExtentsIntersect(subExtents, fillRegion))
+			{
+				// Region boundary intersects child.
+				if (level > 1)
+				{
+					// Descend.
+					if (node->children.inner[i] == NULL)
+					{
+						node->children.inner[i] = AllocInnerNode(subLevel);
+						Log(@"Made inner node %p [level %u]", node->children.inner[i], subLevel);
+					}
+					else if (node->children.inner[i]->refCount > 1)
+					{
+						InnerNode *old = node->children.inner[i];
+						node->children.inner[i] = CopyInnerNode(old, subLevel);
+						Log(@"Copied inner node %p to %p [level %u]", old, node->children.inner[i], subLevel);
+						ReleaseInnerNode(old, subLevel);
+					}
+					PerformFill(node->children.inner[i], subLevel, fillRegion, cell, filledNodeCache, subBase, halfSize, groundLevel, isAir, isStone);
+				}
+				else
+				{
+					// Fill part of chunk.
+					if (node->children.leaves[i] == NULL)
+					{
+						node->children.leaves[i] = MakeChunk(subBase.y, groundLevel);
+						Log(@"Made chunk %p", node->children.leaves[i]);
+					}
+					else if (node->children.leaves[i]->refCount > 1)
+					{
+						Chunk *old = node->children.leaves[i];
+						node->children.leaves[i] = CopyChunk(old);
+						Log(@"Copied chunk %p to %p", old, node->children.leaves[i]);
+						ReleaseChunk(old);
+					}
+					
+					MCGridExtents fillExtents = MCGridExtentsIntersection(subExtents, fillRegion);
+					fillExtents = MCOffsetGridExtents(fillExtents, -subBase.x, -subBase.y, -subBase.z);
+					Log(@"Filling chunk %p in extents %@", node->children.leaves[i], JA_ENCODE(fillExtents));
+					FillPartialChunk(node->children.leaves[i], cell, fillExtents);
+				}
+			}
+		}
+	}
+	
+	LogOutdent();
+}
+
+
 - (void) fillRegion:(MCGridExtents)region withCell:(MCCell)cell
 {
-	[super fillRegion:region withCell:cell];
-}
+	BOOL isAir = (cell.blockID == kMCBlockAir && cell.blockData == 0);
+	BOOL isStone = (cell.blockID == kMCBlockSmoothStone && cell.blockData == 0);
+	
+	/*
+		For efficiency, we want to replace large areas with shared chunks/nodes.
+		The filledNodeCache array contains these shared nodes:
+		filledNodeCache[0] will be a chunk filled entirely with the target cell
+		type, and filledNodeCache[n] will be an inner node whose children are
+		filledNodes[n - 1].
+	*/
+	void *filledNodeCache[_rootLevel];
+	memset(filledNodeCache, 0, sizeof(void *) * _rootLevel);
+	
+	NSInteger repDistance = RepresentedDistance(_rootLevel);
+	MCGridCoordinates base = { -repDistance, -repDistance, -repDistance };
+	NSUInteger size = repDistance * 2;
+	
+	Log(@"Filling region %@ of %@ with cell %@", JA_ENCODE(region), self, JA_ENCODE(cell));
+	LogIndent();
+	
+	PerformFill(_root, _rootLevel, region, cell, filledNodeCache, base, size, self.groundLevel, isAir, isStone);
+	
+	LogOutdent();
+	
+	[self willChangeValueForKey:@"extents"];
+	_extentsAreAccurate = NO;
+	[self didChangeValueForKey:@"extents"];
+	[self noteChangeInExtents:region];
+	
+#if LOG_STRUCTURE
+	[self dumpStructure];
 #endif
+}
 
 
 #if 0
@@ -672,6 +891,7 @@ static void DumpNodeStructure(InnerNode *node, NSUInteger level, DumpStatistics 
 }
 
 
+#if LOG_STRUCTURE
 - (void) endBulkUpdate
 {
 	[super endBulkUpdate];
@@ -680,13 +900,14 @@ static void DumpNodeStructure(InnerNode *node, NSUInteger level, DumpStatistics 
 		[self dumpStructure];
 	}
 }
+#endif
 
 #endif
 
 
 static BOOL ForEachChunk(InnerNode *node, MCGridCoordinates base, NSUInteger size, NSUInteger level, MCGridExtents bounds, JAMinecraftSchematicChunkIterator iterator, BOOL makeWriteable)
 {
-	NSCParameterAssert(node != NULL);
+	NSCParameterAssert(node != NULL && node->tag == ((level == 0) ? kTagChunk : kTagInnerNode));
 	
 	if (level == 0)
 	{
@@ -757,8 +978,13 @@ static BOOL ForEachChunk(InnerNode *node, MCGridCoordinates base, NSUInteger siz
 
 
 #if LOGGING
-static NSUInteger sLiveInnerNodes = 0;
-static NSUInteger sLiveChunks = 0;
+static NSUInteger sLiveInnerNodeCount = 0;
+static NSUInteger sLiveChunkCount = 0;
+#endif
+
+#if TRACK_NODE_INSTANCES
+static NSHashTable *sLiveInnerNodes = NULL;
+static NSHashTable *sLiveChunks = NULL;
 #endif
 
 
@@ -774,12 +1000,19 @@ static inline InnerNode *AllocInnerNode(NSUInteger level)
 	InnerNode *result = calloc(sizeof(InnerNode), 1);
 	if (result == NULL)  [NSException raise:NSMallocException format:@"Out of memory"];
 	
-	result->refCount = 1;
-#ifndef NDEBUG
+#if DEBUG_MCSCHEMATIC
+	result-> tag = kTagInnerNode;
 	result->level = level;
 #endif
+	
+	result->refCount = 1;
+	
 #if LOGGING
-	sLiveInnerNodes++;
+	sLiveInnerNodeCount++;
+#endif
+#if TRACK_NODE_INSTANCES
+	if (sLiveInnerNodes == NULL)  sLiveInnerNodes = NSCreateHashTable(NSNonOwnedPointerHashCallBacks, 0);
+	NSHashInsertKnownAbsent(sLiveInnerNodes, result);
 #endif
 	
 	return result;
@@ -791,12 +1024,19 @@ static Chunk *AllocChunk(void)
 	Chunk *result = calloc(sizeof(Chunk), 1);
 	if (result == NULL)  [NSException raise:NSMallocException format:@"Out of memory"];
 	
+#if DEBUG_MCSCHEMATIC
+	result-> tag = kTagChunk;
+#endif
+	
 	result->refCount = 1;
-	result->extents = kMCEmptyExtents;
-	result->extentsAreAccurate = YES;
+	result->extentsAreAccurate = NO;
 	
 #if LOGGING
-	sLiveChunks++;
+	sLiveChunkCount++;
+#endif
+#if TRACK_NODE_INSTANCES
+	if (sLiveChunks == NULL)  sLiveChunks = NSCreateHashTable(NSNonOwnedPointerHashCallBacks, 0);
+	NSHashInsertKnownAbsent(sLiveChunks, result);
 #endif
 	
 	return result;
@@ -812,22 +1052,11 @@ static Chunk *MakeChunk(NSInteger baseY, NSInteger groundLevel)
 		MCCell stoneCell = { kMCBlockSmoothStone, 0 };
 		if (baseY + kChunkSize < groundLevel)
 		{
-			FillChunk(result, stoneCell);
+			FillCompleteChunk(result, stoneCell);
 		}
 		else
 		{
-			unsigned maxY = groundLevel - baseY;
-			for (unsigned z = 0; z < kChunkSize; z++)
-			{
-				for (unsigned y = 0; y < maxY; y++)
-				{
-					unsigned offset = Offset(0, y, z);
-					for (unsigned x = 0; x < kChunkSize; x++)
-					{
-						result->cells[offset++] = stoneCell;
-					}
-				}
-			}
+			FillPartialChunk(result, stoneCell, (MCGridExtents){ 0, kChunkSize, 0, groundLevel - baseY, 0, kChunkSize });
 		}
 	}
 	
@@ -837,10 +1066,15 @@ static Chunk *MakeChunk(NSInteger baseY, NSInteger groundLevel)
 
 static inline void FreeInnerNode(InnerNode *node, NSUInteger level)
 {
-	NSCParameterAssert(node != NULL && node->level == level);
+	NSCParameterAssert(node != NULL && node->tag == kTagInnerNode && node->level == level);
 	
-	Log(@"Freeing inner node %p [level %lu, live count -> %lu]", node, node->level, --sLiveInnerNodes);
+	Log(@"Freeing inner node %p [level %lu, live count -> %lu]", node, node->level, --sLiveInnerNodeCount);
 	LogIndent();
+	
+#if TRACK_NODE_INSTANCES
+	NSCAssert1(NSHashGet(sLiveInnerNodes, node) != NULL, @"Attempt to remove unknown inner node %p.", node);
+	NSHashRemove(sLiveInnerNodes, node);
+#endif
 	
 	for (unsigned i = 0; i < 8; i++)
 	{
@@ -850,6 +1084,11 @@ static inline void FreeInnerNode(InnerNode *node, NSUInteger level)
 			else  ReleaseInnerNode(node->children.inner[i], level - 1);
 		}
 	}
+	
+#if DEBUG_MCSCHEMATIC
+	node->tag = kTagDeadInnerNode;
+#endif
+	
 	free(node);
 	
 	LogOutdent();
@@ -858,14 +1097,26 @@ static inline void FreeInnerNode(InnerNode *node, NSUInteger level)
 
 static inline void FreeChunk(Chunk *chunk)
 {
-	Log(@"Freeing chunk %p [live count -> %lu]", chunk, --sLiveChunks);
+	NSCParameterAssert(chunk != NULL && chunk->tag == kTagChunk);
+	
+#if TRACK_NODE_INSTANCES
+	NSCAssert1(NSHashGet(sLiveChunks, chunk) != NULL, @"Attempt to remove unknown chunk %p.", chunk);
+	NSHashRemove(sLiveChunks, chunk);
+#endif
+	
+	Log(@"Freeing chunk %p [live count -> %lu]", chunk, --sLiveChunkCount);
+	
+#if DEBUG_MCSCHEMATIC
+	chunk->tag = kTagDeadChunk;
+#endif
+	
 	free(chunk);
 }
 
 
 static InnerNode *COWInnerNode(InnerNode *node, NSUInteger level)
 {
-	NSCParameterAssert(node != NULL && level == node->level);
+	NSCParameterAssert(node != NULL && node->tag == kTagInnerNode && level == node->level);
 	node->refCount++;
 	return node;
 }
@@ -888,13 +1139,13 @@ static Chunk *COWChunk(Chunk *chunk)
 
 static InnerNode *CopyInnerNode(InnerNode *node, NSUInteger level)
 {
-	NSCParameterAssert(node != NULL && level == node->level);
+	NSCParameterAssert(node != NULL && node->tag == kTagInnerNode && level == node->level);
 	
 	InnerNode *result = AllocInnerNode(level);
 	if (JA_EXPECT_NOT(result == NULL))  return NULL;
 	
 	result->refCount = 1;
-#ifndef NDEBUG
+#if DEBUG_MCSCHEMATIC
 	result->level = node->level;
 #endif
 	
@@ -913,7 +1164,7 @@ static InnerNode *CopyInnerNode(InnerNode *node, NSUInteger level)
 
 static Chunk *CopyChunk(Chunk *chunk)
 {
-	NSCParameterAssert(chunk != NULL);
+	NSCParameterAssert(chunk != NULL && chunk->tag == kTagChunk);
 	
 	Chunk *result = AllocChunk();
 	if (JA_EXPECT_NOT(result == NULL))  return NULL;
@@ -926,7 +1177,7 @@ static Chunk *CopyChunk(Chunk *chunk)
 
 static void ReleaseInnerNode(InnerNode *node, NSUInteger level)
 {
-	NSCParameterAssert(node != NULL && level == node->level);
+	NSCParameterAssert(node != NULL && node->tag == kTagInnerNode && level == node->level);
 	
 	Log(@"Releasing inner node %p [refcount %lu->%lu, level %lu]", node, node->refCount, node->refCount - 1, node->level);
 	LogIndent();
@@ -942,7 +1193,7 @@ static void ReleaseInnerNode(InnerNode *node, NSUInteger level)
 
 static void ReleaseChunk(Chunk *chunk)
 {
-	NSCParameterAssert(chunk != NULL);
+	NSCParameterAssert(chunk != NULL && chunk->tag == kTagChunk);
 	
 	Log(@"Releasing chunk %p [refcount %u->%u]", chunk, chunk->refCount, chunk->refCount - 1);
 	LogIndent();
@@ -958,7 +1209,7 @@ static void ReleaseChunk(Chunk *chunk)
 
 static MCGridExtents ChunkGetExtents(Chunk *chunk)
 {
-	NSCParameterAssert(chunk != NULL);
+	NSCParameterAssert(chunk != NULL && chunk->tag == kTagChunk);
 	
 	if (!chunk->extentsAreAccurate)
 	{
@@ -998,7 +1249,7 @@ static MCGridExtents ChunkGetExtents(Chunk *chunk)
 
 static MCCell ChunkGetCell(Chunk *chunk, NSInteger x, NSInteger y, NSInteger z)
 {
-	NSCParameterAssert(chunk != NULL &&
+	NSCParameterAssert(chunk != NULL && chunk->tag == kTagChunk &&
 					   0 <= x && x < kChunkSize &&
 					   0 <= y && y < kChunkSize &&
 					   0 <= z && z < kChunkSize);
@@ -1009,7 +1260,7 @@ static MCCell ChunkGetCell(Chunk *chunk, NSInteger x, NSInteger y, NSInteger z)
 
 static BOOL ChunkSetCell(Chunk *chunk, NSInteger x, NSInteger y, NSInteger z, MCCell cell)
 {
-	NSCParameterAssert(chunk != NULL &&
+	NSCParameterAssert(chunk != NULL && chunk->tag == kTagChunk && chunk->refCount == 1 &&
 					   0 <= x && x < kChunkSize &&
 					   0 <= y && y < kChunkSize &&
 					   0 <= z && z < kChunkSize);
@@ -1023,20 +1274,167 @@ static BOOL ChunkSetCell(Chunk *chunk, NSInteger x, NSInteger y, NSInteger z, MC
 }
 
 
-static void FillChunk(Chunk *chunk, MCCell cell)
+static void FillCompleteChunk(Chunk *chunk, MCCell cell)
 {
-	NSCParameterAssert(chunk != NULL);
+	NSCParameterAssert(chunk != NULL && chunk->tag == kTagChunk && chunk->refCount == 1);
 	
 	MCCell pattern[8] = { cell, cell, cell, cell, cell, cell, cell, cell };
 	memset_pattern16(chunk->cells, &pattern, sizeof chunk->cells / 16);
+	
+	chunk->extentsAreAccurate = NO;
 }
 
 
+static void FillPartialChunk(Chunk *chunk, MCCell cell, MCGridExtents extents)
+{
+	NSCParameterAssert(chunk != NULL && chunk->tag == kTagChunk && chunk->refCount == 1);
+	NSCParameterAssert(MCGridCoordinatesAreWithinExtents(MCGridExtentsMinimum(extents), MCGridExtentsWithCoordinatesAndSize(kMCZeroCoordinates, kChunkSize, kChunkSize, kChunkSize)));
+	NSCParameterAssert(MCGridCoordinatesAreWithinExtents(MCGridExtentsMaximum(extents), MCGridExtentsWithCoordinatesAndSize(kMCZeroCoordinates, kChunkSize, kChunkSize, kChunkSize)));
+	
+	for (unsigned z = extents.minZ; z <= extents.maxZ; z++)
+	{
+		for (unsigned y = extents.minY; y <= extents.maxY; y++)
+		{
+			for (unsigned x = extents.minX; x <= extents.maxX; x++)
+			{
+				chunk->cells[Offset(x, y, z)] = cell;
+			}
+		}
+	}
+	
+	chunk->extentsAreAccurate = NO;
+}
+
+
+static void *COWNode(void *node, unsigned level)
+{
+	if (level == 0)  return COWChunk(node);
+	else  return COWInnerNode(node, level);
+}
+
+
+static void ReleaseNode(void *node, unsigned level)
+{
+	if (level == 0)  ReleaseChunk(node);
+	else  ReleaseInnerNode(node, level);
+}
+
+
+static NSUInteger GetNodeRefCount(void *node, unsigned level)
+{
+	if (node == NULL)  return 0;
+	else if (level == 0)
+	{
+#if DEBUG_MCSCHEMATIC
+		NSCParameterAssert(((Chunk *)node)->tag == kTagChunk);
+#endif
+		return ((Chunk *)node)->refCount;
+	}
+	else
+	{
+		
+#if DEBUG_MCSCHEMATIC
+		NSCParameterAssert(((InnerNode *)node)->tag == kTagInnerNode);
+#endif
+		return ((InnerNode *)node)->refCount;
+	}
+}
+
+
+#if TRACK_NODE_INSTANCES
+#import "JAHashEnumeration.h"
+
+
+extern void JAMCSchematicDump(void)
+{
+	DoLog(@"JAMinecraftSchematic debug dump:");
+	DoLogIndent();
+	NSUInteger count = (sLiveInnerNodes != NULL) ? NSCountHashTable(sLiveInnerNodes) : 0;
+	__block NSUInteger i = 0;
+	
 #if LOGGING
+	if (count == sLiveInnerNodeCount)
+	{
+		DoLog(@"Inner nodes: %lu live.", count);
+	}
+	else
+	{
+		DoLog(@"***** INCONSISTENCY: %lu inner nodes in live nodes hash, %lu counted. *****", count, sLiveInnerNodeCount);
+	}
+#else
+	DoLog(@"Inner nodes: %lu live.", count);
+#endif
+	
+	if (sLiveInnerNodes != NULL)
+	{
+		DoLogIndent();
+		JAHashTableEnumerate(sLiveInnerNodes, ^(void *item) {
+			InnerNode *node = item;
+			if (node->tag == kTagInnerNode)
+			{
+				DoLog(@"Inner node %lu: %p [level = %u, refcount = %u]", i++, node, node->level, node->refCount);
+			}
+			else
+			{
+				NSString *desc = nil;
+				if (node->tag == kTagDeadInnerNode)  desc = @"released";
+				else if (node->tag == kTagChunk)  desc = @"chunk";
+				else if (node->tag == kTagDeadChunk)  desc = @"released chunk";
+				else  desc = @"unknown reference";
+				DoLog(@"Inner node %lu: %p - ***** INVALID - %@", i++, node, desc);
+			}
+		});
+		DoLogOutdent();
+	}
+	
+	i = 0;
+	count = (sLiveChunks != NULL) ? NSCountHashTable(sLiveChunks) : 0;
+	
+#if LOGGING
+	if (count == sLiveChunkCount)
+	{
+		DoLog(@"Chunks: %lu live.", count);
+	}
+	else
+	{
+		DoLog(@"***** INCONSISTENCY: %lu chunks in live chunks hash, %lu counted. *****", count, sLiveChunkCount);
+	}
+#else
+	DoLog(@"Chunks: %lu live.", count);
+#endif
+	
+	if (sLiveChunks != NULL)
+	{
+		DoLogIndent();
+		JAHashTableEnumerate(sLiveChunks, ^(void *item) {
+			Chunk *chunk = item;
+			if (chunk->tag == kTagChunk)
+			{
+				DoLog(@"Chunk %lu: %p [refcount = %u]", i++, chunk, chunk->refCount);
+			}
+			else
+			{
+				NSString *desc = nil;
+				if (chunk->tag == kTagDeadChunk)  desc = @"released";
+				else if (chunk->tag == kTagInnerNode)  desc = @"inner node";
+				else if (chunk->tag == kTagDeadInnerNode)  desc = @"released inner node";
+				else  desc = @"unknown reference";
+				DoLog(@"Chunk %lu: %p - ***** INVALID - %@", i++, chunk, desc);
+			}
+		});
+		DoLogOutdent();
+	}
+	
+	DoLogOutdent();
+}
+#endif
+
+
+#if LOGGING || TRACK_NODE_INSTANCES
 static NSString *sLogIndentation = @"";
 
 
-static void Log(NSString *format, ...)
+static void DoLog(NSString *format, ...)
 {
 	va_list args;
 	va_start(args, format);
@@ -1047,13 +1445,13 @@ static void Log(NSString *format, ...)
 }
 
 
-static void LogIndent(void)
+static void DoLogIndent(void)
 {
 	sLogIndentation = [sLogIndentation stringByAppendingString:@"  "];
 }
 
 
-static void LogOutdent(void)
+static void DoLogOutdent(void)
 {
 	if (sLogIndentation.length > 1)  sLogIndentation = [sLogIndentation substringFromIndex:2];
 }
