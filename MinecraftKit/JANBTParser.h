@@ -52,6 +52,15 @@ typedef enum
 
 
 @interface JANBTTag: NSObject <NSCopying>
+{
+	union
+	{
+		id objectVal;
+		long long integerVal;
+		double floatVal;
+		double doubleVal;
+	} _value;
+}
 
 @property (readonly) JANBTTagType type;
 @property (readonly, copy) NSString *name;
@@ -86,6 +95,11 @@ typedef enum
 	Deserialize an NBT file into JANBTTags.
 */
 @interface JANBTParser: NSObject
+{
+	NSData					*_data;
+	const uint8_t			*_bytes;
+	size_t					_remaining;
+}
 
 + (JANBTTag *) parseData:(NSData *)data;
 
@@ -104,6 +118,10 @@ typedef enum
 	enforced.
 */
 @interface JANBTEncoder: NSObject
+{
+	JANBTTag				*_rootTag;
+	NSData					*_data;
+}
 
 + (NSData *) encodeTag:(JANBTTag *)tag;
 

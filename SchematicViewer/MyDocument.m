@@ -41,6 +41,10 @@
 
 @implementation MyDocument
 
+@synthesize schematic = _schematic;
+@synthesize schematicView = _schematicView;
+
+
 - (id) init
 {
 	if ((self = [super init]))

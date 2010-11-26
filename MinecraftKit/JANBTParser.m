@@ -33,15 +33,6 @@ static NSString *NameFromTagType(JANBTTagType type);
 
 
 @interface JANBTTag ()
-{
-	union
-	{
-		id objectVal;
-		long long integerVal;
-		double floatVal;
-		double doubleVal;
-	} _value;
-}
 
 @property (readwrite, setter=priv_setType:) JANBTTagType type;
 @property (readwrite, copy, setter=priv_setName:) NSString *name;
@@ -751,11 +742,6 @@ static NSString * const kJANBTParserUnknownTagException = @"se.ayton.jens JANBTP
 
 
 @interface JANBTParser ()
-{
-	NSData					*_data;
-	const uint8_t			*_bytes;
-	size_t					_remaining;
-}
 
 // These will raise kJANBTParserUnexpectedEOFException if they would otherwise pass the end of the data.
 - (void) readBytes:(void *)buffer length:(size_t)length;
@@ -791,10 +777,6 @@ static NSString * const kJANBTParserUnknownTagException = @"se.ayton.jens JANBTP
 
 
 @interface JANBTEncoder ()
-{
-	JANBTTag				*_rootTag;
-	NSData					*_data;
-}
 @end
 
 

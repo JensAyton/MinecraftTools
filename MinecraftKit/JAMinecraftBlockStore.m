@@ -16,10 +16,6 @@ NSString * const kJAMinecraftBlockStoreErrorDomain			= @"se.ayton.jens JAMinecra
 
 
 @interface JAMinecraftBlockStore ()
-{
-	NSUInteger						_bulkLevel;
-	MCGridExtents					_dirtyExtents;
-}
 
 - (void) postChangeNotification:(MCGridExtents)changedExtents;
 

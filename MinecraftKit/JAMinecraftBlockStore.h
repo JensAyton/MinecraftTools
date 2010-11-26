@@ -35,6 +35,10 @@ enum
 
 
 @interface JAMinecraftBlockStore: NSObject
+{
+	NSUInteger						_bulkLevel;
+	MCGridExtents					_dirtyExtents;
+}
 
 @property (readonly) MCGridExtents extents;
 

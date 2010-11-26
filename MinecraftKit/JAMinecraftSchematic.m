@@ -149,25 +149,6 @@ typedef BOOL (^JAMinecraftSchematicChunkIterator)(Chunk *chunk, MCGridCoordinate
 
 
 @interface JAMinecraftSchematic ()
-{
-@private
-	InnerNode						*_root;
-	MCGridExtents					_extents;
-	NSInteger						_groundLevel;
-	
-	BOOL							_extentsAreAccurate;
-	uint8_t							_rootLevel;
-	
-	/*
-		Access cache for quicker sequential reads.
-		TODO: keep track of path through tree to cached chunk. This will allow
-		fast access to adjacent chunks, and use of cache on write (by checking
-		for COWed ancestor nodes).
-	*/
-	BOOL							_cacheIsValid;
-	Chunk							*_cachedChunk;
-	MCGridCoordinates				_cacheBase;
-}
 
 //	Space spanned by octree, regardless of "fullness” of cells.
 @property (readonly) MCGridExtents totalExtents;
