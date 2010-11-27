@@ -66,11 +66,15 @@ enum
 };
 
 
+#if LOGGING
+
 typedef struct
 {
 	NSUInteger						innerNodeCount;
 	NSUInteger						leafNodeCount;
 } DumpStatistics;
+
+#endif
 
 
 typedef struct InnerNode InnerNode;
@@ -1383,6 +1387,86 @@ static void ReifyStructure(InnerNode *node, unsigned level, MCGridExtents region
 	
 	LogOutdent();
 }
+
+
+#ifndef NDEBUG
+static NSString *BuildGraphViz(void *node, unsigned level, MCGridCoordinates base, NSUInteger size, NSMutableString *graphViz, NSMutableSet *seen)
+{
+	if (node == NULL)  return nil;
+	NSString *thisName = [NSString stringWithFormat:@"n%p", node];
+	
+	if (![seen member:thisName])
+	{
+		[seen addObject:thisName];
+		
+		if (level > 0)
+		{
+			InnerNode *innerNode = node;
+			
+			NSString *label = [ NSString stringWithFormat:@"%p level %u, size %lu", innerNode, level, size];
+			if (innerNode->refCount > 1)
+			{
+				label = [label stringByAppendingFormat:@" [rc %lu]", innerNode->refCount];
+			}
+			[graphViz appendFormat:@"\t%@ [label=\"%@\"]\n", thisName, label];
+			
+			NSUInteger halfSize = size / 2;
+			
+			for (unsigned i = 0; i < 8; i++)
+			{
+				if (innerNode->children.inner[i] != NULL)
+				{
+					// Find extents of ith child.
+					MCGridCoordinates subBase = base;
+					if (i & 1) subBase.x += halfSize;
+					if (i & 2) subBase.y += halfSize;
+					if (i & 4) subBase.z += halfSize;
+					
+					NSString *subName = BuildGraphViz(innerNode->children.inner[i], level - 1, subBase, halfSize, graphViz, seen);
+					
+					[graphViz appendFormat:@"\t%@ -> %@\n", thisName, subName];
+				}
+			}
+		}
+		else
+		{
+			Chunk *chunk = node;
+			NSString *label =[ NSString stringWithFormat:@"Node %p", chunk];
+			if (chunk->refCount > 1)
+			{
+				label = [label stringByAppendingFormat:@" [rc %lu]", chunk->refCount];
+			}
+			
+			[graphViz appendFormat:@"\t%@ [shape=box label=\"%@\"]\n", thisName, label];
+		}
+	}
+	
+	return thisName;
+}
+
+
+- (NSString *) debugGraphViz
+{
+	NSMutableString *graphViz = [NSMutableString stringWithString:@"digraph schematic\n{\n\tnode [shape=ellipse]\n"];
+	NSMutableSet *seen = [NSMutableSet set];
+	
+	NSInteger repDistance = RepresentedDistance(_rootLevel);
+	MCGridCoordinates base = { -repDistance, -repDistance, -repDistance };
+	NSUInteger size = repDistance * 2;
+	
+	BuildGraphViz(_root, _rootLevel, base, size, graphViz, seen);
+	
+	[graphViz appendString:@"}\n"];
+	return graphViz;
+}
+
+
+- (void) writeDebugGraphVizToURL:(NSURL *)url
+{
+	[[self debugGraphViz] writeToURL:url atomically:YES encoding:NSUTF8StringEncoding error:NULL];
+}
+
+#endif
 
 @end
 

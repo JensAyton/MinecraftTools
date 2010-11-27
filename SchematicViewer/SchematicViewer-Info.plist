@@ -111,6 +111,29 @@
 				</array>
 			</dict>
 		</dict>
+		
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>GraphViz DOT Document</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.att.graphviz.graph</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>dot</string>
+					<string>gv</string>
+				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>text/vnd.graphviz</string>
+				</array>
+			</dict>
+		</dict>
 	</array>
 </dict>
 </plist>

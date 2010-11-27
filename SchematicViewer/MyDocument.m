@@ -188,6 +188,12 @@
 	{
 		enabled = [[NSPasteboard generalPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:kJAMinecraftSchematicUTI, kJAMinecraftRedstoneSimulatorUTI, nil]] != nil;
 	}
+#if NDEBUG
+	else if (action == @selector(saveGraphViz:))
+	{
+		enabled = NO;
+	}
+#endif
 	else
 	{
 		if ([super respondsToSelector:@selector(validateMenuItem:)])  enabled = [super validateMenuItem:menuItem];
@@ -264,6 +270,24 @@
 {
 	// FIXME: do we need to explicitly drop here?
 	self.schematicView.selection = kMCEmptyExtents;
+}
+
+
+- (IBAction) saveGraphViz:(id)sender
+{
+#ifndef NDEBUG
+	NSSavePanel *savePanel = [NSSavePanel savePanel];
+	savePanel.allowedFileTypes = [NSArray arrayWithObject:@"dot"];
+	savePanel.nameFieldStringValue = [self.displayName stringByAppendingPathExtension:@"dot"];
+	[savePanel setExtensionHidden:NO];
+	
+	[savePanel beginSheetModalForWindow:self.windowForSheet completionHandler:^(NSInteger result){
+		if (result)
+		{
+			[self.schematic writeDebugGraphVizToURL:savePanel.URL];
+		}
+	}];
+#endif
 }
 
 

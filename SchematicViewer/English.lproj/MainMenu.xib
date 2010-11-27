@@ -845,6 +845,15 @@
 									<reference key="NSOnImage" ref="1033313550"/>
 									<reference key="NSMixedImage" ref="310636482"/>
 								</object>
+								<object class="NSMenuItem" id="479563872">
+									<reference key="NSMenu" ref="47718353"/>
+									<string key="NSTitle">Save GraphViz…</string>
+									<string key="NSKeyEquiv">g</string>
+									<int key="NSKeyEquivModMask">1572864</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="1033313550"/>
+									<reference key="NSMixedImage" ref="310636482"/>
+								</object>
 							</object>
 						</object>
 					</object>
@@ -1306,6 +1315,14 @@
 						<reference key="destination" ref="78137290"/>
 					</object>
 					<int key="connectionID">546</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">saveGraphViz:</string>
+						<reference key="source" ref="1014"/>
+						<reference key="destination" ref="479563872"/>
+					</object>
+					<int key="connectionID">550</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1976,6 +1993,7 @@
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<reference ref="299479871"/>
+							<reference ref="479563872"/>
 						</object>
 						<reference key="parent" ref="279756064"/>
 					</object>
@@ -1988,6 +2006,11 @@
 						<int key="objectID">545</int>
 						<reference key="object" ref="78137290"/>
 						<reference key="parent" ref="789758025"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">549</int>
+						<reference key="object" ref="479563872"/>
+						<reference key="parent" ref="47718353"/>
 					</object>
 				</object>
 			</object>
@@ -2151,6 +2174,7 @@
 					<string>540.IBPluginDependency</string>
 					<string>541.IBPluginDependency</string>
 					<string>545.IBPluginDependency</string>
+					<string>549.IBPluginDependency</string>
 					<string>56.IBPluginDependency</string>
 					<string>56.ImportedFromIB2</string>
 					<string>57.IBEditorWindowLastContentRect</string>
@@ -2340,7 +2364,8 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{900, 322}, {106, 23}}</string>
+					<string>{{900, 302}, {201, 43}}</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2368,7 +2393,7 @@
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
-					<string>{{671, 182}, {196, 203}}</string>
+					<string>{{693, 142}, {196, 203}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>{{155, 774}, {199, 203}}</string>
@@ -2396,7 +2421,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">548</int>
+			<int key="maxID">550</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2437,6 +2462,7 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>decrementCurrentLayer:</string>
 							<string>incrementCurrentLayer:</string>
+							<string>saveGraphViz:</string>
 							<string>scribble:</string>
 							<string>selectAll:</string>
 							<string>selectNone:</string>
@@ -2445,6 +2471,7 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -2460,6 +2487,7 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>decrementCurrentLayer:</string>
 							<string>incrementCurrentLayer:</string>
+							<string>saveGraphViz:</string>
 							<string>scribble:</string>
 							<string>selectAll:</string>
 							<string>selectNone:</string>
@@ -2474,6 +2502,10 @@
 							</object>
 							<object class="IBActionInfo">
 								<string key="name">incrementCurrentLayer:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">saveGraphViz:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">

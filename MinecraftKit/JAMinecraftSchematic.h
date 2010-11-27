@@ -75,4 +75,9 @@
 
 - (NSInteger) findNaturalGroundLevel;
 
+#ifndef NDEBUG
+- (NSString *) debugGraphViz;
+- (void) writeDebugGraphVizToURL:(NSURL *)url;
+#endif
+
 @end

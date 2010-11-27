@@ -48,4 +48,6 @@
 - (IBAction) selectAll:(id)sender;
 - (IBAction) selectNone:(id)sender;
 
+- (IBAction) saveGraphViz:(id)sender;
+
 @end
