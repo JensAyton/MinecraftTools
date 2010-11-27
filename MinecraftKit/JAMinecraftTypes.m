@@ -26,11 +26,22 @@
 #include "JAMinecraftTypes.h"
 
 
-const MCCell kJAEmptyCell = { .blockID = kMCBlockAir, .blockData = 0 };
+const MCCell kMCAirCell = { .blockID = kMCBlockAir, .blockData = 0 };
+const MCCell kMCStoneCell = { .blockID = kMCBlockSmoothStone, .blockData = 0 };
 const MCGridCoordinates kMCZeroCoordinates = { 0, 0, 0 };
 const MCGridExtents kMCEmptyExtents = { NSIntegerMax, NSIntegerMin, NSIntegerMax, NSIntegerMin, NSIntegerMax, NSIntegerMin };
 const MCGridExtents kMCZeroExtents = { 0, 0, 0, 0, 0, 0 };
 const MCGridExtents kMCInfiniteExtents = { NSIntegerMin, NSIntegerMax, NSIntegerMin, NSIntegerMax, NSIntegerMin, NSIntegerMax };
+
+
+BOOL MCGridExtentsAreWithinExtents(MCGridExtents inner_, MCGridExtents outer_)
+{
+	MCGridExtents inner = inner_, outer = outer_;
+	
+	return	!MCGridExtentsEmpty(inner) &&
+			MCGridCoordinatesAreWithinExtents(MCGridExtentsMinimum(inner), outer) &&
+			MCGridCoordinatesAreWithinExtents(MCGridExtentsMaximum(inner), outer);
+}
 
 
 MCGridExtents MCGridExtentsUnion(MCGridExtents a, MCGridExtents b)

@@ -207,13 +207,10 @@ static void ThrowSubclassResponsibility(const char *func) __attribute__((noretur
 }
 
 
-#if 0
-// Using category here causes spurious “@synthesize not allowed in a category’s implementation” errors with apple-clang 1.5
 @end
 
 
 @implementation JAMinecraftBlockStore (Conveniences)
-#endif
 
 - (NSUInteger) width
 {

@@ -115,11 +115,23 @@ static NSString * const kGroundLevelKey	= @"se.jens.ayton GroundLevel";
 		}
 	}
 	
-	JANBTTag *groundLevel = [dict objectForKey:kGroundLevelKey];
-	if (groundLevel.integerType)  self.groundLevel = groundLevel.integerValue;
-	else  [self findNaturalGroundLevel];
-	
 	[self endBulkUpdate];
+	
+	NSInteger groundLevel;
+	JANBTTag *groundLevelTag = [dict objectForKey:kGroundLevelKey];
+	if (groundLevelTag.integerType)  groundLevel = groundLevelTag.integerValue;
+	else  groundLevel = [self findNaturalGroundLevel];
+	
+	if (groundLevel != 0)
+	{
+		JAMinecraftSchematic *leveled = [[[self class] alloc] initWithGroundLevel:groundLevel];
+		MCGridExtents extents = self.extents;
+		[leveled beginBulkUpdate];
+		[leveled fillRegion:extents withCell:kMCAirCell];
+		[leveled copyRegion:extents from:self at:MCGridExtentsMinimum(extents)];
+		[leveled endBulkUpdate];
+		return leveled;
+	}
 	
 	return self;
 }

@@ -3,16 +3,16 @@
 	<data>
 		<int key="IBDocument.SystemTarget">1060</int>
 		<string key="IBDocument.SystemVersion">10H574</string>
-		<string key="IBDocument.InterfaceBuilderVersion">804</string>
+		<string key="IBDocument.InterfaceBuilderVersion">823</string>
 		<string key="IBDocument.AppKitVersion">1038.35</string>
 		<string key="IBDocument.HIToolboxVersion">461.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
-			<string key="NS.object.0">804</string>
+			<string key="NS.object.0">823</string>
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="29"/>
+			<integer value="540"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -401,6 +401,16 @@
 									<reference key="NSMenu" ref="789758025"/>
 									<string key="NSTitle">Select All</string>
 									<string key="NSKeyEquiv">a</string>
+									<int key="NSKeyEquivModMask">1048576</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="1033313550"/>
+									<reference key="NSMixedImage" ref="310636482"/>
+								</object>
+								<object class="NSMenuItem" id="78137290">
+									<reference key="NSMenu" ref="789758025"/>
+									<bool key="NSIsAlternate">YES</bool>
+									<string key="NSTitle">Select None</string>
+									<string key="NSKeyEquiv">A</string>
 									<int key="NSKeyEquivModMask">1048576</int>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="1033313550"/>
@@ -829,7 +839,7 @@
 								<bool key="EncodedWithXMLCoder">YES</bool>
 								<object class="NSMenuItem" id="299479871">
 									<reference key="NSMenu" ref="47718353"/>
-									<string key="NSTitle">Scribble (Test Copy-on-Write)</string>
+									<string key="NSTitle">Scribble</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="1033313550"/>
@@ -1289,6 +1299,14 @@
 					</object>
 					<int key="connectionID">544</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">selectNone:</string>
+						<reference key="source" ref="1014"/>
+						<reference key="destination" ref="78137290"/>
+					</object>
+					<int key="connectionID">546</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -1482,6 +1500,7 @@
 							<reference ref="507821607"/>
 							<reference ref="981774355"/>
 							<reference ref="763435172"/>
+							<reference ref="78137290"/>
 						</object>
 						<reference key="parent" ref="952259628"/>
 					</object>
@@ -1965,6 +1984,11 @@
 						<reference key="object" ref="299479871"/>
 						<reference key="parent" ref="47718353"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">545</int>
+						<reference key="object" ref="78137290"/>
+						<reference key="parent" ref="789758025"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -2126,6 +2150,7 @@
 					<string>540.IBEditorWindowLastContentRect</string>
 					<string>540.IBPluginDependency</string>
 					<string>541.IBPluginDependency</string>
+					<string>545.IBPluginDependency</string>
 					<string>56.IBPluginDependency</string>
 					<string>56.ImportedFromIB2</string>
 					<string>57.IBEditorWindowLastContentRect</string>
@@ -2218,7 +2243,7 @@
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
-					<string>{{624, 103}, {254, 283}}</string>
+					<string>{{735, 42}, {254, 303}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>{{197, 734}, {243, 243}}</string>
@@ -2268,13 +2293,13 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>{{525, 802}, {197, 73}}</string>
-					<string>{{602, 617}, {486, 20}}</string>
+					<string>{{541, 345}, {486, 20}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>{74, 862}</string>
 					<string>{{11, 977}, {478, 20}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{1078, 102}, {156, 83}}</string>
+					<string>{{779, 262}, {156, 83}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{475, 832}, {234, 43}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2315,7 +2340,8 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{961, 594}, {256, 23}}</string>
+					<string>{{900, 322}, {106, 23}}</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2342,7 +2368,7 @@
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
-					<string>{{582, 183}, {196, 203}}</string>
+					<string>{{671, 182}, {196, 203}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>{{155, 774}, {199, 203}}</string>
@@ -2370,7 +2396,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">544</int>
+			<int key="maxID">548</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2412,11 +2438,15 @@
 							<string>decrementCurrentLayer:</string>
 							<string>incrementCurrentLayer:</string>
 							<string>scribble:</string>
+							<string>selectAll:</string>
+							<string>selectNone:</string>
 							<string>zoomIn:</string>
 							<string>zoomOut:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -2431,6 +2461,8 @@
 							<string>decrementCurrentLayer:</string>
 							<string>incrementCurrentLayer:</string>
 							<string>scribble:</string>
+							<string>selectAll:</string>
+							<string>selectNone:</string>
 							<string>zoomIn:</string>
 							<string>zoomOut:</string>
 						</object>
@@ -2446,6 +2478,14 @@
 							</object>
 							<object class="IBActionInfo">
 								<string key="name">scribble:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">selectAll:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">selectNone:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">

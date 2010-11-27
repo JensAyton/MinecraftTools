@@ -171,6 +171,18 @@ static uint8_t CellInfoOrientationFromDoorMeta(uint8_t meta);
 	
 	[self endBulkUpdate];
 	
+	NSInteger groundLevel = [self findNaturalGroundLevel];
+	if (groundLevel != 0)
+	{
+		JAMinecraftSchematic *leveled = [[[self class] alloc] initWithGroundLevel:groundLevel];
+		MCGridExtents extents = self.extents;
+		[leveled beginBulkUpdate];
+		[leveled fillRegion:extents withCell:kMCAirCell];
+		[leveled copyRegion:extents from:self at:MCGridExtentsMinimum(extents)];
+		[leveled endBulkUpdate];
+		return leveled;
+	}
+	
 	return self;
 }
 

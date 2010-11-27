@@ -34,6 +34,7 @@
 
 #define DEBUG_DRAWING				0
 
+// USE_BACKGROUND_CACHE: use pattern colours to draw out-of-bounds cells rather than calling the render callback.
 #define USE_BACKGROUND_CACHE		1
 
 
@@ -174,7 +175,12 @@
 	{
 		NSNotificationCenter *nctr = [NSNotificationCenter defaultCenter];
 		[nctr removeObserver:self name:nil object:_store];
+		[_store removeObserver:self forKeyPath:@"groundLevel"];
+		[_store removeObserver:self forKeyPath:@"extents"];
+		
 		[nctr addObserver:self selector:@selector(blockStoreChanged:) name:kJAMinecraftBlockStoreChangedNotification object:store];
+		[store addObserver:self forKeyPath:@"groundLevel" options:0 context:NULL];
+		[store addObserver:self forKeyPath:@"extents" options:0 context:NULL];
 		
 		_store = store;
 		
@@ -190,6 +196,16 @@
 	[extentsVal getValue:&extents];
 	
 	[self setNeedsDisplayInRect:[self rectFromExtents:extents]];
+}
+
+
+- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+	if (object == _store)
+	{
+		if ([keyPath isEqualToString:@"groundLevel"])  [self invalidateDrawingCaches];
+		[self setNeedsDisplay:YES];
+	}
 }
 
 
@@ -276,13 +292,13 @@
 
 - (NSColor *) airFillColorOutsideDefinedArea
 {
-	return [self defaultFillColorForCellType:kJAEmptyCell];
+	return [self defaultFillColorForCellType:kMCAirCell];
 }
 
 
 - (NSColor *) groundFillColorOutsideDefinedArea
 {
-	return [self defaultFillColorForCellType:(MCCell){ kMCBlockSmoothStone, 0 }];
+	return [self defaultFillColorForCellType:kMCStoneCell];
 }
 
 

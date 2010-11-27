@@ -45,4 +45,7 @@
 
 - (IBAction) scribble:(id)sender;
 
+- (IBAction) selectAll:(id)sender;
+- (IBAction) selectNone:(id)sender;
+
 @end

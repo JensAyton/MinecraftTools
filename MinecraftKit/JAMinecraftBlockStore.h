@@ -81,8 +81,6 @@ enum
 
 /*
 	Copy blocks from another schematic.
-	IMPORTANT: air blocks are ignored, not copied. Erase the target region
-	first if you want that behaviour.
 */
 - (void) copyRegion:(MCGridExtents)region from:(JAMinecraftBlockStore *)source at:(MCGridCoordinates)target;
 

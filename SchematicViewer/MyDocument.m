@@ -253,6 +253,20 @@
 }
 
 
+- (IBAction) selectAll:(id)sender
+{
+	// FIXME: do we need to explicitly drop here?
+	self.schematicView.selection = self.schematic.extents;
+}
+
+
+- (IBAction) selectNone:(id)sender
+{
+	// FIXME: do we need to explicitly drop here?
+	self.schematicView.selection = kMCEmptyExtents;
+}
+
+
 - (void) saveSchematicForUndoWithName:(NSString *)undoActionName
 {
 	NSUndoManager *undoMgr = self.undoManager;
@@ -275,40 +289,13 @@
 
 - (IBAction) scribble:(id)sender
 {
-	/*
-		To test JAMinecraftSchematic’s copy-on-write mechanism, make a copy
-		of the schematic and make some random changes in the current layer,
-		then force a redraw. This should have *no visible effect* in the
-		application.
-		
-		To verify that something’s happening, enable the LOGGING macro in
-		JAMinecraftSchematic.m. The expected result is some messages about
-		nodes being created, followed by a dump of the internal storage
-		hierarchy of the schematic, then messages about nodes being released
-		when the copy is garbage-collected.
-		
-		In the internal storage hierarchy dump, most chunks will either have
-		a refcount of 2 or be descended from an inner node with a refcount of
-		2.
-		
-		Change the following #if 1 to #if 0 to see what would happen if the
-		COW didn’t work.
-	*/
+	//	Modify blocks randomly to test copy-on-write and undo.
 	
-#if 1
-	JAMinecraftSchematic *copy = [self.schematic copy];
-#else
-	JAMinecraftSchematic *copy = self.schematic;
-#endif
+	[self saveSchematicForUndoWithName:NSLocalizedString(@"Scribble", @"Scribble user interface action.")];
+	JAMinecraftSchematic *schematic = self.schematic;
 	
-	if (copy == nil)
-	{
-		NSLog(@"Scribble failed: could not copy schematic.");
-		NSBeep();
-		return;
-	}
-	
-	MCGridExtents extents = copy.extents;
+	MCGridExtents extents = self.schematicView.selection;
+	if (MCGridExtentsEmpty(extents))  extents = schematic.extents;
 	if (MCGridExtentsEmpty(extents))
 	{
 		// Reasonable fallback.
@@ -316,29 +303,24 @@
 	}
 	
 	srandomdev();
-	NSUInteger scribbleCount = MCGridExtentsLength(extents) * MCGridExtentsWidth(extents) / 50;
+	NSUInteger scribbleCount = MCGridExtentsLength(extents) * MCGridExtentsWidth(extents) * MCGridExtentsHeight(extents) / 50;
 	if (scribbleCount < 5)  scribbleCount = 5;
-	NSLog(@"Scribbling %lu times...", scribbleCount);
 	
-	[copy beginBulkUpdate];
+	[schematic beginBulkUpdate];
 	while (scribbleCount--)
 	{
 		MCGridCoordinates coords =
 		{
-			random() % MCGridExtentsWidth(extents),
-			self.currentLayer,
-			random() % MCGridExtentsLength(extents)
+			random() % MCGridExtentsWidth(extents) + extents.minX,
+			random() % MCGridExtentsHeight(extents) + extents.minY,
+			random() % MCGridExtentsLength(extents) + extents.minZ
 		};
 		
-		MCCell cell = { random() % (kMCBlockJackOLantern + 1), 0 };
+		MCCell cell = { random() % (kMCLastBlockID + 1), 0 };
 		
-		[copy setCell:cell at:coords];
+		[schematic setCell:cell at:coords];
 	}
-	[copy endBulkUpdate];
-	
-	[self.schematicView setNeedsDisplay:YES];
-	
-	NSLog(@"Scribbling complete.");
+	[schematic endBulkUpdate];
 }
 
 @end

@@ -95,8 +95,7 @@ struct Chunk
 #if DEBUG_MCSCHEMATIC
 	uint32_t					tag;
 #endif
-	uint16_t					refCount;
-	
+	uint32_t					refCount;
 	BOOL						extentsAreAccurate;
 	MCGridExtents				extents;
 	MCCell						cells[kJAMinecraftSchematicCellsPerChunk];
@@ -106,10 +105,10 @@ struct Chunk
 #if DEBUG_MCSCHEMATIC
 enum
 {
-	kTagInnerNode = 'node',
-	kTagChunk = 'chnk',
-	kTagDeadInnerNode = 'xnod',
-	kTagDeadChunk = 'xchk'
+	kTagInnerNode				= 'node',
+	kTagChunk					= 'chnk',
+	kTagDeadInnerNode			= 'xnod',
+	kTagDeadChunk				= 'xchk'
 };
 #endif
 
@@ -129,8 +128,8 @@ static Chunk *CopyChunk(Chunk *chunk);
 static void ReleaseInnerNode(InnerNode *node, NSUInteger level);
 static void ReleaseChunk(Chunk *chunk);
 
-static MCGridExtents ChunkGetExtents(Chunk *chunk);
-static MCCell ChunkGetCell(Chunk *chunk, NSInteger x, NSInteger y, NSInteger z);
+static MCGridExtents ChunkGetExtents(Chunk *chunk, NSInteger baseY, NSInteger groundLevel);
+static inline MCCell ChunkGetCell(Chunk *chunk, NSInteger x, NSInteger y, NSInteger z);
 static BOOL ChunkSetCell(Chunk *chunk, NSInteger x, NSInteger y, NSInteger z, MCCell cell);	// Returns true if cell is changed.
 
 // Recursively test if node’s children are all null. Does not test effective emptiness of chunks.
@@ -167,6 +166,8 @@ typedef BOOL (^JAMinecraftSchematicChunkIterator)(Chunk *chunk, MCGridCoordinate
 			 makeWriteable:(BOOL)makeWriteable;
 
 - (void) growOctree;
+- (void) growOctreeToCoverDistance:(NSUInteger)distance;
+- (void) growOctreeToCoverExtents:(MCGridExtents)extents;
 
 #if LOGGING
 - (void) dumpStructure;
@@ -180,6 +181,26 @@ typedef BOOL (^JAMinecraftSchematicChunkIterator)(Chunk *chunk, MCGridCoordinate
 - (BOOL) forEachChunkInRegion:(MCGridExtents)bounds do:(JAMinecraftSchematicChunkIterator)iterator;
 - (BOOL) forEachChunkDo:(JAMinecraftSchematicChunkIterator)iterator;
 
+/*	Structural optimization: find empty space areas and ensure they’re null
+	blocks, and shrink the tree if possible.
+	
+	The “deferred” option will cause an optimization pass to happen at the end
+	of any ongoing bulk update; if none is going on the optimization will
+	happen immediately. -optimizeWholeTree always uses deferred mode.
+	
+	Future possibility: find non-empty-space homogeneous chunks too.
+*/
+- (void) optimizeStructureInRegion:(MCGridExtents)region deferred:(BOOL)deferred;
+- (void) optimizeWholeTree;
+
+/*	-reifyStructureInRegion: is semantically the opposite of
+	-optimizeStructureInRegion:; it replaces all empty-space chunks in a
+	region with explicit ones. I refrained from calling it
+	-pessimizeStructureInRegion: since it reuses chunks and inner nodes to
+	reduce cost.
+*/
+- (void) reifyStructureInRegion:(MCGridExtents)region;
+
 @end
 
 
@@ -191,7 +212,16 @@ static inline NSUInteger RepresentedDistance(levels)
 
 @implementation JAMinecraftSchematic
 
+@synthesize groundLevel = _groundLevel;
+
+
 - (id) init
+{
+	return [self initWithGroundLevel:0];
+}
+
+
+- (id) initWithGroundLevel:(NSInteger)groundLevel
 {
 	if ((self = [super init]))
 	{
@@ -202,6 +232,7 @@ static inline NSUInteger RepresentedDistance(levels)
 		
 		_extents = kMCEmptyExtents;
 		_extentsAreAccurate = YES;
+		_groundLevel = groundLevel;
 	}
 	
 	return self;
@@ -210,6 +241,8 @@ static inline NSUInteger RepresentedDistance(levels)
 
 - (void) finalize
 {
+	//	The tree is not thread-safe, so we need to release it on the main thread.
+	
 	InnerNode *root = _root;
 	if (root != NULL)
 	{
@@ -250,8 +283,8 @@ static inline NSUInteger RepresentedDistance(levels)
 	
 	if (chunk == NULL)
 	{
-		if (location.y >= self.groundLevel)  return (MCCell){ kMCBlockAir, 0 };
-		else  return (MCCell){ kMCBlockSmoothStone, 0 };
+		if (location.y >= self.groundLevel)  return kMCAirCell;
+		else  return kMCStoneCell;
 	}
 	
 	return ChunkGetCell(chunk, location.x - base.x, location.y - base.y, location.z - base.z);
@@ -260,10 +293,12 @@ static inline NSUInteger RepresentedDistance(levels)
 
 - (void) setCell:(MCCell)cell at:(MCGridCoordinates)location
 {
+	BOOL isEmptyCell = MCCellsEqual(cell, (location.y < _groundLevel) ? kMCStoneCell : kMCAirCell );
+	
 	MCGridCoordinates base;
 	Chunk *chunk = [self resolveChunkAt:location
 						baseCoordinates:&base
-						 createIfNeeded:!MCCellIsAir(cell)
+						 createIfNeeded:!isEmptyCell
 						  makeWriteable:YES];
 	
 	BOOL changed = NO;
@@ -281,8 +316,8 @@ static inline NSUInteger RepresentedDistance(levels)
 			_extentsAreAccurate = NO;
 			[self didChangeValueForKey:@"extents"];
 		}
+		[self noteChangeInLocation:location];
 	}
-	[self noteChangeInLocation:location];
 }
 
 
@@ -295,17 +330,7 @@ static void *GetTemplateNode(void **filledNodeCache, unsigned level, MCCell cell
 {
 	if (filledNodeCache[level] != NULL)
 	{
-		if (level > 0)
-		{
-			return COWInnerNode(filledNodeCache[level], level);
-		}
-		else
-		{
-			void *result = filledNodeCache[level];
-			// Assignment is to minimize copies in case of retain count overflow.
-			filledNodeCache[level] = COWChunk(result);
-			return result;
-		}
+		return COWNode(filledNodeCache[level], level);
 
 	}
 	else if (level == 0)
@@ -331,9 +356,8 @@ static void *GetTemplateNode(void **filledNodeCache, unsigned level, MCCell cell
 }
 
 
-static void PerformFill(InnerNode *node, unsigned level, MCGridExtents fillRegion_, MCCell cell, void **filledNodeCache, MCGridCoordinates base, NSUInteger size, NSInteger groundLevel, BOOL isAir, BOOL isStone)
+static void PerformFill(InnerNode *node, unsigned level, MCGridExtents fillRegion, MCCell cell, void **filledNodeCache, MCGridCoordinates base, NSUInteger size, NSInteger groundLevel, BOOL isAir, BOOL isStone)
 {
-	MCGridExtents fillRegion = fillRegion_;
 	NSUInteger halfSize = size / 2;
 	unsigned subLevel = level - 1;
 	
@@ -354,6 +378,9 @@ static void PerformFill(InnerNode *node, unsigned level, MCGridExtents fillRegio
 		{
 			MCGridCoordinates max = { subBase.x + halfSize - 1, subBase.y + halfSize - 1, subBase.z + halfSize - 1 };
 			completelyEnclosed = MCGridCoordinatesAreWithinExtents(max, fillRegion);
+			
+			// Can’t use block fill if ...BOGUS?
+		//	if (completelyEnclosed && (isAir || isStone) && subBase.y < groundLevel && subBase.y + halfSize > groundLevel)
 		}
 		
 		// If the child is completely enclosed, we want to replace it.
@@ -377,18 +404,18 @@ static void PerformFill(InnerNode *node, unsigned level, MCGridExtents fillRegio
 			
 			if (node->children.inner[i] != NULL)
 			{
-				if (level > 1)
-				{
-					Log(@"Replacing inner node %p [level %u] with %p [refcount %u]", node->children.inner[i], subLevel, templateNode, GetNodeRefCount(templateNode, subLevel));
-					ReleaseInnerNode(node->children.inner[i], subLevel);
-					node->children.inner[i] = templateNode;
-				}
-				else
-				{
-					Log(@"Replacing chunk %p with %p [refcount %u]", node->children.leaves[i], templateNode, GetNodeRefCount(templateNode, subLevel));
-					ReleaseChunk(node->children.leaves[i]);
-					node->children.leaves[i] = templateNode;
-				}
+				ReleaseNode(node->children.inner[i], subLevel);
+			}
+			
+			if (level > 1)
+			{
+				Log(@"Replacing inner node %p [level %u] with %p [refcount %u]", node->children.inner[i], subLevel, templateNode, GetNodeRefCount(templateNode, subLevel));
+				node->children.inner[i] = templateNode;
+			}
+			else
+			{
+				Log(@"Replacing chunk %p with %p [refcount %u]", node->children.leaves[i], templateNode, GetNodeRefCount(templateNode, subLevel));
+				node->children.leaves[i] = templateNode;
 			}
 		}
 		else
@@ -448,6 +475,8 @@ static void PerformFill(InnerNode *node, unsigned level, MCGridExtents fillRegio
 	BOOL isAir = (cell.blockID == kMCBlockAir && cell.blockData == 0);
 	BOOL isStone = (cell.blockID == kMCBlockSmoothStone && cell.blockData == 0);
 	
+	[self growOctreeToCoverExtents:region];
+	
 	/*
 		For efficiency, we want to replace large areas with shared chunks/nodes.
 		The filledNodeCache array contains these shared nodes:
@@ -474,59 +503,24 @@ static void PerformFill(InnerNode *node, unsigned level, MCGridExtents fillRegio
 	[self didChangeValueForKey:@"extents"];
 	[self noteChangeInExtents:region];
 	
+	if (isAir || isStone)  [self optimizeStructureInRegion:region deferred:YES];
+	
 #if LOG_STRUCTURE
 	[self dumpStructure];
 #endif
 }
 
 
-#if 0
 - (void) copyRegion:(MCGridExtents)region from:(JAMinecraftBlockStore *)source at:(MCGridCoordinates)location
 {
-	if (MCGridExtentsEmpty(region))  return;
+	// FIXME: should optimize for schematics and copy-on-write chunks when appropriately aligned.
+	[self beginBulkUpdate];
 	
-	if ([source isKindOfClass:[JAMinecraftSchematic class]])
-	{
-		MCGridCoordinates offset = { location.x - region.minX, location.y - region.minY, location.z - region.minZ };
-		
-		// FIXME: should COW chunks/subtrees if appropriately aligned.
-		[source forEachChunkInRegion:region do:^(Chunk *chunk, MCGridCoordinates base)
-		{
-			NSUInteger bx, by, bz;
-			MCGridCoordinates loc;
-			
-			for (bz = 0; bz < kChunkSize; bz++)
-			{
-				loc.z = base.z + bz;
-				for (by = 0; by < kChunkSize; by++)
-				{
-					loc.y = base.y + by;
-					for (bx = 0; bx < kChunkSize; bx++)
-					{
-						loc.x = base.x + bx;
-						
-						if (MCGridCoordinatesAreWithinExtents(loc, region))
-						{
-							MCCell cell = [sourceCircuit cellAt:loc];
-							if (cell.blockID != kMCBlockAir)
-							{
-								MCGridCoordinates dstloc = { loc.x + offset.x, loc.y + offset.y, loc.z + offset.z };
-								[self setCell:cell at:dstloc];
-							}
-						}
-					}
-				}
-			}
-			
-			return YES;
-		}];
-	}
-	else
-	{
-		[super copyRegion:region from:source at:location];
-	}
+	[super copyRegion:region from:source at:location];
+	[self optimizeWholeTree];
+	
+	[self endBulkUpdate];
 }
-#endif
 
 
 - (MCGridExtents) extents
@@ -534,9 +528,10 @@ static void PerformFill(InnerNode *node, unsigned level, MCGridExtents fillRegio
 	if (!_extentsAreAccurate)
 	{
 		__block MCGridExtents result = kMCEmptyExtents;
+		const NSInteger groundLevel = self.groundLevel;
 		
 		[self forEachChunkDo:^(Chunk *chunk, MCGridCoordinates base) {
-			MCGridExtents chunkExtents = ChunkGetExtents(chunk);
+			MCGridExtents chunkExtents = ChunkGetExtents(chunk, base.y, groundLevel);
 			if (!MCGridExtentsEmpty(chunkExtents))
 			{
 				result.minX = MIN(result.minX, chunkExtents.minX + base.x);
@@ -586,30 +581,6 @@ static void PerformFill(InnerNode *node, unsigned level, MCGridExtents fillRegio
 {
 	return [NSSet setWithObject:@"extents"];
 }
-
-
-- (NSInteger) groundLevel
-{
-	return _groundLevel;
-}
-
-
-- (void) setGroundLevel:(NSInteger)value
-{
-	if (value != _groundLevel)
-	{
-		MCGridExtents changedRegion =
-		{
-			NSIntegerMin, NSIntegerMax,
-			MIN(value, _groundLevel), MAX(value, _groundLevel),
-			NSIntegerMin, NSIntegerMax
-		};
-		
-		_groundLevel = value;
-		[self noteChangeInExtents:changedRegion];
-	}
-}
-
 
 
 /*
@@ -743,10 +714,11 @@ enum
 };
 
 
-- (void) findNaturalGroundLevel
+- (NSInteger) findNaturalGroundLevel
 {
 	MCGridExtents extents = self.extents;
-	if (MCGridExtentsEmpty(extents))  return;
+	if (MCGridExtentsEmpty(extents))  return 0;
+	
 	if (kLastWeight != kMCLastBlockID)
 	{
 		NSLog(@"WARNING: %s requires its weight table to be updated. Ground level determination may be off.", __FUNCTION__);
@@ -756,33 +728,36 @@ enum
 	NSInteger minY = extents.minY / kChunkSize * kChunkSize;
 	NSInteger maxY = (extents.maxY + kChunkSize) / kChunkSize * kChunkSize;
 	NSUInteger levelCount = maxY - minY;
+	
 	NSInteger weightArray[levelCount];
 	memset(weightArray, 0, sizeof weightArray);
-	
 	NSInteger *weights = weightArray;	// Can’t refer to array from inside block.
 	
-	[self forEachChunkDo:^(Chunk *chunk, MCGridCoordinates base)
+	MCGridCoordinates coords;
+	for (coords.y = extents.minY; coords.y <= extents.maxY; coords.y++)
 	{
-		for (NSInteger y = 0; y < kChunkSize; y++)
+		NSInteger weight = 0;
+		
+		for (coords.z = extents.minZ; coords.z <= extents.maxZ; coords.z++)
 		{
-			NSInteger weight = 0;
-			
-			for (NSInteger z = 0; z < kChunkSize; z++)
+			for (coords.x = extents.minX; coords.x <= extents.maxX; coords.x++)
 			{
-				for (NSInteger x = 0; x < kChunkSize; x++)
-				{
-					MCCell cell = ChunkGetCell(chunk, x, y, z);
-					weight += kGroundLevelWeights[cell.blockID];
-				}
+				MCCell cell = [self cellAt:coords];
+				weight += kGroundLevelWeights[cell.blockID];
 			}
-			
-			off_t yIndex = y + base.y - minY;
-			NSAssert(yIndex < (off_t)levelCount, @"Level range logic error");
-			weights[yIndex] += weight;
 		}
 		
-		return YES;
-	}];
+		off_t yIndex = coords.y - extents.minY;
+		NSAssert(yIndex < (off_t)levelCount, @"Level range logic error");
+		weights[yIndex] += weight;
+	}
+	
+#if 0 && DEBUG_MCSCHEMATIC
+	for (NSUInteger i = 0; i < levelCount; i++)
+	{
+		NSLog(@"weights[%lu] (level %li): %li (avg: %g)", i, i + minY, weights[i], (float)weights[i] / (MCGridExtentsWidth(extents) * MCGridExtentsLength(extents)));
+	}
+#endif
 	
 	// Find first negative weight.
 	NSUInteger groundIndex;
@@ -797,7 +772,7 @@ enum
 		groundIndex--;
 	}
 	
-	self.groundLevel = minY + groundIndex;
+	return minY + groundIndex;
 }
 
 
@@ -853,12 +828,8 @@ enum
 	if (repDistance <= maxDistance)
 	{
 		if (!createIfNeeded)  return nil;
-		
-		do
-		{
-			[self growOctree];
-			repDistance = RepresentedDistance(_rootLevel);
-		} while (repDistance <= maxDistance);
+		[self growOctreeToCoverDistance:maxDistance];
+		repDistance = RepresentedDistance(_rootLevel);
 	}
 	
 	// Base[XYZ] and size define the coordinate range represented by the node under consideration.
@@ -907,7 +878,6 @@ enum
 			if (!createIfNeeded)  return NULL;
 			child = AllocInnerNode(level);
 			Log(@"Creating inner node %p at (%li, %li, %li)", child, baseX, baseY, baseZ);
-			if (child == nil)  [NSException raise:NSMallocException format:@"Out of memory"];
 			node->children.inner[nextIndex] = child;
 		}
 		if (makeWriteable && child->refCount > 1)
@@ -928,7 +898,6 @@ enum
 		chunk = MakeChunk(baseY, _groundLevel);
 		Log(@"Creating chunk %p at (%li, %li, %li)", chunk, baseX, baseY, baseZ);
 		
-		if (chunk == nil)  [NSException raise:NSMallocException format:@"Out of memory"];
 		node->children.leaves[nextIndex] = chunk;
 	}
 	else if (makeWriteable && chunk->refCount > 1)
@@ -963,7 +932,6 @@ enum
 	LogIndent();
 	
 	InnerNode *newRoot = AllocInnerNode(_rootLevel + 1);
-	if (newRoot == NULL)  [NSException raise:NSMallocException format:@"Out of memory"];
 	Log(@"Creating root inner node %p [level %lu]", newRoot, newRoot->level);
 	
 	InnerNode *oldRoot = _root;
@@ -974,7 +942,6 @@ enum
 		{
 			InnerNode *intermediate = AllocInnerNode(_rootLevel);
 			Log(@"Creating intermediate inner node %p [level %lu]", intermediate, intermediate->level);
-			if (intermediate == NULL)  [NSException raise:NSMallocException format:@"Out of memory"];
 			
 			if (_rootLevel > 1)  intermediate->children.inner[i ^ 7] = COWInnerNode(_root->children.inner[i], _rootLevel - 1);
 			else  intermediate->children.leaves[i ^ 7] = COWChunk(_root->children.leaves[i]);
@@ -994,6 +961,33 @@ enum
 #endif
 	
 	LogOutdent();
+}
+
+
+- (void) growOctreeToCoverDistance:(NSUInteger)distance
+{
+	NSUInteger repDistance = RepresentedDistance(_rootLevel);
+	
+	// If block is out of range, we need to grow until it isn’t.
+	while (repDistance <= distance)
+	{
+		[self growOctree];
+		repDistance = RepresentedDistance(_rootLevel);
+	}
+}
+
+
+- (void) growOctreeToCoverExtents:(MCGridExtents)extents
+{
+	NSInteger maxDistance = 0;
+	maxDistance = MAX(maxDistance, extents.maxX);
+	maxDistance = MAX(maxDistance, -extents.minX);
+	maxDistance = MAX(maxDistance, extents.maxY);
+	maxDistance = MAX(maxDistance, -extents.minY);
+	maxDistance = MAX(maxDistance, extents.maxZ);
+	maxDistance = MAX(maxDistance, -extents.minZ);
+	
+	[self growOctreeToCoverDistance:maxDistance];
 }
 
 
@@ -1060,20 +1054,24 @@ static void DumpNodeStructure(InnerNode *node, NSUInteger level, DumpStatistics 
 	
 	NSLog(@"Levels: %u. Inner nodes: %lu of %lu (%.2f %%). Leaf nodes: %lu of %lu (%.2f %%).", _rootLevel, stats.innerNodeCount, maxInnerNodes, (float)stats.innerNodeCount / maxInnerNodes * 100.0f, stats.leafNodeCount, maxLeafNodes, (float)stats.leafNodeCount / maxLeafNodes* 100.0f);
 }
+#endif
 
 
-#if LOG_STRUCTURE
 - (void) endBulkUpdate
 {
 	[super endBulkUpdate];
 	if (!self.bulkUpdateInProgress)
 	{
+		if (!MCGridExtentsEmpty(_deferredOptimizationRegion))
+		{
+			[self optimizeStructureInRegion:_deferredOptimizationRegion deferred:NO];
+			_deferredOptimizationRegion = kMCEmptyExtents;
+		}
+#if LOG_STRUCTURE
 		[self dumpStructure];
+#endif
 	}
 }
-#endif
-
-#endif
 
 
 static BOOL ForEachChunk(InnerNode *node, MCGridCoordinates base, NSUInteger size, NSUInteger level, MCGridExtents bounds, JAMinecraftSchematicChunkIterator iterator, BOOL makeWriteable)
@@ -1145,6 +1143,252 @@ static BOOL ForEachChunk(InnerNode *node, MCGridCoordinates base, NSUInteger siz
 	return [self forEachChunkInRegion:kMCInfiniteExtents do:iterator];
 }
 
+
+static BOOL ChunkIsEmpty(Chunk *chunk, NSInteger baseY, NSInteger groundLevel)
+{
+	for (unsigned y = 0; y < kChunkSize; y++)
+	{
+		uint8_t emptyType = (baseY + y >= groundLevel) ? kMCBlockAir : kMCBlockSmoothStone;
+		
+		for (unsigned z = 0; z < kChunkSize; z++)
+		{
+			for (unsigned x = 0; x < kChunkSize; x++)
+			{
+				MCCell cell = ChunkGetCell(chunk, x, y, z);
+				if (cell.blockID != emptyType || cell.blockData != 0)  return NO;
+			}
+		}
+	}
+	
+	return YES;
+}
+
+
+static void OptimizeStructure(InnerNode **nodePtr, unsigned level, MCGridExtents region_, MCGridCoordinates base, NSUInteger size, NSInteger groundLevel)
+{
+	NSCParameterAssert(nodePtr != NULL && *nodePtr != NULL);
+	
+	InnerNode *node = *nodePtr;
+	MCGridExtents region = region_;
+	NSUInteger halfSize = size / 2;
+	unsigned subLevel = level - 1;
+	BOOL remainingChildren = NO;
+	
+	Log(@"Optimizing node %p [level %u]", node, level);
+	LogIndent();
+	
+	for (unsigned i = 0; i < 8; i++)
+	{
+		if (node->children.inner[i] != NULL)
+		{
+			// Find extents of ith child.
+			MCGridCoordinates subBase = base;
+			if (i & 1) subBase.x += halfSize;
+			if (i & 2) subBase.y += halfSize;
+			if (i & 4) subBase.z += halfSize;
+			
+			MCGridExtents subExtents = MCGridExtentsWithCoordinatesAndSize(subBase, halfSize, halfSize, halfSize);
+			if (MCGridExtentsIntersect(subExtents, region))
+			{
+				if (subLevel > 0)
+				{
+					OptimizeStructure(&node->children.inner[i], subLevel, region, subBase, halfSize, groundLevel);
+				}
+				else
+				{
+					if (ChunkIsEmpty(node->children.leaves[i], base.y, groundLevel))
+					{
+						ReleaseChunk(node->children.leaves[i]);
+						node->children.leaves[i] = NULL;
+					}
+				}
+			}
+		}
+		
+		if (node->children.inner[i] != NULL)  remainingChildren = YES;
+	}
+	
+	if (!remainingChildren)
+	{
+		ReleaseInnerNode(node, level);
+		*nodePtr = NULL;
+	}
+	
+	LogOutdent();
+}
+
+
+- (void) optimizeStructureInRegion:(MCGridExtents)region deferred:(BOOL)deferred
+{
+	return;
+	
+	if (MCGridExtentsEmpty(region))  return;
+	
+	if (deferred && self.bulkUpdateInProgress)
+	{
+		_deferredOptimizationRegion = MCGridExtentsUnion(_deferredOptimizationRegion, region);
+		return;
+	}
+	
+	Log(@"Optimizing %@", self);
+	LogIndent();
+	
+	NSInteger repDistance = RepresentedDistance(_rootLevel);
+	MCGridCoordinates base = { -repDistance, -repDistance, -repDistance };
+	NSUInteger size = repDistance * 2;
+	
+	OptimizeStructure(&_root, _rootLevel, region, base, size, self.groundLevel);
+	
+	if (_root == NULL)
+	{
+		Log(@"Optimized tree is empty.");
+		// We’re empty, but the root is required to exist for simplicity elsewhere.
+		_rootLevel = 1;
+		_root = AllocInnerNode(_rootLevel);
+	}
+	else
+	{
+		// FIXME: shrink tree if appropriate.
+	}
+	
+	LogOutdent();
+}
+
+
+- (void) optimizeWholeTree
+{
+	[self optimizeStructureInRegion:kMCInfiniteExtents deferred:YES];
+}
+
+
+static void ReifyStructure(InnerNode *node, unsigned level, MCGridExtents region_, void **airNodeCache, void **stoneNodeCache, Chunk *interfaceChunk, MCGridCoordinates base, NSUInteger size, NSInteger groundLevel)
+{
+	NSCParameterAssert(node != NULL);
+	
+	MCGridExtents region = region_;
+	NSUInteger halfSize = size / 2;
+	unsigned subLevel = level - 1;
+	
+	Log(@"Reifying node %p [level %u]", node, level);
+	LogIndent();
+	
+	for (unsigned i = 0; i < 8; i++)
+	{
+		// Find extents of ith child.
+		MCGridCoordinates subBase = base;
+		if (i & 1) subBase.x += halfSize;
+		if (i & 2) subBase.y += halfSize;
+		if (i & 4) subBase.z += halfSize;
+		
+		MCGridExtents subExtents = MCGridExtentsWithCoordinatesAndSize(subBase, halfSize, halfSize, halfSize);
+		if (MCGridExtentsIntersect(subExtents, region))
+		{
+			if (subLevel > 0)
+			{
+				if (node->children.inner[i] == NULL)
+				{
+					void *appropriateCache = NULL;
+					MCCell templateCell;
+					
+					/*	If this child is completely under/over ground and
+						completely within the fill region, we can insert an
+						entire subtree.
+					*/
+					if (MCGridExtentsAreWithinExtents(subExtents, region))
+					{
+						if (subBase.y >= groundLevel)
+						{
+							appropriateCache = airNodeCache;
+							templateCell = kMCAirCell;
+						}
+						else if ((NSInteger)(subBase.y + halfSize) <= groundLevel)
+						{
+							appropriateCache = stoneNodeCache;
+							templateCell = kMCStoneCell;
+						}
+					}
+					
+					if (appropriateCache != NULL)
+					{
+						InnerNode *node = GetTemplateNode(appropriateCache, subLevel, templateCell);
+						Log(@"Inserting subtree %p [level %u, refcount %lu]", node, subLevel, node->refCount);
+						node->children.inner[i] = node;
+					}
+					else
+					{
+						// Otherwise, allocate node and iterate into it.
+						node->children.inner[i] = AllocInnerNode(subLevel);
+						ReifyStructure(node->children.inner[i], subLevel, region, airNodeCache, stoneNodeCache, interfaceChunk, subBase, halfSize, groundLevel);
+					}
+				}
+			}
+			else
+			{
+				// Chunk level.
+				if (node->children.leaves[i] == NULL)
+				{
+					Chunk *chunk = NULL;
+					if (subBase.y >= groundLevel)
+					{
+						chunk = GetTemplateNode(airNodeCache, 0, kMCAirCell);
+					}
+					else if ((NSInteger)(subBase.y + halfSize) <= groundLevel)
+					{
+						chunk = GetTemplateNode(stoneNodeCache, 0, kMCStoneCell);
+					}
+					else
+					{
+						chunk = COWChunk(interfaceChunk);
+					}
+					
+					Log(@"Inserting chunk %p [refcount %u]", chunk, chunk->refCount);
+					node->children.leaves[i] = chunk;
+				}
+			}
+		}
+	}
+	
+	LogOutdent();
+}
+
+
+- (void) reifyStructureInRegion:(MCGridExtents)region
+{
+	/*
+		Two caches similar to the one in -fillRegion:withCell: – one for air,
+		the other for stone.
+	*/
+	void *airNodeCache[_rootLevel * 2];
+	memset(airNodeCache, 0, sizeof(void *) * _rootLevel * 2);
+	void *stoneNodeCache = airNodeCache + _rootLevel;
+	
+	NSInteger repDistance = RepresentedDistance(_rootLevel);
+	MCGridCoordinates base = { -repDistance, -repDistance, -repDistance };
+	NSUInteger size = repDistance * 2;
+	
+	NSInteger groundLevel = self.groundLevel;
+	
+	/*
+		Interface chunk cache: a chunk for the level intersected by the ground
+		level.
+	*/
+	MCGridExtents interfaceFillExtents = MCGridExtentsWithCoordinatesAndSize(kMCZeroCoordinates, kChunkSize, groundLevel % kChunkSize, kChunkSize);
+	Chunk *interfaceChunk = AllocChunk();
+	if (!MCGridExtentsEmpty(interfaceFillExtents))
+	{
+		FillPartialChunk(interfaceChunk, kMCStoneCell, interfaceFillExtents);
+	}
+	
+	Log(@"Reifing region %@ of %@", JA_ENCODE(region), self);
+	LogIndent();
+	
+	ReifyStructure(_root, _rootLevel, region, airNodeCache, stoneNodeCache, interfaceChunk, base, size, self.groundLevel);
+	
+	ReleaseChunk(interfaceChunk);
+	
+	LogOutdent();
+}
+
 @end
 
 
@@ -1166,10 +1410,26 @@ static inline off_t Offset(unsigned x, unsigned y, unsigned z)
 }
 
 
+static void ThrowMallocException(void) __attribute__((noreturn));
+static void ThrowMallocException(void)
+{
+	[NSException raise:NSMallocException format:@"Out of memory"];
+	__builtin_unreachable();
+	abort();
+}
+
+
+static void *AllocClearOrThrow(size_t size)
+{
+	void *result = calloc(size, 1);
+	if (JA_EXPECT_NOT(result == NULL))  ThrowMallocException();
+	return result;
+}
+
+
 static inline InnerNode *AllocInnerNode(NSUInteger level)
 {
-	InnerNode *result = calloc(sizeof(InnerNode), 1);
-	if (result == NULL)  [NSException raise:NSMallocException format:@"Out of memory"];
+	InnerNode *result = AllocClearOrThrow(sizeof(InnerNode));
 	
 #if DEBUG_MCSCHEMATIC
 	result-> tag = kTagInnerNode;
@@ -1192,15 +1452,13 @@ static inline InnerNode *AllocInnerNode(NSUInteger level)
 
 static Chunk *AllocChunk(void)
 {
-	Chunk *result = calloc(sizeof(Chunk), 1);
-	if (result == NULL)  [NSException raise:NSMallocException format:@"Out of memory"];
+	Chunk *result = AllocClearOrThrow(sizeof(Chunk));
 	
 #if DEBUG_MCSCHEMATIC
 	result-> tag = kTagChunk;
 #endif
 	
 	result->refCount = 1;
-	result->extentsAreAccurate = NO;
 	
 #if LOGGING
 	sLiveChunkCount++;
@@ -1221,13 +1479,13 @@ static Chunk *MakeChunk(NSInteger baseY, NSInteger groundLevel)
 	if (baseY < groundLevel)
 	{
 		MCCell stoneCell = { kMCBlockSmoothStone, 0 };
-		if (baseY + kChunkSize < groundLevel)
+		if (baseY + kChunkSize <= groundLevel)
 		{
 			FillCompleteChunk(result, stoneCell);
 		}
 		else
 		{
-			FillPartialChunk(result, stoneCell, (MCGridExtents){ 0, kChunkSize, 0, groundLevel - baseY, 0, kChunkSize });
+			FillPartialChunk(result, stoneCell, (MCGridExtents){ 0, kChunkSize - 1, 0, groundLevel - baseY - 1, 0, kChunkSize - 1 });
 		}
 	}
 	
@@ -1378,7 +1636,7 @@ static void ReleaseChunk(Chunk *chunk)
 }
 
 
-static MCGridExtents ChunkGetExtents(Chunk *chunk)
+static MCGridExtents ChunkGetExtents(Chunk *chunk, NSInteger baseY, NSInteger groundLevel)
 {
 	NSCParameterAssert(chunk != NULL && chunk->tag == kTagChunk);
 	
@@ -1389,14 +1647,16 @@ static MCGridExtents ChunkGetExtents(Chunk *chunk)
 		unsigned maxY = 0, minY = UINT_MAX;
 		unsigned maxZ = 0, minZ = UINT_MAX;
 		
-		unsigned x, y, z;
-		for (z = 0; z < kChunkSize; z++)
+		for (unsigned y = 0; y < kChunkSize; y++)
 		{
-			for (y = 0; y < kChunkSize; y++)
+			uint8_t emptyType = (baseY + y >= groundLevel) ? kMCBlockAir : kMCBlockSmoothStone;
+			
+			for (unsigned z = 0; z < kChunkSize; z++)
 			{
-				for (x = 0; x < kChunkSize; x++)
+				for (unsigned x = 0; x < kChunkSize; x++)
 				{
-					if (!MCCellIsAir(chunk->cells[Offset(x, y, z)]))
+					MCCell cell = chunk->cells[Offset(x, y, z)];
+					if (cell.blockID != emptyType || cell.blockData != 0)
 					{
 						minX = MIN(minX, x);
 						maxX = MAX(maxX, x);
@@ -1418,7 +1678,7 @@ static MCGridExtents ChunkGetExtents(Chunk *chunk)
 }
 
 
-static MCCell ChunkGetCell(Chunk *chunk, NSInteger x, NSInteger y, NSInteger z)
+static inline MCCell ChunkGetCell(Chunk *chunk, NSInteger x, NSInteger y, NSInteger z)
 {
 	NSCParameterAssert(chunk != NULL && chunk->tag == kTagChunk &&
 					   0 <= x && x < kChunkSize &&
@@ -1450,7 +1710,7 @@ static void FillCompleteChunk(Chunk *chunk, MCCell cell)
 	NSCParameterAssert(chunk != NULL && chunk->tag == kTagChunk && chunk->refCount == 1);
 	
 	MCCell pattern[8] = { cell, cell, cell, cell, cell, cell, cell, cell };
-	memset_pattern16(chunk->cells, &pattern, sizeof chunk->cells / 16);
+	memset_pattern16(chunk->cells, &pattern, sizeof chunk->cells);
 	
 	chunk->extentsAreAccurate = NO;
 }
@@ -1459,8 +1719,7 @@ static void FillCompleteChunk(Chunk *chunk, MCCell cell)
 static void FillPartialChunk(Chunk *chunk, MCCell cell, MCGridExtents extents)
 {
 	NSCParameterAssert(chunk != NULL && chunk->tag == kTagChunk && chunk->refCount == 1);
-	NSCParameterAssert(MCGridCoordinatesAreWithinExtents(MCGridExtentsMinimum(extents), MCGridExtentsWithCoordinatesAndSize(kMCZeroCoordinates, kChunkSize, kChunkSize, kChunkSize)));
-	NSCParameterAssert(MCGridCoordinatesAreWithinExtents(MCGridExtentsMaximum(extents), MCGridExtentsWithCoordinatesAndSize(kMCZeroCoordinates, kChunkSize, kChunkSize, kChunkSize)));
+	NSCParameterAssert(MCGridExtentsAreWithinExtents(extents, MCGridExtentsWithCoordinatesAndSize(kMCZeroCoordinates, kChunkSize, kChunkSize, kChunkSize)));
 	
 	for (unsigned z = extents.minZ; z <= extents.maxZ; z++)
 	{

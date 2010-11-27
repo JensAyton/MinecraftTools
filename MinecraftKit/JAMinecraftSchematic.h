@@ -12,7 +12,8 @@
 	bounding box of all non-empty blocks.
 	
 	Performance characteristics:
-	• Reads are O(log n), where n is the size on the longest side.
+	• Reads are worst-case O(log n), where n is the size on the longest side.
+	  Sequential reads in any direction are faster on average.
 	• Writes are generally also O(log n).
 	• Copying is O(1) (in both time and memory), with O(n) deferred costs
 	  amortized across writes. (In other words, it’s hierarchically copy-on-
@@ -66,25 +67,12 @@
 	BOOL							_cacheIsValid;
 	struct Chunk					*_cachedChunk;
 	MCGridCoordinates				_cacheBase;
+	
+	MCGridExtents					_deferredOptimizationRegion;
 }
 
-/*
-	NOTE: changing the ground level will change the virtual content of “empty
-	space” in the schematic (see header comment), but not the actual content
-	of non-empty space.
-	
-	Since this distinction makes little sense to a user, changing ground level
-	for a schematic that has been shown is unhelpful. It should be set once
-	when loading the schematic.
-	
-	-findNaturalGroundLevel makes a best guess for an appropriate ground level
-	by assigning positive weights to “ground-like” block types and negative
-	weights to “above-ground-like” ones, and finding the lowest level with
-	a zero or negative overall weight. Empty chunks are ignored in this
-	calculation.
-*/
-@property (readwrite) NSInteger groundLevel;
+- (id) initWithGroundLevel:(NSInteger)groundLevel;
 
-- (void) findNaturalGroundLevel;
+- (NSInteger) findNaturalGroundLevel;
 
 @end

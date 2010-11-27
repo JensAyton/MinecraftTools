@@ -60,7 +60,8 @@ typedef struct MCCell
 } MCCell;
 
 
-extern const MCCell kJAEmptyCell;
+extern const MCCell kMCAirCell;
+extern const MCCell kMCStoneCell;
 
 static inline BOOL MCCellsEqual(MCCell a, MCCell b) JA_CONST_FUNC;
 
@@ -161,6 +162,7 @@ static MCGridExtents MCGridExtentsWithCoordinates(MCGridCoordinates coords) JA_C
 static MCGridExtents MCGridExtentsWithCoordinatesAndSize(MCGridCoordinates coords, NSUInteger sizeX, NSUInteger sizeY, NSUInteger sizeZ) JA_CONST_FUNC;
 
 static BOOL MCGridCoordinatesAreWithinExtents(MCGridCoordinates coords, MCGridExtents extents) JA_CONST_FUNC;
+BOOL MCGridExtentsAreWithinExtents(MCGridExtents inner, MCGridExtents outer) JA_CONST_FUNC;
 
 /*
 	MCGridExtentsUnion(MCGridExtents a, MCGridExtents b)
