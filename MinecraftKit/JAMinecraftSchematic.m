@@ -378,9 +378,6 @@ static void PerformFill(InnerNode *node, unsigned level, MCGridExtents fillRegio
 		{
 			MCGridCoordinates max = { subBase.x + halfSize - 1, subBase.y + halfSize - 1, subBase.z + halfSize - 1 };
 			completelyEnclosed = MCGridCoordinatesAreWithinExtents(max, fillRegion);
-			
-			// Can’t use block fill if ...BOGUS?
-		//	if (completelyEnclosed && (isAir || isStone) && subBase.y < groundLevel && subBase.y + halfSize > groundLevel)
 		}
 		
 		// If the child is completely enclosed, we want to replace it.
@@ -397,8 +394,6 @@ static void PerformFill(InnerNode *node, unsigned level, MCGridExtents fillRegio
 			else
 			{
 				// Use template node.
-				// FIXME: if ground level isn’t chunk-aligned, we miss some opportunities to delete nodes.
-				
 				templateNode = GetTemplateNode(filledNodeCache, subLevel, cell);
 			}
 			
