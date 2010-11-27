@@ -15,7 +15,7 @@ NSString * const kJAMinecraftBlockStoreChangedExtents		= @"kJAMinecraftBlockStor
 NSString * const kJAMinecraftBlockStoreErrorDomain			= @"se.ayton.jens JAMinecraftBlockStore ErrorDomain";
 
 
-@interface JAMinecraftBlockStore ()
+@interface JAMutableMinecraftBlockStore ()
 
 - (void) postChangeNotification:(MCGridExtents)changedExtents;
 
@@ -26,17 +26,6 @@ static void ThrowSubclassResponsibility(const char *func) __attribute__((noretur
 
 
 @implementation JAMinecraftBlockStore
-
-- (id) init
-{
-	if ((self = [super init]))
-	{
-		_dirtyExtents = kMCEmptyExtents;
-	}
-	
-	return self;
-}
-
 
 - (NSInteger) groundLevel
 {
@@ -64,12 +53,6 @@ static void ThrowSubclassResponsibility(const char *func) __attribute__((noretur
 }
 
 
-- (void) setCell:(MCCell)cell at:(MCGridCoordinates)location
-{
-	ThrowSubclassResponsibility(__FUNCTION__);
-}
-
-
 - (NSInteger) minimumLayer
 {
 	ThrowSubclassResponsibility(__FUNCTION__);
@@ -77,6 +60,27 @@ static void ThrowSubclassResponsibility(const char *func) __attribute__((noretur
 
 
 - (NSInteger) maximumLayer
+{
+	ThrowSubclassResponsibility(__FUNCTION__);
+}
+
+@end
+
+
+@implementation JAMutableMinecraftBlockStore
+
+- (id) init
+{
+	if ((self = [super init]))
+	{
+		_dirtyExtents = kMCEmptyExtents;
+	}
+	
+	return self;
+}
+
+
+- (void) setCell:(MCCell)cell at:(MCGridCoordinates)location
 {
 	ThrowSubclassResponsibility(__FUNCTION__);
 }
@@ -206,7 +210,6 @@ static void ThrowSubclassResponsibility(const char *func) __attribute__((noretur
 	[self endBulkUpdate];
 }
 
-
 @end
 
 
@@ -253,6 +256,10 @@ static void ThrowSubclassResponsibility(const char *func) __attribute__((noretur
 	return [self cellAt:(MCGridCoordinates){ x, y, z }];
 }
 
+@end
+
+
+@implementation JAMutableMinecraftBlockStore (Conveniences)
 
 - (void) setCell:(MCCell)cell atX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z
 {

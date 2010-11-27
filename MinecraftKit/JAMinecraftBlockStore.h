@@ -35,10 +35,6 @@ enum
 
 
 @interface JAMinecraftBlockStore: NSObject
-{
-	NSUInteger						_bulkLevel;
-	MCGridExtents					_dirtyExtents;
-}
 
 @property (readonly) MCGridExtents extents;
 
@@ -56,6 +52,16 @@ enum
 @property (readonly) NSInteger groundLevel;
 
 - (MCCell) cellAt:(MCGridCoordinates)location;
+
+@end
+
+
+@interface JAMutableMinecraftBlockStore: JAMinecraftBlockStore
+{
+	NSUInteger						_bulkLevel;
+	MCGridExtents					_dirtyExtents;
+}
+
 - (void) setCell:(MCCell)cell at:(MCGridCoordinates)location;
 
 /*
@@ -101,6 +107,12 @@ enum
 @property (readonly) NSUInteger height;
 
 - (MCCell) cellAtX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z;
+
+@end
+
+
+@interface JAMutableMinecraftBlockStore (Conveniences)
+
 - (void) setCell:(MCCell)cell atX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z;
 
 @end

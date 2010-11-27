@@ -48,7 +48,7 @@
 @class JAMinecraftSchematicInnerNode;
 
 
-@interface JAMinecraftSchematic: JAMinecraftBlockStore <NSCopying>
+@interface JAMinecraftSchematic: JAMutableMinecraftBlockStore <NSCopying>
 {
 @private
 	struct InnerNode				*_root;

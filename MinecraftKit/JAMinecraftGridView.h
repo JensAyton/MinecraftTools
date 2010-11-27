@@ -28,7 +28,7 @@
 #import <Cocoa/Cocoa.h>
 #import "JAMinecraftTypes.h"
 
-@class JAMinecraftBlockStore, JAMinecraftSchematic;
+@class JAMinecraftBlockStore, JAMutableMinecraftBlockStore, JAMinecraftSchematic;
 
 typedef void (^JAMCGridViewRenderCB)(JAMinecraftBlockStore *store, MCCell cell, MCGridCoordinates location, NSRect drawingRect);
 
@@ -45,35 +45,35 @@ enum
 @interface JAMinecraftGridView: NSView
 {
 @private
-	JAMinecraftBlockStore	*_store;
+	JAMutableMinecraftBlockStore	*_store;
 	
-	NSScroller				*_horizontalScroller;
-	NSScroller				*_verticalScroller;
+	NSScroller						*_horizontalScroller;
+	NSScroller						*_verticalScroller;
 	
-	NSPoint					_scrollCenter;
-	NSInteger				_currentLayer;
+	NSPoint							_scrollCenter;
+	NSInteger						_currentLayer;
 	
-	JAMCGridViewRenderCB	_renderCallback;
+	JAMCGridViewRenderCB			_renderCallback;
 	
-	uint8_t					_dragAction;
+	uint8_t							_dragAction;
 	
-	MCGridCoordinates		_selectionAnchor;
-	MCGridExtents			_selection;
-	NSTimer					*_selectionUpdateTimer;
+	MCGridCoordinates				_selectionAnchor;
+	MCGridExtents					_selection;
+	NSTimer							*_selectionUpdateTimer;
 	
-	NSUInteger				_zoomLevel;
-	NSInteger				_cellSize;
-	NSInteger				_gridWidth;
+	NSUInteger						_zoomLevel;
+	NSInteger						_cellSize;
+	NSInteger						_gridWidth;
 	
-	JAMinecraftSchematic	*_floatContent;
-	MCGridCoordinates		_floatOffset;
-	MCGridExtents			_floatExtents;
-	BOOL					_floatIsSelection;
+	JAMinecraftSchematic			*_floatContent;
+	MCGridCoordinates				_floatOffset;
+	MCGridExtents					_floatExtents;
+	BOOL							_floatIsSelection;
 	
-	NSColor					*_emptyOutsidePattern;
+	NSColor							*_emptyOutsidePattern;
 }
 
-@property (nonatomic, assign) JAMinecraftBlockStore *store;
+@property (nonatomic, assign) JAMutableMinecraftBlockStore *store;
 
 /*	drawingStore: presents a unified view of the main store and any floating
 	content. This may be a JAMinecraftMergedBlockStore, whose contents cannot

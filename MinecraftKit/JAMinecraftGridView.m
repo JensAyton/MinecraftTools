@@ -171,13 +171,13 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 }
 
 
-- (JAMinecraftBlockStore *) store
+- (JAMutableMinecraftBlockStore *) store
 {
 	return _store;
 }
 
 
-- (void) setStore:(JAMinecraftBlockStore *)store
+- (void) setStore:(JAMutableMinecraftBlockStore *)store
 {
 	if (store != _store)
 	{
@@ -201,6 +201,12 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 {
 	if (_floatContent == nil)  return _store;
 	else return [[JAMinecraftMergedBlockStore alloc] initWithMainStore:_store overlay:_floatContent offset:_floatOffset];
+}
+
+
++ (NSSet *) keyPathsForValuesAffectingDrawingStore
+{
+	return [NSSet setWithObjects:@"store", @"hasFloatingContent", @"floatingContentOffset", nil];
 }
 
 
