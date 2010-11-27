@@ -1401,7 +1401,7 @@ static NSHashTable *sLiveChunks = NULL;
 static inline off_t Offset(unsigned x, unsigned y, unsigned z)  __attribute__((const, always_inline));
 static inline off_t Offset(unsigned x, unsigned y, unsigned z)
 {
-	return (z * kChunkSize + y) * kChunkSize + x;
+	return (y * kChunkSize + z) * kChunkSize + x;
 }
 
 
@@ -1716,9 +1716,9 @@ static void FillPartialChunk(Chunk *chunk, MCCell cell, MCGridExtents extents)
 	NSCParameterAssert(chunk != NULL && chunk->tag == kTagChunk && chunk->refCount == 1);
 	NSCParameterAssert(MCGridExtentsAreWithinExtents(extents, MCGridExtentsWithCoordinatesAndSize(kMCZeroCoordinates, kChunkSize, kChunkSize, kChunkSize)));
 	
-	for (unsigned z = extents.minZ; z <= extents.maxZ; z++)
+	for (unsigned y = extents.minY; y <= extents.maxY; y++)
 	{
-		for (unsigned y = extents.minY; y <= extents.maxY; y++)
+		for (unsigned z = extents.minZ; z <= extents.maxZ; z++)
 		{
 			for (unsigned x = extents.minX; x <= extents.maxX; x++)
 			{
