@@ -25,6 +25,8 @@
 
 #import "JAMinecraftGridView.h"
 #import "JAMinecraftBlockStore.h"
+#import "JAMinecraftSchematic.h"
+#import "JAMinecraftMergedBlockStore.h"
 #import "IsKeyDown.h"
 
 
@@ -38,6 +40,10 @@
 #define USE_BACKGROUND_CACHE		1
 
 
+NSString * const kJAMinecraftGridViewWillFreezeSelectionNotification = @"se.ayton.jens JAMinecraftGridView will freeze selection";
+NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayton.jens JAMinecraftGridView will discard selection";;
+
+
 @interface JAMinecraftGridView ()
 
 // Drawing
@@ -49,6 +55,8 @@
 #endif
 
 @property (readonly, nonatomic) NSColor *emptyOutsidePattern;
+
+- (void) setNeedsDisplayInExtents:(MCGridExtents)extents;
 
 // Selection
 - (BOOL) hasVisibleSelection;
@@ -189,6 +197,13 @@
 }
 
 
+- (JAMinecraftBlockStore *) drawingStore
+{
+	if (_floatContent == nil)  return _store;
+	else return [[JAMinecraftMergedBlockStore alloc] initWithMainStore:_store overlay:_floatContent offset:_floatOffset];
+}
+
+
 - (void) blockStoreChanged:(NSNotification *)notification
 {
 	NSValue *extentsVal = [notification.userInfo objectForKey:kJAMinecraftBlockStoreChangedExtents];
@@ -226,6 +241,25 @@
 }
 
 
+- (MCGridCoordinates) scrollCenterCoordinates
+{
+	return (MCGridCoordinates){ round(_scrollCenter.y), _currentLayer, round(_scrollCenter.x) };
+}
+
+
+- (void) setScrollCenterCoordinates:(MCGridCoordinates)value
+{
+	self.scrollCenter = (NSPoint){ value.z, value.x };
+	self.currentLayer = value.y;
+}
+
+
++ (NSSet *) keyPathsForValuesAffectingScrollCenterCoordinates
+{
+	return [NSSet setWithObjects:@"scrollCenter", @"currentLayer", nil];
+}
+
+
 - (MCGridExtents) selection
 {
 	return _selection;
@@ -236,6 +270,11 @@
 {
 	if (!MCGridExtentsEqual(value, _selection))
 	{
+		if (_floatContent != nil)
+		{
+			[self freezeFloatingContent]; 
+		}
+		
 		_selection = value;
 		[self updateSelectionTimer];
 		[self setNeedsDisplay:YES];
@@ -305,6 +344,172 @@
 - (BOOL) infiniteCanvas
 {
 	return YES;
+}
+
+
+#pragma mark Floating content
+
+- (BOOL) hasFloatingContent
+{
+	return _floatContent != nil;
+}
+
+
+- (BOOL) hasFloatingSelection
+{
+	return self.hasFloatingContent && !MCGridExtentsEmpty(self.selection);
+}
+
+
+- (MCGridCoordinates) floatingContentOffset
+{
+	if (self.hasFloatingContent)
+	{
+		return _floatOffset;
+	}
+	else
+	{
+		return kMCZeroCoordinates;
+	}
+}
+
+
+- (void) setFloatingContentOffset:(MCGridCoordinates)value
+{
+	if (self.hasFloatingContent && !MCGridCoordinatesEqual(value, _floatOffset))
+	{
+		MCGridExtents oldFloatExtents = _floatExtents;
+		MCGridExtents newFloatExtents = MCGridExtentsOffset(_floatContent.extents, value.x, value.y, value.z);
+		MCGridExtents totalExtentsBefore = MCGridExtentsUnion(self.store.extents, oldFloatExtents);
+		MCGridExtents totalExtentsAfter = MCGridExtentsUnion(self.store.extents, newFloatExtents);
+		BOOL willChangeExtents = !MCGridExtentsEqual(totalExtentsBefore, totalExtentsAfter);
+		
+		if (willChangeExtents)  [self willChangeValueForKey:@"extents"];
+		[self willChangeValueForKey:@"floatingContentOffset"];
+		
+		_floatOffset = value;
+		_floatExtents = newFloatExtents;
+		
+		if (_floatIsSelection)
+		{
+			// Direct access to avoid dropping floater.
+			[self willChangeValueForKey:@"selection"];
+			_selection = newFloatExtents;
+			[self didChangeValueForKey:@"selection"];
+		}
+		
+		[self didChangeValueForKey:@"floatingContentOffset"];
+		if (willChangeExtents)
+		{
+			[self didChangeValueForKey:@"extents"];
+			[self setNeedsDisplay:YES];
+		}
+		else
+		{
+			[self setNeedsDisplayInExtents:oldFloatExtents];
+			[self setNeedsDisplayInExtents:newFloatExtents];
+		}
+	}
+}
+
+- (MCGridExtents) floatingContentExtents
+{
+	if (self.hasFloatingContent)
+	{
+		return _floatExtents;
+	}
+	else
+	{
+		return kMCEmptyExtents;
+	}
+}
+
+
++ (NSSet *) keyPathsForValuesAffectingFloatingContentExtents
+{
+	return [NSSet setWithObject:@"floatingContentOffset"];
+}
+
+
+- (void) setFloatingContent:(JAMinecraftSchematic *)floater
+				 withOffset:(MCGridCoordinates)offset
+				asSelection:(BOOL)asSelection
+{
+	if (floater == nil)  return;
+	
+	if (_floatContent != nil) [self freezeFloatingContent];
+	if (!asSelection)  self.selection = kMCEmptyExtents;
+	
+	[self willChangeValueForKey:@"hasFloatingContent"];
+	
+	_floatContent = floater;
+	_floatIsSelection = asSelection;
+	self.floatingContentOffset = offset;
+	
+	[self didChangeValueForKey:@"hasFloatingContent"];
+}
+
+- (void) setFloatingContent:(JAMinecraftSchematic *)floater
+				 centeredAt:(MCGridCoordinates)center
+				asSelection:(BOOL)asSelection
+{
+	MCGridExtents floaterExtents = (floater != nil) ? floater.extents : kMCZeroExtents;
+	if (MCGridExtentsEmpty(floaterExtents))  floaterExtents = kMCZeroExtents;
+	
+	center.x -= MCGridExtentsWidth(floaterExtents);
+	center.y -= MCGridExtentsHeight(floaterExtents);
+	center.z -= MCGridExtentsLength(floaterExtents);
+	
+	[self setFloatingContent:floater withOffset:center asSelection:asSelection];
+}
+
+
+- (void) makeSelectionFloat
+{
+	MCGridExtents selection = self.selection;
+	if (MCGridExtentsEmpty(selection) || _floatContent != nil /* already have floating selection */)  return;
+	
+	JAMinecraftSchematic *floater = [[JAMinecraftSchematic alloc] initWithRegion:selection ofStore:self.store];
+	[self.store fillRegion:selection withCell:kMCAirCell];
+	
+	[self setFloatingContent:floater withOffset:kMCZeroCoordinates asSelection:YES];
+}
+
+
+- (void) priv_dropFloatingContent
+{
+	[self willChangeValueForKey:@"hasFloatingContent"];
+	[self willChangeValueForKey:@"hasFloatingSelection"];
+	[self willChangeValueForKey:@"floatingContentOffset"];
+	
+	_floatContent = nil;
+	[self setNeedsDisplayInExtents:_floatExtents];
+	
+	[self didChangeValueForKey:@"floatingContentOffset"];
+	[self didChangeValueForKey:@"hasFloatingSelection"];
+	[self didChangeValueForKey:@"hasFloatingContent"];
+}
+
+
+- (void) freezeFloatingContent
+{
+	[[NSNotificationCenter defaultCenter] postNotificationName:kJAMinecraftGridViewWillFreezeSelectionNotification object:self];
+	
+	MCGridExtents region = _floatContent.extents;
+	MCGridCoordinates target = _floatOffset;
+	target.x += region.minX;
+	target.y += region.minY;
+	target.z += region.minZ;
+	[self.store copyRegion:region from:_floatContent at:target];
+	
+	[self priv_dropFloatingContent];
+}
+
+
+- (void) discardFloatingContent
+{
+	[[NSNotificationCenter defaultCenter] postNotificationName:kJAMinecraftGridViewWillDiscardSelectionNotification object:self];
+	[self priv_dropFloatingContent];
 }
 
 
@@ -429,7 +634,7 @@
 {
 	if (JA_EXPECT_NOT(_renderCallback == NULL))  return;
 	
-	JAMinecraftBlockStore *store = self.store;
+	JAMinecraftBlockStore *store = self.drawingStore;
 	MCGridExtents targetExtents = [self extentsFromRect:rect];
 #if USE_BACKGROUND_CACHE
 	targetExtents = MCGridExtentsIntersection(targetExtents, store.extents);
@@ -528,6 +733,12 @@
 #endif
 
 
+- (void) setNeedsDisplayInExtents:(MCGridExtents)extents
+{
+	[self setNeedsDisplayInRect:NSInsetRect([self rectFromExtents:extents], -_gridWidth, -_gridWidth)];
+}
+
+
 #pragma mark NSResponder
 
 - (BOOL)acceptsFirstResponder
@@ -573,6 +784,7 @@
 	{
 		_dragAction = kDragSelect;
 		_selectionAnchor = [self cellLocationForPointInWindow:event.locationInWindow];
+		if (self.hasFloatingSelection)  [self freezeFloatingContent];
 		self.selection = kMCEmptyExtents;
 		[self updateSelectionTimer];
 	}

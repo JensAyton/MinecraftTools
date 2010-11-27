@@ -28,7 +28,7 @@
 #import <Cocoa/Cocoa.h>
 #import "JAMinecraftTypes.h"
 
-@class JAMinecraftBlockStore;
+@class JAMinecraftBlockStore, JAMinecraftSchematic;
 
 typedef void (^JAMCGridViewRenderCB)(JAMinecraftBlockStore *store, MCCell cell, MCGridCoordinates location, NSRect drawingRect);
 
@@ -65,14 +65,27 @@ enum
 	NSInteger				_cellSize;
 	NSInteger				_gridWidth;
 	
+	JAMinecraftSchematic	*_floatContent;
+	MCGridCoordinates		_floatOffset;
+	MCGridExtents			_floatExtents;
+	BOOL					_floatIsSelection;
+	
 	NSColor					*_emptyOutsidePattern;
 }
 
 @property (nonatomic, assign) JAMinecraftBlockStore *store;
 
+/*	drawingStore: presents a unified view of the main store and any floating
+	content. This may be a JAMinecraftMergedBlockStore, whose contents cannot
+	be written.
+*/
+@property (nonatomic, readonly) JAMinecraftBlockStore *drawingStore;
+
 // Scroll location, in floating-point cell coordinates.
 @property (nonatomic) NSPoint scrollCenter;
 @property (nonatomic) NSInteger currentLayer;
+
+@property (nonatomic) MCGridCoordinates scrollCenterCoordinates;
 
 @property (nonatomic) MCGridExtents selection;
 
@@ -81,6 +94,39 @@ enum
 
 // Recentre on middle of document.
 - (IBAction) scrollToCenter:(id)sender;
+
+/*
+	Floating content:
+	The floating content is a schematic that is overlaid over the main content.
+	It can be used in two ways:
+	• Floating selection: in this mode, the selection is synchronized to the
+	  extents of the floater. The floating selection can then be moved around
+	  without destroying the underlying content.
+	• Overlay: in this mode, the float is drawn in preference to the underlying
+	  content, with no highlight. This can be used to implement temporary
+	  changes such as uncommitted drawing tool feedback.
+	
+	It is not possible to have a selection and an overlay at the same time. If
+	both exist, floating selection mode is in effect.
+*/
+
+@property (nonatomic, readonly) BOOL hasFloatingContent;
+@property (nonatomic, readonly) BOOL hasFloatingSelection;
+@property (nonatomic) MCGridCoordinates floatingContentOffset;
+@property (nonatomic, readonly) MCGridExtents floatingContentExtents;
+
+- (void) setFloatingContent:(JAMinecraftSchematic *)floater
+				 withOffset:(MCGridCoordinates)offset
+				asSelection:(BOOL)asSelection;
+
+- (void) setFloatingContent:(JAMinecraftSchematic *)floater
+				 centeredAt:(MCGridCoordinates)center
+				asSelection:(BOOL)asSelection;
+
+- (void) makeSelectionFloat;
+
+- (void) freezeFloatingContent;
+- (void) discardFloatingContent;
 
 
 /*
@@ -103,6 +149,9 @@ enum
 /*
 	Rendering: the render callback is a block called for each cell that needs
 	rendering. It may be swapped out at any time.
+	
+	Note that the store parameter is the grid view’s “drawing store” (read
+	above), and it is not safe to write to it.
 */
 @property (nonatomic, copy) JAMCGridViewRenderCB renderCallback;
 
@@ -164,3 +213,7 @@ enum
 @property (nonatomic, readonly) BOOL infiniteCanvas;
 
 @end
+
+
+extern NSString * const kJAMinecraftGridViewWillFreezeSelectionNotification;
+extern NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification;

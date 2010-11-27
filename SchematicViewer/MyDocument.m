@@ -247,8 +247,7 @@
 		return;
 	}
 	
-	// FIXME: floating selections, undo, actual pasting.
-	NSLog(@"Pretend something was just pasted!");
+	[self.schematicView setFloatingContent:pasted centeredAt:self.schematicView.scrollCenterCoordinates asSelection:YES];
 }
 
 

@@ -243,6 +243,22 @@ static inline NSUInteger RepresentedDistance(levels)
 }
 
 
+- (id) initWithRegion:(MCGridExtents)region ofStore:(JAMinecraftBlockStore *)store
+{
+	if (store == nil)  return nil;
+	
+	if ((self = [self initWithGroundLevel:store.groundLevel]))
+	{
+		if (!MCGridExtentsEmpty(region))
+		{
+			[self copyRegion:region from:store at:MCGridExtentsMinimum(region)];
+		}
+	}
+	
+	return self;
+}
+
+
 - (void) finalize
 {
 	//	The tree is not thread-safe, so we need to release it on the main thread.
@@ -457,7 +473,7 @@ static void PerformFill(InnerNode *node, unsigned level, MCGridExtents fillRegio
 					}
 					
 					MCGridExtents fillExtents = MCGridExtentsIntersection(subExtents, fillRegion);
-					fillExtents = MCOffsetGridExtents(fillExtents, -subBase.x, -subBase.y, -subBase.z);
+					fillExtents = MCGridExtentsOffset(fillExtents, -subBase.x, -subBase.y, -subBase.z);
 					Log(@"Filling chunk %p in extents %@", node->children.leaves[i], JA_ENCODE(fillExtents));
 					FillPartialChunk(node->children.leaves[i], cell, fillExtents);
 				}

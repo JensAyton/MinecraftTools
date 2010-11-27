@@ -61,6 +61,7 @@ typedef struct MCCell
 
 
 extern const MCCell kMCAirCell;
+extern const MCCell kMCHoleCell;	// Air cell with kMCInfoAirIsHoleMask flag set.
 extern const MCCell kMCStoneCell;
 
 static inline BOOL MCCellsEqual(MCCell a, MCCell b) JA_CONST_FUNC;
@@ -73,6 +74,7 @@ static inline BOOL MCCellIsSolid(MCCell cell) JA_CONST_FUNC;
 static inline BOOL MCCellIsLiquid(MCCell cell) JA_CONST_FUNC;
 static inline BOOL MCCellIsItem(MCCell cell) JA_CONST_FUNC;
 static inline BOOL MCCellIsAir(MCCell cell) JA_CONST_FUNC;
+static inline BOOL MCCellIsHole(MCCell cell) JA_CONST_FUNC;
 static inline BOOL MCCellIsPowerSource(MCCell cell) JA_CONST_FUNC;
 static inline BOOL MCCellIsPowerSink(MCCell cell) JA_CONST_FUNC;
 static inline BOOL MCCellIsPowerActive(MCCell cell) JA_CONST_FUNC;
@@ -140,8 +142,6 @@ static BOOL MCGridExtentsEqual(MCGridExtents a, MCGridExtents b) JA_CONST_FUNC;
 static NSUInteger MCGridExtentsWidth(MCGridExtents extents) JA_CONST_FUNC;
 static NSUInteger MCGridExtentsLength(MCGridExtents extents) JA_CONST_FUNC;
 static NSUInteger MCGridExtentsHeight(MCGridExtents extents) JA_CONST_FUNC;
-
-static MCGridExtents MCOffsetGridExtents(MCGridExtents extents, NSInteger dx, NSInteger dy, NSInteger dz) JA_CONST_FUNC;
 
 
 /*
@@ -360,6 +360,12 @@ static inline BOOL MCCellIsAir(MCCell cell)
 }
 
 
+static inline BOOL MCCellIsHole(MCCell cell)
+{
+	return MCBlockIDIsAir(cell.blockID) && cell.blockData & kMCInfoAirIsHoleMask;
+}
+
+
 static inline BOOL MCCellIsPowerSource(MCCell cell)
 {
 	return MCBlockIDIsPowerSource(cell.blockID);
@@ -423,7 +429,7 @@ static NSUInteger MCGridExtentsHeight(MCGridExtents extents)
 }
 
 
-static MCGridExtents MCOffsetGridExtents(MCGridExtents extents, NSInteger dx, NSInteger dy, NSInteger dz)
+static MCGridExtents MCGridExtentsOffset(MCGridExtents extents, NSInteger dx, NSInteger dy, NSInteger dz)
 {
 	extents.minX += dx;
 	extents.maxX += dx;

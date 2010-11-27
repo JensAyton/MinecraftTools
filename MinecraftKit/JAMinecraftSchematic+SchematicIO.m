@@ -182,7 +182,7 @@ static NSString * const kGroundLevelKey	= @"se.jens.ayton GroundLevel";
 			{
 				MCCell cell = [self cellAt:location];
 				*blockBytes++ = cell.blockID;
-				*metaBytes++ = cell.blockData;
+				*metaBytes++ = cell.blockData & 0x0F;
 			}
 		}
 	}

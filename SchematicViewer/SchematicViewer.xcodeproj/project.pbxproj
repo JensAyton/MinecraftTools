@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A30425A12A1AB320026C989 /* JAMinecraftMergedBlockStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A30425912A1AB320026C989 /* JAMinecraftMergedBlockStore.m */; };
 		1A52C349128F710B006E2D65 /* JAMinecraftBlockIDs.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A52C329128F710B006E2D65 /* JAMinecraftBlockIDs.c */; };
 		1A52C34A128F710B006E2D65 /* JAMinecraftGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A52C32C128F710B006E2D65 /* JAMinecraftGridView.m */; };
 		1A52C34B128F710B006E2D65 /* JAMinecraftSchematic+RDatIO.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A52C32E128F710B006E2D65 /* JAMinecraftSchematic+RDatIO.m */; };
@@ -38,6 +39,8 @@
 		089C1660FE840EACC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		13E42FBA07B3F13500E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
+		1A30425812A1AB320026C989 /* JAMinecraftMergedBlockStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAMinecraftMergedBlockStore.h; sourceTree = "<group>"; };
+		1A30425912A1AB320026C989 /* JAMinecraftMergedBlockStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAMinecraftMergedBlockStore.m; sourceTree = "<group>"; };
 		1A52C329128F710B006E2D65 /* JAMinecraftBlockIDs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = JAMinecraftBlockIDs.c; sourceTree = "<group>"; };
 		1A52C32A128F710B006E2D65 /* JAMinecraftBlockIDs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAMinecraftBlockIDs.h; sourceTree = "<group>"; };
 		1A52C32B128F710B006E2D65 /* JAMinecraftGridView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAMinecraftGridView.h; sourceTree = "<group>"; };
@@ -160,6 +163,8 @@
 				1A52C332128F710B006E2D65 /* JAMinecraftSchematic+SchematicIO.m */,
 				1A52C333128F710B006E2D65 /* JAMinecraftSchematic.h */,
 				1A52C334128F710B006E2D65 /* JAMinecraftSchematic.m */,
+				1A30425812A1AB320026C989 /* JAMinecraftMergedBlockStore.h */,
+				1A30425912A1AB320026C989 /* JAMinecraftMergedBlockStore.m */,
 				1A52C337128F710B006E2D65 /* JAMinecraftTypes.h */,
 				1A52C338128F710B006E2D65 /* JAMinecraftTypes.m */,
 			);
@@ -321,6 +326,7 @@
 				1A52C43F128F71D8006E2D65 /* JASchematicViewerView.m in Sources */,
 				1A52C87B129036CF006E2D65 /* JAMinecraftBlockStore.m in Sources */,
 				1A54A704129B166600977657 /* JAHashEnumeration.m in Sources */,
+				1A30425A12A1AB320026C989 /* JAMinecraftMergedBlockStore.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

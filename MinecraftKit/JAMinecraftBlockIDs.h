@@ -128,6 +128,12 @@ enum
 */
 enum
 {
+	/*	Air: MCKit-internal “hole” flag indicates a block that shouldn’t
+		overwrite other blocks and should be transparent in renderings
+		(corresponding to “shadow” blocks in Redstone Simulator).
+	*/
+	kMCInfoAirIsHoleMask					= 0x10,
+	
 	/*	Sapling: low 4 bits are “age”. This value is incremented randomly
 		until the sapling grows “old enough” to be replaced with a tree.
 	*/

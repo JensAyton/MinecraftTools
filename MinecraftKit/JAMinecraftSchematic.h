@@ -73,6 +73,8 @@
 
 - (id) initWithGroundLevel:(NSInteger)groundLevel;
 
+- (id) initWithRegion:(MCGridExtents)region ofStore:(JAMinecraftBlockStore *)store;
+
 - (NSInteger) findNaturalGroundLevel;
 
 #ifndef NDEBUG

@@ -27,6 +27,7 @@
 
 
 const MCCell kMCAirCell = { .blockID = kMCBlockAir, .blockData = 0 };
+const MCCell kMCHoleCell = { .blockID = kMCBlockAir, .blockData = kMCInfoAirIsHoleMask };
 const MCCell kMCStoneCell = { .blockID = kMCBlockSmoothStone, .blockData = 0 };
 const MCGridCoordinates kMCZeroCoordinates = { 0, 0, 0 };
 const MCGridExtents kMCEmptyExtents = { NSIntegerMax, NSIntegerMin, NSIntegerMax, NSIntegerMin, NSIntegerMax, NSIntegerMin };
