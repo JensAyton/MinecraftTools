@@ -85,7 +85,7 @@ struct InnerNode
 	uint32_t					tag;
 	NSUInteger					level;	// For sanity checking.
 #endif
-	NSUInteger					refCount;
+	NSUInteger					refCountMinusOne;
 	
 	union
 	{
@@ -99,7 +99,7 @@ struct Chunk
 #if DEBUG_MCSCHEMATIC
 	uint32_t					tag;
 #endif
-	uint32_t					refCount;
+	uint32_t					refCountMinusOne;
 	BOOL						extentsAreAccurate;
 	MCGridExtents				extents;
 	MCCell						cells[kJAMinecraftSchematicCellsPerChunk];
@@ -129,6 +129,13 @@ static Chunk *COWChunk(Chunk *chunk);
 static InnerNode *CopyInnerNode(InnerNode *node, NSUInteger level);
 static Chunk *CopyChunk(Chunk *chunk);
 
+static inline NSUInteger GetInnerNodeRefCount(InnerNode *node, NSUInteger level);
+static inline NSUInteger GetChunkRefCount(Chunk *chunk);
+
+// Equivlant to Get[InnerNode/Chunk]RefCount(...) > 1
+static inline BOOL InnerNodeIsShared(InnerNode *node, NSUInteger level);
+static inline BOOL ChunkIsShared(Chunk *chunk);
+
 static void ReleaseInnerNode(InnerNode *node, NSUInteger level);
 static void ReleaseChunk(Chunk *chunk);
 
@@ -139,7 +146,7 @@ static BOOL ChunkSetCell(Chunk *chunk, NSInteger x, NSInteger y, NSInteger z, MC
 // Recursively test if node’s children are all null. Does not test effective emptiness of chunks.
 static BOOL NodeIsEmpty(InnerNode *node, unsigned level);
 
-// Slightly higher-level accessors which infer type from level.
+// Slightly higher-level interfaces which infer type from level.
 static void *COWNode(void *node, unsigned level);
 static void ReleaseNode(void *node, unsigned level);
 static NSUInteger GetNodeRefCount(void *node, unsigned level);
@@ -324,7 +331,7 @@ static inline NSUInteger RepresentedDistance(levels)
 	BOOL changed = NO;
 	if (chunk != nil)
 	{
-		NSAssert(chunk->refCount == 1, @"resolveChunkAt:... returned a shared chunk for setCell:at:");
+		NSAssert(chunk->refCountMinusOne == 0, @"resolveChunkAt:... returned a shared chunk for setCell:at:");
 		
 		BOOL changeAffectsExtents = YES;	// FIXME: smartness
 		
@@ -447,7 +454,7 @@ static void PerformFill(InnerNode *node, unsigned level, MCGridExtents fillRegio
 						node->children.inner[i] = AllocInnerNode(subLevel);
 						Log(@"Made inner node %p [level %u]", node->children.inner[i], subLevel);
 					}
-					else if (node->children.inner[i]->refCount > 1)
+					else if (InnerNodeIsShared(node->children.inner[i], subLevel))
 					{
 						InnerNode *old = node->children.inner[i];
 						node->children.inner[i] = CopyInnerNode(old, subLevel);
@@ -464,7 +471,7 @@ static void PerformFill(InnerNode *node, unsigned level, MCGridExtents fillRegio
 						node->children.leaves[i] = MakeChunk(subBase.y, groundLevel);
 						Log(@"Made chunk %p", node->children.leaves[i]);
 					}
-					else if (node->children.leaves[i]->refCount > 1)
+					else if (ChunkIsShared(node->children.leaves[i]))
 					{
 						Chunk *old = node->children.leaves[i];
 						node->children.leaves[i] = CopyChunk(old);
@@ -895,7 +902,7 @@ enum
 			Log(@"Creating inner node %p at (%li, %li, %li)", child, baseX, baseY, baseZ);
 			node->children.inner[nextIndex] = child;
 		}
-		if (makeWriteable && child->refCount > 1)
+		if (makeWriteable && InnerNodeIsShared(child, level))
 		{
 			InnerNode *newChild = CopyInnerNode(child, level);
 			Log(@"Copying inner node %p to %p at (%li, %li, %li)", child, newChild, baseX, baseY, baseZ);
@@ -915,7 +922,7 @@ enum
 		
 		node->children.leaves[nextIndex] = chunk;
 	}
-	else if (makeWriteable && chunk->refCount > 1)
+	else if (makeWriteable && ChunkIsShared(chunk))
 	{
 		Chunk *newChunk = CopyChunk(chunk);
 		Log(@"Copying chunk %p to %p at (%li, %li, %li)", chunk, newChunk, baseX, baseY, baseZ);
@@ -1115,7 +1122,7 @@ static BOOL ForEachChunk(InnerNode *node, MCGridCoordinates base, NSUInteger siz
 				subBase.y <= bounds.maxY && bounds.minY <= (subBase.y + halfSize) &&
 				subBase.z <= bounds.maxZ && bounds.minZ <= (subBase.z + halfSize))
 			{
-				if (makeWriteable && child->refCount > 1)
+				if (makeWriteable && InnerNodeIsShared(child, level))
 				{
 					if (level > 1)
 					{
@@ -1420,9 +1427,9 @@ static NSString *BuildGraphViz(void *node, unsigned level, MCGridCoordinates bas
 			InnerNode *innerNode = node;
 			
 			NSString *label = [ NSString stringWithFormat:@"%p level %u, size %lu", innerNode, level, size];
-			if (innerNode->refCount > 1)
+			if (InnerNodeIsShared(innerNode, level))
 			{
-				label = [label stringByAppendingFormat:@" [rc %lu]", innerNode->refCount];
+				label = [label stringByAppendingFormat:@" [rc %lu]", GetInnerNodeRefCount(innerNode, level)];
 			}
 			[graphViz appendFormat:@"\t%@ [label=\"%@\"]\n", thisName, label];
 			
@@ -1448,9 +1455,9 @@ static NSString *BuildGraphViz(void *node, unsigned level, MCGridCoordinates bas
 		{
 			Chunk *chunk = node;
 			NSString *label =[ NSString stringWithFormat:@"Node %p", chunk];
-			if (chunk->refCount > 1)
+			if (ChunkIsShared(chunk))
 			{
-				label = [label stringByAppendingFormat:@" [rc %lu]", chunk->refCount];
+				label = [label stringByAppendingFormat:@" [rc %lu]", GetChunkRefCount(chunk)];
 			}
 			
 			[graphViz appendFormat:@"\t%@ [shape=box label=\"%@\"]\n", thisName, label];
@@ -1531,8 +1538,6 @@ static inline InnerNode *AllocInnerNode(NSUInteger level)
 	result->level = level;
 #endif
 	
-	result->refCount = 1;
-	
 #if LOGGING
 	sLiveInnerNodeCount++;
 #endif
@@ -1552,8 +1557,6 @@ static Chunk *AllocChunk(void)
 #if DEBUG_MCSCHEMATIC
 	result-> tag = kTagChunk;
 #endif
-	
-	result->refCount = 1;
 	
 #if LOGGING
 	sLiveChunkCount++;
@@ -1641,23 +1644,16 @@ static inline void FreeChunk(Chunk *chunk)
 static InnerNode *COWInnerNode(InnerNode *node, NSUInteger level)
 {
 	NSCParameterAssert(node != NULL && node->tag == kTagInnerNode && level == node->level);
-	node->refCount++;
+	node->refCountMinusOne++;
 	return node;
 }
 
 
 static Chunk *COWChunk(Chunk *chunk)
 {
-	NSCParameterAssert(chunk != NULL);
-	if (JA_EXPECT(chunk->refCount < (INT16_MAX - 1)))
-	{
-		chunk->refCount++;
-		return chunk;
-	}
-	else
-	{
-		return CopyChunk(chunk);
-	}
+	NSCParameterAssert(chunk != NULL && chunk->tag == kTagChunk);
+	chunk->refCountMinusOne++;
+	return chunk;
 }
 
 
@@ -1668,7 +1664,7 @@ static InnerNode *CopyInnerNode(InnerNode *node, NSUInteger level)
 	InnerNode *result = AllocInnerNode(level);
 	if (JA_EXPECT_NOT(result == NULL))  return NULL;
 	
-	result->refCount = 1;
+	result->refCountMinusOne = 0;
 #if DEBUG_MCSCHEMATIC
 	result->level = node->level;
 #endif
@@ -1694,8 +1690,40 @@ static Chunk *CopyChunk(Chunk *chunk)
 	if (JA_EXPECT_NOT(result == NULL))  return NULL;
 	
 	bcopy(chunk, result, sizeof *result);
-	result->refCount = 1;
+	result->refCountMinusOne = 0;
 	return result;
+}
+
+
+static inline NSUInteger GetInnerNodeRefCount(InnerNode *node, NSUInteger level)
+{
+	NSCParameterAssert(node != NULL && node->tag == kTagInnerNode && level == node->level);
+	
+	return node->refCountMinusOne + 1;
+}
+
+
+static inline NSUInteger GetChunkRefCount(Chunk *chunk)
+{
+	NSCParameterAssert(chunk != NULL && chunk->tag == kTagChunk);
+	
+	return chunk->refCountMinusOne + 1;
+}
+
+
+static inline BOOL InnerNodeIsShared(InnerNode *node, NSUInteger level)
+{
+	NSCParameterAssert(node != NULL && node->tag == kTagInnerNode && level == node->level);
+	
+	return node->refCountMinusOne > 0;
+}
+
+
+static inline BOOL ChunkIsShared(Chunk *chunk)
+{
+	NSCParameterAssert(chunk != NULL && chunk->tag == kTagChunk);
+	
+	return chunk->refCountMinusOne > 0;
 }
 
 
@@ -1706,7 +1734,7 @@ static void ReleaseInnerNode(InnerNode *node, NSUInteger level)
 	Log(@"Releasing inner node %p [refcount %lu->%lu, level %lu]", node, node->refCount, node->refCount - 1, node->level);
 	LogIndent();
 	
-	if (--node->refCount == 0)
+	if (node->refCountMinusOne-- == 0)
 	{
 		FreeInnerNode(node, level);
 	}
@@ -1722,7 +1750,7 @@ static void ReleaseChunk(Chunk *chunk)
 	Log(@"Releasing chunk %p [refcount %u->%u]", chunk, chunk->refCount, chunk->refCount - 1);
 	LogIndent();
 	
-	if (--chunk->refCount == 0)
+	if (chunk->refCountMinusOne-- == 0)
 	{
 		FreeChunk(chunk);
 	}
@@ -1786,7 +1814,7 @@ static inline MCCell ChunkGetCell(Chunk *chunk, NSInteger x, NSInteger y, NSInte
 
 static BOOL ChunkSetCell(Chunk *chunk, NSInteger x, NSInteger y, NSInteger z, MCCell cell)
 {
-	NSCParameterAssert(chunk != NULL && chunk->tag == kTagChunk && chunk->refCount == 1 &&
+	NSCParameterAssert(chunk != NULL && chunk->tag == kTagChunk && chunk->refCountMinusOne == 0 &&
 					   0 <= x && x < kChunkSize &&
 					   0 <= y && y < kChunkSize &&
 					   0 <= z && z < kChunkSize);
@@ -1802,7 +1830,7 @@ static BOOL ChunkSetCell(Chunk *chunk, NSInteger x, NSInteger y, NSInteger z, MC
 
 static void FillCompleteChunk(Chunk *chunk, MCCell cell)
 {
-	NSCParameterAssert(chunk != NULL && chunk->tag == kTagChunk && chunk->refCount == 1);
+	NSCParameterAssert(chunk != NULL && chunk->tag == kTagChunk && chunk->refCountMinusOne == 0);
 	
 	MCCell pattern[8] = { cell, cell, cell, cell, cell, cell, cell, cell };
 	memset_pattern16(chunk->cells, &pattern, sizeof chunk->cells);
@@ -1813,7 +1841,7 @@ static void FillCompleteChunk(Chunk *chunk, MCCell cell)
 
 static void FillPartialChunk(Chunk *chunk, MCCell cell, MCGridExtents extents)
 {
-	NSCParameterAssert(chunk != NULL && chunk->tag == kTagChunk && chunk->refCount == 1);
+	NSCParameterAssert(chunk != NULL && chunk->tag == kTagChunk && chunk->refCountMinusOne == 0);
 	NSCParameterAssert(MCGridExtentsAreWithinExtents(extents, MCGridExtentsWithCoordinatesAndSize(kMCZeroCoordinates, kChunkSize, kChunkSize, kChunkSize)));
 	
 	for (unsigned y = extents.minY; y <= extents.maxY; y++)
@@ -1850,18 +1878,11 @@ static NSUInteger GetNodeRefCount(void *node, unsigned level)
 	if (node == NULL)  return 0;
 	else if (level == 0)
 	{
-#if DEBUG_MCSCHEMATIC
-		NSCParameterAssert(((Chunk *)node)->tag == kTagChunk);
-#endif
-		return ((Chunk *)node)->refCount;
+		return GetChunkRefCount(node);
 	}
 	else
 	{
-		
-#if DEBUG_MCSCHEMATIC
-		NSCParameterAssert(((InnerNode *)node)->tag == kTagInnerNode);
-#endif
-		return ((InnerNode *)node)->refCount;
+		return GetInnerNodeRefCount(node, level);
 	}
 }
 
@@ -1897,7 +1918,7 @@ extern void JAMCSchematicDump(void)
 			InnerNode *node = item;
 			if (node->tag == kTagInnerNode)
 			{
-				DoLog(@"Inner node %lu: %p [level = %u, refcount = %u]", i++, node, node->level, node->refCount);
+				DoLog(@"Inner node %lu: %p [level = %u, refcount = %u]", i++, node, node->level, GetInnerNodeRefCount(node, node->level));
 			}
 			else
 			{
@@ -1935,7 +1956,7 @@ extern void JAMCSchematicDump(void)
 			Chunk *chunk = item;
 			if (chunk->tag == kTagChunk)
 			{
-				DoLog(@"Chunk %lu: %p [refcount = %u]", i++, chunk, chunk->refCount);
+				DoLog(@"Chunk %lu: %p [refcount = %u]", i++, chunk, GetChunkRefCount(chunk));
 			}
 			else
 			{
