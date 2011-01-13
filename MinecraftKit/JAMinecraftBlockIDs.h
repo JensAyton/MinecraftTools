@@ -50,8 +50,14 @@ enum
 	kMCBlockLeaves							= 18,
 	kMCBlockSponge							= 19,
 	kMCBlockGlass							= 20,
-	// Values 21-34 and 36 represent coloured cloth in Classic, and are not usable in Alpha.
+	kMCBlockLapisLazuliOre					= 21,
+	kMCBlockLapisLazuliBlock				= 22,
+	kMCBlockDispenser						= 23,	// Data: FIXME (expect tile entity)
+	kMCBlockSandstone						= 24,
+	kMCBlockNoteBlock						= 25,	// Data: FIXME
+	// 26-34 currently unused in Beta
 	kMCBlockWhiteCloth						= 35,
+	// 36 currently unused in Beta
 	kMCBlockYellowFlower					= 37,
 	kMCBlockRedFlower						= 38,
 	kMCBlockBrownMushroom					= 39,
@@ -101,12 +107,13 @@ enum
 	kMCBlockReed							= 83,
 	kMCBlockJukebox							= 84,
 	kMCBlockFence							= 85,
-	kMCBlockPumpkin							= 86,
+	kMCBlockPumpkin							= 86,	// Data: kMCInfoPumpkinOrientationMask.
 	kMCBlockNetherstone						= 87,	// Hellstone/red nether stuff
 	kMCBlockSlowSand						= 88,	// Mud/brown nether stuff
 	kMCBlockLightstone						= 89,	// Shiny yellow nether stuff
 	kMCBlockPortal							= 90,
-	kMCBlockJackOLantern					= 91,	// FIXME: data? I’d expect an orientation. -- Ahruman 2010-11-08
+	kMCBlockJackOLantern					= 91,	// Data: kMCInfoPumpkinOrientationMask.
+	kMCBlockCake							= 92,	// FIXME: data? I’d expect a slice count. -- Ahruman 2011-01-13
 	
 	kMCBlockLantern					= kMCBlockTorch,	// Expected future renaming.
 };
@@ -249,7 +256,15 @@ enum
 	
 	/*	Pressure plates: they can be on, or not on.
 	*/
-	kMCInfoPressurePlateOn					= 0x01
+	kMCInfoPressurePlateOn					= 0x01,
+	
+	/*	Pumpkin/Jack-o-lantern orientation.
+	*/
+	kMCInfoPumpkinOrientationMask			= 0x03,
+	kMCInfoPumpkinOrientationEast			= 0x00,
+	kMCInfoPumpkinOrientationSouth			= 0x01,
+	kMCInfoPumpkinOrientationWest			= 0x02,
+	kMCInfoPumpkinOrientationNorth			= 0x03
 };
 
 

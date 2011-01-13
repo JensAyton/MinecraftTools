@@ -274,7 +274,7 @@ static inline NSUInteger RepresentedDistance(levels)
 	if (root != NULL)
 	{
 		NSUInteger level = _rootLevel;
-		dispatch_async(dispatch_get_main_queue(), ^{ ReleaseInnerNode(root, level); });
+		[[NSOperationQueue mainQueue] addOperationWithBlock: ^{ ReleaseInnerNode(root, level); }];
 	}
 	
 	[super finalize];
@@ -1517,7 +1517,6 @@ static void ThrowMallocException(void)
 {
 	[NSException raise:NSMallocException format:@"Out of memory"];
 	__builtin_unreachable();
-	abort();
 }
 
 

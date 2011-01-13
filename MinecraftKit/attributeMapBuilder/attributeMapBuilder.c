@@ -53,7 +53,12 @@ static const uint8_t kFullySolidIDs[] =
 	kMCBlockCoalOre,
 	kMCBlockLog,
 	kMCBlockSponge,
-	21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 36,	// Classic-only cloth blocks
+	kMCBlockLapisLazuliOre,
+	kMCBlockLapisLazuliBlock,
+	kMCBlockDispenser,
+	kMCBlockSandstone,
+	kMCBlockNoteBlock,	// FIXME: test.
+	26, 27, 28, 29, 30, 31, 32, 33, 34, 36,	// Classic-only cloth blocks
 	kMCBlockWhiteCloth,
 	kMCBlockGoldBlock,
 	kMCBlockIronBlock,
@@ -156,6 +161,7 @@ static const uint8_t kPowerSinkIDs[] =
 	kMCBlockIronDoor,
 	kMCBlockRedstoneTorchOff,
 	kMCBlockRedstoneTorchOn,
+	kMCBlockNoteBlock
 };
 
 
@@ -182,7 +188,8 @@ static const uint8_t kOreIDs[] =
 	kMCBlockCoalOre,
 	kMCBlockDiamondOre,
 	kMCBlockRedstoneOre,
-	kMCBlockGlowingRedstoneOre
+	kMCBlockGlowingRedstoneOre,
+	kMCBlockLapisLazuliOre
 };
 
 
