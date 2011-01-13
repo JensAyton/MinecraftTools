@@ -119,7 +119,7 @@ enum
 };
 
 
-#define kMCLastBlockID kMCBlockJackOLantern
+#define kMCLastBlockID kMCBlockCake
 
 
 /*

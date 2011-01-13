@@ -648,12 +648,12 @@ const int8_t kGroundLevelWeights[256] =
 	0,		// Sponge
 	
 	-2,		// Glass
+	8,		// Lapis lazuli “ore”
+	-2,		// Lapis lazuli block
+	-4,		// Dispenser
+	-2,		// Sandstone
+	-4,		// Note block
 	0,		// unused range
-	0,
-	0,
-	0,
-	0,
-	0,
 	0,
 	0,
 	0,
@@ -726,6 +726,7 @@ const int8_t kGroundLevelWeights[256] =
 	
 	-4,		// Portal
 	-4,		// Jack-o-lantern
+	-8,		// Cake
 	
 	0
 };
