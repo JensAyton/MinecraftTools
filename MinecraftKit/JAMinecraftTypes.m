@@ -235,6 +235,26 @@ MCDirection MCCellGetOrientation(MCCell cell)
 					return kMCDirectionUnknown;
 			}
 			
+		case kMCBlockPumpkin:
+		case kMCBlockJackOLantern:
+			switch (blockData & kMCInfoPumpkinOrientationMask)
+			{
+				case kMCInfoPumpkinOrientationEast:
+					return kMCDirectionEast;
+					
+				case kMCInfoPumpkinOrientationSouth:
+					return kMCDirectionSouth;
+					
+				case kMCInfoPumpkinOrientationWest:
+					return kMCDirectionWest;
+					
+				case kMCInfoPumpkinOrientationNorth:
+					return kMCDirectionNorth;
+					
+				default:
+					return kMCDirectionUnknown;
+			}
+			
 		default:
 			return kMCDirectionUnknown;
 	}
@@ -368,6 +388,30 @@ void MCCellSetOrientation(MCCell *cell, MCDirection orientation)
 					value = kMCInfoLadderOrientationNorth;
 					break;
 			}
+			break;
+			
+		case kMCBlockPumpkin:
+		case kMCBlockJackOLantern:
+			mask = kMCInfoPumpkinOrientationMask;
+			switch (orientation)
+		{
+			case kMCDirectionSouth:
+				value = kMCInfoPumpkinOrientationSouth;
+				break;
+				
+			case kMCDirectionEast:
+				value = kMCInfoPumpkinOrientationEast;
+				break;
+				
+			case kMCDirectionWest:
+				value = kMCInfoPumpkinOrientationWest;
+				break;
+				
+			case kMCDirectionNorth:
+			default:
+				value = kMCInfoPumpkinOrientationNorth;
+				break;
+		}
 			break;
 	}
 	
