@@ -161,6 +161,7 @@ static const uint8_t kPowerSinkIDs[] =
 	kMCBlockIronDoor,
 	kMCBlockRedstoneTorchOff,
 	kMCBlockRedstoneTorchOn,
+	kMCBlockDispenser,
 	kMCBlockNoteBlock
 };
 
