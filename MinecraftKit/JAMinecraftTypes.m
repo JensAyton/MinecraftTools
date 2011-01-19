@@ -217,18 +217,21 @@ MCDirection MCCellGetOrientation(MCCell cell)
 			
 		case kMCBlockLadder:
 		case kMCBlockWallSign:
-			switch (blockData & kMCInfoLadderOrientationMask)
+		case kMCBlockFurnace:
+		case kMCBlockBurningFurnace:
+		case kMCBlockDispenser:
+			switch (blockData & kMCInfoMisc2OrientationMask)
 			{
-				case kMCInfoLadderOrientationEast:
+				case kMCInfoMisc2OrientationEast:
 					return kMCDirectionEast;
 					
-				case kMCInfoLadderOrientationWest:
+				case kMCInfoMisc2OrientationWest:
 					return kMCDirectionWest;
 					
-				case kMCInfoLadderOrientationNorth:
+				case kMCInfoMisc2OrientationNorth:
 					return kMCDirectionNorth;
 					
-				case kMCInfoLadderOrientationSouth:
+				case kMCInfoMisc2OrientationSouth:
 					return kMCDirectionSouth;
 					
 				default:
@@ -368,24 +371,27 @@ void MCCellSetOrientation(MCCell *cell, MCDirection orientation)
 			
 		case kMCBlockLadder:
 		case kMCBlockWallSign:
-			mask = kMCInfoLadderOrientationMask;
+		case kMCBlockFurnace:
+		case kMCBlockBurningFurnace:
+		case kMCBlockDispenser:
+			mask = kMCInfoMisc2OrientationMask;
 			switch (orientation)
 			{
 				case kMCDirectionSouth:
-					value = kMCInfoLadderOrientationSouth;
+					value = kMCInfoMisc2OrientationSouth;
 					break;
 					
 				case kMCDirectionEast:
-					value = kMCInfoLadderOrientationEast;
+					value = kMCInfoMisc2OrientationEast;
 					break;
 					
 				case kMCDirectionWest:
-					value = kMCInfoLadderOrientationWest;
+					value = kMCInfoMisc2OrientationWest;
 					break;
 					
 				case kMCDirectionNorth:
 				default:
-					value = kMCInfoLadderOrientationNorth;
+					value = kMCInfoMisc2OrientationNorth;
 					break;
 			}
 			break;

@@ -35,7 +35,7 @@ enum
 	kMCBlockDirt							= 3,
 	kMCBlockCobblestone						= 4,
 	kMCBlockWood							= 5,
-	kMCBlockSapling							= 6,
+	kMCBlockSapling							= 6,	// kMCInfoSaplingAge
 	kMCBlockBedrock							= 7,	// “Adminium”
 	kMCBlockWater							= 8,
 	kMCBlockStationaryWater					= 9,
@@ -46,17 +46,17 @@ enum
 	kMCBlockGoldOre							= 14,
 	kMCBlockIronOre							= 15,
 	kMCBlockCoalOre							= 16,	// “Coal ore”? Meh. You get the point.
-	kMCBlockLog								= 17,
-	kMCBlockLeaves							= 18,
+	kMCBlockLog								= 17,	// Data: kMCInfoWoodType
+	kMCBlockLeaves							= 18,	// Data: kMCInfoWoodType
 	kMCBlockSponge							= 19,
 	kMCBlockGlass							= 20,
 	kMCBlockLapisLazuliOre					= 21,
 	kMCBlockLapisLazuliBlock				= 22,
-	kMCBlockDispenser						= 23,	// Data: FIXME (expect tile entity)
+	kMCBlockDispenser						= 23,	// Data: kMCInfoMisc2Orientation
 	kMCBlockSandstone						= 24,
 	kMCBlockNoteBlock						= 25,	// Data: FIXME
 	// 26-34 currently unused in Beta
-	kMCBlockWhiteCloth						= 35,
+	kMCBlockWhiteCloth						= 35,	// Data: kMCInfoWoolColor
 	// 36 currently unused in Beta
 	kMCBlockYellowFlower					= 37,
 	kMCBlockRedFlower						= 38,
@@ -71,10 +71,10 @@ enum
 	kMCBlockBookshelf						= 47,
 	kMCBlockMossyCobblestone				= 48,
 	kMCBlockObsidian						= 49,
-	kMCBlockTorch							= 50,	// Data: kMCInfoMiscOrientationMask.
+	kMCBlockTorch							= 50,	// Data: kMCInfoMiscOrientation.
 	kMCBlockFire							= 51,
 	kMCBlockMobSpawner						= 52,	// No blockData; information is stored in a tile entity.
-	kMCBlockWoodenStairs					= 53,
+	kMCBlockWoodenStairs					= 53,	// Data: kMCInfoStairOrientationMask
 	kMCBlockChest							= 54,	// No blockData; information is stored in a tile entity.
 	kMCBlockRedstoneWire					= 55,
 	kMCBlockDiamondOre						= 56,
@@ -82,37 +82,37 @@ enum
 	kMCBlockWorkbench						= 58,
 	kMCBlockCrops							= 59,
 	kMCBlockSoil							= 60,
-	kMCBlockFurnace							= 61,	// No blockData; information is stored in a tile entity.
-	kMCBlockBurningFurnace					= 62,	// Presumably same entity data as above.
-	kMCBlockSignPost						= 63,	// Sign on ground. Has blockdata and tile entity.
+	kMCBlockFurnace							= 61,	// Data: kMCInfoMisc2Orientation; other information is stored in a tile entity.
+	kMCBlockBurningFurnace					= 62,	// As normal furnace.
+	kMCBlockSignPost						= 63,	// Sign on ground. Data: kMCInfoSignPostOrientation; has tile entity.
 	kMCBlockWoodenDoor						= 64,
 	kMCBlockLadder							= 65,
 	kMCBlockMinecartTrack					= 66,
-	kMCBlockCobblestoneStairs				= 67,
-	kMCBlockWallSign						= 68,	// Sign on wall. Has blockdata and tile entity.
+	kMCBlockCobblestoneStairs				= 67,	// Data: kMCInfoStairOrientation
+	kMCBlockWallSign						= 68,	// Sign on wall. Data: kMCInfoMisc2Orientation; has tile entity.
 	kMCBlockLever							= 69,
 	kMCBlockStonePressurePlate				= 70,
 	kMCBlockIronDoor						= 71,
 	kMCBlockWoodenPressurePlate				= 72,
 	kMCBlockRedstoneOre						= 73,
 	kMCBlockGlowingRedstoneOre				= 74,
-	kMCBlockRedstoneTorchOff				= 75,	// Data: kMCInfoMiscOrientationMask.
-	kMCBlockRedstoneTorchOn					= 76,	// Data: kMCInfoMiscOrientationMask.
-	kMCBlockStoneButton						= 77,	// Data: kMCInfoMiscOrientationMask.
+	kMCBlockRedstoneTorchOff				= 75,	// Data: kMCInfoMiscOrientation.
+	kMCBlockRedstoneTorchOn					= 76,	// Data: kMCInfoMiscOrientation.
+	kMCBlockStoneButton						= 77,	// Data: kMCInfoMiscOrientation.
 	kMCBlockSnow							= 78,
 	kMCBlockIce								= 79,
 	kMCBlockSnowBlock						= 80,
-	kMCBlockCactus							= 81,
+	kMCBlockCactus							= 81,	// Data: kMCInfoCactusAge
 	kMCBlockClay							= 82,
 	kMCBlockReed							= 83,
 	kMCBlockJukebox							= 84,
 	kMCBlockFence							= 85,
-	kMCBlockPumpkin							= 86,	// Data: kMCInfoPumpkinOrientationMask.
+	kMCBlockPumpkin							= 86,	// Data: kMCInfoPumpkinOrientation.
 	kMCBlockNetherstone						= 87,	// Hellstone/red nether stuff
 	kMCBlockSlowSand						= 88,	// Mud/brown nether stuff
 	kMCBlockLightstone						= 89,	// Shiny yellow nether stuff
 	kMCBlockPortal							= 90,
-	kMCBlockJackOLantern					= 91,	// Data: kMCInfoPumpkinOrientationMask.
+	kMCBlockJackOLantern					= 91,	// Data: kMCInfoPumpkinOrientation.
 	kMCBlockCake							= 92,	// FIXME: data? I’d expect a slice count. -- Ahruman 2011-01-13
 	
 	kMCBlockLantern					= kMCBlockTorch,	// Expected future renaming.
@@ -159,6 +159,35 @@ enum
 	*/
 	kMCInfoLavaEmptinessMask				= 0x03,
 	kMCInfoLavaFlowing						= kMCInfoWaterFlowing,
+	
+	/*	Wood: type/species.
+		Affects texture only.
+	*/
+	kMCInfoWoodTypeMask						= 0x0F,
+	kMCInfoWoodTypeDefault					= 0x00,
+	kMCInfoWoodTypeConifer					= 0x01,
+	kMCInfoWoodTypeBirch					= 0x02,
+	
+	/*	Wool: colour.
+		This is represented by different block IDs in Creative.
+	*/
+	kMCInfoWoolColorMask					= 0x0F,
+	kMCInfoWoolColorWhite					= 0x00,
+	kMCInfoWoolColorOrange					= 0x01,
+	kMCInfoWoolColorMagenta					= 0x02,
+	kMCInfoWoolColorLightBlue				= 0x03,
+	kMCInfoWoolColorYellow					= 0x04,
+	kMCInfoWoolColorLightGreen				= 0x05,
+	kMCInfoWoolColorPink					= 0x06,
+	kMCInfoWoolColorGray					= 0x07,
+	kMCInfoWoolColorLightGray				= 0x08,
+	kMCInfoWoolColorCyan					= 0x09,
+	kMCInfoWoolColorPurple					= 0x0A,
+	kMCInfoWoolColorBlue					= 0x0B,
+	kMCInfoWoolColorBrown					= 0x0C,
+	kMCInfoWoolColorDarkGreen				= 0x0D,
+	kMCInfoWoolColorRed						= 0x0E,
+	kMCInfoWoolColorBlack					= 0x0F,
 	
 	/*	Several block types use these orientation flags, but some oriented
 		block types do not. Use MCCellGet/SetOrientation() for generic access.
@@ -211,13 +240,18 @@ enum
 	kMCInfoInfoDoorOpen						= 0x04,
 	kMCInfoInfoDoorTopHalf					= 0x08,
 	
-	/*	Ladder orientations refer to the facing direction of the ladder.
+	/*	kInfoMisc2Orientation
+		Another common set of orientation flags, used for:
+		* Ladders
+		* Wall signs
+		* Furnaces
+		* Dispensers
 	*/
-	kMCInfoLadderOrientationMask			= 0x07,
-	kMCInfoLadderOrientationEast			= 0x02,
-	kMCInfoLadderOrientationWest			= 0x03,
-	kMCInfoLadderOrientationNorth			= 0x04,
-	kMCInfoLadderOrientationSouth			= 0x05,
+	kMCInfoMisc2OrientationMask				= 0x07,
+	kMCInfoMisc2OrientationEast				= 0x02,
+	kMCInfoMisc2OrientationWest				= 0x03,
+	kMCInfoMisc2OrientationNorth			= 0x04,
+	kMCInfoMisc2OrientationSouth			= 0x05,
 	
 	/*	Minecart track orientations. Note that these don’t map to the same
 		set of orientations as most of the other “orientation” value sets.
@@ -237,14 +271,6 @@ enum
 	kMCInfoTrackOrientationEastNorth		= 0x08,	// ◟
 	kMCInfoTrackOrientationSouthEast		= 0x09,	// ◜
 	
-	/*	Wall signs use the same scheme as ladders.
-	 */
-	kMCInfoWallSignOrientationMask			= kMCInfoLadderOrientationMask,
-	kMCInfoWallSignOrientationEast			= kMCInfoLadderOrientationEast,
-	kMCInfoWallSignOrientationWest			= kMCInfoLadderOrientationWest,
-	kMCInfoWallSignOrientationNorth			= kMCInfoLadderOrientationNorth,
-	kMCInfoWallSignOrientationSouth			= kMCInfoLadderOrientationSouth,
-	
 	/*	Levers use a variant of the misc orientation flags with two distinct
 		floor orientations. They also have an on/off flag.
 	*/
@@ -257,6 +283,12 @@ enum
 	/*	Pressure plates: they can be on, or not on.
 	*/
 	kMCInfoPressurePlateOn					= 0x01,
+	
+	/*	Cactus: low 4 bits are “age”. This value is incremented randomly
+		until the cactus is old enough to spawn another block on top of it,
+		unless there are two cactus blocks below it.
+	*/
+	kMCInfoCactusAgeMask					= 0x0F,
 	
 	/*	Pumpkin/Jack-o-lantern orientation.
 	*/
