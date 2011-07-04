@@ -463,7 +463,7 @@ enum
 };
 
 
-typedef uint8_t JAMCBlockIDMetadata;
+typedef uint16_t JAMCBlockIDMetadata;
 
 
 JA_EXTERN const JAMCBlockIDMetadata kMCBlockTypeClassifications[256];

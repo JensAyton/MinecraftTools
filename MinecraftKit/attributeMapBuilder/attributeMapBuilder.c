@@ -229,7 +229,7 @@ static const uint8_t kPistonIDs[] =
 };
 
 
-static void ApplyAttribute(const uint8_t *idList, size_t idCount, JAMCBlockIDMetadata flag, uint8_t attributeMap[256]);
+static void ApplyAttribute(const uint8_t *idList, size_t idCount, JAMCBlockIDMetadata flag, JAMCBlockIDMetadata attributeMap[256]);
 
 #define APPLY_ATTRIBUTE(idList, flag)  ApplyAttribute(idList, sizeof idList / sizeof *idList, flag, attributeMap)
 
@@ -291,7 +291,7 @@ int main (int argc, const char * argv[])
 }
 
 
-static void ApplyAttribute(const uint8_t *idList, size_t idCount, JAMCBlockIDMetadata flag, uint8_t attributeMap[256])
+static void ApplyAttribute(const uint8_t *idList, size_t idCount, JAMCBlockIDMetadata flag, JAMCBlockIDMetadata attributeMap[256])
 {
 	for (size_t i = 0; i < idCount; i++)
 	{
