@@ -2,7 +2,7 @@
 	JAMinecraftTypes.m
 	
 	
-	Copyright © 2010 Jens Ayton
+	Copyright © 2010–2011 Jens Ayton
 	
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),
@@ -149,7 +149,7 @@ MCDirection MCCellGetOrientation(MCCell cell)
 	uint8_t blockData = cell.blockData;
 	switch (cell.blockID)
 	{
-		case kMCBlockLantern:
+		case kMCBlockTorch:
 		case kMCBlockRedstoneTorchOff:
 		case kMCBlockRedstoneTorchOn:
 		case kMCBlockLever:
@@ -238,24 +238,65 @@ MCDirection MCCellGetOrientation(MCCell cell)
 					return kMCDirectionUnknown;
 			}
 			
+		case kMCBlockBed:
 		case kMCBlockPumpkin:
 		case kMCBlockJackOLantern:
-			switch (blockData & kMCInfoPumpkinOrientationMask)
+			switch (blockData & kMCInfoMisc3OrientationMask)
 			{
-				case kMCInfoPumpkinOrientationEast:
+				case kMCInfoMisc3OrientationEast:
 					return kMCDirectionEast;
 					
-				case kMCInfoPumpkinOrientationSouth:
+				case kMCInfoMisc3OrientationSouth:
 					return kMCDirectionSouth;
 					
-				case kMCInfoPumpkinOrientationWest:
+				case kMCInfoMisc3OrientationWest:
 					return kMCDirectionWest;
 					
-				case kMCInfoPumpkinOrientationNorth:
+				case kMCInfoMisc3OrientationNorth:
 					return kMCDirectionNorth;
 					
 				default:
 					return kMCDirectionUnknown;
+			}
+			
+		case kMCBlockPiston:
+		case kMCBlockStickyPiston:
+		case kMCBlockPistonHead:
+			switch (blockData & kMCInfoPistonOrientationMask)
+			{
+				case kMCInfoPistonOrientationUp:
+					return kMCDirectionUp;
+					
+				case kMCInfoPistonOrientationEast:
+					return kMCDirectionEast;
+					
+				case kMCInfoPistonOrientationWest:
+					return kMCDirectionWest;
+					
+				case kMCInfoPistonOrientationNorth:
+					return kMCDirectionNorth;
+					
+				case kMCInfoPistonOrientationSouth:
+					return kMCDirectionSouth;
+					
+				default:
+					return kMCDirectionUnknown;
+			}
+			
+		case kMCBlockTrapdoor:
+			switch (blockData & kMCInfoTrapdoorOrientationMask)
+			{
+				case kMCInfoTrapdoorOrientationEast:
+					return kMCDirectionEast;
+					
+				case kMCInfoTrapdoorOrientationWest:
+					return kMCDirectionWest;
+					
+				case kMCInfoTrapdoorOrientationNorth:
+					return kMCDirectionNorth;
+					
+				case kMCInfoTrapdoorOrientationSouth:
+					return kMCDirectionSouth;
 			}
 			
 		default:
@@ -273,7 +314,7 @@ void MCCellSetOrientation(MCCell *cell, MCDirection orientation)
 	
 	switch (cell->blockID)
 	{
-		case kMCBlockLantern:
+		case kMCBlockTorch:
 		case kMCBlockRedstoneTorchOff:
 		case kMCBlockRedstoneTorchOn:
 		case kMCBlockLever:
@@ -396,29 +437,83 @@ void MCCellSetOrientation(MCCell *cell, MCDirection orientation)
 			}
 			break;
 			
+		case kMCBlockBed:
 		case kMCBlockPumpkin:
 		case kMCBlockJackOLantern:
-			mask = kMCInfoPumpkinOrientationMask;
+			mask = kMCInfoMisc3OrientationMask;
+			switch (orientation)
+			{
+				case kMCDirectionSouth:
+					value = kMCInfoMisc3OrientationSouth;
+					break;
+					
+				case kMCDirectionEast:
+					value = kMCInfoMisc3OrientationEast;
+					break;
+					
+				case kMCDirectionWest:
+					value = kMCInfoMisc3OrientationWest;
+					break;
+					
+				case kMCDirectionNorth:
+				default:
+					value = kMCInfoMisc3OrientationNorth;
+					break;
+			}
+			break;
+			
+		case kMCBlockPiston:
+		case kMCBlockStickyPiston:
+		case kMCBlockPistonHead:
+			mask = kMCInfoPistonOrientationMask;
+			switch (orientation)
+			{
+				case kMCDirectionUp:
+					value = kMCInfoPistonOrientationUp;
+					break;
+					
+				case kMCDirectionEast:
+					value = kMCInfoPistonOrientationEast;
+					break;
+					
+				case kMCDirectionWest:
+					value = kMCInfoPistonOrientationWest;
+					break;
+					
+				case kMCDirectionNorth:
+					value = kMCInfoPistonOrientationNorth;
+					break;
+					
+				case kMCDirectionSouth:
+				default:
+					value = kMCInfoPistonOrientationSouth;
+					break;
+			}
+			break;
+			
+		case kMCBlockTrapdoor:
+			mask = kMCInfoTrapdoorOrientationMask;
 			switch (orientation)
 		{
-			case kMCDirectionSouth:
-				value = kMCInfoPumpkinOrientationSouth;
-				break;
-				
 			case kMCDirectionEast:
-				value = kMCInfoPumpkinOrientationEast;
+				value = kMCInfoTrapdoorOrientationEast;
 				break;
 				
 			case kMCDirectionWest:
-				value = kMCInfoPumpkinOrientationWest;
+				value = kMCInfoTrapdoorOrientationWest;
 				break;
 				
 			case kMCDirectionNorth:
-			default:
-				value = kMCInfoPumpkinOrientationNorth;
+				value = kMCInfoTrapdoorOrientationNorth;
 				break;
-		}
+				
+			case kMCDirectionSouth:
+			default:
+				value = kMCInfoTrapdoorOrientationSouth;
+				break;
+			}
 			break;
+
 	}
 	
 	cell->blockData = cell->blockData & ~mask | value;

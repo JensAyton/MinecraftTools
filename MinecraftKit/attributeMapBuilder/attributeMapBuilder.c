@@ -57,12 +57,14 @@ static const uint8_t kFullySolidIDs[] =
 	kMCBlockLapisLazuliBlock,
 	kMCBlockDispenser,
 	kMCBlockSandstone,
-	kMCBlockNoteBlock,	// FIXME: test.
-	26, 27, 28, 29, 30, 31, 32, 33, 34, 36,	// Classic-only cloth blocks
-	kMCBlockWhiteCloth,
+	kMCBlockNoteBlock,		// FIXME: test.
+	kMCBlockStickyPiston,	// FIXME: test.
+	kMCBlockPiston,			// FIXME: test.
+	kMCBlockCloth,
+	36,						// Unused in beta; white cloth in creative.
 	kMCBlockGoldBlock,
 	kMCBlockIronBlock,
-	kMCBlockDoubleStep,
+	kMCBlockDoubleSlab,
 	kMCBlockBrick,
 	kMCBlockTNT,
 	kMCBlockBookshelf,
@@ -84,7 +86,8 @@ static const uint8_t kFullySolidIDs[] =
 	kMCBlockNetherstone,
 	kMCBlockSlowSand,
 	kMCBlockLightstone,
-	kMCBlockJackOLantern
+	kMCBlockJackOLantern,
+	kMCBlockLockedChest
 };
 
 
@@ -93,7 +96,7 @@ static const uint8_t kQuasiSolidIDs[] =
 {
 	kMCBlockLeaves,
 	kMCBlockGlass,
-	kMCBlockSingleStep,
+	kMCBlockSingleSlab,
 	kMCBlockMobSpawner,
 	kMCBlockWoodenStairs,
 	kMCBlockCobblestoneStairs
@@ -112,18 +115,25 @@ static const uint8_t kLiquidIDs[] =
 static const uint8_t kItemIDs[] =
 {
 	kMCBlockSapling,
+	kMCBlockBed,
+	kMCBlockPoweredRail,
+	kMCBlockDetectorRail,
+	kMCBlockCobweb,
+	kMCBlockTallGrass,
+	kMCBlockDeadShrubs,
+	kMCBlockPistonHead,
 	kMCBlockYellowFlower,
 	kMCBlockRedFlower,
 	kMCBlockBrownMushroom,
 	kMCBlockRedMushroom,
-	kMCBlockLantern,
+	kMCBlockTorch,
 	kMCBlockFire,
 	kMCBlockRedstoneWire,
 	kMCBlockCrops,
 	kMCBlockSignPost,
 	kMCBlockWoodenDoor,
 	kMCBlockLadder,
-	kMCBlockMinecartTrack,
+	kMCBlockRail,
 	kMCBlockWallSign,
 	kMCBlockLever,
 	kMCBlockStonePressurePlate,
@@ -137,12 +147,17 @@ static const uint8_t kItemIDs[] =
 	kMCBlockCactus,
 	kMCBlockReed,
 	kMCBlockFence,
-	kMCBlockPortal
+	kMCBlockPortal,
+	kMCBlockCake,
+	kMCBlockRedstoneRepeaterOff,
+	kMCBlockRedstoneRepeaterOn,
+	kMCBlockTrapdoor
 };
 
 
 static const uint8_t kPowerSourceIDs[] =
 {
+	kMCBlockDetectorRail,
 	kMCBlockLever,
 	kMCBlockStonePressurePlate,
 	kMCBlockWoodenPressurePlate,
@@ -154,10 +169,11 @@ static const uint8_t kPowerSourceIDs[] =
 
 static const uint8_t kPowerSinkIDs[] =
 {
+	kMCBlockPoweredRail,
 	kMCBlockRedstoneWire,
 	kMCBlockTNT,
 	kMCBlockWoodenDoor,
-	kMCBlockMinecartTrack,
+	kMCBlockRail,
 	kMCBlockIronDoor,
 	kMCBlockRedstoneTorchOff,
 	kMCBlockRedstoneTorchOn,
@@ -168,6 +184,8 @@ static const uint8_t kPowerSinkIDs[] =
 
 static const uint8_t kVegetableIDs[] =
 {
+	kMCBlockTallGrass,
+	kMCBlockDeadShrubs,
 	kMCBlockSapling,
 	kMCBlockYellowFlower,
 	kMCBlockRedFlower,
@@ -187,10 +205,27 @@ static const uint8_t kOreIDs[] =
 	kMCBlockGoldOre,
 	kMCBlockIronOre,
 	kMCBlockCoalOre,
+	kMCBlockLapisLazuliOre,
 	kMCBlockDiamondOre,
 	kMCBlockRedstoneOre,
 	kMCBlockGlowingRedstoneOre,
 	kMCBlockLapisLazuliOre
+};
+
+
+static const uint8_t kRailIDs[] =
+{
+	kMCBlockRail,
+	kMCBlockPoweredRail,
+	kMCBlockDetectorRail
+};
+
+
+static const uint8_t kPistonIDs[] =
+{
+	kMCBlockPiston,
+	kMCBlockStickyPiston,
+	kMCBlockPistonHead
 };
 
 
@@ -208,6 +243,8 @@ int main (int argc, const char * argv[])
 	APPLY_ATTRIBUTE(kQuasiSolidIDs, kMCBlockIsQuasiSolid);
 	APPLY_ATTRIBUTE(kLiquidIDs, kMCBlockIsLiquid);
 	APPLY_ATTRIBUTE(kItemIDs, kMCBlockIsItem);
+	APPLY_ATTRIBUTE(kRailIDs, kMCBlockIsRail);
+	APPLY_ATTRIBUTE(kPistonIDs, kMCBlockIsPiston);
 	
 	/*
 		Sanity check: ensure all known block IDs except air have a

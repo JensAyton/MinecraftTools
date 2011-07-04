@@ -25,15 +25,15 @@
 	(180, 180, 180),	// Dispenser
 	(240, 220, 120),	// Sandstone
 	(150, 90, 40),		// Note block
-	(0, 0, 0),			// Unused in beta
-	(0, 0, 0),			// Unused in beta
-	(0, 0, 0),			// Unused in beta
-	(0, 0, 0),			// Unused in beta
-	(0, 0, 0),			// Unused in beta
-	(0, 0, 0),			// Unused in beta
-	(0, 0, 0),			// Unused in beta
-	(0, 0, 0),			// Unused in beta
-	(0, 0, 0),			// Unused in beta
+	(128, 0, 0),		// Bed
+	(180, 170, 170),	// Powered rail
+	(170, 170, 180),	// Detector rail
+	(0, 0, 0),			// Sticky piston – FIXME
+	(200, 200, 200),	// Cobweb
+	(190, 255, 190),	// Tall grass
+	(225, 200, 160),	// Dead shrubs
+	(0, 0, 0),			// Piston – FIXME
+	(0, 0, 0),			// Piston head – fixme
 	(220, 220, 220),	// Wool
 	(0, 0, 0),			// Unused in beta
 	(255, 255, 128),	// Yellow flower
@@ -65,7 +65,7 @@
 	(175, 126, 46),		// Sign post
 	(175, 126, 46),		// Wooden door
 	(175, 126, 46),		// Ladder
-	(170, 170, 180),	// Minecart track
+	(170, 170, 180),	// Minecart rail
 	(128, 128, 128),	// Cobblestone stairs
 	(175, 126, 46),		// Wall sign
 	(175, 126, 46),		// Lever
@@ -90,6 +90,10 @@
 	(80, 64, 50),		// Slow sand
 	(255, 240, 128),	// Lightstone
 	(170, 30, 120),		// Portal
-	(255, 160, 0)		// Jack-o-lantern
-	(255, 128, 240)		// Cake
+	(255, 160, 0),		// Jack-o-lantern
+	(255, 128, 240),	// Cake
+	(128, 64, 64),		// Redstone repeater (off)
+	(255, 64, 64),		// Redstone repeater (on)
+	(150, 90, 40),		// Locked chest
+	(175, 126, 46)		// Trapdoor
 )
