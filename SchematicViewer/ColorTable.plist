@@ -20,22 +20,22 @@
 	(160, 230, 50),		// Leaves
 	(255, 230, 50),		// Sponge
 	(180, 255, 255),	// Glass
-	(0, 0, 0),			// Unused in alpha
-	(0, 0, 0),			// Unused in alpha
-	(0, 0, 0),			// Unused in alpha
-	(0, 0, 0),			// Unused in alpha
-	(0, 0, 0),			// Unused in alpha
-	(0, 0, 0),			// Unused in alpha
-	(0, 0, 0),			// Unused in alpha
-	(0, 0, 0),			// Unused in alpha
-	(0, 0, 0),			// Unused in alpha
-	(0, 0, 0),			// Unused in alpha
-	(0, 0, 0),			// Unused in alpha
-	(0, 0, 0),			// Unused in alpha
-	(0, 0, 0),			// Unused in alpha
-	(0, 0, 0),			// Unused in alpha
+	(180, 180, 240),	// Lapis lazuli “ore”
+	(0, 0, 255),		// Lapis lazuli block
+	(180, 180, 180),	// Dispenser
+	(240, 220, 120),	// Sandstone
+	(150, 90, 40),		// Note block
+	(0, 0, 0),			// Unused in beta
+	(0, 0, 0),			// Unused in beta
+	(0, 0, 0),			// Unused in beta
+	(0, 0, 0),			// Unused in beta
+	(0, 0, 0),			// Unused in beta
+	(0, 0, 0),			// Unused in beta
+	(0, 0, 0),			// Unused in beta
+	(0, 0, 0),			// Unused in beta
+	(0, 0, 0),			// Unused in beta
 	(220, 220, 220),	// Wool
-	(0, 0, 0),			// Unused in alpha
+	(0, 0, 0),			// Unused in beta
 	(255, 255, 128),	// Yellow flower
 	(255, 128, 128),	// Red flower
 	(170, 128, 128),	// Brown mushroom
@@ -91,4 +91,5 @@
 	(255, 240, 128),	// Lightstone
 	(170, 30, 120),		// Portal
 	(255, 160, 0)		// Jack-o-lantern
+	(255, 128, 240)		// Cake
 )
