@@ -530,6 +530,24 @@ JA_INLINE bool MCBlockIDIsVegetable(uint8_t blockID)
 }
 
 
+JA_INLINE bool MCBlockIDIsOre(uint8_t blockID)
+{
+	return kMCBlockTypeClassifications[blockID] & kMCBlockIsOre;
+}
+
+
+JA_INLINE bool MCBlockIDIsRail(uint8_t blockID)
+{
+	return kMCBlockTypeClassifications[blockID] & kMCBlockIsRail;
+}
+
+
+JA_INLINE bool MCBlockIDIsPiston(uint8_t blockID)
+{
+	return kMCBlockTypeClassifications[blockID] & kMCBlockIsPiston;
+}
+
+
 JA_INLINE bool MCBlockIDIsRedstoneTorch(uint8_t blockID)
 {
 	return blockID == kMCBlockRedstoneTorchOn || blockID == kMCBlockRedstoneTorchOff;

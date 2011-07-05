@@ -210,10 +210,11 @@ typedef enum
 	decode the various orientation representations used by different block types.
 	Caveats:
 	* For levers, there are two possible floor orientations, which are both
-	  reported as kMCDirectionDown. East/west levers and north/south levers
-	  provide power in different ways. Code dealing with power propagation
-	  will need to examine the block data directly.
-	  MCCellSetOrientation() will preserve the distinction.
+	  reported as kMCDirectionDown. MCCellSetOrientation() will preserve the
+	  distinction. The MCRotateCell[Anti]Clockwise() functions will rotate
+	  floor levers as a special case.
+	  NOTE: prior to beta 1.6, the two floor lever orientations worked
+	  differently, but this has been fixed.
 	* Minecart tracks aren’t handled, since their orientation concepts are
 	  special.
 	
@@ -294,7 +295,7 @@ MCDirection MCDirectionFlipEastWestFunc(MCDirection direction) JA_CONST_FUNC;
 
 /*
 	MCDirection MCDirectionFlipUpDown(MCDirection direction)
-	Reverse a direction if it is up or don.
+	Reverse a direction if it is up or down.
 */
 #define MCDirectionFlipUpDown(dir)  (INLINEABLE_DIRECTION(dir) ? MCDirectionFlipUpDownBody(dir) : MCDirectionFlipUpDownFunc(dir))
 static inline MCDirection MCDirectionFlipUpDownBody(MCDirection direction) JA_CONST_FUNC;
@@ -314,6 +315,40 @@ MCDirection MCRotateClockwiseFunc(MCDirection direction) JA_CONST_FUNC;
 */
 #define MCRotateAntiClockwise(dir)  (INLINEABLE_DIRECTION(dir) ? MCRotateClockwiseBody(MCDirectionFlipBody(dir)) : MCRotateAntiClockwiseFunc(dir))
 MCDirection MCRotateAntiClockwiseFunc(MCDirection direction) JA_CONST_FUNC;
+
+
+
+/*
+	Rotation functions for rails.
+	
+	Rail orientations work too differently from other orientations to be
+	usefully expressed as MCDirections. These functions deal with them.
+	They requre their input to be a blockData value for a rail block, masked
+	with kMCInfoRailOrientationMask or kMCInfoPoweredRailOrientationMask as
+	appropriate.
+	
+	uint8_t MCRotateRailDataClockwise(uint8_t railBlockData)
+	Rotate the blockData for a rail segment 90° clockwise.
+	
+	uint8_t MCFlipRailDataHorizontal(uint8_t railBlockData)
+	Flip a rail’s orientation from east to west.
+*/
+
+uint8_t MCRotateRailDataClockwise(uint8_t railBlockData);
+uint8_t MCFlipRailEastWest(uint8_t railBlockData);
+
+
+/*
+	General cell rotation and flipping.
+	
+	These functions work for both MCDirection-compliant types and rails. For
+	cells with no orientation, they do nothing.
+ */
+MCCell MCRotateCellClockwise(MCCell cell);
+MCCell MCRotateCellAntiClockwise(MCCell cell);
+MCCell MCRotateCell180Degrees(MCCell cell);
+MCCell MCFlipCellEastWest(MCCell cell);
+MCCell MCFlipCellNorthSouth(MCCell cell);
 
 
 /****** Inline function bodies only beyond this point. ******/

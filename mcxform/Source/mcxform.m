@@ -301,8 +301,7 @@ static JAMinecraftSchematic *ProcessFlipX(JAMinecraftSchematic *currentCircuit, 
 			{
 				MCGridCoordinates loc = { extents.minX + x, extents.minY + y, extents.minZ + z };
 				MCCell cell = [currentCircuit cellAt:loc];
-				loc.z = extents.maxZ - z;
-				MCCellSetOrientation(&cell, MCDirectionFlipEastWest(MCCellGetOrientation(cell)));
+				cell = MCFlipCellEastWest(cell);
 				[result setCell:cell at:loc];
 			}
 		}
@@ -329,7 +328,7 @@ static JAMinecraftSchematic *ProcessFlipY(JAMinecraftSchematic *currentCircuit, 
 				MCGridCoordinates loc = { extents.minX + x, extents.minY + y, extents.minZ + z };
 				MCCell cell = [currentCircuit cellAt:loc];
 				loc.x = extents.maxX - x;
-				MCCellSetOrientation(&cell, MCDirectionFlipNorthSouth(MCCellGetOrientation(cell)));
+				cell = MCFlipCellNorthSouth(cell);
 				[result setCell:cell at:loc];
 			}
 		}
@@ -357,7 +356,7 @@ static JAMinecraftSchematic *ProcessRotate180(JAMinecraftSchematic *currentCircu
 				MCCell cell = [currentCircuit cellAt:loc];
 				loc.x = extents.maxX - x;
 				loc.z = extents.maxZ - z;
-				MCCellSetOrientation(&cell, MCDirectionFlipNorthSouth(MCDirectionFlipEastWest(MCCellGetOrientation(cell))));
+				cell = MCRotateCell180Degrees(cell);
 				[result setCell:cell at:loc];
 			}
 		}
@@ -385,7 +384,7 @@ static JAMinecraftSchematic *ProcessRotateClockwise(JAMinecraftSchematic *curren
 				MCCell cell = [currentCircuit cellAt:loc];
 				loc.z = loc.x;
 				loc.x = extents.maxZ - z;
-				MCCellSetOrientation(&cell, MCRotateClockwise(MCCellGetOrientation(cell)));
+				cell = MCRotateCellClockwise(cell);
 				[result setCell:cell at:loc];
 			}
 		}
@@ -413,7 +412,7 @@ static JAMinecraftSchematic *ProcessRotateAntiClockwise(JAMinecraftSchematic *cu
 				MCCell cell = [currentCircuit cellAt:loc];
 				loc.x = loc.z;
 				loc.z = extents.maxX - x;
-				MCCellSetOrientation(&cell, MCRotateAntiClockwise(MCCellGetOrientation(cell)));
+				cell = MCRotateCellAntiClockwise(cell);
 				[result setCell:cell at:loc];
 			}
 		}

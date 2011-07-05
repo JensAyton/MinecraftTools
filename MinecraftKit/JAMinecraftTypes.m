@@ -144,6 +144,242 @@ MCDirection MCRotateAntiClockwiseFunc(MCDirection direction)
 }
 
 
+uint8_t MCRotateRailDataClockwise(uint8_t railBlockData)
+{
+	switch (railBlockData)
+	{
+		case kMCInfoRailOrientationNorthSouth:
+			return kMCInfoRailOrientationEastWest;
+			
+		case kMCInfoRailOrientationEastWest:
+			return kMCInfoRailOrientationNorthSouth;
+			
+		case kMCInfoRailOrientationRisingSouth:
+			return kMCInfoRailOrientationRisingWest;
+			
+		case kMCInfoRailOrientationRisingNorth:
+			return kMCInfoRailOrientationRisingEast;
+			
+		case kMCInfoRailOrientationRisingEast:
+			return kMCInfoRailOrientationRisingSouth;
+			
+		case kMCInfoRailOrientationRisingWest:
+			return kMCInfoRailOrientationRisingNorth;
+			
+		case kMCInfoRailOrientationWestSouth:
+			return kMCInfoRailOrientationNorthWest;
+			
+		case kMCInfoRailOrientationNorthWest:
+			return kMCInfoRailOrientationEastNorth;
+			
+		case kMCInfoRailOrientationEastNorth:
+			return kMCInfoRailOrientationSouthEast;
+			
+		case kMCInfoRailOrientationSouthEast:
+			return kMCInfoRailOrientationWestSouth;
+			
+		default:
+			return railBlockData;
+	}
+}
+
+
+uint8_t MCFlipRailEastWest(uint8_t railBlockData)
+{
+	switch (railBlockData)
+	{
+		case kMCInfoRailOrientationRisingEast:
+			return kMCInfoRailOrientationRisingWest;
+			
+		case kMCInfoRailOrientationRisingWest:
+			return kMCInfoRailOrientationRisingEast;
+			
+		case kMCInfoRailOrientationWestSouth:
+			return kMCInfoRailOrientationSouthEast;
+			
+		case kMCInfoRailOrientationNorthWest:
+			return kMCInfoRailOrientationEastNorth;
+			
+		case kMCInfoRailOrientationEastNorth:
+			return kMCInfoRailOrientationNorthWest;
+			
+		case kMCInfoRailOrientationSouthEast:
+			return kMCInfoRailOrientationWestSouth;
+			
+		case kMCInfoRailOrientationNorthSouth:
+		case kMCInfoRailOrientationEastWest:
+		case kMCInfoRailOrientationRisingNorth:
+		case kMCInfoRailOrientationRisingSouth:
+		default:
+			return railBlockData;
+	}
+}
+
+
+MCCell MCRotateCellClockwise(MCCell cell)
+{
+	if (!MCBlockIDIsRail(cell.blockID))
+	{
+		MCDirection direction = MCCellGetOrientation(cell);
+		
+		if (cell.blockID != kMCBlockLever || direction != kMCDirectionDown)
+		{
+			direction = MCRotateClockwise(direction);
+			MCCellSetOrientation(&cell, direction);
+		}
+		else
+		{
+			// Special case: handle two orientations of floor levers.
+			uint8_t orientation = cell.blockData & kMCInfoMiscOrientationMask;
+			if (orientation == kMCInfoLeverOrientationFloorEW)
+			{
+				orientation = kMCInfoLeverOrientationFloorNS;
+			}
+			else
+			{
+				orientation = kMCInfoLeverOrientationFloorEW;
+			}
+			cell.blockData = cell.blockData & ~kMCInfoMiscOrientationMask | orientation;
+		}
+	}
+	else
+	{
+		// Special case: rail.
+		uint8_t mask = (cell.blockID == kMCBlockRail) ? kMCInfoRailOrientationMask : kMCInfoPoweredRailOrientationMask;
+		uint8_t maskedData = cell.blockData & mask;
+		maskedData = MCRotateRailDataClockwise(maskedData);
+		cell.blockData = cell.blockData & ~mask | maskedData;
+	}
+	
+	return cell;
+}
+
+
+MCCell MCRotateCellAntiClockwise(MCCell cell)
+{
+	if (!MCBlockIDIsRail(cell.blockID))
+	{
+		MCDirection direction = MCCellGetOrientation(cell);
+		
+		if (cell.blockID != kMCBlockLever || direction != kMCDirectionDown)
+		{
+			direction = MCRotateAntiClockwise(direction);
+			MCCellSetOrientation(&cell, direction);
+		}
+		else
+		{
+			// Special case: handle two orientations of floor levers.
+			uint8_t orientation = cell.blockData & kMCInfoMiscOrientationMask;
+			if (orientation == kMCInfoLeverOrientationFloorEW)
+			{
+				orientation = kMCInfoLeverOrientationFloorNS;
+			}
+			else
+			{
+				orientation = kMCInfoLeverOrientationFloorEW;
+			}
+			cell.blockData = cell.blockData & ~kMCInfoMiscOrientationMask | orientation;
+		}
+	}
+	else
+	{
+		// Special case: rail.
+		uint8_t mask = (cell.blockID == kMCBlockRail) ? kMCInfoRailOrientationMask : kMCInfoPoweredRailOrientationMask;
+		uint8_t maskedData = cell.blockData & mask;
+		// Rotate three times for 270°.
+		maskedData = MCRotateRailDataClockwise(maskedData);
+		maskedData = MCRotateRailDataClockwise(maskedData);
+		maskedData = MCRotateRailDataClockwise(maskedData);
+		cell.blockData = cell.blockData & ~mask | maskedData;
+	}
+	
+	return cell;
+}
+
+
+MCCell MCRotateCell180Degrees(MCCell cell)
+{
+	if (!MCBlockIDIsRail(cell.blockID))
+	{
+		MCDirection direction = MCCellGetOrientation(cell);
+		
+		// Flip on two axes 180°. (Flips are simpler than rotates.)
+		direction = MCDirectionFlipNorthSouth(direction);
+		direction = MCDirectionFlipEastWest(direction);
+		MCCellSetOrientation(&cell, direction);
+		
+		// No special case for floor levers is needed; they’ll end up unchanged.
+	}
+	else
+	{
+		// Special case: rail.
+		uint8_t mask = (cell.blockID == kMCBlockRail) ? kMCInfoRailOrientationMask : kMCInfoPoweredRailOrientationMask;
+		uint8_t maskedData = cell.blockData & mask;
+		// Rotate twice for 180°.
+		maskedData = MCRotateRailDataClockwise(maskedData);
+		maskedData = MCRotateRailDataClockwise(maskedData);
+		cell.blockData = cell.blockData & ~mask | maskedData;
+	}
+	
+	return cell;
+}
+
+
+MCCell MCFlipCellEastWest(MCCell cell)
+{
+	if (!MCBlockIDIsRail(cell.blockID))
+	{
+		MCDirection direction = MCCellGetOrientation(cell);
+		
+		direction = MCDirectionFlipEastWest(direction);
+		MCCellSetOrientation(&cell, direction);
+	}
+	else
+	{
+		// Special case: rail.
+		uint8_t mask = (cell.blockID == kMCBlockRail) ? kMCInfoRailOrientationMask : kMCInfoPoweredRailOrientationMask;
+		uint8_t maskedData = cell.blockData & mask;
+		maskedData = MCFlipRailEastWest(maskedData);
+		cell.blockData = cell.blockData & ~mask | maskedData;
+	}
+	
+	return cell;
+}
+
+
+MCCell MCFlipCellNorthSouth(MCCell cell)
+{
+	if (!MCBlockIDIsRail(cell.blockID))
+	{
+		MCDirection direction = MCCellGetOrientation(cell);
+		
+		direction = MCDirectionFlipNorthSouth(direction);
+		MCCellSetOrientation(&cell, direction);
+	}
+	else
+	{
+		// Special case: rail.
+		uint8_t mask = (cell.blockID == kMCBlockRail) ? kMCInfoRailOrientationMask : kMCInfoPoweredRailOrientationMask;
+		uint8_t maskedData = cell.blockData & mask;
+		// Composition fun time!
+		/*
+			NOTE: this should be inlineable to the eqivalent of a single
+			switch. Apple-clang 1.7 inlines the five functions, but doesn’t
+			merge the switches. I’ll try to remember to revisit this later as
+			tool updates are pending at the time of writing.
+		*/
+		maskedData = MCRotateRailDataClockwise(maskedData);
+		maskedData = MCFlipRailEastWest(maskedData);
+		maskedData = MCRotateRailDataClockwise(maskedData);
+		maskedData = MCRotateRailDataClockwise(maskedData);
+		maskedData = MCRotateRailDataClockwise(maskedData);
+		cell.blockData = cell.blockData & ~mask | maskedData;
+	}
+	
+	return cell;
+}
+
+
 MCDirection MCCellGetOrientation(MCCell cell)
 {
 	uint8_t blockData = cell.blockData;
