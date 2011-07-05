@@ -264,6 +264,9 @@ MCDirection MCCellGetOrientation(MCCell cell)
 		case kMCBlockPistonHead:
 			switch (blockData & kMCInfoPistonOrientationMask)
 			{
+				case kMCInfoPistonOrientationDown:
+					return kMCDirectionDown;
+					
 				case kMCInfoPistonOrientationUp:
 					return kMCDirectionUp;
 					
@@ -468,6 +471,10 @@ void MCCellSetOrientation(MCCell *cell, MCDirection orientation)
 			mask = kMCInfoPistonOrientationMask;
 			switch (orientation)
 			{
+				case kMCDirectionDown:
+					value = kMCInfoPistonOrientationDown;
+					break;
+				
 				case kMCDirectionUp:
 					value = kMCInfoPistonOrientationUp;
 					break;

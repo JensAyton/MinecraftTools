@@ -333,6 +333,7 @@ enum
 		facing of the piston head surface.
 	*/
 	kMCInfoPistonOrientationMask			= 0x07,
+	kMCInfoPistonOrientationDown			= 0x00,
 	kMCInfoPistonOrientationUp				= 0x01,
 	kMCInfoPistonOrientationEast			= 0x02,
 	kMCInfoPistonOrientationWest			= 0x03,
