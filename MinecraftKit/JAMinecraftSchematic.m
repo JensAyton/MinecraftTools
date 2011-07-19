@@ -653,16 +653,16 @@ const int8_t kGroundLevelWeights[256] =
 	-4,		// Dispenser
 	-2,		// Sandstone
 	-4,		// Note block
-	0,		// unused range
-	0,
-	0,
-	0,
+	-8,		// Bed
+	-8,		// Powered rail
+	-8,		// Detector rail
+	-4,		// Sticky piston
 	
-	0,
-	0,
-	0,
-	0,
-	0,
+	0,		// Cobweb (doesn’t occur naturally at time of writing)
+	-8,		// Tall grass
+	-8,		// Dead shrubs
+	-4,		// Piston
+	-4,		// Piston head
 	-2,		// Cloth
 	0,		// unused
 	-8,		// Yellow flower
@@ -727,13 +727,17 @@ const int8_t kGroundLevelWeights[256] =
 	-4,		// Portal
 	-4,		// Jack-o-lantern
 	-8,		// Cake
+	-8,		// Redstone repeater (off)
+	-8,		// Redstone repeater (on)
+	-8,		// Locked chest
+	-8,		// Trapdoor
 	
 	0
 };
 
 enum
 {
-	kLastWeight = kMCBlockJackOLantern
+	kLastWeight = kMCBlockTrapdoor
 };
 
 
