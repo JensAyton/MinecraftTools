@@ -284,7 +284,7 @@ int main (int argc, const char * argv[])
 	
 	for (i = 0; i < 256; i++)
 	{
-		printf("\t0x%X%s\n", attributeMap[i], (i < 255) ? "," : "");
+		printf("\t0x%.4X%s\n", attributeMap[i], (i < 255) ? "," : "");
 	}
 	printf("};\n");
 	return EXIT_SUCCESS;
