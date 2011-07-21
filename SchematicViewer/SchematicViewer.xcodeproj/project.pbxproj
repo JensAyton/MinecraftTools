@@ -73,6 +73,7 @@
 		1A52C87A129036CF006E2D65 /* JAMinecraftBlockStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAMinecraftBlockStore.m; sourceTree = "<group>"; };
 		1A54A702129B166600977657 /* JAHashEnumeration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAHashEnumeration.h; sourceTree = "<group>"; };
 		1A54A703129B166600977657 /* JAHashEnumeration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAHashEnumeration.m; sourceTree = "<group>"; };
+		1ACA50C613D865E500D9A2FB /* JAMinecraftKitLionInterfaces.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAMinecraftKitLionInterfaces.h; sourceTree = "<group>"; };
 		1DDD58290DA1D0D100B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MyDocument.xib; sourceTree = "<group>"; };
 		1DDD582B0DA1D0D100B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		2564AD2C0F5327BB00F57823 /* SchematicViewer_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SchematicViewer_Prefix.pch; sourceTree = "<group>"; };
@@ -184,6 +185,7 @@
 				1A52C345128F710B006E2D65 /* NSData+DDGZip.m */,
 				1A54A702129B166600977657 /* JAHashEnumeration.h */,
 				1A54A703129B166600977657 /* JAHashEnumeration.m */,
+				1ACA50C613D865E500D9A2FB /* JAMinecraftKitLionInterfaces.h */,
 			);
 			name = Utility;
 			sourceTree = "<group>";

@@ -28,6 +28,7 @@
 #import "JAMinecraftSchematic.h"
 #import "JAMinecraftMergedBlockStore.h"
 #import "IsKeyDown.h"
+#import "JAMinecraftKitLionInterfaces.h"
 
 
 #define kSelectionRefreshInterval	0.1	// Selection animation interval in seconds
@@ -41,7 +42,7 @@
 
 
 NSString * const kJAMinecraftGridViewWillFreezeSelectionNotification = @"se.ayton.jens JAMinecraftGridView will freeze selection";
-NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayton.jens JAMinecraftGridView will discard selection";;
+NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayton.jens JAMinecraftGridView will discard selection";
 
 
 @interface JAMinecraftGridView ()
@@ -1268,8 +1269,22 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 - (void) scrollWheel:(NSEvent *)event
 {
 	NSRect contentFrame = self.innerFrame;
-	contentFrame.origin.x -= event.deltaX * (_cellSize + _gridWidth);
-	contentFrame.origin.y += event.deltaY * (_cellSize + _gridWidth);
+	CGFloat deltaX, deltaY;
+	
+	if ([event respondsToSelector:@selector(hasPreciseScrollingDeltas)] && [event hasPreciseScrollingDeltas])
+	{
+		// FIXME: should let sub-point values accumulate and clean up when drawing. More importantly, this doesn’t quite work; we sometimes get misaligned tiles.
+		deltaX = round(event.scrollingDeltaX);
+		deltaY = round(event.scrollingDeltaY);
+	}
+	else
+	{
+		deltaX = event.deltaX * (_cellSize + _gridWidth);
+		deltaY = event.deltaY * (_cellSize + _gridWidth);
+	}
+	
+	contentFrame.origin.x -= deltaX;
+	contentFrame.origin.y += deltaY;
 	[self scrollContentOriginTo:contentFrame.origin];
 }
 
