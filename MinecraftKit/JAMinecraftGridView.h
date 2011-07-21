@@ -45,7 +45,7 @@ enum
 @interface JAMinecraftGridView: NSView
 {
 @private
-	JAMutableMinecraftBlockStore	*_store;
+	JAMutableMinecraftBlockStore <NSCopying>	*_store;
 	
 	NSScroller						*_horizontalScroller;
 	NSScroller						*_verticalScroller;
@@ -73,7 +73,7 @@ enum
 	NSColor							*_emptyOutsidePattern;
 }
 
-@property (nonatomic, assign) JAMutableMinecraftBlockStore *store;
+@property (nonatomic, assign) JAMutableMinecraftBlockStore <NSCopying> *store;
 
 /*	drawingStore: presents a unified view of the main store and any floating
 	content. This may be a JAMinecraftMergedBlockStore, whose contents cannot

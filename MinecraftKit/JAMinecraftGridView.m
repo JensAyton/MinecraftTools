@@ -177,7 +177,7 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 }
 
 
-- (void) setStore:(JAMutableMinecraftBlockStore *)store
+- (void) setStore:(JAMutableMinecraftBlockStore <NSCopying> *)store
 {
 	if (store != _store)
 	{

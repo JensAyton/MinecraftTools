@@ -410,7 +410,7 @@ static void PerformFill(InnerNode *node, unsigned level, MCGridExtents fillRegio
 		// If the child is completely enclosed, we want to replace it.
 		if (completelyEnclosed)
 		{
-			BOOL emptySpace = isAir && subBase.y >= groundLevel || isStone && (NSInteger)(subBase.y + halfSize - 1) < groundLevel;
+			BOOL emptySpace = (isAir && subBase.y >= groundLevel) || (isStone && (NSInteger)(subBase.y + halfSize - 1) < groundLevel);
 			
 			void *templateNode;
 			if (emptySpace)
