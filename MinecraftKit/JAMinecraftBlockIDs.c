@@ -104,7 +104,7 @@ const JAMCBlockIDMetadata kMCBlockTypeClassifications[256] =
 	0x0008,
 	0x0008,
 	0x0008,
-	0x8001,
+	0x0001,
 	0x0008,
 	0x0000,
 	0x0000,

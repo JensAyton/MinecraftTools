@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A0C657513E6F67200722B66 /* JAPropertyListAccessors.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A0C654113E6F67200722B66 /* JAPropertyListAccessors.m */; };
+		1A0C657913E6F67200722B66 /* JAValueToString.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A0C657213E6F67200722B66 /* JAValueToString.m */; };
 		1A52C8B712903870006E2D65 /* JAMinecraftBlockStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A52C8B612903870006E2D65 /* JAMinecraftBlockStore.m */; };
-		1A52CA6712933835006E2D65 /* JAValueToString.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A52CA6612933835006E2D65 /* JAValueToString.m */; };
 		1A54A7A9129B214500977657 /* JAHashEnumeration.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A54A7A8129B214500977657 /* JAHashEnumeration.m */; };
 		1A9FB1ED1281F88B003DD1C3 /* JAMinecraftTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A9FB1E31281F88B003DD1C3 /* JAMinecraftTypes.m */; };
 		1A9FB21B1281F8E8003DD1C3 /* JANBTParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A9FB2181281F8E8003DD1C3 /* JANBTParser.m */; };
@@ -55,10 +56,12 @@
 		08FB7796FE84155DC02AAC07 /* mcxform.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mcxform.m; sourceTree = "<group>"; };
 		08FB779EFE84155DC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		1A0C64A913E6DF0C00722B66 /* attributeMapBuilder.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = attributeMapBuilder.xcodeproj; path = ../MinecraftKit/attributeMapBuilder/attributeMapBuilder.xcodeproj; sourceTree = "<group>"; };
+		1A0C654013E6F67200722B66 /* JAPropertyListAccessors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAPropertyListAccessors.h; sourceTree = "<group>"; };
+		1A0C654113E6F67200722B66 /* JAPropertyListAccessors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAPropertyListAccessors.m; sourceTree = "<group>"; };
+		1A0C657113E6F67200722B66 /* JAValueToString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAValueToString.h; sourceTree = "<group>"; };
+		1A0C657213E6F67200722B66 /* JAValueToString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAValueToString.m; sourceTree = "<group>"; };
 		1A52C8B512903870006E2D65 /* JAMinecraftBlockStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAMinecraftBlockStore.h; sourceTree = "<group>"; };
 		1A52C8B612903870006E2D65 /* JAMinecraftBlockStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAMinecraftBlockStore.m; sourceTree = "<group>"; };
-		1A52CA6512933835006E2D65 /* JAValueToString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAValueToString.h; sourceTree = "<group>"; };
-		1A52CA6612933835006E2D65 /* JAValueToString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAValueToString.m; sourceTree = "<group>"; };
 		1A54A7A7129B214500977657 /* JAHashEnumeration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAHashEnumeration.h; sourceTree = "<group>"; };
 		1A54A7A8129B214500977657 /* JAHashEnumeration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAHashEnumeration.m; sourceTree = "<group>"; };
 		1A9FB1E11281F88B003DD1C3 /* JAMinecraftBlockIDs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAMinecraftBlockIDs.h; sourceTree = "<group>"; };
@@ -75,8 +78,6 @@
 		1AAD77821288AE90001FB721 /* JAMinecraftSchematic+RDatIO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "JAMinecraftSchematic+RDatIO.m"; sourceTree = "<group>"; };
 		1AAD77851288AE90001FB721 /* JAMinecraftSchematic+SchematicIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "JAMinecraftSchematic+SchematicIO.h"; sourceTree = "<group>"; };
 		1AAD77861288AE90001FB721 /* JAMinecraftSchematic+SchematicIO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "JAMinecraftSchematic+SchematicIO.m"; sourceTree = "<group>"; };
-		1AAD78261288B93D001FB721 /* JAValueToString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAValueToString.h; sourceTree = "<group>"; };
-		1AAD78271288B93D001FB721 /* JAValueToString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAValueToString.m; sourceTree = "<group>"; };
 		1AAD7958128B04C7001FB721 /* JAMinecraftBlockIDs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = JAMinecraftBlockIDs.c; sourceTree = "<group>"; };
 		1AAD7B06128B2B34001FB721 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		32A70AAB03705E1F00C91783 /* mcxform_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mcxform_Prefix.pch; sourceTree = "<group>"; };
@@ -135,11 +136,27 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		1A0C64ED13E6F67200722B66 /* JAPropertyListAccessors */ = {
+			isa = PBXGroup;
+			children = (
+				1A0C654013E6F67200722B66 /* JAPropertyListAccessors.h */,
+				1A0C654113E6F67200722B66 /* JAPropertyListAccessors.m */,
+			);
+			path = JAPropertyListAccessors;
+			sourceTree = "<group>";
+		};
+		1A0C654A13E6F67200722B66 /* JAValueToString */ = {
+			isa = PBXGroup;
+			children = (
+				1A0C657113E6F67200722B66 /* JAValueToString.h */,
+				1A0C657213E6F67200722B66 /* JAValueToString.m */,
+			);
+			path = JAValueToString;
+			sourceTree = "<group>";
+		};
 		1A9FB1DE1281F88B003DD1C3 /* MinecraftKit */ = {
 			isa = PBXGroup;
 			children = (
-				1AAD78261288B93D001FB721 /* JAValueToString.h */,
-				1AAD78271288B93D001FB721 /* JAValueToString.m */,
 				1A52C8B512903870006E2D65 /* JAMinecraftBlockStore.h */,
 				1A52C8B612903870006E2D65 /* JAMinecraftBlockStore.m */,
 				1AAD777F1288AE90001FB721 /* JAMinecraftSchematic.h */,
@@ -156,10 +173,10 @@
 				1A9FB2181281F8E8003DD1C3 /* JANBTParser.m */,
 				1A9FB2191281F8E8003DD1C3 /* NSData+DDGZip.h */,
 				1A9FB21A1281F8E8003DD1C3 /* NSData+DDGZip.m */,
-				1A52CA6512933835006E2D65 /* JAValueToString.h */,
-				1A52CA6612933835006E2D65 /* JAValueToString.m */,
 				1A54A7A7129B214500977657 /* JAHashEnumeration.h */,
 				1A54A7A8129B214500977657 /* JAHashEnumeration.m */,
+				1A0C64ED13E6F67200722B66 /* JAPropertyListAccessors */,
+				1A0C654A13E6F67200722B66 /* JAValueToString */,
 			);
 			name = MinecraftKit;
 			path = ../MinecraftKit;
@@ -252,8 +269,9 @@
 				1AAD778C1288AE90001FB721 /* JAMinecraftSchematic+SchematicIO.m in Sources */,
 				1AAD7959128B04C7001FB721 /* JAMinecraftBlockIDs.c in Sources */,
 				1A52C8B712903870006E2D65 /* JAMinecraftBlockStore.m in Sources */,
-				1A52CA6712933835006E2D65 /* JAValueToString.m in Sources */,
 				1A54A7A9129B214500977657 /* JAHashEnumeration.m in Sources */,
+				1A0C657513E6F67200722B66 /* JAPropertyListAccessors.m in Sources */,
+				1A0C657913E6F67200722B66 /* JAValueToString.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

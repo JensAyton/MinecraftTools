@@ -23,7 +23,8 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#include "JAMinecraftTypes.h"
+#import "JAMinecraftTypes.h"
+#import "JAPropertyListAccessors.h"
 
 
 const MCCell kMCAirCell = { .blockID = kMCBlockAir, .blockData = 0 };
@@ -35,10 +36,59 @@ const MCGridExtents kMCZeroExtents = { 0, 0, 0, 0, 0, 0 };
 const MCGridExtents kMCInfiniteExtents = { NSIntegerMin, NSIntegerMax, NSIntegerMin, NSIntegerMax, NSIntegerMin, NSIntegerMax };
 
 
-BOOL MCGridExtentsAreWithinExtents(MCGridExtents inner_, MCGridExtents outer_)
+NSString *MCExpectedTileEntityTypeForBlockID(uint8_t blockID)
 {
-	MCGridExtents inner = inner_, outer = outer_;
+	switch (blockID)
+	{
+		case kMCBlockDispenser:		return @"Trap";
+		case kMCBlockNoteBlock:		return @"Music";
+		case kMCBlockMobSpawner:	return @"Monster Spawner";
+		case kMCBlockChest:			return @"Chest";
+		case kMCBlockFurnace:
+		case kMCBlockBurningFurnace:return @"Furnace";
+		case kMCBlockSignPost:
+		case kMCBlockWallSign:		return @"Sign";
+		case kMCBlockJukebox:		return @"RecordPlayer";
+			
+		case kMCBlock36:
+			// FIXME: don’t know expected type. Can these be serialized? Probably not.
+			return @"?";
+			
+		default:
+			if (!MCBlockIDHasTileEntity(blockID))  return nil;
+			
+			NSLog(@"Internal error: block ID %u expects a tile entity, but the tile entity ID is unknown.", blockID);
+			return @"?";
+	}
+}
+
+
+BOOL MCTileEntityIsCompatibleWithCell(NSDictionary *tileEntity, MCCell cell)
+{
+	if (tileEntity == nil)  return YES;		// Even blocks that should have tile entities can have none, for robustness. TODO: test what Minecraft does.
 	
+	NSString *type = [tileEntity ja_stringForKey:@"id"];
+	if (type == nil)  return NO;
+	NSString *expectedType = MCExpectedTileEntityTypeForBlockID(cell.blockID);
+	
+	if ([type isEqualToString:expectedType])  return YES;
+	else if ([expectedType isEqualToString:@"?"])  return YES;
+	
+	return NO;
+}
+
+
+void MCRequireTileEntityIsCompatibleWithCell(NSDictionary *tileEntity, MCCell cell)
+{
+	if (!MCTileEntityIsCompatibleWithCell(tileEntity, cell))
+	{
+		[NSException raise:NSInvalidArgumentException format:@"Tile entity of type \"%@\" cannot be used with block ID %u.", [tileEntity ja_stringForKey:@"id"], cell.blockID];
+	}
+}
+
+
+BOOL MCGridExtentsAreWithinExtents(MCGridExtents inner, MCGridExtents outer)
+{
 	return	!MCGridExtentsEmpty(inner) &&
 			MCGridCoordinatesAreWithinExtents(MCGridExtentsMinimum(inner), outer) &&
 			MCGridCoordinatesAreWithinExtents(MCGridExtentsMaximum(inner), outer);

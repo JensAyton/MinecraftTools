@@ -157,6 +157,10 @@ static const uint8_t kItemIDs[] =
 
 static const uint8_t kTileEntityIDs[] =
 {
+	/*
+		NOTE: these must have a corresponding entry in
+		MCExpectedTileEntityTypeForBlockID() in JAMinecraftTypes.m.
+	*/
 	kMCBlockDispenser,
 	kMCBlock36,
 	kMCBlockNoteBlock,
@@ -166,8 +170,7 @@ static const uint8_t kTileEntityIDs[] =
 	kMCBlockBurningFurnace,
 	kMCBlockSignPost,
 	kMCBlockWallSign,
-	kMCBlockJukebox,
-	kMCBlockLockedChest
+	kMCBlockJukebox
 };
 
 

@@ -47,7 +47,7 @@ static void ThrowSubclassResponsibility(const char *func) __attribute__((noretur
 }
 
 
-- (MCCell) cellAt:(MCGridCoordinates)location
+- (MCCell) cellAt:(MCGridCoordinates)location gettingTileEntity:(NSDictionary **)outTileEntity
 {
 	ThrowSubclassResponsibility(__FUNCTION__);
 }
@@ -80,7 +80,7 @@ static void ThrowSubclassResponsibility(const char *func) __attribute__((noretur
 }
 
 
-- (void) setCell:(MCCell)cell at:(MCGridCoordinates)location
+- (void) setCell:(MCCell)cell andTileEntity:(NSDictionary *)tileEntity at:(MCGridCoordinates)location
 {
 	ThrowSubclassResponsibility(__FUNCTION__);
 }
@@ -251,9 +251,37 @@ static void ThrowSubclassResponsibility(const char *func) __attribute__((noretur
 }
 
 
+- (MCCell) cellAt:(MCGridCoordinates)location
+{
+	return [self cellAt:location gettingTileEntity:NULL];
+}
+
+
+- (NSDictionary *) tileEntityAt:(MCGridCoordinates)location
+{
+	NSDictionary *result = nil;
+	[self cellAt:location gettingTileEntity:&result];
+	return result;
+}
+
+
+- (MCCell) cellAtX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z gettingTileEntity:(NSDictionary **)outTileEntity
+{
+	return [self cellAt:(MCGridCoordinates){ x, y, z } gettingTileEntity:outTileEntity];
+}
+
+
 - (MCCell) cellAtX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z
 {
-	return [self cellAt:(MCGridCoordinates){ x, y, z }];
+	return [self cellAt:(MCGridCoordinates){ x, y, z } gettingTileEntity:NULL];
+}
+
+
+- (NSDictionary *) tileEntityAtX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z
+{
+	NSDictionary *result = nil;
+	[self cellAt:(MCGridCoordinates){ x, y, z } gettingTileEntity:&result];
+	return result;	
 }
 
 @end
@@ -261,9 +289,37 @@ static void ThrowSubclassResponsibility(const char *func) __attribute__((noretur
 
 @implementation JAMutableMinecraftBlockStore (Conveniences)
 
+- (void) setCell:(MCCell)cell at:(MCGridCoordinates)location
+{
+	NSDictionary *tileEntity = [self tileEntityAt:location];
+	if (tileEntity != nil && !MCTileEntityIsCompatibleWithCell(tileEntity, cell))  tileEntity = nil;
+	
+	[self setCell:cell andTileEntity:tileEntity at:(MCGridCoordinates)location];
+}
+
+
+- (void) setTileEntity:(NSDictionary *)tileEntity at:(MCGridCoordinates)location
+{
+	MCCell cell = [self cellAt:location];
+	[self setCell:cell andTileEntity:tileEntity at:location];
+}
+
+
 - (void) setCell:(MCCell)cell atX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z
 {
 	[self setCell:cell at:(MCGridCoordinates){ x, y, z }];
+}
+
+
+- (void) setTileEntity:(NSDictionary *)tileEntity atX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z
+{
+	[self setTileEntity:tileEntity at:(MCGridCoordinates){ x, y, z, }];
+}
+
+
+- (void) setCell:(MCCell)cell andTileEntity:(NSDictionary *)tileEntity atX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z
+{
+	[self setCell:cell andTileEntity:tileEntity at:(MCGridCoordinates){ x, y, z }];
 }
 
 @end

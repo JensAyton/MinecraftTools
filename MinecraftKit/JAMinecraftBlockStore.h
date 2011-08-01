@@ -51,7 +51,15 @@ enum
 */
 @property (readonly) NSInteger groundLevel;
 
-- (MCCell) cellAt:(MCGridCoordinates)location;
+/*
+	Access primitive: retrieves cell data and tile entity. outTileEntity may
+	be NULL. See Conveniences category below for alternative forms.
+	
+	The caller is responsible for ensuring that the cell and tile entity are
+	compatible (as per MCTileEntityIsCompatibleWithCell()). If they are not,
+	NSInvalidArgumentException will be thrown.
+*/
+- (MCCell) cellAt:(MCGridCoordinates)location gettingTileEntity:(NSDictionary **)outTileEntity;
 
 @end
 
@@ -62,7 +70,7 @@ enum
 	MCGridExtents					_dirtyExtents;
 }
 
-- (void) setCell:(MCCell)cell at:(MCGridCoordinates)location;
+- (void) setCell:(MCCell)cell andTileEntity:(NSDictionary *)tileEntity at:(MCGridCoordinates)location;
 
 /*
 	Bulk updates: while a bulk update is in progress, changes are coalesced into
@@ -106,14 +114,30 @@ enum
 @property (readonly) NSUInteger length;
 @property (readonly) NSUInteger height;
 
+- (MCCell) cellAt:(MCGridCoordinates)location;
+- (NSDictionary *) tileEntityAt:(MCGridCoordinates)location;
+
+- (MCCell) cellAtX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z gettingTileEntity:(NSDictionary **)outTileEntity;
 - (MCCell) cellAtX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z;
+- (NSDictionary *) tileEntityAtX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z;
 
 @end
 
 
 @interface JAMutableMinecraftBlockStore (Conveniences)
 
+/*
+	NOTE: setting cell and tile entity separately is discouraged as it involves
+	extra work to ensure consistency with the existing tile entity/cell.
+	
+	If setCell: changes the cell type, any existing tile entity will be removed.
+*/
+- (void) setCell:(MCCell)cell at:(MCGridCoordinates)location;
+- (void) setTileEntity:(NSDictionary *)tileEntity at:(MCGridCoordinates)location;
+
 - (void) setCell:(MCCell)cell atX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z;
+- (void) setTileEntity:(NSDictionary *)tileEntity atX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z;
+- (void) setCell:(MCCell)cell andTileEntity:(NSDictionary *)tileEntity atX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z;
 
 @end
 

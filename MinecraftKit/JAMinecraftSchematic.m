@@ -300,7 +300,7 @@ static inline NSUInteger RepresentedDistance(levels)
 }
 
 
-- (MCCell) cellAt:(MCGridCoordinates)location
+- (MCCell) cellAt:(MCGridCoordinates)location gettingTileEntity:(NSDictionary **)outTileEntity
 {
 	MCGridCoordinates base;
 	Chunk *chunk = [self resolveChunkAt:location
@@ -314,12 +314,15 @@ static inline NSUInteger RepresentedDistance(levels)
 		else  return kMCStoneCell;
 	}
 	
+	if (outTileEntity != NULL)  *outTileEntity = nil;
 	return ChunkGetCell(chunk, location.x - base.x, location.y - base.y, location.z - base.z);
 }
 
 
-- (void) setCell:(MCCell)cell at:(MCGridCoordinates)location
+- (void) setCell:(MCCell)cell andTileEntity:(NSDictionary *)tileEntity at:(MCGridCoordinates)location
 {
+	MCRequireTileEntityIsCompatibleWithCell(tileEntity, cell);
+	
 	BOOL isEmptyCell = MCCellsEqual(cell, (location.y < _groundLevel) ? kMCStoneCell : kMCAirCell );
 	
 	MCGridCoordinates base;

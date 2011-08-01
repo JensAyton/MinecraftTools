@@ -4,7 +4,7 @@
 	Basic types for dealing with Minecraft data, biased towards redstone stuff.
 	
 	
-	Copyright © 2010 Jens Ayton
+	Copyright © 2010–2011 Jens Ayton
 	
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),
@@ -48,6 +48,11 @@
  *	Conceptually, a cell is a location which contains a block. Alternatively,
  *	you can think of “cell” as a pointless and redundant synonym of “block”
  *	if you prefer.
+ *	
+ *	A more heavyweight MCBlock class with both “cell” data and tile entity (if
+ *	relevant) may be added at a later date. Adding tile entities to MCCell
+ *	would be bad because object references in structs aren’t/won’t be supported
+ *	in ARC.
  */
 
 typedef struct MCCell
@@ -65,6 +70,19 @@ extern const MCCell kMCHoleCell;	// Air cell with kMCInfoAirIsHoleMask flag set.
 extern const MCCell kMCStoneCell;
 
 static inline BOOL MCCellsEqual(MCCell a, MCCell b) JA_CONST_FUNC;
+
+
+/*
+	Determine the expected tile entity type ID for a given block ID.
+	Returns "?" for unknown block types, nil for non-tileentity types.
+*/
+NSString *MCExpectedTileEntityTypeForBlockID(uint8_t blockID) JA_CONST_FUNC;
+
+// Test whether a given tile entity and cell are of compatible types.
+BOOL MCTileEntityIsCompatibleWithCell(NSDictionary *tileEntity, MCCell cell) JA_CONST_FUNC;
+
+// As above, but throws NSInvalidArgumentException if not compatible.
+void MCRequireTileEntityIsCompatibleWithCell(NSDictionary *tileEntity, MCCell cell) JA_CONST_FUNC;
 
 
 //	Convenience predicates and info extractors.

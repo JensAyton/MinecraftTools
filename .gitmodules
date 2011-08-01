@@ -1,0 +1,6 @@
+[submodule "MinecraftKit/JAPropertyListAccessors"]
+	path = MinecraftKit/JAPropertyListAccessors
+	url = git://github.com/Ahruman/JAPropertyListAccessors.git
+[submodule "MinecraftKit/JAValueToString"]
+	path = MinecraftKit/JAValueToString
+	url = git://github.com/Ahruman/JAValueToString.git
