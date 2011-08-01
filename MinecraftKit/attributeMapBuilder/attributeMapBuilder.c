@@ -61,7 +61,6 @@ static const uint8_t kFullySolidIDs[] =
 	kMCBlockStickyPiston,	// FIXME: test.
 	kMCBlockPiston,			// FIXME: test.
 	kMCBlockCloth,
-	36,						// Unused in beta; white cloth in creative.
 	kMCBlockGoldBlock,
 	kMCBlockIronBlock,
 	kMCBlockDoubleSlab,
@@ -122,6 +121,7 @@ static const uint8_t kItemIDs[] =
 	kMCBlockTallGrass,
 	kMCBlockDeadShrubs,
 	kMCBlockPistonHead,
+	kMCBlock36,
 	kMCBlockYellowFlower,
 	kMCBlockRedFlower,
 	kMCBlockBrownMushroom,
@@ -152,6 +152,22 @@ static const uint8_t kItemIDs[] =
 	kMCBlockRedstoneRepeaterOff,
 	kMCBlockRedstoneRepeaterOn,
 	kMCBlockTrapdoor
+};
+
+
+static const uint8_t kTileEntityIDs[] =
+{
+	kMCBlockDispenser,
+	kMCBlock36,
+	kMCBlockNoteBlock,
+	kMCBlockMobSpawner,
+	kMCBlockChest,
+	kMCBlockFurnace,
+	kMCBlockBurningFurnace,
+	kMCBlockSignPost,
+	kMCBlockWallSign,
+	kMCBlockJukebox,
+	kMCBlockLockedChest
 };
 
 
@@ -243,8 +259,6 @@ int main (int argc, const char * argv[])
 	APPLY_ATTRIBUTE(kQuasiSolidIDs, kMCBlockIsQuasiSolid);
 	APPLY_ATTRIBUTE(kLiquidIDs, kMCBlockIsLiquid);
 	APPLY_ATTRIBUTE(kItemIDs, kMCBlockIsItem);
-	APPLY_ATTRIBUTE(kRailIDs, kMCBlockIsRail);
-	APPLY_ATTRIBUTE(kPistonIDs, kMCBlockIsPiston);
 	
 	/*
 		Sanity check: ensure all known block IDs except air have a
@@ -275,6 +289,9 @@ int main (int argc, const char * argv[])
 		}
 	}
 	
+	APPLY_ATTRIBUTE(kTileEntityIDs, kMCBlockHasTileEntity);
+	APPLY_ATTRIBUTE(kRailIDs, kMCBlockIsRail);
+	APPLY_ATTRIBUTE(kPistonIDs, kMCBlockIsPiston);
 	APPLY_ATTRIBUTE(kPowerSourceIDs, kMCBlockIsPowerSource);
 	APPLY_ATTRIBUTE(kPowerSinkIDs, kMCBlockIsPowerSink);
 	APPLY_ATTRIBUTE(kVegetableIDs, kMCBlockIsVegetable);

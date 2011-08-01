@@ -65,7 +65,7 @@ enum
 	kMCBlockPiston							= 33,	// Data: kMCInfoPistonOrientationMask
 	kMCBlockPistonHead						= 34,	// Data: kMCInfoPistonOrientationMask and kMCInfoPistonHeadIsSticky
 	kMCBlockCloth							= 35,	// Data: kMCInfoWoolColor
-	// 36 currently unused in Beta
+	kMCBlock36								= 36,	// Used for piston animations; shouldn’t occur in saved games, but can be hacked in. Classified as an item in MCKit. See http://www.minecraftwiki.net/wiki/Technical_blocks
 	kMCBlockYellowFlower					= 37,
 	kMCBlockRedFlower						= 38,
 	kMCBlockBrownMushroom					= 39,
@@ -430,6 +430,11 @@ enum
 	
 	kMCBlockIsSolid					= kMCBlockIsFullySolid | kMCBlockIsQuasiSolid,
 	
+	/*
+		Storage type attribute: identifies blocks with special storage requirements.
+	*/
+	kMCBlockHasTileEntity			= 0x8000,
+	
 	/*	Secondary attributes.
 		
 		NOTE: “off” redstone torches are considered sources for consistency,
@@ -497,6 +502,12 @@ JA_INLINE bool MCBlockIDIsLiquid(uint8_t blockID)
 JA_INLINE bool MCBlockIDIsItem(uint8_t blockID)
 {
 	return kMCBlockTypeClassifications[blockID] & kMCBlockIsItem;
+}
+
+
+JA_INLINE bool MCBlockIDHasTileEntity(uint8_t blockID)
+{
+	return kMCBlockTypeClassifications[blockID] & kMCBlockHasTileEntity;
 }
 
 

@@ -35,10 +35,28 @@
 		8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		1A0C649413E6DE1400722B66 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A0C648C13E6DE1400722B66 /* attributeMapBuilder.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DD76FA10486AA7600D96B5E;
+			remoteInfo = attributeMapBuilder;
+		};
+		1A0C649613E6DE1E00722B66 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A0C648C13E6DE1400722B66 /* attributeMapBuilder.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1A0C648213E6DC4800722B66;
+			remoteInfo = "Update attribute map";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		089C1660FE840EACC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		13E42FBA07B3F13500E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
+		1A0C648C13E6DE1400722B66 /* attributeMapBuilder.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = attributeMapBuilder.xcodeproj; path = ../MinecraftKit/attributeMapBuilder/attributeMapBuilder.xcodeproj; sourceTree = "<group>"; };
 		1A30425812A1AB320026C989 /* JAMinecraftMergedBlockStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAMinecraftMergedBlockStore.h; sourceTree = "<group>"; };
 		1A30425912A1AB320026C989 /* JAMinecraftMergedBlockStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAMinecraftMergedBlockStore.m; sourceTree = "<group>"; };
 		1A52C329128F710B006E2D65 /* JAMinecraftBlockIDs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = JAMinecraftBlockIDs.c; sourceTree = "<group>"; };
@@ -129,6 +147,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		1A0C648D13E6DE1400722B66 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1A0C649513E6DE1400722B66 /* attributeMapBuilder */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		1A52C322128F710B006E2D65 /* MinecraftKit */ = {
 			isa = PBXGroup;
 			children = (
@@ -200,6 +226,7 @@
 				2A37F4B8FDCFA73011CA2CEA /* Resources */,
 				2A37F4C3FDCFA73011CA2CEA /* Frameworks */,
 				19C28FB0FE9D524F11CA2CBB /* Products */,
+				1A0C648C13E6DE1400722B66 /* attributeMapBuilder.xcodeproj */,
 			);
 			name = SchematicViewer;
 			sourceTree = "<group>";
@@ -260,6 +287,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				1A0C649713E6DE1E00722B66 /* PBXTargetDependency */,
 			);
 			name = SchematicViewer;
 			productInstallPath = "$(HOME)/Applications";
@@ -287,12 +315,28 @@
 			);
 			mainGroup = 2A37F4AAFDCFA73011CA2CEA /* SchematicViewer */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 1A0C648D13E6DE1400722B66 /* Products */;
+					ProjectRef = 1A0C648C13E6DE1400722B66 /* attributeMapBuilder.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				8D15AC270486D014006FF6A4 /* SchematicViewer */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		1A0C649513E6DE1400722B66 /* attributeMapBuilder */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = attributeMapBuilder;
+			remoteRef = 1A0C649413E6DE1400722B66 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		8D15AC2B0486D014006FF6A4 /* Resources */ = {
@@ -336,6 +380,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1A0C649713E6DE1E00722B66 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Update attribute map";
+			targetProxy = 1A0C649613E6DE1E00722B66 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		089C165FFE840EACC02AAC07 /* InfoPlist.strings */ = {

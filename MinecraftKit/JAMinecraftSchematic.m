@@ -664,7 +664,7 @@ const int8_t kGroundLevelWeights[256] =
 	-4,		// Piston
 	-4,		// Piston head
 	-2,		// Cloth
-	0,		// unused
+	-4,		// Piston animation
 	-8,		// Yellow flower
 	-8,		// Red flower
 	1,		// Brown mushroom

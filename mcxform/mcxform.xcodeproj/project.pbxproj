@@ -22,6 +22,23 @@
 		8DD76F9C0486AA7600D96B5E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FB779EFE84155DC02AAC07 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		1A0C64B113E6DF0C00722B66 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A0C64A913E6DF0C00722B66 /* attributeMapBuilder.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DD76FA10486AA7600D96B5E;
+			remoteInfo = attributeMapBuilder;
+		};
+		1A0C64B313E6DF1600722B66 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A0C64A913E6DF0C00722B66 /* attributeMapBuilder.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1A0C648213E6DC4800722B66;
+			remoteInfo = "Update attribute map";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		8DD76F9E0486AA7600D96B5E /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -37,6 +54,7 @@
 /* Begin PBXFileReference section */
 		08FB7796FE84155DC02AAC07 /* mcxform.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mcxform.m; sourceTree = "<group>"; };
 		08FB779EFE84155DC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		1A0C64A913E6DF0C00722B66 /* attributeMapBuilder.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = attributeMapBuilder.xcodeproj; path = ../MinecraftKit/attributeMapBuilder/attributeMapBuilder.xcodeproj; sourceTree = "<group>"; };
 		1A52C8B512903870006E2D65 /* JAMinecraftBlockStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAMinecraftBlockStore.h; sourceTree = "<group>"; };
 		1A52C8B612903870006E2D65 /* JAMinecraftBlockStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAMinecraftBlockStore.m; sourceTree = "<group>"; };
 		1A52CA6512933835006E2D65 /* JAValueToString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAValueToString.h; sourceTree = "<group>"; };
@@ -87,6 +105,7 @@
 				08FB779DFE84155DC02AAC07 /* External Frameworks and Libraries */,
 				1AB674ADFE9D54B511CA2CBB /* Products */,
 				1A9FB2291281F913003DD1C3 /* libz.dylib */,
+				1A0C64A913E6DF0C00722B66 /* attributeMapBuilder.xcodeproj */,
 			);
 			name = mcxform;
 			sourceTree = "<group>";
@@ -106,6 +125,14 @@
 				08FB779EFE84155DC02AAC07 /* Foundation.framework */,
 			);
 			name = "External Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+		1A0C64AA13E6DF0C00722B66 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1A0C64B213E6DF0C00722B66 /* attributeMapBuilder */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		1A9FB1DE1281F88B003DD1C3 /* MinecraftKit */ = {
@@ -160,6 +187,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				1A0C64B413E6DF1600722B66 /* PBXTargetDependency */,
 			);
 			name = mcxform;
 			productInstallPath = "$(HOME)/bin";
@@ -187,12 +215,28 @@
 			);
 			mainGroup = 08FB7794FE84155DC02AAC07 /* mcxform */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 1A0C64AA13E6DF0C00722B66 /* Products */;
+					ProjectRef = 1A0C64A913E6DF0C00722B66 /* attributeMapBuilder.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				8DD76F960486AA7600D96B5E /* mcxform */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		1A0C64B213E6DF0C00722B66 /* attributeMapBuilder */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = attributeMapBuilder;
+			remoteRef = 1A0C64B113E6DF0C00722B66 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8DD76F990486AA7600D96B5E /* Sources */ = {
@@ -214,6 +258,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1A0C64B413E6DF1600722B66 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Update attribute map";
+			targetProxy = 1A0C64B313E6DF1600722B66 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		1DEB927508733DD40010E9CD /* Debug */ = {
