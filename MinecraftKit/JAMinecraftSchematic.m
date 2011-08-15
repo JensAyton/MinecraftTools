@@ -1898,6 +1898,7 @@ static NSUInteger GetNodeRefCount(void *node, unsigned level)
 #import "JAHashEnumeration.h"
 
 
+extern void JAMCSchematicDump(void);
 extern void JAMCSchematicDump(void)
 {
 	DoLog(@"JAMinecraftSchematic debug dump:");

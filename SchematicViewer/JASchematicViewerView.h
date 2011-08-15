@@ -25,7 +25,7 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#import "JAMinecraftGridView.h"
+#import <JAMinecraftKit/JAMinecraftGridView.h>
 
 
 @interface JASchematicViewerView: JAMinecraftGridView

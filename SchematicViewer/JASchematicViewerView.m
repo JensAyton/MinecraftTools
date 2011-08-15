@@ -24,7 +24,7 @@
 */
 
 #import "JASchematicViewerView.h"
-#import "JAMinecraftSchematic.h"
+#import <JAMinecraftKit/JAMinecraftSchematic.h>
 
 
 typedef struct

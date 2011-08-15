@@ -24,9 +24,9 @@
 */
 
 #import "MyDocument.h"
-#import "JAMinecraftSchematic.h"
-#import "JAMinecraftSchematic+SchematicIO.h"
-#import "JAMinecraftSchematic+RDatIO.h"
+#import <JAMinecraftKit/JAMinecraftSchematic.h>
+#import <JAMinecraftKit/JAMinecraftSchematic+SchematicIO.h>
+#import <JAMinecraftKit/JAMinecraftSchematic+RDatIO.h>
 #import "JASchematicViewerView.h"
 
 

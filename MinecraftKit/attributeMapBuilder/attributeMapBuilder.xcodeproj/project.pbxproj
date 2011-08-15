@@ -242,6 +242,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx10.6;
+				SYMROOT = ../../build;
 			};
 			name = Debug;
 		};
@@ -253,6 +254,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				SDKROOT = macosx10.6;
+				SYMROOT = ../../build;
 			};
 			name = Release;
 		};
@@ -266,6 +268,7 @@
 				1A0C648513E6DC4800722B66 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		1DEB927408733DD40010E9CD /* Build configuration list for PBXNativeTarget "attributeMapBuilder" */ = {
 			isa = XCConfigurationList;
