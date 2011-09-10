@@ -10,7 +10,7 @@
 	need to be updated and a new JAMinecraftBlockIDs.c generated.
 	
 	
-	Copyright © 2010 Jens Ayton
+	Copyright © 2010–2011 Jens Ayton
 	
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),
@@ -86,7 +86,12 @@ static const uint8_t kFullySolidIDs[] =
 	kMCBlockSlowSand,
 	kMCBlockLightstone,
 	kMCBlockJackOLantern,
-	kMCBlockLockedChest
+	kMCBlockLockedChest,
+	kMCBlockStoneWithSilverfish,
+	kMCBlockStoneBrick,
+	kMCBlockWatermelon,
+	
+	99, 100	// FIXME
 };
 
 
@@ -98,7 +103,9 @@ static const uint8_t kQuasiSolidIDs[] =
 	kMCBlockSingleSlab,
 	kMCBlockMobSpawner,
 	kMCBlockWoodenStairs,
-	kMCBlockCobblestoneStairs
+	kMCBlockCobblestoneStairs,
+	kMCBlockBrickStairs,
+	kMCBlockStoneBrickStairs
 };
 
 
@@ -151,7 +158,13 @@ static const uint8_t kItemIDs[] =
 	kMCBlockCake,
 	kMCBlockRedstoneRepeaterOff,
 	kMCBlockRedstoneRepeaterOn,
-	kMCBlockTrapdoor
+	kMCBlockTrapdoor,
+	kMCBlockIronBars,
+	kMCBlockGlassPane,
+	kMCBlockVines,
+	kMCBlockGate,
+	
+	104, 105 // FIXME
 };
 
 
@@ -216,6 +229,10 @@ static const uint8_t kVegetableIDs[] =
 	kMCBlockLog,
 	kMCBlockLeaves,
 	kMCBlockPumpkin,
+	kMCBlockWatermelon,
+	kMCBlockVines,
+	
+	99, 100, 104, 105 // FIXME
 };
 
 

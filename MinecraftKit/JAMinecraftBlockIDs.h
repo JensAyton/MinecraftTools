@@ -125,11 +125,22 @@ enum
 	kMCBlockRedstoneRepeaterOff				= 93,	// Data: kMCInfoMisc3OrientationMask and kMCInfoRedstoneRepeaterDelayMask
 	kMCBlockRedstoneRepeaterOn				= 94,	// Data: kMCInfoMisc3OrientationMask and kMCInfoRedstoneRepeaterDelayMask	
 	kMCBlockLockedChest						= 95,	// April 1 2011 easter egg item, currently deteriorates like leaves.
-	kMCBlockTrapdoor						= 96,	// FIXME: data
+	kMCBlockTrapdoor						= 96,	// Data: kMCInfoTrapdoorOrientationMask and kMCInfoTrapdoorIsOpen
+	kMCBlockStoneWithSilverfish				= 97,
+	kMCBlockStoneBrick						= 98,
+	// FIXME: 99 and 100 are parts of giant mushrooms
+	kMCBlockIronBars						= 101,	// Orientation derived from context like for fences?
+	kMCBlockGlassPane						= 102,	// Orientation derived from context like for fences?
+	kMCBlockWatermelon						= 103,
+	// FIXME: 104 and 105? Guessing watermelon and pumpkin plants.
+	kMCBlockVines							= 106,	// FIXME: data
+	kMCBlockGate							= 107,	// FIXME: data
+	kMCBlockBrickStairs						= 108,	// Data: kMCInfoStairOrientation (presumed)
+	kMCBlockStoneBrickStairs				= 109,	// Data: kMCInfoStairOrientation (presumed)
 };
 
 
-#define kMCLastBlockID kMCBlockTrapdoor
+#define kMCLastBlockID kMCBlockStoneBrickStairs
 
 
 /*

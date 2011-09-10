@@ -483,6 +483,8 @@ MCDirection MCCellGetOrientation(MCCell cell)
 			
 		case kMCBlockWoodenStairs:
 		case kMCBlockCobblestoneStairs:
+		case kMCBlockBrickStairs:
+		case kMCBlockStoneBrickStairs:
 			switch (blockData & kMCInfoStairOrientationMask)
 			{
 				case kMCInfoStairOrientationSouth:
@@ -677,6 +679,8 @@ void MCCellSetOrientation(MCCell *cell, MCDirection orientation)
 			
 		case kMCBlockWoodenStairs:
 		case kMCBlockCobblestoneStairs:
+		case kMCBlockBrickStairs:
+		case kMCBlockStoneBrickStairs:
 			mask = kMCInfoStairOrientationMask;
 				switch (orientation)
 			{

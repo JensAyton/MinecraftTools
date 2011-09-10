@@ -636,8 +636,8 @@ const int8_t kGroundLevelWeights[256] =
 	-2,		// Wood (planks)
 	-8,		// Sapling
 	8,		// Bedrock
-	-2,		// Water
-	-1,		// Stationary water
+	1,		// Water
+	2,		// Stationary water
 	
 	2,		// Lava
 	4,		// Stationary lava
@@ -734,13 +734,27 @@ const int8_t kGroundLevelWeights[256] =
 	-8,		// Redstone repeater (on)
 	-8,		// Locked chest
 	-8,		// Trapdoor
+	8,		// Stone with silverfish
+	-2,		// Stone brick
+	-8,		// Giant mushroom part
+	
+	-8,		// Giant mushroom part
+	-4,		// Iron bars
+	-4,		// Glass pane
+	-4,		// Watermelon
+	-8,		// FIXME: presumed pumpkin or watermelon plant
+	-8,		// FIXME: presumed pumpkin or watermelon plant
+	-8,		// Vines
+	-8,		// Gate
+	-2,		// Brick stairs
+	-2,		// Stone brick stairs
 	
 	0
 };
 
 enum
 {
-	kLastWeight = kMCBlockTrapdoor
+	kLastWeight = kMCBlockStoneBrickStairs
 };
 
 
