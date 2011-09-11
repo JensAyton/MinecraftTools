@@ -416,8 +416,8 @@ enum
 	* Quasi-solids look like solid objects, but don’t block redstone: glass,
 	  leaves, single steps, stairs, mob spawners.
 	* Fully-solid blocks fill their cell and block redstone. This includes
-	  all normal building blocks, as well as workbenches, furnaces, chests,
-	  jukeboxes, TNT, pumpkins and jack-o-lanterns.
+	  all normal building blocks, as well as workbenches, furnaces, jukeboxes,
+	  TNT, pumpkins and jack-o-lanterns.
 	* Liquids are moving and stationary water and lava.
 	* Items are everything else.
 	
