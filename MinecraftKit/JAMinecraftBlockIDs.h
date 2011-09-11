@@ -128,11 +128,13 @@ enum
 	kMCBlockTrapdoor						= 96,	// Data: kMCInfoTrapdoorOrientationMask and kMCInfoTrapdoorIsOpen
 	kMCBlockStoneWithSilverfish				= 97,
 	kMCBlockStoneBrick						= 98,
-	// FIXME: 99 and 100 are parts of giant mushrooms
+	kMCBlockHugeBrownMushroom				= 99,
+	kMCBlockHugeRedMushroom					= 100,
 	kMCBlockIronBars						= 101,	// Orientation derived from context like for fences?
 	kMCBlockGlassPane						= 102,	// Orientation derived from context like for fences?
 	kMCBlockWatermelon						= 103,
-	// FIXME: 104 and 105? Guessing watermelon and pumpkin plants.
+	kMCBlockPumpkinStem						= 104,
+	kMCBlockMelonStem						= 105,
 	kMCBlockVines							= 106,	// FIXME: data
 	kMCBlockGate							= 107,	// FIXME: data
 	kMCBlockBrickStairs						= 108,	// Data: kMCInfoStairOrientation (presumed)

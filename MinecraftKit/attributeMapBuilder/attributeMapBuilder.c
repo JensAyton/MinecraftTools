@@ -88,9 +88,9 @@ static const uint8_t kFullySolidIDs[] =
 	kMCBlockLockedChest,
 	kMCBlockStoneWithSilverfish,
 	kMCBlockStoneBrick,
-	kMCBlockWatermelon,
-	
-	99, 100	// FIXME
+	kMCBlockHugeBrownMushroom,
+	kMCBlockHugeRedMushroom,
+	kMCBlockWatermelon
 };
 
 
@@ -163,8 +163,8 @@ static const uint8_t kItemIDs[] =
 	kMCBlockGlassPane,
 	kMCBlockVines,
 	kMCBlockGate,
-	
-	104, 105 // FIXME
+	kMCBlockPumpkinStem,
+	kMCBlockMelonStem
 };
 
 
@@ -231,8 +231,10 @@ static const uint8_t kVegetableIDs[] =
 	kMCBlockPumpkin,
 	kMCBlockWatermelon,
 	kMCBlockVines,
-	
-	99, 100, 104, 105 // FIXME
+	kMCBlockHugeBrownMushroom,
+	kMCBlockHugeRedMushroom,
+	kMCBlockPumpkinStem,
+	kMCBlockMelonStem
 };
 
 
