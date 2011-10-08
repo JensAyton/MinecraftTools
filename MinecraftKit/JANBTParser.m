@@ -2,7 +2,7 @@
 	JANBTParser.m
 	
 	
-	Copyright © 2010 Jens Ayton
+	Copyright © 2010–2011 Jens Ayton
 	
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),
@@ -25,6 +25,7 @@
 
 #import "JANBTParser.h"
 #import "NSData+DDGZip.h"
+#import "JACollectionHelpers.h"
 
 
 #ifndef NDEBUG
@@ -48,6 +49,13 @@ static NSString *NameFromTagType(JANBTTagType type);
 
 - (void) encodeInto:(NSMutableData *)data;
 - (void) encodeWithoutHeaderInto:(NSMutableData *)data;
+
+@end
+
+
+@interface NSObject (JANBTTag)
+
+- (id) japriv_NBTFromPlistWithName:(NSString *)name;
 
 @end
 
@@ -689,6 +697,121 @@ static NSString *IndentString(NSUInteger count)
 	return result;
 }
 #endif
+
+
+- (id) propertyListRepresentation
+{
+	switch (self.type)
+	{
+		case kJANBTTagEnd:
+			return nil;
+			
+		case kJANBTTagByte:
+		case kJANBTTagShort:
+		case kJANBTTagInt:
+		case kJANBTTagLong:
+		case kJANBTTagFloat:
+		case kJANBTTagDouble:
+		case kJANBTTagByteArray:
+		case kJANBTTagString:
+			return self.objectValue;
+			
+		case kJANBTTagList:
+		{
+			NSArray *array = self.objectValue;
+			return [array ja_map:^(id value){ return [value propertyListRepresentation]; }];
+		}
+			
+		case kJANBTTagCompound:
+		{
+			NSDictionary *dict = self.objectValue;
+			return [dict ja_mapValues:^(id key, id value){ return [value propertyListRepresentation]; }];
+		}
+	}
+}
+
+
++ (id) tagWithName:(NSString *)name propertyListRepresentation:(id)plist
+{
+	return [plist japriv_NBTFromPlistWithName:name];
+}
+
+@end
+
+
+@implementation NSObject (JANBTTag)
+
+- (id) japriv_NBTFromPlistWithName:(NSString *)name
+{
+	return nil;
+}
+
+@end
+
+
+@implementation NSNumber (JANBTTag)
+
+- (id) japriv_NBTFromPlistWithName:(NSString *)name
+{
+	const char *type = [self objCType];
+	if (strcmp(type, @encode(float)) == 0)
+	{
+		return [JANBTTag tagWithName:name floatValue:[self floatValue]];
+	}
+	if (strcmp(type, @encode(double)) == 0)
+	{
+		return [JANBTTag tagWithName:name doubleValue:[self doubleValue]];
+	}
+	return [JANBTTag tagWithName:name integerValue:[self integerValue]];
+}
+
+@end
+
+
+@implementation NSData (JANBTTag)
+
+- (id) japriv_NBTFromPlistWithName:(NSString *)name
+{
+	return [JANBTTag tagWithName:name byteArrayValue:self];
+}
+
+@end
+
+
+@implementation NSString (JANBTTag)
+
+- (id) japriv_NBTFromPlistWithName:(NSString *)name
+{
+	return [JANBTTag tagWithName:name stringValue:self];
+}
+
+@end
+
+
+@implementation NSArray (JANBTTag)
+
+- (id) japriv_NBTFromPlistWithName:(NSString *)name
+{
+	NSArray *elements = [self ja_map:^(id value)
+	{
+		return [JANBTTag tagWithName:nil propertyListRepresentation:value];
+	}];
+	return [JANBTTag tagWithName:name listValue:elements];	
+}
+
+@end
+
+
+@implementation NSDictionary (JANBTTag)
+
+- (id) japriv_NBTFromPlistWithName:(NSString *)name
+{
+	NSDictionary *elements = [self ja_mapValues:^(id key, id value)
+	{
+		return [JANBTTag tagWithName:key propertyListRepresentation:value];
+	}];
+	return [JANBTTag tagWithName:name compoundValue:elements];
+}
 
 @end
 

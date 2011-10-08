@@ -55,6 +55,8 @@
 	MCGridExtents					_extents;
 	NSInteger						_groundLevel;
 	
+	NSMutableDictionary				*_tileEntities;
+	
 	BOOL							_extentsAreAccurate;
 	uint8_t							_rootLevel;
 	

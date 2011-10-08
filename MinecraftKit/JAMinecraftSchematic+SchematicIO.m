@@ -2,7 +2,7 @@
 	JAMinecraftSchematic+SchematicIO.m
 	
 	
-	Copyright © 2010 Jens Ayton
+	Copyright © 2010–2011 Jens Ayton
 	
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),
@@ -25,20 +25,32 @@
 
 #import "JAMinecraftSchematic+SchematicIO.h"
 #import "JANBTParser.h"
+#import "JACollectionHelpers.h"
+#import "JAPropertyListAccessors.h"
+#import "MYCollectionUtilities.h"
 
 
 NSString * const kJAMinecraftSchematicUTI = @"com.davidvierra.mcedit.schematic";
 
 
-static NSString * const kSchematicKey	= @"Schematic";
-static NSString * const kMaterialsKey	= @"Materials";
-static NSString * const kMaterialsAlpha	= @"Alpha";
-static NSString * const kWidthKey		= @"Width";
-static NSString * const kLengthKey		= @"Length";
-static NSString * const kHeightKey		= @"Height";
-static NSString * const kBlocksKey		= @"Blocks";
-static NSString * const kDataKey		= @"Data";
-static NSString * const kGroundLevelKey	= @"se.jens.ayton GroundLevel";
+static NSString * const kSchematicKey		= @"Schematic";
+static NSString * const kMaterialsKey		= @"Materials";
+static NSString * const kMaterialsAlpha		= @"Alpha";
+static NSString * const kWidthKey			= @"Width";
+static NSString * const kLengthKey			= @"Length";
+static NSString * const kHeightKey			= @"Height";
+static NSString * const kBlocksKey			= @"Blocks";
+static NSString * const kDataKey			= @"Data";
+static NSString * const kEntitiesKey		= @"TileEntities";
+static NSString * const kTileEntitiesKey	= @"TileEntities";
+static NSString * const kGroundLevelKey		= @"se.jens.ayton GroundLevel";
+
+
+static id KeyForCoords(NSInteger x, NSInteger y, NSInteger z)
+{
+	MCGridCoordinates value = { x, y, z };
+	return [NSValue valueWithBytes:&value objCType:@encode(typeof(value))];
+}
 
 
 @implementation JAMinecraftSchematic (SchematicIO)
@@ -83,6 +95,24 @@ static NSString * const kGroundLevelKey	= @"se.jens.ayton GroundLevel";
 		return nil;
 	}
 	
+	NSMutableDictionary *tileEntities = nil;
+	NSArray *serializedEntities = [[dict objectForKey:kTileEntitiesKey] objectValue];
+	if ([serializedEntities isKindOfClass:[NSArray class]])
+	{
+		tileEntities = [NSMutableDictionary dictionaryWithCapacity:serializedEntities.count];
+		
+		[serializedEntities enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
+		{
+			NSDictionary *entityDef = [obj propertyListRepresentation];
+			NSUInteger x = [entityDef ja_integerForKey:@"x"];
+			NSUInteger y = [entityDef ja_integerForKey:@"y"];
+			NSUInteger z = [entityDef ja_integerForKey:@"z"];
+			entityDef = [entityDef ja_dictionaryByRemovingObjectsForKeys:$set(@"x", @"y", @"z")];
+			
+			[tileEntities setObject:entityDef forKey:KeyForCoords(x, y, z)];
+		}];
+	}
+	
 	const uint8_t *blockBytes = blockIDs.bytes;
 	const uint8_t *metaBytes = blockData.bytes;
 	
@@ -109,7 +139,10 @@ static NSString * const kGroundLevelKey	= @"se.jens.ayton GroundLevel";
 				
 				MCCell cell = { .blockID = blockID, .blockData = meta };
 				
+				NSDictionary *entity = [tileEntities objectForKey:KeyForCoords(x, y, z)];
+				
 				[self setCell:cell
+				andTileEntity:entity
 						   at:(MCGridCoordinates){x, y, z}];
 			}
 		}
@@ -143,6 +176,19 @@ static NSString * const kGroundLevelKey	= @"se.jens.ayton GroundLevel";
 }
 
 
+static JANBTTag *MakeTileEntityNBT(NSDictionary *entityDict, MCGridCoordinates location)
+{
+	NSMutableDictionary *mutableEntityDict = [entityDict mutableCopy];
+	[mutableEntityDict ja_setInteger:location.x forKey:@"x"];
+	[mutableEntityDict ja_setInteger:location.y forKey:@"y"];
+	[mutableEntityDict ja_setInteger:location.z forKey:@"z"];
+	
+	JANBTTag *result = [JANBTTag tagWithName:nil propertyListRepresentation:mutableEntityDict];
+	[mutableEntityDict release];
+	return result;
+}
+
+
 - (NSData *) schematicDataForRegion:(MCGridExtents)region withError:(NSError **)outError
 {
 	NSMutableDictionary *root = [NSMutableDictionary dictionary];
@@ -170,6 +216,8 @@ static NSString * const kGroundLevelKey	= @"se.jens.ayton GroundLevel";
 		return nil;
 	}
 	
+	NSMutableArray *tileEntities = [NSMutableArray array];
+	
 	uint8_t *blockBytes = blockIDs.mutableBytes;
 	uint8_t *metaBytes = blockData.mutableBytes;
 	
@@ -180,15 +228,22 @@ static NSString * const kGroundLevelKey	= @"se.jens.ayton GroundLevel";
 		{
 			for (location.x = region.minX; location.x <= region.maxX; location.x++)
 			{
-				MCCell cell = [self cellAt:location];
+				NSDictionary *tileEntity = nil;
+				MCCell cell = [self cellAt:location gettingTileEntity:&tileEntity];
 				*blockBytes++ = cell.blockID;
 				*metaBytes++ = cell.blockData & 0x0F;
+				
+				if (tileEntity != nil)
+				{
+					[tileEntities addObject:MakeTileEntityNBT(tileEntity, location)];
+				}
 			}
 		}
 	}
 	
 	[root ja_setNBTByteArray:blockIDs forKey:kBlocksKey];
 	[root ja_setNBTByteArray:blockData forKey:kDataKey];
+	[root ja_setNBTList:tileEntities forKey:kTileEntitiesKey];
 	
 	JANBTTag *nbtRoot = [root ja_asNBTTagWithName:kSchematicKey];
 	return [JANBTEncoder encodeTag:nbtRoot];

@@ -11,7 +11,7 @@
 	http://www.minecraft.net/docs/NBT.txt
 	
 	
-	Copyright © 2010 Jens Ayton
+	Copyright © 2010–2011 Jens Ayton
 	
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),
@@ -77,8 +77,11 @@ typedef enum
 - (NSString *) debugDescription;
 #endif
 
+- (id) propertyListRepresentation;
++ (id) tagWithName:(NSString *)name propertyListRepresentation:(id)plist;
+
 + (id) tagWithName:(NSString *)name integerValue:(long long)value type:(JANBTTagType)type;
-+ (id) tagWithName:(NSString *)name integerValue:(long long)value;	// Selects smallest type.
++ (id) tagWithName:(NSString *)name integerValue:(long long)value;	// Selects smallest appropriate type.
 + (id) tagWithName:(NSString *)name floatValue:(float)value;
 + (id) tagWithName:(NSString *)name doubleValue:(double)value;
 + (id) tagWithName:(NSString *)name byteArrayValue:(NSData *)value;

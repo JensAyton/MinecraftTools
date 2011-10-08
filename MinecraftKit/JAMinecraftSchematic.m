@@ -1,7 +1,7 @@
 /*
 	JAMinecraftSchematic.m
 	
-	Copyright © 2010 Jens Ayton
+	Copyright © 2010–2011 Jens Ayton
 	
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),
@@ -24,6 +24,9 @@
 
 #import "JAMinecraftSchematic.h"
 #import "JAValueToString.h"
+#import "JACollectionHelpers.h"
+#import "JAPropertyListAccessors.h"
+#import "MYCollectionUtilities.h"
 
 
 // Base debug features: validate node types and levels. Required for logging and instance tracking.
@@ -115,6 +118,15 @@ enum
 	kTagDeadChunk				= 'xchk'
 };
 #endif
+
+
+static id TileEntityKeyForCoords(MCGridCoordinates coords);
+
+static inline BOOL Equal(id a, id b)
+{
+	if (a == nil && b != nil)  return NO;
+	return [a isEqual:b];
+}
 
 
 static inline InnerNode *AllocInnerNode(NSUInteger level);
@@ -294,6 +306,8 @@ static inline NSUInteger RepresentedDistance(levels)
 		
 		copy->_extents = _extents;
 		copy->_extentsAreAccurate = _extentsAreAccurate;
+		
+		copy->_tileEntities = [_tileEntities mutableCopy];
 	}
 	
 	return copy;
@@ -314,7 +328,11 @@ static inline NSUInteger RepresentedDistance(levels)
 		else  return kMCStoneCell;
 	}
 	
-	if (outTileEntity != NULL)  *outTileEntity = nil;
+	if (outTileEntity != NULL)
+	{
+		*outTileEntity = [_tileEntities objectForKey:TileEntityKeyForCoords(location)];
+	}
+	
 	return ChunkGetCell(chunk, location.x - base.x, location.y - base.y, location.z - base.z);
 }
 
@@ -339,6 +357,16 @@ static inline NSUInteger RepresentedDistance(levels)
 		BOOL changeAffectsExtents = YES;	// FIXME: smartness
 		
 		changed = ChunkSetCell(chunk, location.x - base.x, location.y - base.y, location.z - base.z, cell);
+		
+		id key = TileEntityKeyForCoords(location);
+		if (!changed)  changed = !Equal([_tileEntities objectForKey:key], tileEntity);
+		
+		if (tileEntity != nil)
+		{
+			if (_tileEntities == nil)  _tileEntities = [NSMutableDictionary new];
+			NSDictionary *cleaned = [tileEntity ja_dictionaryByRemovingObjectsForKeys:$set(@"x", @"y", @"z")];
+			[_tileEntities setObject:cleaned forKey:key];
+		}
 		
 		if (changeAffectsExtents && changed)
 		{
@@ -1525,6 +1553,12 @@ static NSUInteger sLiveChunkCount = 0;
 static NSHashTable *sLiveInnerNodes = NULL;
 static NSHashTable *sLiveChunks = NULL;
 #endif
+
+
+static id TileEntityKeyForCoords(MCGridCoordinates coords)
+{
+	return [NSString stringWithFormat:@"%lli,%lli,%lli", coords.x, coords.y, coords.z];
+}
 
 
 static inline off_t Offset(unsigned x, unsigned y, unsigned z)  __attribute__((const, always_inline));

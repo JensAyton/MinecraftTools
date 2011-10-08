@@ -201,8 +201,9 @@ static void ThrowSubclassResponsibility(const char *func) __attribute__((noretur
 		{
 			for (location.x = region.minX; location.x <= region.maxX; location.x++)
 			{
-				MCCell cell = [source cellAt:location];
-				if (!MCCellIsAir(cell))  [self setCell:cell atX:location.x - offset.x y:location.y - offset.y z:location.z - offset.z];
+				NSDictionary *tileEntity = nil;
+				MCCell cell = [source cellAt:location gettingTileEntity:&tileEntity];
+				if (!MCCellIsAir(cell))  [self setCell:cell andTileEntity:tileEntity atX:location.x - offset.x y:location.y - offset.y z:location.z - offset.z];
 			}
 		}	
 	}
