@@ -158,6 +158,27 @@ enum
 */
 enum
 {
+	/*
+		Info - block data in Minecraft terminology, called info here to avoid
+		confusion.
+		Minecraft stores four bits of data for each block. In schematic files,
+		eight bits per block are stored, but the top four bits are always
+		clear.
+		MinecraftKit stores eight info bits per block in memory. The bottom
+		four bits are Minecraft flags, and the top four are MinecraftKit-
+		internal.
+	*/
+	
+	kMCInfoStandardBitsMask					= 0x0F,
+	
+	/*
+		Any block type: a flag indicating that a block is powered. This is
+		used for non-special blocks that transmit power. For instance, if a
+		redstone wire leads into any opaque block, the block is powered, and
+		can turn off torches attached to it (among other things).
+	*/
+	kMCInfoBlockIsPowered					= 0x10,
+	
 	/*	Air: MCKit-internal “hole” flag indicates a block that shouldn’t
 		overwrite other blocks and should be transparent in renderings
 		(corresponding to “shadow” blocks in Redstone Simulator).
@@ -413,8 +434,8 @@ enum
 /*
 	Block type classifications.
 	
-	Every known block type is classified in exactly one of four categories:
-	fully-solid, quasi-solid, liquid, or item.
+	Every known block type except air is classified in exactly one of four
+	categories: fully-solid, quasi-solid, liquid, or item.
 	* Quasi-solids look like solid objects, but don’t block redstone: glass,
 	  leaves, single steps, stairs, mob spawners.
 	* Fully-solid blocks fill their cell and block redstone. This includes

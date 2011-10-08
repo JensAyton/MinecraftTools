@@ -137,7 +137,7 @@ static id KeyForCoords(NSInteger x, NSInteger y, NSInteger z)
 				uint8_t blockID = *blockBytes++;
 				uint8_t meta = *metaBytes++;
 				
-				MCCell cell = { .blockID = blockID, .blockData = meta };
+				MCCell cell = { .blockID = blockID, .blockData = meta & kMCInfoStandardBitsMask };
 				
 				NSDictionary *entity = [tileEntities objectForKey:KeyForCoords(x, y, z)];
 				
@@ -231,7 +231,7 @@ static JANBTTag *MakeTileEntityNBT(NSDictionary *entityDict, MCGridCoordinates l
 				NSDictionary *tileEntity = nil;
 				MCCell cell = [self cellAt:location gettingTileEntity:&tileEntity];
 				*blockBytes++ = cell.blockID;
-				*metaBytes++ = cell.blockData & 0x0F;
+				*metaBytes++ = cell.blockData & kMCInfoStandardBitsMask;
 				
 				if (tileEntity != nil)
 				{
