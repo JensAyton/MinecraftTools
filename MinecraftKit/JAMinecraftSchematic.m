@@ -770,31 +770,42 @@ const int8_t kGroundLevelWeights[256] =
 	-4,		// Iron bars
 	-4,		// Glass pane
 	-4,		// Watermelon
-	-8,		// FIXME: presumed pumpkin or watermelon plant
-	-8,		// FIXME: presumed pumpkin or watermelon plant
+	-8,		// Pumpkin stem
+	-8,		// Watermelon stem
 	-8,		// Vines
 	-8,		// Gate
 	-2,		// Brick stairs
 	-2,		// Stone brick stairs
+	
+	6,		// Mycelium
+	-8,		// Lily pad
+	-2,		// Nether brick
+	-8,		// Nether brick fence
+	-2,		// Nether brick stairs
+	-8,		// Nether wart
+	-8,		// Enchantment table
+	-8,		// Brewing stand
+	-8,		// Cauldron
+	-8,		// Air portal
+	
+	-6,		// Air portal frame
 	
 	0
 };
 
 enum
 {
-	kLastWeight = kMCBlockStoneBrickStairs
+	kLastWeight = kMCBlockAirPortalFrame
 };
+
+
+static char If_you_get_an_error_here_the_ground_level_weight_table_above_needs_to_be_updated[kLastWeight == kMCLastBlockID ? 1 : -1] __attribute__((unused));
 
 
 - (NSInteger) findNaturalGroundLevel
 {
 	MCGridExtents extents = self.extents;
 	if (MCGridExtentsEmpty(extents))  return 0;
-	
-	if (kLastWeight != kMCLastBlockID)
-	{
-		NSLog(@"WARNING: %s requires its weight table to be updated. Ground level determination may be off.", __FUNCTION__);
-	}
 	
 	// Round minY and maxY outward to chunk boundaries.
 	NSInteger minY = extents.minY / kChunkSize * kChunkSize;

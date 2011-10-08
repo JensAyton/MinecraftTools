@@ -40,19 +40,19 @@ NSString *MCExpectedTileEntityTypeForBlockID(uint8_t blockID)
 {
 	switch (blockID)
 	{
-		case kMCBlockDispenser:		return @"Trap";
-		case kMCBlockNoteBlock:		return @"Music";
-		case kMCBlockMobSpawner:	return @"Monster Spawner";
-		case kMCBlockChest:			return @"Chest";
+		case kMCBlockDispenser:			return @"Trap";
+		case kMCBlockMovingPiston:		return @"Piston";
+		case kMCBlockNoteBlock:			return @"Music";
+		case kMCBlockMobSpawner:		return @"Monster Spawner";
+		case kMCBlockChest:				return @"Chest";
 		case kMCBlockFurnace:
-		case kMCBlockBurningFurnace:return @"Furnace";
+		case kMCBlockBurningFurnace:	return @"Furnace";
 		case kMCBlockSignPost:
-		case kMCBlockWallSign:		return @"Sign";
-		case kMCBlockJukebox:		return @"RecordPlayer";
-			
-		case kMCBlock36:
-			// FIXME: don’t know expected type. Can these be serialized? Probably not.
-			return @"?";
+		case kMCBlockWallSign:			return @"Sign";
+		case kMCBlockJukebox:			return @"RecordPlayer";
+		case kMCBlockEnchantmentTable:	return @"EnchantTable";
+		case kMCBlockBrewingStand:		return @"Cauldron";
+		case kMCBlockAirPortal:			return @"Airportal";
 			
 		default:
 			if (!MCBlockIDHasTileEntity(blockID))  return nil;

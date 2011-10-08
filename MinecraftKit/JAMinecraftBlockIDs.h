@@ -52,9 +52,9 @@ enum
 	kMCBlockGlass							= 20,
 	kMCBlockLapisLazuliOre					= 21,
 	kMCBlockLapisLazuliBlock				= 22,
-	kMCBlockDispenser						= 23,	// Data: kMCInfoMisc2Orientation
+	kMCBlockDispenser						= 23,	// Data: kMCInfoMisc2Orientation; tile entity: Trap.
 	kMCBlockSandstone						= 24,
-	kMCBlockNoteBlock						= 25,	// No blockData; information is stored in a tile entity. (Unconfirmed)
+	kMCBlockNoteBlock						= 25,	// Tile entity: Music
 	kMCBlockBed								= 26,	// Data: kMCInfoMisc3OrientationMask (direction of foot of bed) and kInfoBedIsHead.
 	kMCBlockPoweredRail						= 27,	// Data: kMCInfoPoweredRailOrientationMask and kMCInfoPoweredRailIsPowered.
 	kMCBlockDetectorRail					= 28,	// Data: kMCInfoPoweredRailOrientationMask
@@ -65,7 +65,7 @@ enum
 	kMCBlockPiston							= 33,	// Data: kMCInfoPistonOrientationMask
 	kMCBlockPistonHead						= 34,	// Data: kMCInfoPistonOrientationMask and kMCInfoPistonHeadIsSticky
 	kMCBlockCloth							= 35,	// Data: kMCInfoWoolColor
-	kMCBlock36								= 36,	// Used for piston animations; shouldn’t occur in saved games, but can be hacked in. Classified as an item in MCKit. See http://www.minecraftwiki.net/wiki/Technical_blocks
+	kMCBlockMovingPiston					= 36,	// Used for piston animations. Tile entity: Piston.
 	kMCBlockYellowFlower					= 37,
 	kMCBlockRedFlower						= 38,
 	kMCBlockBrownMushroom					= 39,
@@ -81,26 +81,26 @@ enum
 	kMCBlockObsidian						= 49,
 	kMCBlockTorch							= 50,	// Data: kMCInfoMiscOrientation
 	kMCBlockFire							= 51,	// Data: kMCBlockFireGenerationMask
-	kMCBlockMobSpawner						= 52,	// No blockData; information is stored in a tile entity.
+	kMCBlockMobSpawner						= 52,	// Tile entity: MobSpawner
 	kMCBlockWoodenStairs					= 53,	// Data: kMCInfoStairOrientationMask
-	kMCBlockChest							= 54,	// No blockData; information is stored in a tile entity.
+	kMCBlockChest							= 54,	// Tile entity: Chest
 	kMCBlockRedstoneWire					= 55,
 	kMCBlockDiamondOre						= 56,
 	kMCBlockDiamondBlock					= 57,
 	kMCBlockWorkbench						= 58,
-	kMCBlockCrops							= 59,
-	kMCBlockSoil							= 60,
-	kMCBlockFurnace							= 61,	// Data: kMCInfoMisc2Orientation; other information is stored in a tile entity.
+	kMCBlockCrops							= 59,	// Data: kMCInfoCropsAge
+	kMCBlockSoil							= 60,	// Data: kMCInfoSoilWetness
+	kMCBlockFurnace							= 61,	// Data: kMCInfoMisc2Orientation; tile entity: Furnace.
 	kMCBlockBurningFurnace					= 62,	// As normal furnace.
-	kMCBlockSignPost						= 63,	// Sign on ground. Data: kMCInfoSignPostOrientation; has tile entity.
-	kMCBlockWoodenDoor						= 64,
+	kMCBlockSignPost						= 63,	// Sign on ground. Data: kMCInfoSignPostOrientation; tile entity: Sign.
+	kMCBlockWoodenDoor						= 64,	// Data: kMCInfoDoorOrientationMask, kMCInfoDoorOpen and kMCInfoDoorTopHalf.
 	kMCBlockLadder							= 65,
 	kMCBlockRail							= 66,
 	kMCBlockCobblestoneStairs				= 67,	// Data: kMCInfoStairOrientation
-	kMCBlockWallSign						= 68,	// Sign on wall. Data: kMCInfoMisc2Orientation; has tile entity.
+	kMCBlockWallSign						= 68,	// Sign on wall. Data: kMCInfoMisc2Orientation; tile entity: Sign.
 	kMCBlockLever							= 69,
 	kMCBlockStonePressurePlate				= 70,
-	kMCBlockIronDoor						= 71,
+	kMCBlockIronDoor						= 71,	// Data: kMCInfoDoorOrientationMask, kMCInfoDoorOpen and kMCInfoDoorTopHalf.
 	kMCBlockWoodenPressurePlate				= 72,
 	kMCBlockRedstoneOre						= 73,
 	kMCBlockGlowingRedstoneOre				= 74,
@@ -113,7 +113,7 @@ enum
 	kMCBlockCactus							= 81,	// Data: kMCInfoCactusAge
 	kMCBlockClay							= 82,
 	kMCBlockReed							= 83,
-	kMCBlockJukebox							= 84,
+	kMCBlockJukebox							= 84,	// Tile entity: RecordPlayer
 	kMCBlockFence							= 85,
 	kMCBlockPumpkin							= 86,	// Data: kMCInfoMisc3Orientation.
 	kMCBlockNetherrack						= 87,
@@ -126,36 +126,38 @@ enum
 	kMCBlockRedstoneRepeaterOn				= 94,	// Data: kMCInfoMisc3OrientationMask and kMCInfoRedstoneRepeaterDelayMask	
 	kMCBlockLockedChest						= 95,	// April 1 2011 easter egg item, currently deteriorates like leaves.
 	kMCBlockTrapdoor						= 96,	// Data: kMCInfoTrapdoorOrientationMask and kMCInfoTrapdoorIsOpen
-	kMCBlockStoneWithSilverfish				= 97,
-	kMCBlockStoneBrick						= 98,
-	kMCBlockHugeBrownMushroom				= 99,
-	kMCBlockHugeRedMushroom					= 100,
-	kMCBlockIronBars						= 101,	// Orientation derived from context like for fences?
-	kMCBlockGlassPane						= 102,	// Orientation derived from context like for fences?
+	kMCBlockStoneWithSilverfish				= 97,	// Data: kMCInfoSilverfishAppearanceMask
+	kMCBlockStoneBrick						= 98,	// Data: kMCInfoStoneBrickAppearanceMask
+	kMCBlockHugeBrownMushroom				= 99,	// Data: kMCInfoMushroomAppearanceMask
+	kMCBlockHugeRedMushroom					= 100,	// Data: kMCInfoMushroomAppearanceMask
+	kMCBlockIronBars						= 101,
+	kMCBlockGlassPane						= 102,
 	kMCBlockWatermelon						= 103,
-	kMCBlockPumpkinStem						= 104,
-	kMCBlockMelonStem						= 105,
-	kMCBlockVines							= 106,	// FIXME: data
-	kMCBlockGate							= 107,	// FIXME: data
-	kMCBlockBrickStairs						= 108,	// Data: kMCInfoStairOrientation (presumed)
-	kMCBlockStoneBrickStairs				= 109,	// Data: kMCInfoStairOrientation (presumed)
+	kMCBlockPumpkinStem						= 104,	// Data: kMCInfoGourdStemAge
+	kMCBlockMelonStem						= 105,	// Data: kMCInfoGourdStemAge
+	kMCBlockVines							= 106,	// Data: kMCInfoVineAttachmentMask
+	kMCBlockGate							= 107,	// Data: kMCInfoGateOrientationMask and kMCInfoGateOpen.
+	kMCBlockBrickStairs						= 108,	// Data: kMCInfoStairOrientation
+	kMCBlockStoneBrickStairs				= 109,	// Data: kMCInfoStairOrientation
+	
+	// 1.9 PRERELEASE beyond this point.
+	kMCBlockMycelium						= 110,
+	kMCBlockLilyPad							= 111,
+	kMCBlockNetherBrick						= 112,
+	kMCBlockNetherBrickFence				= 113,
+	kMCBlockNetherBrickStairs				= 114,	// Data: kMCInfoStairOrientation
+	kMCBlockNetherWart						= 115,	// Data: kMCInfoNetherWartAge
+	kMCBlockEnchantmentTable				= 116,	// Tile entity: EnchantTable
+	kMCBlockBrewingStand					= 117,	// Data: FIXME unknown; tile entity: Cauldron
+	kMCBlockCauldron						= 118,	// Data: kMCInfoCauldronFillLevel
+	kMCBlockAirPortal						= 119,	// Tile entity: Airportal
+	kMCBlockAirPortalFrame					= 120	// Data: kMCInfoAirPortalFrameBroken
 };
 
 
-#define kMCLastBlockID kMCBlockStoneBrickStairs
+#define kMCLastBlockID kMCBlockAirPortalFrame
 
 
-/*
-	BlockData bit masks. The meaning of bits depends on the block ID.
-	Names ending with “Mask” are multi-bit values.
-	
-	Note that additional information is stored in the TileEntities structure
-	for the following block types: Furnace, Sign, MobSpawner, Chest. Signs
-	have both block data and tile entity data.
-	
-	In actual map data, the high nybble of the data byte is used for lighting.
-	In schematics, it’s unused.
-*/
 enum
 {
 	/*
@@ -163,10 +165,14 @@ enum
 		confusion.
 		Minecraft stores four bits of data for each block. In schematic files,
 		eight bits per block are stored, but the top four bits are always
-		clear.
+		clear. The meaning of bits depends on the block ID. Names ending with
+		“Mask” are multi-bit values.
 		MinecraftKit stores eight info bits per block in memory. The bottom
 		four bits are Minecraft flags, and the top four are MinecraftKit-
 		internal.
+		
+		Directions use the astronomical convention, a.k.a. “normal English”:
+		east means the direction of sunrise.
 	*/
 	
 	kMCInfoStandardBitsMask					= 0x0F,
@@ -277,11 +283,11 @@ enum
 	
 	/*	Age of crops varies from 0 to 7. 0 is newly planted, 7 is ready wheat.
 	*/
-	kMCInfoCropsAgeMask						= 0x07,
+	kMCInfoCropsAge							= 0x07,
 	
 	/*	According to the wiki, soil wetness varies from 0 (dry) to 8, which is a bit odd.
 	*/
-	kMCInfoSoilWetnessMask					= 0x0F,
+	kMCInfoSoilWetness						= 0x0F,
 	
 	/*	Signpost orientation ranges from 0 (west) to 15, clockwise.
 	*/
@@ -295,8 +301,8 @@ enum
 	kMCInfoDoorOrientationNorth				= 0x01,
 	kMCInfoDoorOrientationWest				= 0x02,
 	kMCInfoDoorOrientationSouth				= 0x03,
-	kMCInfoInfoDoorOpen						= 0x04,
-	kMCInfoInfoDoorTopHalf					= 0x08,
+	kMCInfoDoorOpen							= 0x04,
+	kMCInfoDoorTopHalf						= 0x08,
 	
 	/*	kInfoMisc2Orientation
 		Another common set of orientation flags, used for:
@@ -427,7 +433,69 @@ enum
 	kMCInfoTrapdoorOrientationNorth			= 0x02,
 	kMCInfoTrapdoorOrientationSouth			= 0x03,
 	
-	kMCInfoTrapdoorIsOpen					= 0x04
+	kMCInfoTrapdoorIsOpen					= 0x04,
+	
+	kMCInfoSilverfishAppearanceMask			= 0x03,
+	kMCInfoSilverfishAppearanceSmoothStone	= 0x00,
+	kMCInfoSilverfishAppearanceCobbleStone	= 0x01,
+	kMCInfoSilverfishAppearanceStoneBrick	= 0x02,
+	
+	kMCInfoStoneBrickAppearanceMask			= 0x03,
+	kMCInfoStoneBrickAppearanceNormal		= 0x00,
+	kMCInfoStoneBrickAppearanceMossy		= 0x01,
+	kMCInfoStoneBrickAppearanceCracked		= 0x02,
+	
+	kMCInfoMushroomAppearanceMask			= 0x0F,
+	kMCInfoMushroomAppearanceFlesh			= 0x00,	// Pores on all sides.
+	kMCInfoMushroomAppearanceCapSE			= 0x01,	// Cap texture on top, south and east sides.
+	kMCInfoMushroomAppearanceCapE			= 0x02,	// Cap texture on top and east sides.
+	kMCInfoMushroomAppearanceCapNE			= 0x03,	// Cap texture on top, north and east sides.
+	kMCInfoMushroomAppearanceCapS			= 0x04,	// Cap texture on top, north and east sides.
+	kMCInfoMushroomAppearanceCapMid			= 0x05,	// Cap texture on top side.
+	kMCInfoMushroomAppearanceCapN			= 0x06,	// Cap texture on top and north sides.
+	kMCInfoMushroomAppearanceCapSW			= 0x07,	// Cap texture on top, south and west sides.
+	kMCInfoMushroomAppearanceCapW			= 0x09,	// Cap texture on top and west sides.
+	kMCInfoMushroomAppearanceCapNW			= 0x0A,	// Cap texture on top, north and west sides.
+	kMCInfoMushroomAppearanceCapStem		= 0x0B,	// Stem texture on north, south, east and west sides; pores on top and bottom.
+	
+	/*
+		Gourd stem age: age of pumpkin and melon stems, ranging from 0 to 7.
+	*/
+	kMCInfoGourdStemAge						= 0x07,
+	
+	/*
+		Vine attachment is a bit mask rather than an enumeration – vines may
+		be attached to multiple sides at once.
+	*/
+	kMCInfoVineAttachmentMask				= 0x0F,
+	kMCInfoVineAttachmentWest				= 0x01,
+	kMCInfoVineAttachmentNorth				= 0x02,
+	kMCInfoVineAttachmentEast				= 0x04,
+	kMCInfoVineAttachmentSouth				= 0x08,
+	
+	/*
+		Gate orientations are taken from the wiki. East and west may be
+		confused, since there’s no visible distinction in the game at the
+		moment, but I chose to go with the wiki’s values.
+	*/
+	kMCInfoGateOrientationMask				= kMCInfoDoorOrientationMask,
+	kMCInfoGateOrientationWest				= kMCInfoDoorOrientationEast,
+	kMCInfoGateOrientationNorth				= kMCInfoDoorOrientationNorth,
+	kMCInfoGateOrientationEast				= kMCInfoDoorOrientationWest,
+	kMCInfoGateOrientationSouth				= kMCInfoDoorOrientationSouth,
+	kMCInfoGateOpen							= kMCInfoDoorOpen,
+	
+	/*
+		Nether Wart age ranges from 0 to 3, with 1 and 2 looking the same.
+	*/
+	kMCInfoNetherWartAge					= 0x03,
+	
+	/*
+		Cauldron fill level ranges from 0 to 3.
+	*/
+	kMCInfoCauldronFillLevel				= 0x03,
+	
+	kMCInfoAirPortalFrameBroken				= 0x01
 };
 
 

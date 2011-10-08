@@ -81,16 +81,18 @@ static const uint8_t kFullySolidIDs[] =
 	kMCBlockClay,
 	kMCBlockJukebox,
 	kMCBlockPumpkin,
-	kMCBlockNetherstone,
-	kMCBlockSlowSand,
-	kMCBlockLightstone,
+	kMCBlockNetherrack,
+	kMCBlockSoulSand,
+	kMCBlockGlowstone,
 	kMCBlockJackOLantern,
 	kMCBlockLockedChest,
 	kMCBlockStoneWithSilverfish,
 	kMCBlockStoneBrick,
 	kMCBlockHugeBrownMushroom,
 	kMCBlockHugeRedMushroom,
-	kMCBlockWatermelon
+	kMCBlockWatermelon,
+	kMCBlockMycelium,
+	kMCBlockNetherBrick,
 };
 
 
@@ -104,7 +106,9 @@ static const uint8_t kQuasiSolidIDs[] =
 	kMCBlockWoodenStairs,
 	kMCBlockCobblestoneStairs,
 	kMCBlockBrickStairs,
-	kMCBlockStoneBrickStairs
+	kMCBlockStoneBrickStairs,
+	kMCBlockNetherBrickStairs,
+	kMCBlockAirPortalFrame	// FIXME: test with redstone. Has both filled and unfilled appearances.
 };
 
 
@@ -127,7 +131,7 @@ static const uint8_t kItemIDs[] =
 	kMCBlockTallGrass,
 	kMCBlockDeadShrubs,
 	kMCBlockPistonHead,
-	kMCBlock36,
+	kMCBlockMovingPiston,
 	kMCBlockYellowFlower,
 	kMCBlockRedFlower,
 	kMCBlockBrownMushroom,
@@ -154,6 +158,7 @@ static const uint8_t kItemIDs[] =
 	kMCBlockCactus,
 	kMCBlockReed,
 	kMCBlockFence,
+	kMCBlockNetherBrickFence,
 	kMCBlockPortal,
 	kMCBlockCake,
 	kMCBlockRedstoneRepeaterOff,
@@ -164,7 +169,13 @@ static const uint8_t kItemIDs[] =
 	kMCBlockVines,
 	kMCBlockGate,
 	kMCBlockPumpkinStem,
-	kMCBlockMelonStem
+	kMCBlockMelonStem,
+	kMCBlockLilyPad,
+	kMCBlockNetherWart,
+	kMCBlockEnchantmentTable,
+	kMCBlockBrewingStand,
+	kMCBlockCauldron,
+	kMCBlockAirPortal
 };
 
 
@@ -175,7 +186,7 @@ static const uint8_t kTileEntityIDs[] =
 		MCExpectedTileEntityTypeForBlockID() in JAMinecraftTypes.m.
 	*/
 	kMCBlockDispenser,
-	kMCBlock36,
+	kMCBlockMovingPiston,
 	kMCBlockNoteBlock,
 	kMCBlockMobSpawner,
 	kMCBlockChest,
@@ -183,7 +194,10 @@ static const uint8_t kTileEntityIDs[] =
 	kMCBlockBurningFurnace,
 	kMCBlockSignPost,
 	kMCBlockWallSign,
-	kMCBlockJukebox
+	kMCBlockJukebox,
+	kMCBlockEnchantmentTable,
+	kMCBlockBrewingStand,
+	kMCBlockAirPortal
 };
 
 
@@ -234,7 +248,9 @@ static const uint8_t kVegetableIDs[] =
 	kMCBlockHugeBrownMushroom,
 	kMCBlockHugeRedMushroom,
 	kMCBlockPumpkinStem,
-	kMCBlockMelonStem
+	kMCBlockMelonStem,
+	kMCBlockLilyPad,
+	kMCBlockNetherWart
 };
 
 

@@ -365,9 +365,9 @@ void RDATDataFromCell(MCCell cell, uint8_t *outType, uint8_t *outInfo)
 	{
 		case kMCBlockWoodenDoor:
 		case kMCBlockIronDoor:
-			if (data & kMCInfoInfoDoorTopHalf)  type = kRDATCellDoorTop;
+			if (data & kMCInfoDoorTopHalf)  type = kRDATCellDoorTop;
 			else  type = kRDATCellDoorBottom;
-			if (data & kMCInfoInfoDoorOpen)  info |= kRDATCellInfoDoorLive;
+			if (data & kMCInfoDoorOpen)  info |= kRDATCellInfoDoorLive;
 			info |= CellInfoOrientationFromDoorMeta(data);
 			break;
 			
