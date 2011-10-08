@@ -1126,7 +1126,7 @@ static void DumpNodeStructure(InnerNode *node, NSUInteger level, DumpStatistics 
 	
 	DumpNodeStructure(_root, _rootLevel, &stats, base, size);
 	
-	// Calculate Maximum inner node and leaf count for this level of octree.
+	// Calculate maximum inner node and leaf count for this level of octree.
 	NSUInteger maxInnerNodes = 0;
 	NSUInteger maxLeafNodes = 1;
 	for (NSUInteger i = 0; i < _rootLevel; i++)

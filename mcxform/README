@@ -1,4 +1,4 @@
-mcxform 0.3
+mcxform 0.4
 
 Usage: mcxform --help
        mcxform <outputfile> [commands]
@@ -17,19 +17,12 @@ moves the contents of the working schematic 20 steps to the west, and loads
 original. It then writes the combined result to “out.schematic”.
 
 NOTES:
-  • mcxform does not preserve entities and tile entities. This is not a
-    problem for redstone circuits, but may be for arbitrary map segments from MCEdit.
+  • mcxform does not preserve entities.
   • mcxform trims away empty space (air blocks) on all sides of the working
     schematic before saving. This can be exploited to trim a schematic without
     any other transformations:
        mcxform trimmed.schematic --in source.schematic
     There is currently no way to stop it from trimming space.
-  • mcxform can read both schematic files and Redstone Simulator rdat files.
-    However, they are treated somewhat differently. Redstone Simulator reads
-    and writes schematics with north to the left of its window, which I assume
-    is a bug. mcxform loads schematics correctly, and loads rdat files with
-    the top of Redstone Simulator’s window as north. This can lead to
-    surprising results when using both schematics and rdats in one operation.
 
 COMMANDS:
 --in <filename>:    Load <filename> (a schematic or rdat file) into the
@@ -54,6 +47,7 @@ COMMANDS:
 
 
 Version history:
+0.4  Support for tile entities (chests, signs etc.).
 0.3  Fixed file corruption when writing schematics with more than 65535 blocks
      in total.
 0.2  Fixed rdat read/write support.

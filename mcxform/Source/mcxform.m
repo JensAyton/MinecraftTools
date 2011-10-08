@@ -4,7 +4,7 @@
 	Simple Minecraft schematic manipulator.
 	
 	
-	Copyright © 2010 Jens Ayton
+	Copyright © 2010–2011 Jens Ayton
 	
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),
@@ -300,9 +300,10 @@ static JAMinecraftSchematic *ProcessFlipX(JAMinecraftSchematic *currentCircuit, 
 			for (NSUInteger x = 0; x < width; x++)
 			{
 				MCGridCoordinates loc = { extents.minX + x, extents.minY + y, extents.minZ + z };
-				MCCell cell = [currentCircuit cellAt:loc];
+				NSDictionary *tileEntity = nil;
+				MCCell cell = [currentCircuit cellAt:loc gettingTileEntity:&tileEntity];
 				cell = MCFlipCellEastWest(cell);
-				[result setCell:cell at:loc];
+				[result setCell:cell andTileEntity:tileEntity at:loc];
 			}
 		}
 	}
@@ -326,10 +327,11 @@ static JAMinecraftSchematic *ProcessFlipY(JAMinecraftSchematic *currentCircuit, 
 			for (NSUInteger x = 0; x < width; x++)
 			{
 				MCGridCoordinates loc = { extents.minX + x, extents.minY + y, extents.minZ + z };
-				MCCell cell = [currentCircuit cellAt:loc];
+				NSDictionary *tileEntity = nil;
+				MCCell cell = [currentCircuit cellAt:loc gettingTileEntity:&tileEntity];
 				loc.x = extents.maxX - x;
 				cell = MCFlipCellNorthSouth(cell);
-				[result setCell:cell at:loc];
+				[result setCell:cell andTileEntity:tileEntity at:loc];
 			}
 		}
 	}
@@ -353,11 +355,12 @@ static JAMinecraftSchematic *ProcessRotate180(JAMinecraftSchematic *currentCircu
 			for (NSUInteger x = 0; x < width; x++)
 			{
 				MCGridCoordinates loc = { extents.minX + x, extents.minY + y, extents.minZ + z };
-				MCCell cell = [currentCircuit cellAt:loc];
+				NSDictionary *tileEntity = nil;
+				MCCell cell = [currentCircuit cellAt:loc gettingTileEntity:&tileEntity];
 				loc.x = extents.maxX - x;
 				loc.z = extents.maxZ - z;
 				cell = MCRotateCell180Degrees(cell);
-				[result setCell:cell at:loc];
+				[result setCell:cell andTileEntity:tileEntity at:loc];
 			}
 		}
 	}
@@ -381,11 +384,12 @@ static JAMinecraftSchematic *ProcessRotateClockwise(JAMinecraftSchematic *curren
 			for (NSUInteger x = 0; x < width; x++)
 			{
 				MCGridCoordinates loc = { extents.minX + x, extents.minY + y, extents.minZ + z };
-				MCCell cell = [currentCircuit cellAt:loc];
+				NSDictionary *tileEntity = nil;
+				MCCell cell = [currentCircuit cellAt:loc gettingTileEntity:&tileEntity];
 				loc.z = loc.x;
 				loc.x = extents.maxZ - z;
 				cell = MCRotateCellClockwise(cell);
-				[result setCell:cell at:loc];
+				[result setCell:cell andTileEntity:tileEntity at:loc];
 			}
 		}
 	}
@@ -409,11 +413,12 @@ static JAMinecraftSchematic *ProcessRotateAntiClockwise(JAMinecraftSchematic *cu
 			for (NSUInteger x = 0; x < width; x++)
 			{
 				MCGridCoordinates loc = { extents.minX + x, extents.minY + y, extents.minZ + z };
-				MCCell cell = [currentCircuit cellAt:loc];
+				NSDictionary *tileEntity = nil;
+				MCCell cell = [currentCircuit cellAt:loc gettingTileEntity:&tileEntity];
 				loc.x = loc.z;
 				loc.z = extents.maxX - x;
 				cell = MCRotateCellAntiClockwise(cell);
-				[result setCell:cell at:loc];
+				[result setCell:cell andTileEntity:tileEntity at:loc];
 			}
 		}
 	}
@@ -438,19 +443,13 @@ static void PrintHelpAndExit(void)
 		   "moves the contents of the working schematic 20 steps to the west, and loads\n"
 		   "“in.schematic” at the origin again – which is now 20 steps to the east of the\n"
 		   "original. It then writes the combined result to “out.schematic”.\n\n"
-		   "NOTES:\n  • mcxform does not preserve entities and tile entities. This is not a\n"
-		   "    problem for redstone circuits, but may be for arbitrary map segments from MCEdit.\n"
+		   "NOTES:\n"
+		   "  • mcxform does not preserve entities.\n"
 		   "  • mcxform trims away empty space (air blocks) on all sides of the working\n"
 		   "    schematic before saving. This can be exploited to trim a schematic without\n"
 		   "    any other transformations:\n"
 		   "       mcxform trimmed.schematic --in source.schematic\n"
 		   "    There is currently no way to stop it from trimming space.\n"
-		   "  • mcxform can read both schematic files and Redstone Simulator rdat files.\n"
-		   "    However, they are treated somewhat differently. Redstone Simulator reads\n"
-		   "    and writes schematics with north to the left of its window, which I assume\n"
-		   "    is a bug. mcxform loads schematics correctly, and loads rdat files with\n"
-		   "    the top of Redstone Simulator’s window as north. This can lead to\n"
-		   "    surprising results when using both schematics and rdats in one operation.\n\n"
 		   "COMMANDS:\n");
 	
 	for (NSUInteger i = 0; i < kProcessCount; i++)

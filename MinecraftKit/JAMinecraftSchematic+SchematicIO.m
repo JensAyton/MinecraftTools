@@ -41,7 +41,7 @@ static NSString * const kLengthKey			= @"Length";
 static NSString * const kHeightKey			= @"Height";
 static NSString * const kBlocksKey			= @"Blocks";
 static NSString * const kDataKey			= @"Data";
-static NSString * const kEntitiesKey		= @"TileEntities";
+static NSString * const kEntitiesKey		= @"Entities";
 static NSString * const kTileEntitiesKey	= @"TileEntities";
 static NSString * const kGroundLevelKey		= @"se.jens.ayton GroundLevel";
 
