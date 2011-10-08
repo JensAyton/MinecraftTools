@@ -79,7 +79,7 @@ enum
 	kMCBlockBookshelf						= 47,
 	kMCBlockMossyCobblestone				= 48,
 	kMCBlockObsidian						= 49,
-	kMCBlockTorch							= 50,	// Data: kMCInfoMiscOrientation.
+	kMCBlockTorch							= 50,	// Data: kMCInfoMiscOrientation
 	kMCBlockFire							= 51,	// Data: kMCBlockFireGenerationMask
 	kMCBlockMobSpawner						= 52,	// No blockData; information is stored in a tile entity.
 	kMCBlockWoodenStairs					= 53,	// Data: kMCInfoStairOrientationMask
@@ -116,11 +116,11 @@ enum
 	kMCBlockJukebox							= 84,
 	kMCBlockFence							= 85,
 	kMCBlockPumpkin							= 86,	// Data: kMCInfoMisc3Orientation.
-	kMCBlockNetherstone						= 87,	// Hellstone/red nether stuff
-	kMCBlockSlowSand						= 88,	// Mud/brown nether stuff
-	kMCBlockLightstone						= 89,	// Shiny yellow nether stuff
+	kMCBlockNetherrack						= 87,
+	kMCBlockSoulSand						= 88,
+	kMCBlockGlowstone						= 89,
 	kMCBlockPortal							= 90,
-	kMCBlockJackOLantern					= 91,	// Data: kMCInfoMisc3Orientation.
+	kMCBlockJackOLantern					= 91,	// Data: kMCInfoMisc3Orientation
 	kMCBlockCake							= 92,	// Data: kMCInfoCakeSliceCountMask
 	kMCBlockRedstoneRepeaterOff				= 93,	// Data: kMCInfoMisc3OrientationMask and kMCInfoRedstoneRepeaterDelayMask
 	kMCBlockRedstoneRepeaterOn				= 94,	// Data: kMCInfoMisc3OrientationMask and kMCInfoRedstoneRepeaterDelayMask	
