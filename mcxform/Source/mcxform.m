@@ -302,6 +302,7 @@ static JAMinecraftSchematic *ProcessFlipX(JAMinecraftSchematic *currentCircuit, 
 				MCGridCoordinates loc = { extents.minX + x, extents.minY + y, extents.minZ + z };
 				NSDictionary *tileEntity = nil;
 				MCCell cell = [currentCircuit cellAt:loc gettingTileEntity:&tileEntity];
+				loc.z = extents.maxZ - z;
 				cell = MCFlipCellEastWest(cell);
 				[result setCell:cell andTileEntity:tileEntity at:loc];
 			}
