@@ -43,6 +43,12 @@
 - (IBAction) zoomIn:(id)sender;
 - (IBAction) zoomOut:(id)sender;
 
+- (IBAction) rotateLeft:(id)sender;
+- (IBAction) rotateRight:(id)sender;
+
+- (IBAction) flipHorizontal:(id)sender;
+- (IBAction) flipVertical:(id)sender;
+
 - (IBAction) scribble:(id)sender;
 
 - (IBAction) selectAll:(id)sender;

@@ -310,6 +310,152 @@
 }
 
 
+- (IBAction) rotateLeft:(id)sender
+{
+	[self saveSchematicForUndoWithName:NSLocalizedString(@"Rotate Left", @"Rotate Left user interface action.")];
+	
+	JAMinecraftSchematic *currentCircuit = self.schematic;
+	JAMinecraftSchematic *result = [JAMinecraftSchematic new];
+	
+	MCGridExtents extents = currentCircuit.extents;
+	NSUInteger length = MCGridExtentsLength(extents);
+	NSUInteger width = MCGridExtentsWidth(extents);
+	NSUInteger height = MCGridExtentsHeight(extents);
+	
+	[result beginBulkUpdate];
+	
+	for (NSUInteger z = 0; z < length; z++)
+	{
+		for (NSUInteger y = 0; y < height; y++)
+		{
+			for (NSUInteger x = 0; x < width; x++)
+			{
+				MCGridCoordinates loc = { extents.minX + x, extents.minY + y, extents.minZ + z };
+				NSDictionary *tileEntity = nil;
+				MCCell cell = [currentCircuit cellAt:loc gettingTileEntity:&tileEntity];
+				loc.x = loc.z;
+				loc.z = extents.maxX - x;
+				cell = MCRotateCellAntiClockwise(cell);
+				[result setCell:cell andTileEntity:tileEntity at:loc];
+			}
+		}
+	}
+	
+	[result endBulkUpdate];
+	
+	self.schematic = result;
+}
+
+
+- (IBAction) rotateRight:(id)sender
+{
+	[self saveSchematicForUndoWithName:NSLocalizedString(@"Rotate Right", @"Rotate Right user interface action.")];
+	
+	JAMinecraftSchematic *currentCircuit = self.schematic;
+	JAMinecraftSchematic *result = [JAMinecraftSchematic new];
+	
+	MCGridExtents extents = currentCircuit.extents;
+	NSUInteger length = MCGridExtentsLength(extents);
+	NSUInteger width = MCGridExtentsWidth(extents);
+	NSUInteger height = MCGridExtentsHeight(extents);
+	
+	[result beginBulkUpdate];
+	
+	for (NSUInteger z = 0; z < length; z++)
+	{
+		for (NSUInteger y = 0; y < height; y++)
+		{
+			for (NSUInteger x = 0; x < width; x++)
+			{
+				MCGridCoordinates loc = { extents.minX + x, extents.minY + y, extents.minZ + z };
+				NSDictionary *tileEntity = nil;
+				MCCell cell = [currentCircuit cellAt:loc gettingTileEntity:&tileEntity];
+				loc.z = loc.x;
+				loc.x = extents.maxZ - z;
+				cell = MCRotateCellClockwise(cell);
+				[result setCell:cell andTileEntity:tileEntity at:loc];
+			}
+		}
+	}
+	
+	[result endBulkUpdate];
+	
+	self.schematic = result;
+}
+
+
+- (IBAction) flipHorizontal:(id)sender
+{
+	[self saveSchematicForUndoWithName:NSLocalizedString(@"Flip Horizontal", @"Flip Horizontal user interface action.")];
+	
+	JAMinecraftSchematic *currentCircuit = self.schematic;
+	JAMinecraftSchematic *result = [JAMinecraftSchematic new];
+	
+	MCGridExtents extents = currentCircuit.extents;
+	NSUInteger length = MCGridExtentsLength(extents);
+	NSUInteger width = MCGridExtentsWidth(extents);
+	NSUInteger height = MCGridExtentsHeight(extents);
+	
+	[result beginBulkUpdate];
+	
+	for (NSUInteger z = 0; z < length; z++)
+	{
+		for (NSUInteger y = 0; y < height; y++)
+		{
+			for (NSUInteger x = 0; x < width; x++)
+			{
+				MCGridCoordinates loc = { extents.minX + x, extents.minY + y, extents.minZ + z };
+				NSDictionary *tileEntity = nil;
+				MCCell cell = [currentCircuit cellAt:loc gettingTileEntity:&tileEntity];
+				loc.z = extents.maxZ - z;
+				cell = MCFlipCellEastWest(cell);
+				[result setCell:cell andTileEntity:tileEntity at:loc];
+			}
+		}
+	}
+	
+	[result endBulkUpdate];
+	
+	self.schematic = result;
+}
+
+
+- (IBAction) flipVertical:(id)sender
+{
+	[self saveSchematicForUndoWithName:NSLocalizedString(@"Flip Vertical", @"Flip Vertical user interface action.")];
+	
+	JAMinecraftSchematic *currentCircuit = self.schematic;
+	JAMinecraftSchematic *result = [JAMinecraftSchematic new];
+	
+	MCGridExtents extents = currentCircuit.extents;
+	NSUInteger length = MCGridExtentsLength(extents);
+	NSUInteger width = MCGridExtentsWidth(extents);
+	NSUInteger height = MCGridExtentsHeight(extents);
+	
+	[result beginBulkUpdate];
+	
+	for (NSUInteger z = 0; z < length; z++)
+	{
+		for (NSUInteger y = 0; y < height; y++)
+		{
+			for (NSUInteger x = 0; x < width; x++)
+			{
+				MCGridCoordinates loc = { extents.minX + x, extents.minY + y, extents.minZ + z };
+				NSDictionary *tileEntity = nil;
+				MCCell cell = [currentCircuit cellAt:loc gettingTileEntity:&tileEntity];
+				loc.x = extents.maxX - x;
+				cell = MCFlipCellNorthSouth(cell);
+				[result setCell:cell andTileEntity:tileEntity at:loc];
+			}
+		}
+	}
+	
+	[result endBulkUpdate];
+	
+	self.schematic = result;
+}
+
+
 - (IBAction) scribble:(id)sender
 {
 	//	Modify blocks randomly to test copy-on-write and undo.
