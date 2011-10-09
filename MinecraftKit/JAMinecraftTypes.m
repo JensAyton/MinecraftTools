@@ -272,24 +272,34 @@ MCCell MCRotateCellClockwise(MCCell cell)
 	{
 		MCDirection direction = MCCellGetOrientation(cell);
 		
-		if (cell.blockID != kMCBlockLever || direction != kMCDirectionDown)
+		if (cell.blockID != kMCBlockSignPost)
 		{
-			direction = MCRotateClockwise(direction);
-			MCCellSetOrientation(&cell, direction);
-		}
-		else
-		{
-			// Special case: handle two orientations of floor levers.
-			uint8_t orientation = cell.blockData & kMCInfoMiscOrientationMask;
-			if (orientation == kMCInfoLeverOrientationFloorEW)
+			if (cell.blockID != kMCBlockLever || direction != kMCDirectionDown)
 			{
-				orientation = kMCInfoLeverOrientationFloorNS;
+				direction = MCRotateClockwise(direction);
+				MCCellSetOrientation(&cell, direction);
 			}
 			else
 			{
-				orientation = kMCInfoLeverOrientationFloorEW;
+				// Special case: handle two orientations of floor levers.
+				uint8_t orientation = cell.blockData & kMCInfoMiscOrientationMask;
+				if (orientation == kMCInfoLeverOrientationFloorEW)
+				{
+					orientation = kMCInfoLeverOrientationFloorNS;
+				}
+				else
+				{
+					orientation = kMCInfoLeverOrientationFloorEW;
+				}
+				cell.blockData = cell.blockData & ~kMCInfoMiscOrientationMask | orientation;
 			}
-			cell.blockData = cell.blockData & ~kMCInfoMiscOrientationMask | orientation;
+		}
+		else
+		{
+			// Special case: signposts.
+			uint8_t orientation = cell.blockData & kMCInfoSignPostOrientationMask;
+			orientation = (orientation + 4) & kMCInfoSignPostOrientationMask;
+			cell.blockData = (cell.blockData & ~kMCInfoSignPostOrientationMask) | orientation;
 		}
 	}
 	else
@@ -311,24 +321,34 @@ MCCell MCRotateCellAntiClockwise(MCCell cell)
 	{
 		MCDirection direction = MCCellGetOrientation(cell);
 		
-		if (cell.blockID != kMCBlockLever || direction != kMCDirectionDown)
+		if (cell.blockID != kMCBlockSignPost)
 		{
-			direction = MCRotateAntiClockwise(direction);
-			MCCellSetOrientation(&cell, direction);
-		}
-		else
-		{
-			// Special case: handle two orientations of floor levers.
-			uint8_t orientation = cell.blockData & kMCInfoMiscOrientationMask;
-			if (orientation == kMCInfoLeverOrientationFloorEW)
+			if (cell.blockID != kMCBlockLever || direction != kMCDirectionDown)
 			{
-				orientation = kMCInfoLeverOrientationFloorNS;
+				direction = MCRotateAntiClockwise(direction);
+				MCCellSetOrientation(&cell, direction);
 			}
 			else
 			{
-				orientation = kMCInfoLeverOrientationFloorEW;
+				// Special case: handle two orientations of floor levers.
+				uint8_t orientation = cell.blockData & kMCInfoMiscOrientationMask;
+				if (orientation == kMCInfoLeverOrientationFloorEW)
+				{
+					orientation = kMCInfoLeverOrientationFloorNS;
+				}
+				else
+				{
+					orientation = kMCInfoLeverOrientationFloorEW;
+				}
+				cell.blockData = cell.blockData & ~kMCInfoMiscOrientationMask | orientation;
 			}
-			cell.blockData = cell.blockData & ~kMCInfoMiscOrientationMask | orientation;
+		}
+		else
+		{
+			// Special case: signposts.
+			uint8_t orientation = cell.blockData & kMCInfoSignPostOrientationMask;
+			orientation = (orientation + 12) & kMCInfoSignPostOrientationMask;
+			cell.blockData = (cell.blockData & ~kMCInfoSignPostOrientationMask) | orientation;	
 		}
 	}
 	else
@@ -351,14 +371,24 @@ MCCell MCRotateCell180Degrees(MCCell cell)
 {
 	if (!MCBlockIDIsRail(cell.blockID))
 	{
-		MCDirection direction = MCCellGetOrientation(cell);
-		
-		// Flip on two axes 180°. (Flips are simpler than rotates.)
-		direction = MCDirectionFlipNorthSouth(direction);
-		direction = MCDirectionFlipEastWest(direction);
-		MCCellSetOrientation(&cell, direction);
-		
-		// No special case for floor levers is needed; they’ll end up unchanged.
+		if (cell.blockID != kMCBlockSignPost)
+		{
+			MCDirection direction = MCCellGetOrientation(cell);
+			
+			// Flip on two axes 180°. (Flips are simpler than rotates.)
+			direction = MCDirectionFlipNorthSouth(direction);
+			direction = MCDirectionFlipEastWest(direction);
+			MCCellSetOrientation(&cell, direction);
+			
+			// No special case for floor levers is needed; they’ll end up unchanged.
+		}
+		else
+		{
+			// Special case: signposts.
+			uint8_t orientation = cell.blockData & kMCInfoSignPostOrientationMask;
+			orientation = (orientation + 8) & kMCInfoSignPostOrientationMask;
+			cell.blockData = (cell.blockData & ~kMCInfoSignPostOrientationMask) | orientation;	
+		}
 	}
 	else
 	{
