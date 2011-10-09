@@ -132,7 +132,7 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 		[self performSwitchZoomLevel];
 		
 		// Set trivial basic render callback.
-		self.renderCallback = ^(JAMinecraftBlockStore *store, MCCell cell, MCGridCoordinates location, NSRect drawingRect)
+		self.renderCallback = ^(JAMinecraftBlockStore *store, MCCell cell, NSDictionary *tileEntity, MCGridCoordinates location, NSRect drawingRect)
 		{
 			if (cell.blockID == kMCBlockAir)  [[NSColor whiteColor] set];
 			else  [[NSColor blueColor] set];
@@ -319,7 +319,7 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 
 - (void) drawFillPatternForCellType:(MCCell)cell inRect:(NSRect)rect
 {
-	_renderCallback(self.store, cell, (MCGridCoordinates){ NSIntegerMin, NSIntegerMin, NSIntegerMin }, rect);
+	_renderCallback(self.store, cell, nil, (MCGridCoordinates){ NSIntegerMin, NSIntegerMin, NSIntegerMin }, rect);
 }
 
 
@@ -656,10 +656,12 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 		for (coords.x = targetExtents.minX; coords.x <= targetExtents.maxX; coords.x++)
 		{
 			NSRect cellRect = [self rectFromCellLocation:coords];
+			NSDictionary *tileEntity = nil;
+			MCCell cell = [store cellAt:coords gettingTileEntity:&tileEntity];
 			
 			[gCtxt saveGraphicsState];
 			[NSBezierPath clipRect:cellRect];
-			_renderCallback(store, [store cellAt:coords], coords, cellRect);
+			_renderCallback(store, cell, tileEntity, coords, cellRect);
 			[gCtxt restoreGraphicsState];
 		}
 	}

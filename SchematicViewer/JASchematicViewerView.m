@@ -105,7 +105,7 @@ static const NSUInteger kDefaultZoomLevel = 3;
 		[colors addObject:red];
 	}
 	
-	self.renderCallback = ^(JAMinecraftBlockStore *schematic, MCCell cell, MCGridCoordinates location, NSRect cellRect)
+	self.renderCallback = ^(JAMinecraftBlockStore *schematic, MCCell cell, NSDictionary *tileEntity, MCGridCoordinates location, NSRect cellRect)
 	{
 		NSColor *blockColor = [colors objectAtIndex:cell.blockID];
 		if (MCCellIsFullySolid(cell) || MCCellIsLiquid(cell) || MCCellIsAir(cell))
@@ -124,15 +124,25 @@ static const NSUInteger kDefaultZoomLevel = 3;
 		{
 			[blockColor set];
 			CGFloat width = 2.0;
-			cellRect = NSInsetRect(cellRect, width / 2, width / 2);
+			NSRect contentRect = NSInsetRect(cellRect, width / 2, width / 2);
 			[NSBezierPath setDefaultLineWidth:width];
-			[NSBezierPath strokeRect:cellRect];
+			[NSBezierPath strokeRect:contentRect];
 		}
 		else if (MCCellIsItem(cell))
 		{
 			[blockColor set];
-			cellRect = NSInsetRect(cellRect, cellRect.size.width / 4, cellRect.size.width / 4);
-			[NSBezierPath fillRect:cellRect];
+			NSRect contentRect = NSInsetRect(cellRect, cellRect.size.width / 4, cellRect.size.width / 4);
+			[NSBezierPath fillRect:contentRect];
+		}
+		
+		if (tileEntity != nil)
+		{
+			// Draw dotted orange outline around blocks with tile entities.
+			[[NSColor orangeColor] set];
+			NSBezierPath *path = [NSBezierPath bezierPathWithRect:NSInsetRect(cellRect, 1, 1)];
+			[path setLineDash:(CGFloat []){2, 2} count:2 phase:0];
+			path.lineWidth = 2;
+			[path stroke];
 		}
 	};
 }

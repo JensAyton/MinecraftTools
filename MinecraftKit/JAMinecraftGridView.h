@@ -30,7 +30,7 @@
 
 @class JAMinecraftBlockStore, JAMutableMinecraftBlockStore, JAMinecraftSchematic;
 
-typedef void (^JAMCGridViewRenderCB)(JAMinecraftBlockStore *store, MCCell cell, MCGridCoordinates location, NSRect drawingRect);
+typedef void (^JAMCGridViewRenderCB)(JAMinecraftBlockStore *store, MCCell cell, NSDictionary *tileEntity, MCGridCoordinates location, NSRect drawingRect);
 
 
 // FIXME: do something sane about this.
