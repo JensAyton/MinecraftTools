@@ -244,6 +244,7 @@ static JANBTTag *MakeTileEntityNBT(NSDictionary *entityDict, MCGridCoordinates l
 	[root ja_setNBTByteArray:blockIDs forKey:kBlocksKey];
 	[root ja_setNBTByteArray:blockData forKey:kDataKey];
 	[root ja_setNBTList:tileEntities forKey:kTileEntitiesKey];
+	[root ja_setNBTList:[NSArray array] forKey:kEntitiesKey];
 	
 	JANBTTag *nbtRoot = [root ja_asNBTTagWithName:kSchematicKey];
 	return [JANBTEncoder encodeTag:nbtRoot];
