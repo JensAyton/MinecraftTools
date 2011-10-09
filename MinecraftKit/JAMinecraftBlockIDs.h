@@ -136,7 +136,7 @@ enum
 	kMCBlockPumpkinStem						= 104,	// Data: kMCInfoGourdStemAge
 	kMCBlockMelonStem						= 105,	// Data: kMCInfoGourdStemAge
 	kMCBlockVines							= 106,	// Data: kMCInfoVineAttachmentMask
-	kMCBlockGate							= 107,	// Data: kMCInfoGateOrientationMask and kMCInfoGateOpen.
+	kMCBlockGate							= 107,	// Data: kMCInfoDoorOrientationMask and kMCInfoDoorOpen.
 	kMCBlockBrickStairs						= 108,	// Data: kMCInfoStairOrientation
 	kMCBlockStoneBrickStairs				= 109,	// Data: kMCInfoStairOrientation
 	
@@ -297,9 +297,9 @@ enum
 		swing anti-clockwise.
 	 */
 	kMCInfoDoorOrientationMask				= 0x03,
-	kMCInfoDoorOrientationEast				= 0x00,
+	kMCInfoDoorOrientationWest				= 0x00,
 	kMCInfoDoorOrientationNorth				= 0x01,
-	kMCInfoDoorOrientationWest				= 0x02,
+	kMCInfoDoorOrientationEast				= 0x02,
 	kMCInfoDoorOrientationSouth				= 0x03,
 	kMCInfoDoorOpen							= 0x04,
 	kMCInfoDoorTopHalf						= 0x08,
@@ -472,18 +472,6 @@ enum
 	kMCInfoVineAttachmentNorth				= 0x02,
 	kMCInfoVineAttachmentEast				= 0x04,
 	kMCInfoVineAttachmentSouth				= 0x08,
-	
-	/*
-		Gate orientations are taken from the wiki. East and west may be
-		confused, since there’s no visible distinction in the game at the
-		moment, but I chose to go with the wiki’s values.
-	*/
-	kMCInfoGateOrientationMask				= kMCInfoDoorOrientationMask,
-	kMCInfoGateOrientationWest				= kMCInfoDoorOrientationEast,
-	kMCInfoGateOrientationNorth				= kMCInfoDoorOrientationNorth,
-	kMCInfoGateOrientationEast				= kMCInfoDoorOrientationWest,
-	kMCInfoGateOrientationSouth				= kMCInfoDoorOrientationSouth,
-	kMCInfoGateOpen							= kMCInfoDoorOpen,
 	
 	/*
 		Nether Wart age ranges from 0 to 3, with 1 and 2 looking the same.
