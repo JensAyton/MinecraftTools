@@ -57,9 +57,7 @@ static const uint8_t kFullySolidIDs[] =
 	kMCBlockLapisLazuliBlock,
 	kMCBlockDispenser,
 	kMCBlockSandstone,
-	kMCBlockNoteBlock,		// FIXME: test.
-	kMCBlockStickyPiston,	// FIXME: test.
-	kMCBlockPiston,			// FIXME: test.
+	kMCBlockNoteBlock,
 	kMCBlockCloth,
 	kMCBlockGoldBlock,
 	kMCBlockIronBlock,
@@ -72,7 +70,6 @@ static const uint8_t kFullySolidIDs[] =
 	kMCBlockDiamondOre,
 	kMCBlockDiamondBlock,
 	kMCBlockWorkbench,
-	kMCBlockSoil,
 	kMCBlockFurnace,
 	kMCBlockBurningFurnace,
 	kMCBlockRedstoneOre,
@@ -101,9 +98,12 @@ static const uint8_t kQuasiSolidIDs[] =
 {
 	kMCBlockLeaves,
 	kMCBlockGlass,
+	kMCBlockStickyPiston,
+	kMCBlockPiston,
 	kMCBlockSingleSlab,
 	kMCBlockMobSpawner,
 	kMCBlockWoodenStairs,
+	kMCBlockSoil,
 	kMCBlockCobblestoneStairs,
 	kMCBlockBrickStairs,
 	kMCBlockStoneBrickStairs,
