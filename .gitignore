@@ -8,3 +8,6 @@ xcuserdata/
 project.xcworkspace/
 
 Test data/Output
+
+# Generated on the fly.
+MinecraftKit/JAMinecraftBlockIDs.c
