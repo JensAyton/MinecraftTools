@@ -14,6 +14,7 @@
 		1A52C5F2128FF602006E2D65 /* README in Resources */ = {isa = PBXBuildFile; fileRef = 1A52C5F1128FF602006E2D65 /* README */; };
 		1AC44F8A13F93A2C00FB7296 /* JAMinecraftKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AC44F8713F93A1F00FB7296 /* JAMinecraftKit.framework */; };
 		1AC44F8C13F93A3900FB7296 /* JAMinecraftKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1AC44F8713F93A1F00FB7296 /* JAMinecraftKit.framework */; };
+		1AFE8EBB144997BE007056C1 /* CellToolTips.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1AFE8EBA144997BE007056C1 /* CellToolTips.plist */; };
 		1DDD582C0DA1D0D100B32029 /* MyDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58280DA1D0D100B32029 /* MyDocument.xib */; };
 		1DDD582D0DA1D0D100B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD582A0DA1D0D100B32029 /* MainMenu.xib */; };
 		8D15AC2C0486D014006FF6A4 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */; };
@@ -57,6 +58,7 @@
 		1A52C455128F7574006E2D65 /* ColorTable.plist */ = {isa = PBXFileReference; explicitFileType = text.plist; fileEncoding = 4; path = ColorTable.plist; sourceTree = "<group>"; };
 		1A52C5F1128FF602006E2D65 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		1AC44F7B13F93A1F00FB7296 /* MinecraftKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MinecraftKit.xcodeproj; path = ../MinecraftKit/MinecraftKit.xcodeproj; sourceTree = "<group>"; };
+		1AFE8EBA144997BE007056C1 /* CellToolTips.plist */ = {isa = PBXFileReference; explicitFileType = text; path = CellToolTips.plist; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.plist; };
 		1DDD58290DA1D0D100B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MyDocument.xib; sourceTree = "<group>"; };
 		1DDD582B0DA1D0D100B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		2564AD2C0F5327BB00F57823 /* SchematicViewer_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SchematicViewer_Prefix.pch; sourceTree = "<group>"; };
@@ -158,6 +160,7 @@
 		2A37F4B8FDCFA73011CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1AFE8EBA144997BE007056C1 /* CellToolTips.plist */,
 				1A52C455128F7574006E2D65 /* ColorTable.plist */,
 				2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */,
 				8D15AC360486D014006FF6A4 /* SchematicViewer-Info.plist */,
@@ -253,6 +256,7 @@
 				1DDD582D0DA1D0D100B32029 /* MainMenu.xib in Resources */,
 				1A52C456128F7574006E2D65 /* ColorTable.plist in Resources */,
 				1A52C5F2128FF602006E2D65 /* README in Resources */,
+				1AFE8EBB144997BE007056C1 /* CellToolTips.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

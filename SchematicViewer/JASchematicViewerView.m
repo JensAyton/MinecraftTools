@@ -148,6 +148,99 @@ static const NSUInteger kDefaultZoomLevel = 3;
 }
 
 
+#pragma mark Tool tips
+
+- (BOOL) hasCellToolTips
+{
+	return YES;
+}
+
+
+// SUPER MEGA AWESOME template engine.
+#define TEMPLATE(string, NAME)			[string stringByReplacingOccurrencesOfString:(@"<$"#NAME"$>") withString:NAME]
+#define TEMPLATE_KEY(dict, key, NAME)	({ NSString *template = [dict objectForKey:key]; [template isKindOfClass:[NSString class]] ? TEMPLATE(template, NAME) : nil; })
+
+#define TEMPLATE2(string, NAME1, NAME2)					TEMPLATE(TEMPLATE(string, NAME1), NAME2)
+#define TEMPLATE3(string, NAME1, NAME2, NAME3)			TEMPLATE(TEMPLATE2(string, NAME1, NAME2), NAME3)
+
+#define TEMPLATE_KEY2(dict, key, NAME1, NAME2)			TEMPLATE(TEMPLATE_KEY(dict, key, NAME1), NAME2)
+#define TEMPLATE_KEY3(dict, key, NAME1, NAME2, NAME3)	TEMPLATE(TEMPLATE_KEY2(dict, key, NAME1, NAME2), NAME3)
+
+
+- (NSString *) stringForToolTipForLocation:(MCGridCoordinates)location
+									  cell:(MCCell)cell
+								tileEntity:(NSDictionary *)tileEntity
+{
+	if (_toolTipExtraStrings == nil)
+	{
+		_toolTipExtraStrings = [NSDictionary dictionaryWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"CellToolTips" withExtension:@"plist"]];
+		[_toolTipExtraStrings retain];
+		_toolTipStrings = [_toolTipExtraStrings objectForKey:@"by ID"];
+		if (![_toolTipStrings isKindOfClass:[NSArray class]])  _toolTipStrings = nil;
+	}
+	
+	NSString *base = nil;
+	NSString *extra = nil;
+	
+	if (cell.blockID < _toolTipStrings.count)
+	{
+		base = [_toolTipStrings objectAtIndex:cell.blockID];
+	}
+	
+	switch (cell.blockID)
+	{
+		case kMCBlockCloth:
+		{
+			NSArray *types = [_toolTipExtraStrings objectForKey:@"Wool"];
+			if ([types isKindOfClass:[NSArray class]] && cell.blockData < types.count)
+			{
+				extra = [types objectAtIndex:cell.blockData];
+			}
+			break;
+		}
+			
+		case kMCBlockRedstoneWire:
+			if (cell.blockData == 0)
+			{
+				extra = [_toolTipExtraStrings objectForKey:@"Redstone0"];
+			}
+			else
+			{
+				NSString *level = [NSString stringWithFormat:@"%u", cell.blockData];
+				extra = TEMPLATE_KEY(_toolTipExtraStrings, @"Redstone", level);
+			}
+			break;
+			
+		case kMCBlockStoneWithSilverfish:
+		{
+			NSArray *types = [_toolTipExtraStrings objectForKey:@"Silverfish"];
+			if ([types isKindOfClass:[NSArray class]] && cell.blockData < types.count)
+			{
+				extra = [types objectAtIndex:cell.blockData];
+			}
+			break;
+		}
+	}
+	
+	if (base != nil)
+	{
+		if (extra != nil)
+		{
+			return TEMPLATE_KEY2(_toolTipExtraStrings, @"Parens", base, extra);
+		}
+		else
+		{
+			return base;
+		}
+	}
+	else
+	{
+		NSString *blockID = [NSString stringWithFormat:@"%u", cell.blockID];
+		return TEMPLATE_KEY(_toolTipExtraStrings, @"UnknownID", blockID);
+	}
+}
+
+
 #pragma mark Zooming
 
 - (NSUInteger) maximumZoomLevel

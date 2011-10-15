@@ -70,6 +70,9 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 
 - (void) updateSelectionTimer;
 
+// Tool tips
+- (void) updateToolTipTracking;
+
 // Scrolling
 - (void) updateScrollers;
 
@@ -127,6 +130,8 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 		[self addSubview:_verticalScroller];
 		
 		_selection = kMCEmptyExtents;
+		
+		[self updateToolTipTracking];
 		
 		_zoomLevel = self.defaultZoomLevel;
 		[self performSwitchZoomLevel];
@@ -1043,6 +1048,81 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 }
 
 
+#pragma mark Tool tips
+
+- (BOOL) hasCellToolTips
+{
+	return NO;
+}
+
+- (NSString *) stringForToolTipForLocation:(MCGridCoordinates)location
+									  cell:(MCCell)cell
+								tileEntity:(NSDictionary *)tileEntity
+{
+	[NSException raise:NSGenericException format:@"%s is a subclass responsibility (when -hasCellToolTips returns true).", __func__];
+	__builtin_unreachable();
+}
+
+
+- (NSString *) view:(NSView *)view
+   stringForToolTip:(NSToolTipTag)tag
+			  point:(NSPoint)point
+		   userData:(void *)data
+{
+	if (view == self)
+	{
+		MCGridCoordinates location = [self cellLocationFromPoint:point];
+		NSDictionary *tileEntity = nil;
+		MCCell cell = [self.store cellAt:location gettingTileEntity:&tileEntity];
+		
+		return [self stringForToolTipForLocation:location
+											cell:cell
+									  tileEntity:tileEntity];
+	}
+	else
+	{
+		return [super view:view stringForToolTip:tag point:point userData:data];
+	}
+}
+
+
+- (void) updateToolTipTracking
+{
+	if (self.hasCellToolTips)
+	{
+		[self removeAllToolTips];
+		[_toolTipUpdateTimer invalidate];
+		
+		/*
+			Coalesce update, because adding tool tip rects is quite expensive.
+			It might be better to implement custom tool tips rather than use
+			the tool tip rect mechanism, but I hate reimplementing AppKit
+			stuff. Just look at what happened to our scrollers in Lion. :-/
+		*/
+		_toolTipUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector(deferredUpdateToolTipTracking:) userInfo:nil repeats:NO];
+	}
+}
+
+
+- (void) deferredUpdateToolTipTracking:(id)junk
+{
+	_toolTipUpdateTimer = nil;
+	
+	NSRect innerFrame = self.innerFrame;
+	MCGridExtents extents = [self extentsFromRect:innerFrame];
+	MCGridCoordinates loc;
+	for (loc.x = extents.minX; loc.x <= extents.maxX; loc.x++)
+	{
+		for (loc.z = extents.minZ; loc.z <= extents.maxZ; loc.z++)
+		{
+			NSRect cellRect = [self rectFromCellLocation:loc];
+			cellRect = NSIntersectionRect(cellRect, innerFrame);
+			[self addToolTipRect:cellRect owner:self userData:nil];
+		}
+	}
+}
+
+
 #pragma mark Scrolling
 
 - (IBAction) scrollToCenter:(id)sender
@@ -1113,7 +1193,7 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 		[_verticalScroller setEnabled:NO];
 	}
 
-	
+	[self updateToolTipTracking];
 	[self updateSelectionTimer];
 }
 

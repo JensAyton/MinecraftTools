@@ -437,7 +437,7 @@ enum
 	
 	kMCInfoSilverfishAppearanceMask			= 0x03,
 	kMCInfoSilverfishAppearanceSmoothStone	= 0x00,
-	kMCInfoSilverfishAppearanceCobbleStone	= 0x01,
+	kMCInfoSilverfishAppearanceCobblestone	= 0x01,
 	kMCInfoSilverfishAppearanceStoneBrick	= 0x02,
 	
 	kMCInfoStoneBrickAppearanceMask			= 0x03,

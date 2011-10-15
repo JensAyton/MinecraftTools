@@ -71,6 +71,8 @@ enum
 	BOOL							_floatIsSelection;
 	
 	NSColor							*_emptyOutsidePattern;
+	
+	NSTimer							*_toolTipUpdateTimer;
 }
 
 @property (nonatomic, assign) JAMutableMinecraftBlockStore <NSCopying> *store;
@@ -211,6 +213,16 @@ enum
 	content should be scrolled so no outside area is shown.
 */
 @property (nonatomic, readonly) BOOL infiniteCanvas;
+
+/*
+	Cell tool tips: if hasCellToolTips (default: false), the MincraftGridView
+	registers for dynamic tool tips and abstracts request locations into cells.
+*/
+@property (nonatomic, readonly) BOOL hasCellToolTips;
+
+- (NSString *) stringForToolTipForLocation:(MCGridCoordinates)location
+									  cell:(MCCell)cell
+								tileEntity:(NSDictionary *)tileEntity;
 
 @end
 
