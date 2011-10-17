@@ -291,7 +291,7 @@ MCCell MCRotateCellClockwise(MCCell cell)
 				{
 					orientation = kMCInfoLeverOrientationFloorEW;
 				}
-				cell.blockData = cell.blockData & ~kMCInfoMiscOrientationMask | orientation;
+				cell.blockData = (cell.blockData & ~kMCInfoMiscOrientationMask) | orientation;
 			}
 		}
 		else
@@ -308,7 +308,7 @@ MCCell MCRotateCellClockwise(MCCell cell)
 		uint8_t mask = (cell.blockID == kMCBlockRail) ? kMCInfoRailOrientationMask : kMCInfoPoweredRailOrientationMask;
 		uint8_t maskedData = cell.blockData & mask;
 		maskedData = MCRotateRailDataClockwise(maskedData);
-		cell.blockData = cell.blockData & ~mask | maskedData;
+		cell.blockData = (cell.blockData & ~mask) | maskedData;
 	}
 	
 	return cell;
@@ -340,7 +340,7 @@ MCCell MCRotateCellAntiClockwise(MCCell cell)
 				{
 					orientation = kMCInfoLeverOrientationFloorEW;
 				}
-				cell.blockData = cell.blockData & ~kMCInfoMiscOrientationMask | orientation;
+				cell.blockData = (cell.blockData & ~kMCInfoMiscOrientationMask) | orientation;
 			}
 		}
 		else
@@ -360,7 +360,7 @@ MCCell MCRotateCellAntiClockwise(MCCell cell)
 		maskedData = MCRotateRailDataClockwise(maskedData);
 		maskedData = MCRotateRailDataClockwise(maskedData);
 		maskedData = MCRotateRailDataClockwise(maskedData);
-		cell.blockData = cell.blockData & ~mask | maskedData;
+		cell.blockData = (cell.blockData & ~mask) | maskedData;
 	}
 	
 	return cell;
@@ -398,7 +398,7 @@ MCCell MCRotateCell180Degrees(MCCell cell)
 		// Rotate twice for 180°.
 		maskedData = MCRotateRailDataClockwise(maskedData);
 		maskedData = MCRotateRailDataClockwise(maskedData);
-		cell.blockData = cell.blockData & ~mask | maskedData;
+		cell.blockData = (cell.blockData & ~mask) | maskedData;
 	}
 	
 	return cell;
@@ -420,7 +420,7 @@ MCCell MCFlipCellEastWest(MCCell cell)
 		uint8_t mask = (cell.blockID == kMCBlockRail) ? kMCInfoRailOrientationMask : kMCInfoPoweredRailOrientationMask;
 		uint8_t maskedData = cell.blockData & mask;
 		maskedData = MCFlipRailEastWest(maskedData);
-		cell.blockData = cell.blockData & ~mask | maskedData;
+		cell.blockData = (cell.blockData & ~mask) | maskedData;
 	}
 	
 	return cell;
@@ -453,7 +453,7 @@ MCCell MCFlipCellNorthSouth(MCCell cell)
 		maskedData = MCRotateRailDataClockwise(maskedData);
 		maskedData = MCRotateRailDataClockwise(maskedData);
 		maskedData = MCRotateRailDataClockwise(maskedData);
-		cell.blockData = cell.blockData & ~mask | maskedData;
+		cell.blockData = (cell.blockData & ~mask) | maskedData;
 	}
 	
 	return cell;
@@ -843,5 +843,5 @@ void MCCellSetOrientation(MCCell *cell, MCDirection orientation)
 
 	}
 	
-	cell->blockData = cell->blockData & ~mask | value;
+	cell->blockData = (cell->blockData & ~mask) | value;
 }
