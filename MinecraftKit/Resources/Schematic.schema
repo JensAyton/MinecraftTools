@@ -1,0 +1,126 @@
+/*
+	Definitions of expected types for schematic files. This is used to ensure
+	the expected types are used when serializing stuff (especially numbers)
+	without having to track types in the in-memory representation.
+	
+	Possible types, with corresponding NBT specification types:
+	byte			8-bit signed integer, TAG_Byte
+	short			16-bit signed integer, TAG_Short
+	int				32-bit signed integer, TAG_Int
+	long			64-bit signed integer, TAG_Long
+	float			32-bit IEEE float, TAG_Float
+	double			64-bit IEEE float, TAG_Double
+	data			Binary data, TAG_Byte_Array
+	string			UTF-8 string, TAG_String
+	(<type>)		Homogeneous list, TAG_List
+	{key = type; …}	String-keyed associative array, TAG_Compound
+*/
+
+{
+	Length = short;
+	Width = short;
+	Height = short;
+	Materials = string;
+	Blocks = data;
+	Data = data;
+	Entities =
+	(
+		{
+			id = string;
+			
+			Pos = ( double );
+			Motion = ( double );
+			Rotation = ( float );
+			FallDistance = float;
+			Air = short;
+			Fire = short;
+			OnGround = byte;
+			AttackTime = short;
+			DeathTime = short;
+			Health = short;
+			HurtTime = short;
+			Saddle = byte;
+			Sheared = byte;
+			Color = byte;
+			powered = byte;
+			Size = int;
+			Owner = string;
+			Sitting = byte;
+			Angry = byte;
+			Anger = short;
+			carried = short;
+			carriedData = short;
+			Age = short;
+			Health = short;
+			xTile = short;
+			yTile = short;
+			zTile = short;
+			inTile = byte;
+			shake = byte;
+			inGround = byte;
+			Dir = byte;
+			Motive = string;
+			TileX = int;
+			TileY = int;
+			TileZ = int;
+			Value = short;
+			Type = int;
+			PushX = double;
+			PushY = double;
+			Fuel = short;
+			Fuse = byte;
+			Tile = byte;
+			Item =
+			{
+				id = short;
+				damage = short;
+				count = byte;
+			};
+			Items =
+			(
+				{
+					id = short;
+					Count = byte;
+					Slot = byte;
+					Damage = short;
+				}
+			);
+		}
+	);
+	TileEntities =
+	(
+		{
+			id = string;
+			x = int;
+			y = int;
+			z = int;
+			BurnTime = short;
+			CookTime = short;
+			Text1 = string;
+			Text2 = string;
+			Text3 = string;
+			Text4 = string;
+			EntityId = string;
+			Delay = short;
+			note = byte;
+			Record = int;
+			blockId = int;
+			blockData = int;
+			facing = int;
+			progress = float;
+			extending = byte;
+			brewTime = int;
+			Items =
+			(
+				{
+					id = short;
+					Count = byte;
+					Slot = byte;
+					Damage = short;
+				}
+			);
+		}
+	);
+	
+	"se.jens.ayton GroundLevel" = short;
+}

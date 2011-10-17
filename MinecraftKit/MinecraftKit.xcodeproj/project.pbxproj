@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1AF8C14A144CA38900D86C3D /* Schematic.schema in Resources */ = {isa = PBXBuildFile; fileRef = 1AF8C149144CA38900D86C3D /* Schematic.schema */; };
 		1AFC074C14404395009666A9 /* JACollectionHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AFC074A14404395009666A9 /* JACollectionHelpers.h */; };
 		1AFC074D14404395009666A9 /* JACollectionHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFC074B14404395009666A9 /* JACollectionHelpers.m */; };
 		1AFC075214405F8A009666A9 /* MYCollectionUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AFC075014405F8A009666A9 /* MYCollectionUtilities.h */; };
@@ -64,6 +65,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1AF8C149144CA38900D86C3D /* Schematic.schema */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Schematic.schema; path = Resources/Schematic.schema; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.plist; };
 		1AFC074A14404395009666A9 /* JACollectionHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JACollectionHelpers.h; sourceTree = SOURCE_ROOT; };
 		1AFC074B14404395009666A9 /* JACollectionHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JACollectionHelpers.m; sourceTree = SOURCE_ROOT; };
 		1AFC075014405F8A009666A9 /* MYCollectionUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYCollectionUtilities.h; sourceTree = SOURCE_ROOT; };
@@ -181,6 +183,7 @@
 			isa = PBXGroup;
 			children = (
 				1AFE345C13F930BF001A33D4 /* MinecraftKit-Info.plist */,
+				1AF8C149144CA38900D86C3D /* Schematic.schema */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -360,6 +363,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1AF8C14A144CA38900D86C3D /* Schematic.schema in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -68,8 +68,14 @@ typedef enum
 - (NSString *) debugDescription;
 #endif
 
+/*
+	A schema is a property list type specifying the expected types of NBT
+	entries. See Schematic.schema for an example and grammar.
+	The schema is advisory; if a value can’t be represented in the specified
+	type, or none is specified, an appropriate type will be selected automatically.
+*/
 - (id) propertyListRepresentation;
-+ (id) tagWithName:(NSString *)name propertyListRepresentation:(id)plist;
++ (id) tagWithName:(NSString *)name propertyListRepresentation:(id)plist schema:(id)schema;
 
 + (id) tagWithName:(NSString *)name integerValue:(long long)value type:(JANBTTagType)type;
 + (id) tagWithName:(NSString *)name integerValue:(long long)value;	// Selects smallest appropriate type.

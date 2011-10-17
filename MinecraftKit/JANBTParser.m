@@ -26,6 +26,7 @@
 #import "JANBTParser.h"
 #import "NSData+DDGZip.h"
 #import "JACollectionHelpers.h"
+#import "MYCollectionUtilities.h"
 
 
 #ifndef NDEBUG
@@ -47,7 +48,7 @@ static NSString *NameFromTagType(JANBTTagType type);
 
 @interface NSObject (JANBTTag)
 
-- (id) japriv_NBTFromPlistWithName:(NSString *)name;
+- (id) japriv_NBTFromPlistWithName:(NSString *)name schema:(id)schema;
 
 @end
 
@@ -86,6 +87,8 @@ static NSString *NameFromTagType(JANBTTagType type);
 		  listValue:(NSArray *)value	// May be nil
 		elementType:(JANBTTagType)type	// kJANBTTagEnd indicates type should be inferred; requires non-empty list.
 		   verified:(BOOL)verified;		// True if list is known to be homogeneous.
+
+- (JANBTTagType) elementType;
 
 @end
 
@@ -362,11 +365,11 @@ static NSString *IndentString(NSUInteger count)
 			{
 				NSArray *list = self.objectValue;
 				NSUInteger count = list.count;
-				if (count == 0)  [result appendString:@"0 entries"];	// Strictly, we shouldn't be losing type info in this case.
-				else
+				[result appendFormat:@"%llu entries of type %@", count, NameFromTagType([(JANBTListTag *)self elementType])];
+				if (count > 0)
 				{
 					JANBTTag *subTag = [list objectAtIndex:0];
-					[result appendFormat:@"%llu entries of type %@\n%@{", count, NameFromTagType(subTag.type), IndentString(indent)];
+					[result appendFormat:@"\n%@{", IndentString(indent)];
 					
 					for (subTag in list)
 					{
@@ -475,9 +478,9 @@ static NSString *IndentString(NSUInteger count)
 }
 
 
-+ (id) tagWithName:(NSString *)name propertyListRepresentation:(id)plist
++ (id) tagWithName:(NSString *)name propertyListRepresentation:(id)plist schema:(id)schema
 {
-	return [plist japriv_NBTFromPlistWithName:name];
+	return [plist japriv_NBTFromPlistWithName:name schema:schema];
 }
 
 @end
@@ -814,6 +817,12 @@ static NSString *IndentString(NSUInteger count)
 }
 
 
+- (JANBTTagType) elementType
+{
+	return _elementType;
+}
+
+
 - (id) objectValue
 {
 	return _value;
@@ -931,7 +940,7 @@ static NSString *IndentString(NSUInteger count)
 
 @implementation NSObject (JANBTTag)
 
-- (id) japriv_NBTFromPlistWithName:(NSString *)name
+- (id) japriv_NBTFromPlistWithName:(NSString *)name schema:(id)schema
 {
 	return nil;
 }
@@ -941,17 +950,35 @@ static NSString *IndentString(NSUInteger count)
 
 @implementation NSNumber (JANBTTag)
 
-- (id) japriv_NBTFromPlistWithName:(NSString *)name
+- (id) japriv_NBTFromPlistWithName:(NSString *)name schema:(id)schema
 {
-	const char *type = [self objCType];
-	if (strcmp(type, @encode(float)) == 0)
+	JANBTTagType tagType = kJANBTTagEnd;
+	if ($equal(schema, @"byte"))  tagType = kJANBTTagByte;
+	else if ($equal(schema, @"short"))  tagType = kJANBTTagShort;
+	else if ($equal(schema, @"int"))  tagType = kJANBTTagInt;
+	else if ($equal(schema, @"long"))  tagType = kJANBTTagLong;
+	else if ($equal(schema, @"float"))  tagType = kJANBTTagFloat;
+	else if ($equal(schema, @"double"))  tagType = kJANBTTagDouble;
+	else
 	{
-		return [JANBTTag tagWithName:name floatValue:[self floatValue]];
+		const char *type = [self objCType];
+		if (strcmp(type, @encode(float)) == 0)  tagType = kJANBTTagFloat;
+		if (strcmp(type, @encode(double)) == 0)  tagType = kJANBTTagDouble;
 	}
-	if (strcmp(type, @encode(double)) == 0)
+	
+	if (tagType != kJANBTTagEnd)
 	{
-		return [JANBTTag tagWithName:name doubleValue:[self doubleValue]];
+		if (tagType == kJANBTTagFloat)
+		{
+			return [[JANBTFloatTag alloc] initWithName:name floatValue:[self floatValue]];
+		}
+		if (tagType == kJANBTTagDouble)
+		{
+			return [[JANBTDoubleTag alloc] initWithName:name doubleValue:[self doubleValue]];
+		}
+		return [[JANBTIntegerTag alloc] initWithName:name integerValue:[self integerValue] type:tagType];
 	}
+	
 	return [JANBTTag tagWithName:name integerValue:[self integerValue]];
 }
 
@@ -960,7 +987,7 @@ static NSString *IndentString(NSUInteger count)
 
 @implementation NSData (JANBTTag)
 
-- (id) japriv_NBTFromPlistWithName:(NSString *)name
+- (id) japriv_NBTFromPlistWithName:(NSString *)name schema:(id)schema
 {
 	return [JANBTTag tagWithName:name byteArrayValue:self];
 }
@@ -970,7 +997,7 @@ static NSString *IndentString(NSUInteger count)
 
 @implementation NSString (JANBTTag)
 
-- (id) japriv_NBTFromPlistWithName:(NSString *)name
+- (id) japriv_NBTFromPlistWithName:(NSString *)name schema:(id)schema
 {
 	return [JANBTTag tagWithName:name stringValue:self];
 }
@@ -980,13 +1007,49 @@ static NSString *IndentString(NSUInteger count)
 
 @implementation NSArray (JANBTTag)
 
-- (id) japriv_NBTFromPlistWithName:(NSString *)name
+- (id) japriv_NBTFromPlistWithName:(NSString *)name schema:(id)schema
 {
+	if ([schema isKindOfClass:[NSArray class]] && [schema count] > 0)
+	{
+		schema = [schema objectAtIndex:0];
+	}
+	
 	NSArray *elements = [self ja_map:^(id value)
 	{
-		return [JANBTTag tagWithName:nil propertyListRepresentation:value];
+		return [value japriv_NBTFromPlistWithName:nil schema:schema];
 	}];
-	return [JANBTTag tagWithName:name listValue:elements];	
+	
+	if (schema == nil || elements.count > 0)
+	{
+		return [JANBTTag tagWithName:name listValue:elements];	
+	}
+	else
+	{
+		// Special case to get right nominal type for empty lists.
+		JANBTTagType type = kJANBTTagByte;	// Fallback.
+		
+		if ([schema isKindOfClass:[NSArray class]])
+		{
+			type = kJANBTTagList;
+		}
+		else if ([schema isKindOfClass:[NSDictionary class]])
+		{
+			type = kJANBTTagCompound;
+		}
+		else if ([schema isKindOfClass:[NSString class]])
+		{
+		//	if ($equal(schema, @"byte"))  type = kJANBTTagByte;	// Not needed since it's the default.
+			if ($equal(schema, @"short"))  type = kJANBTTagShort;
+			if ($equal(schema, @"int"))  type = kJANBTTagInt;
+			if ($equal(schema, @"long"))  type = kJANBTTagLong;
+			if ($equal(schema, @"float"))  type = kJANBTTagFloat;
+			if ($equal(schema, @"double"))  type = kJANBTTagDouble;
+			if ($equal(schema, @"data"))  type = kJANBTTagByteArray;
+			if ($equal(schema, @"string"))  type = kJANBTTagString;
+		}
+		
+		return [[JANBTListTag alloc] initWithName:name listValue:[NSArray array] elementType:type verified:YES];
+	}
 }
 
 @end
@@ -994,13 +1057,29 @@ static NSString *IndentString(NSUInteger count)
 
 @implementation NSDictionary (JANBTTag)
 
-- (id) japriv_NBTFromPlistWithName:(NSString *)name
+- (id) japriv_NBTFromPlistWithName:(NSString *)name schema:(id)schema
 {
+	if (![schema isKindOfClass:[NSDictionary class]])
+	{
+		schema = nil;
+	}
+	
 	NSDictionary *elements = [self ja_mapValues:^(id key, id value)
 	{
-		return [JANBTTag tagWithName:key propertyListRepresentation:value];
+		return [value japriv_NBTFromPlistWithName:key schema:[schema objectForKey:key]];
 	}];
 	return [[JANBTCompoundTag alloc] initWithName:name compoundValue:elements verified:YES];
+}
+
+@end
+
+
+@implementation JANBTTag (JANBTTag)
+
+- (id) japriv_NBTFromPlistWithName:(NSString *)name schema:(id)schema
+{
+	if ($equal(self.name, name))  return self;
+	else  return nil;
 }
 
 @end
