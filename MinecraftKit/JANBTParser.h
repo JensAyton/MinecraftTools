@@ -77,8 +77,9 @@ typedef enum
 + (id) tagWithName:(NSString *)name doubleValue:(double)value;
 + (id) tagWithName:(NSString *)name byteArrayValue:(NSData *)value;
 + (id) tagWithName:(NSString *)name stringValue:(NSString *)value;
-+ (id) tagWithName:(NSString *)name listValue:(NSArray *)value;
-+ (id) tagWithName:(NSString *)name compoundValue:(NSDictionary *)value;
++ (id) tagWithName:(NSString *)name listValue:(NSArray *)value;		// Value type is inferred from first value. List may not be empty.
++ (id) tagWithName:(NSString *)name listValue:(NSArray *)value elementType:(JANBTTagType)type;
++ (id) tagWithName:(NSString *)name compoundValue:(id)value;		// Value may be dictionary or array of named tags. objectValue will always be dictionary.
 
 @end
 
