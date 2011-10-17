@@ -184,7 +184,6 @@ static JANBTTag *MakeTileEntityNBT(NSDictionary *entityDict, MCGridCoordinates l
 	[mutableEntityDict ja_setInteger:location.z forKey:@"z"];
 	
 	JANBTTag *result = [JANBTTag tagWithName:nil propertyListRepresentation:mutableEntityDict];
-	[mutableEntityDict release];
 	return result;
 }
 

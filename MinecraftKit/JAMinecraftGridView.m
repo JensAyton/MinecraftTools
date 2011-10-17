@@ -201,7 +201,7 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 - (JAMinecraftBlockStore *) drawingStore
 {
 	if (_floatContent == nil)  return _store;
-	else return [[[JAMinecraftMergedBlockStore alloc] initWithMainStore:_store overlay:_floatContent offset:_floatOffset] autorelease];
+	else return [[JAMinecraftMergedBlockStore alloc] initWithMainStore:_store overlay:_floatContent offset:_floatOffset];
 }
 
 
@@ -326,7 +326,7 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 - (NSColor *) defaultFillColorForCellType:(MCCell)cell
 {
 	NSRect patternRect = (NSRect){{ 0, 0 }, { _cellSize, _cellSize }};
-	NSImage *patternImage = [[[NSImage alloc] initWithSize:patternRect.size] autorelease];
+	NSImage *patternImage = [[NSImage alloc] initWithSize:patternRect.size];
 	
 	[patternImage lockFocus];
 	[self drawFillPatternForCellType:cell inRect:patternRect];
@@ -476,7 +476,7 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 	MCGridExtents selection = self.selection;
 	if (MCGridExtentsEmpty(selection) || _floatContent != nil /* already have floating selection */)  return;
 	
-	JAMinecraftSchematic *floater = [[[JAMinecraftSchematic alloc] initWithRegion:selection ofStore:self.store] autorelease];
+	JAMinecraftSchematic *floater = [[JAMinecraftSchematic alloc] initWithRegion:selection ofStore:self.store];
 	[self.store fillRegion:selection withCell:kMCAirCell];
 	
 	[self setFloatingContent:floater withOffset:kMCZeroCoordinates asSelection:YES];
@@ -564,7 +564,7 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 {
 	NSSize patternSize = { _cellSize + _gridWidth, _cellSize + _gridWidth };
 	
-	NSImage *patternImage = [[[NSImage alloc] initWithSize:patternSize] autorelease];
+	NSImage *patternImage = [[NSImage alloc] initWithSize:patternSize];
 	[patternImage lockFocus];
 	
 	[gridColor set];
@@ -588,7 +588,7 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 		if (self.currentLayer >= self.store.groundLevel)  fillColor = self.airFillColorOutsideDefinedArea;
 		else  fillColor = self.groundFillColorOutsideDefinedArea;
 		
-		_emptyOutsidePattern = [[self buildCellPatternWithFillColor:fillColor gridColor:self.gridColorOutsideDefinedArea] retain];
+		_emptyOutsidePattern = [self buildCellPatternWithFillColor:fillColor gridColor:self.gridColorOutsideDefinedArea];
 	}
 	
 	return _emptyOutsidePattern;

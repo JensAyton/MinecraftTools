@@ -163,7 +163,7 @@ static inline BOOL IsFloatType(JANBTTagType type)
 
 + (id) tagWithName:(NSString *)name integerValue:(long long)value type:(JANBTTagType)type
 {
-	return [[[JANBTIntegerTag alloc] initWithName:name integerValue:value type:type] autorelease];
+	return [[JANBTIntegerTag alloc] initWithName:name integerValue:value type:type];
 }
 
 
@@ -187,43 +187,43 @@ static inline BOOL IsFloatType(JANBTTagType type)
 		type = kJANBTTagLong;
 	}
 	
-	return [[[JANBTIntegerTag alloc] initWithName:name integerValue:value type:type] autorelease];
+	return [[JANBTIntegerTag alloc] initWithName:name integerValue:value type:type];
 }
 
 
 + (id) tagWithName:(NSString *)name floatValue:(float)value
 {
-	return [[[JANBTFloatTag alloc] initWithName:name floatValue:value] autorelease];
+	return [[JANBTFloatTag alloc] initWithName:name floatValue:value];
 }
 
 
 + (id) tagWithName:(NSString *)name doubleValue:(double)value
 {
-	return [[[JANBTDoubleTag alloc] initWithName:name doubleValue:value] autorelease];
+	return [[JANBTDoubleTag alloc] initWithName:name doubleValue:value];
 }
 
 
 + (id) tagWithName:(NSString *)name byteArrayValue:(NSData *)value
 {
-	return [[[JANBTObjectTag alloc] initWithName:name objectValue:value type:kJANBTTagByteArray] autorelease];
+	return [[JANBTObjectTag alloc] initWithName:name objectValue:value type:kJANBTTagByteArray];
 }
 
 
 + (id) tagWithName:(NSString *)name stringValue:(NSString *)value
 {
-	return [[[JANBTObjectTag alloc] initWithName:name objectValue:value type:kJANBTTagString] autorelease];
+	return [[JANBTObjectTag alloc] initWithName:name objectValue:value type:kJANBTTagString];
 }
 
 
 + (id) tagWithName:(NSString *)name listValue:(NSArray *)value
 {
-	return [[[JANBTObjectTag alloc] initWithName:name objectValue:value type:kJANBTTagList] autorelease];
+	return [[JANBTObjectTag alloc] initWithName:name objectValue:value type:kJANBTTagList];
 }
 
 
 + (id) tagWithName:(NSString *)name compoundValue:(NSDictionary *)value
 {
-	return [[[JANBTObjectTag alloc] initWithName:name objectValue:value type:kJANBTTagCompound] autorelease];
+	return [[JANBTObjectTag alloc] initWithName:name objectValue:value type:kJANBTTagCompound];
 }
 
 
@@ -240,7 +240,7 @@ static inline BOOL IsFloatType(JANBTTagType type)
 
 - (id) copyWithZone:(NSZone *)zone
 {
-	return [self retain];
+	return self;
 }
 
 
@@ -648,7 +648,6 @@ static NSString *IndentString(NSUInteger count)
 				break;
 				
 			default:
-				[self release];
 				return nil;
 		}
 		
@@ -802,13 +801,6 @@ static NSString *IndentString(NSUInteger count)
 	}
 	
 	return self;
-}
-
-
-- (void) dealloc
-{
-	[_value release];
-	[super dealloc];
 }
 
 
@@ -1009,10 +1001,7 @@ static void UnexpectedEOF(void)
 + (JANBTTag *) parseData:(NSData *)data
 {
 	JANBTParser *parser = [[self alloc] initWithData:data];
-	JANBTTag *result = [parser parsedTags];
-	[parser release];
-	
-	return result;
+	return [parser parsedTags];
 }
 
 
@@ -1022,27 +1011,17 @@ static void UnexpectedEOF(void)
 	data = [data dd_gzipInflate];
 	if (data == nil)
 	{
-		[self release];
 		return nil;
 	}
 	
 	if ((self = [super init]))
 	{
-		_data = [data retain];
+		_data = data;
 		_bytes = data.bytes;
 		_remaining = data.length;
 	}
 	
 	return self;
-}
-
-
-- (void) dealloc
-{
-	[_data release];
-	_data = nil;
-	
-	[super dealloc];
 }
 
 
@@ -1163,8 +1142,7 @@ static void UnexpectedEOF(void)
 		[e raise];
 	}
 	
-	NSString *result = [[NSString alloc] initWithBytesNoCopy:bytes length:length encoding:NSUTF8StringEncoding freeWhenDone:YES];
-	return [result autorelease];
+	return [[NSString alloc] initWithBytesNoCopy:bytes length:length encoding:NSUTF8StringEncoding freeWhenDone:YES];
 }
 
 @end
@@ -1234,28 +1212,28 @@ static void UnexpectedEOF(void)
 - (JANBTTag *) priv_parseByteWithName:(NSString *)name
 {
 	int8_t byteVal = [self readByte];
-	return [[[JANBTIntegerTag alloc] initWithName:name integerValue:byteVal type:kJANBTTagByte] autorelease];
+	return [[JANBTIntegerTag alloc] initWithName:name integerValue:byteVal type:kJANBTTagByte];
 }
 
 
 - (JANBTTag *) priv_parseShortWithName:(NSString *)name
 {
 	int16_t shortVal = [self readShort];
-	return [[[JANBTIntegerTag alloc] initWithName:name integerValue:shortVal type:kJANBTTagShort] autorelease];
+	return [[JANBTIntegerTag alloc] initWithName:name integerValue:shortVal type:kJANBTTagShort];
 }
 
 
 - (JANBTTag *) priv_parseIntWithName:(NSString *)name
 {
 	int32_t intVal = [self readInt];
-	return [[[JANBTIntegerTag alloc] initWithName:name integerValue:intVal type:kJANBTTagInt] autorelease];
+	return [[JANBTIntegerTag alloc] initWithName:name integerValue:intVal type:kJANBTTagInt];
 }
 
 
 - (JANBTTag *) priv_parseLongWithName:(NSString *)name
 {
 	int64_t longVal = [self readLong];
-	return [[[JANBTIntegerTag alloc] initWithName:name integerValue:longVal type:kJANBTTagLong] autorelease];
+	return [[JANBTIntegerTag alloc] initWithName:name integerValue:longVal type:kJANBTTagLong];
 }
 
 
@@ -1263,7 +1241,7 @@ static void UnexpectedEOF(void)
 {
 	int32_t floatBytes = [self readInt];
 	Float32 floatVal = *(Float32 *)&floatBytes;
-	return [[[JANBTFloatTag alloc] initWithName:name floatValue:floatVal] autorelease];
+	return [[JANBTFloatTag alloc] initWithName:name floatValue:floatVal];
 }
 
 
@@ -1271,7 +1249,7 @@ static void UnexpectedEOF(void)
 {
 	int64_t doubleBytes = [self readLong];
 	Float64 doubleVal = *(Float64 *)&doubleBytes;
-	return [[[JANBTDoubleTag alloc] initWithName:name doubleValue:doubleVal] autorelease];
+	return [[JANBTDoubleTag alloc] initWithName:name doubleValue:doubleVal];
 }
 
 
@@ -1343,39 +1321,20 @@ static void UnexpectedEOF(void)
 + (NSData *) encodeTag:(JANBTTag *)tag
 {
 	JANBTEncoder *encoder = [[self alloc] initWithRootTag:tag];
-	NSData *result = [encoder encodedData];
-	[encoder release];
-	
-	return result;
+	return [encoder encodedData];
 }
 
 
 - (id) initWithRootTag:(JANBTTag *)tag
 {
-	if (tag == nil)
-	{
-		[self release];
-		return nil;
-	}
+	if (tag == nil)  return nil;
 	
 	if ((self = [super init]))
 	{
-		_rootTag = [tag retain];
+		_rootTag = tag;
 	}
 	
 	return self;
-}
-
-
-- (void) dealloc
-{
-	[_rootTag release];
-	_rootTag = nil;
-	
-	[_data release];
-	_data = nil;
-	
-	[super dealloc];
 }
 
 
@@ -1385,8 +1344,7 @@ static void UnexpectedEOF(void)
 	{
 		NSMutableData *rawData = [NSMutableData data];
 		[_rootTag encodeInto:rawData];
-		_data = [[rawData dd_gzipDeflate] retain];
-		[_rootTag release];
+		_data = [rawData dd_gzipDeflate];
 		_rootTag = nil;
 	}
 	
