@@ -49,7 +49,7 @@
 {
 	if ((self = [super init]))
 	{
-		self.schematic = [[JAMinecraftSchematic alloc] init];
+		self.schematic = [[JAMinecraftSchematic new] autorelease];
 	}
 	
 	return self;
@@ -93,11 +93,12 @@
 {
 	if ([typeName isEqualToString:kJAMinecraftRedstoneSimulatorUTI])
 	{
-		self.schematic = [[JAMinecraftSchematic alloc] initWithRDatData:data error:outError];
+		self.schematic = [[[JAMinecraftSchematic alloc] initWithRDatData:data error:outError] autorelease];
 	}
 	else if ([typeName isEqualToString:kJAMinecraftSchematicUTI])
 	{
-		self.schematic = [[JAMinecraftSchematic alloc] initWithSchematicData:data error:outError];
+		JAMinecraftSchematic *schematic = [[[JAMinecraftSchematic alloc] initWithSchematicData:data error:outError] autorelease];
+		self.schematic = schematic;
 	}
 	else
 	{
@@ -233,12 +234,12 @@
 	NSPasteboard *pboard = [NSPasteboard generalPasteboard];
 	JAMinecraftSchematic *pasted = nil;
 	NSData *data = [pboard dataForType:kJAMinecraftSchematicUTI];
-	if (data != nil)  pasted = [[JAMinecraftSchematic alloc] initWithSchematicData:data error:nil];
+	if (data != nil)  pasted = [[[JAMinecraftSchematic alloc] initWithSchematicData:data error:nil] autorelease];
 	
 	if (pasted == nil)
 	{
 		data = [pboard dataForType:kJAMinecraftRedstoneSimulatorUTI];
-		if (data != nil)  pasted = [[JAMinecraftSchematic alloc] initWithRDatData:data error:nil];
+		if (data != nil)  pasted = [[[JAMinecraftSchematic alloc] initWithRDatData:data error:nil] autorelease];
 	}
 	
 	if (data == nil)
@@ -294,7 +295,7 @@
 {
 	NSUndoManager *undoMgr = self.undoManager;
 	[undoMgr setActionName:undoActionName];
-	[[undoMgr prepareWithInvocationTarget:self] undoSchematicChangeWithOldSchematic:[self.schematic copy] selection:self.schematicView.selection];
+	[[undoMgr prepareWithInvocationTarget:self] undoSchematicChangeWithOldSchematic:[[self.schematic copy] autorelease] selection:self.schematicView.selection];
 }
 
 
@@ -315,7 +316,7 @@
 	[self saveSchematicForUndoWithName:NSLocalizedString(@"Rotate Left", @"Rotate Left user interface action.")];
 	
 	JAMinecraftSchematic *currentCircuit = self.schematic;
-	JAMinecraftSchematic *result = [JAMinecraftSchematic new];
+	JAMinecraftSchematic *result = [[JAMinecraftSchematic new] autorelease];
 	
 	MCGridExtents extents = currentCircuit.extents;
 	NSUInteger length = MCGridExtentsLength(extents);
@@ -352,7 +353,7 @@
 	[self saveSchematicForUndoWithName:NSLocalizedString(@"Rotate Right", @"Rotate Right user interface action.")];
 	
 	JAMinecraftSchematic *currentCircuit = self.schematic;
-	JAMinecraftSchematic *result = [JAMinecraftSchematic new];
+	JAMinecraftSchematic *result = [[JAMinecraftSchematic new] autorelease];
 	
 	MCGridExtents extents = currentCircuit.extents;
 	NSUInteger length = MCGridExtentsLength(extents);
@@ -389,7 +390,7 @@
 	[self saveSchematicForUndoWithName:NSLocalizedString(@"Flip Horizontal", @"Flip Horizontal user interface action.")];
 	
 	JAMinecraftSchematic *currentCircuit = self.schematic;
-	JAMinecraftSchematic *result = [JAMinecraftSchematic new];
+	JAMinecraftSchematic *result = [[JAMinecraftSchematic new] autorelease];
 	
 	MCGridExtents extents = currentCircuit.extents;
 	NSUInteger length = MCGridExtentsLength(extents);
@@ -425,7 +426,7 @@
 	[self saveSchematicForUndoWithName:NSLocalizedString(@"Flip Vertical", @"Flip Vertical user interface action.")];
 	
 	JAMinecraftSchematic *currentCircuit = self.schematic;
-	JAMinecraftSchematic *result = [JAMinecraftSchematic new];
+	JAMinecraftSchematic *result = [[JAMinecraftSchematic new] autorelease];
 	
 	MCGridExtents extents = currentCircuit.extents;
 	NSUInteger length = MCGridExtentsLength(extents);

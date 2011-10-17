@@ -33,19 +33,39 @@ static NSString *NameFromTagType(JANBTTagType type);
 #endif
 
 
-@interface JANBTTag ()
-
-@property (readwrite, setter=priv_setType:) JANBTTagType type;
-@property (readwrite, copy, setter=priv_setName:) NSString *name;
+@interface JANBTIntegerTag: JANBTTag
 
 - (id) initWithName:(NSString *)name integerValue:(long long)value type:(JANBTTagType)type;
-- (id) initWithName:(NSString *)name integerValue:(long long)value;	// Selects smallest type.
+
+@end
+
+
+@interface JANBTFloatTag: JANBTTag
+
 - (id) initWithName:(NSString *)name floatValue:(float)value;
+
+@end
+
+
+@interface JANBTDoubleTag: JANBTTag
+
 - (id) initWithName:(NSString *)name doubleValue:(double)value;
-- (id) initWithName:(NSString *)name byteArrayValue:(NSData *)value;
-- (id) initWithName:(NSString *)name stringValue:(NSString *)value;
-- (id) initWithName:(NSString *)name listValue:(NSArray *)value;
-- (id) initWithName:(NSString *)name compoundValue:(NSDictionary *)value;
+
+@end
+
+
+@interface JANBTObjectTag: JANBTTag
+
+- (id) initWithName:(NSString *)name objectValue:(id)object type:(JANBTTagType)type;
+
+@end
+
+
+@interface JANBTTag ()
+
+@property (readwrite, copy, setter=priv_setName:) NSString *name;
+
+- (id) initWithName:(NSString *)name;
 
 - (void) encodeInto:(NSMutableData *)data;
 - (void) encodeWithoutHeaderInto:(NSMutableData *)data;
@@ -138,106 +158,27 @@ static inline BOOL IsFloatType(JANBTTagType type)
 
 @implementation JANBTTag
 
-@synthesize type = _type;
 @synthesize name = _name;
 
 
 + (id) tagWithName:(NSString *)name integerValue:(long long)value type:(JANBTTagType)type
 {
-	return [[[self alloc] initWithName:name integerValue:value type:type] autorelease];
+	return [[[JANBTIntegerTag alloc] initWithName:name integerValue:value type:type] autorelease];
 }
 
 
 + (id) tagWithName:(NSString *)name integerValue:(long long)value
 {
-	return [[[self alloc] initWithName:name integerValue:value] autorelease];
-}
-
-
-+ (id) tagWithName:(NSString *)name floatValue:(float)value
-{
-	return [[[self alloc] initWithName:name floatValue:value] autorelease];
-}
-
-
-+ (id) tagWithName:(NSString *)name doubleValue:(double)value
-{
-	return [[[self alloc] initWithName:name doubleValue:value] autorelease];
-}
-
-
-+ (id) tagWithName:(NSString *)name byteArrayValue:(NSData *)value
-{
-	return [[[self alloc] initWithName:name byteArrayValue:value] autorelease];
-}
-
-
-+ (id) tagWithName:(NSString *)name stringValue:(NSString *)value
-{
-	return [[[self alloc] initWithName:name stringValue:value] autorelease];
-}
-
-
-+ (id) tagWithName:(NSString *)name listValue:(NSArray *)value
-{
-	return [[[self alloc] initWithName:name listValue:value] autorelease];
-}
-
-
-+ (id) tagWithName:(NSString *)name compoundValue:(NSDictionary *)value
-{
-	return [[[self alloc] initWithName:name compoundValue:value] autorelease];
-}
-
-
-- (id) initWithName:(NSString *)name integerValue:(long long)value type:(JANBTTagType)type
-{
-	switch (type)
-	{
-		case kJANBTTagByte:
-			value = (int8_t)value;
-			break;
-			
-		case kJANBTTagShort:
-			value = (int16_t)value;
-			break;
-			
-		case kJANBTTagInt:
-			value = (int32_t)value;
-			break;
-			
-		case kJANBTTagLong:
-			value = (int64_t)value;
-			break;
-			
-		default:
-			[self release];
-			return nil;
-	}
-	
-	if ((self = [super init]))
-	{
-		self.type = type;
-		self.name = name;
-		_value.integerVal = value;
-	}
-	
-	return self;
-}
-
-
-- (id) initWithName:(NSString *)name integerValue:(long long)value
-{
 	JANBTTagType type;
-	if (-128 <= value && value <= 127)
+	if (INT8_MIN <= value && value <= INT8_MAX)
 	{
 		type = kJANBTTagByte;
 	}
-	else if (-32768 <= value && value <= 32767)
+	else if (INT16_MIN <= value && value <= INT16_MAX)
 	{
 		type = kJANBTTagShort;
 	}
-	else if (-2147483648 <= value && value <= 2147483647)
+	else if (INT32_MIN <= value && value <= INT32_MAX)
 	{
 		type = kJANBTTagInt;
 	}
@@ -246,90 +187,54 @@ static inline BOOL IsFloatType(JANBTTagType type)
 		type = kJANBTTagLong;
 	}
 	
-	return [self initWithName:name integerValue:value type:type];
+	return [[[JANBTIntegerTag alloc] initWithName:name integerValue:value type:type] autorelease];
 }
 
 
-- (id) initWithName:(NSString *)name floatValue:(float)value
++ (id) tagWithName:(NSString *)name floatValue:(float)value
 {
+	return [[[JANBTFloatTag alloc] initWithName:name floatValue:value] autorelease];
+}
+
+
++ (id) tagWithName:(NSString *)name doubleValue:(double)value
+{
+	return [[[JANBTDoubleTag alloc] initWithName:name doubleValue:value] autorelease];
+}
+
+
++ (id) tagWithName:(NSString *)name byteArrayValue:(NSData *)value
+{
+	return [[[JANBTObjectTag alloc] initWithName:name objectValue:value type:kJANBTTagByteArray] autorelease];
+}
+
+
++ (id) tagWithName:(NSString *)name stringValue:(NSString *)value
+{
+	return [[[JANBTObjectTag alloc] initWithName:name objectValue:value type:kJANBTTagString] autorelease];
+}
+
+
++ (id) tagWithName:(NSString *)name listValue:(NSArray *)value
+{
+	return [[[JANBTObjectTag alloc] initWithName:name objectValue:value type:kJANBTTagList] autorelease];
+}
+
+
++ (id) tagWithName:(NSString *)name compoundValue:(NSDictionary *)value
+{
+	return [[[JANBTObjectTag alloc] initWithName:name objectValue:value type:kJANBTTagCompound] autorelease];
+}
+
+
+- (id) initWithName:(NSString *)name
+{	
 	if ((self = [super init]))
 	{
-		self.type = kJANBTTagFloat;
 		self.name = name;
-		_value.floatVal = value;
-	}
-	return self;
-}
-
-
-- (id) initWithName:(NSString *)name doubleValue:(double)value
-{
-	if ((self = [super init]))
-	{
-		self.type = kJANBTTagDouble;
-		self.name = name;
-		_value.doubleVal = value;
-	}
-	return self;
-}
-
-
-- (id) priv_initWithName:(NSString *)name type:(JANBTTagType)type object:(id)value
-{
-	if ((self = [super init]))
-	{
-		self.type = type;
-		self.name = name;
-		_value.objectVal = [value retain];
-		[[NSGarbageCollector defaultCollector] disableCollectorForPointer:value];
-	}
-	return self;
-}
-
-
-- (id) initWithName:(NSString *)name byteArrayValue:(NSData *)value
-{
-	return [self priv_initWithName:name type:kJANBTTagByteArray object:value];
-}
-
-
-- (id) initWithName:(NSString *)name stringValue:(NSString *)value
-{
-	return [self priv_initWithName:name type:kJANBTTagString object:value];
-}
-
-
-- (id) initWithName:(NSString *)name listValue:(NSArray *)value
-{
-	return [self priv_initWithName:name type:kJANBTTagList object:value];
-}
-
-
-- (id) initWithName:(NSString *)name compoundValue:(NSDictionary *)value
-{
-	return [self priv_initWithName:name type:kJANBTTagCompound object:value];
-}
-
-
-- (void) dealloc
-{
-	self.name = nil;
-	
-	if (IsObjectType(self.type))
-	{
-		[_value.objectVal release];
-		_value.objectVal = nil;
 	}
 	
-	[super dealloc];
-}
-
-
-- (void) finalize
-{
-	[[NSGarbageCollector defaultCollector] enableCollectorForPointer:_value.objectVal];
-	
-	[super finalize];
+	return self;
 }
 
 
@@ -339,62 +244,36 @@ static inline BOOL IsFloatType(JANBTTagType type)
 }
 
 
-- (id) objectValue
-{
-	JANBTTagType type = self.type;
-	if (IsObjectType(type))  return _value.objectVal;
-	if (IsIntegerType(type))  return [NSNumber numberWithLongLong:_value.integerVal];
-	if (type == kJANBTTagFloat)  return [NSNumber numberWithFloat:_value.floatVal];
-	if (type == kJANBTTagDouble)  return [NSNumber numberWithDouble:_value.doubleVal];
-	
-	return nil;
-}
+@dynamic type, objectValue;	// Subclass responsibilities
 
 
 - (double) doubleValue
 {
-	JANBTTagType type = self.type;
-	if (type == kJANBTTagFloat)  return _value.floatVal;
-	if (type == kJANBTTagDouble)  return _value.doubleVal;
-	if (IsIntegerType(type))  return _value.integerVal;
-	if (IsObjectType(type) && [_value.objectVal respondsToSelector:@selector(doubleValue)])  return [_value.objectVal doubleValue];
-	
-	return NAN;
+	return [self.objectValue doubleValue];
 }
 
 
 - (long long) integerValue
 {
-	JANBTTagType type = self.type;
-	if (IsIntegerType(type))  return _value.integerVal;
-	if (type == kJANBTTagFloat)  return _value.floatVal;
-	if (type == kJANBTTagDouble)  return _value.doubleVal;
-	if (IsObjectType(type))
-	{
-		if ([_value.objectVal respondsToSelector:@selector(longLongValue)])  return [_value.objectVal longLongValue];
-		if ([_value.objectVal respondsToSelector:@selector(integerValue)])  return [_value.objectVal integerValue];
-		if ([_value.objectVal respondsToSelector:@selector(intValue)])  return [_value.objectVal intValue];
-	}
-	
-	return 0;
+	return [self.objectValue integerValue];
 }
 
 
 - (BOOL) isIntegerType
 {
-	return IsIntegerType(self.type);
+	return NO;
 }
 
 
 - (BOOL) isFloatType
 {
-	return self.type == kJANBTTagFloat || self.type == kJANBTTagDouble;
+	return NO;
 }
 
 
 - (BOOL) isObjectType
 {
-	return IsObjectType(self.type);
+	return NO;
 }
 
 
@@ -739,6 +618,220 @@ static NSString *IndentString(NSUInteger count)
 @end
 
 
+@implementation JANBTIntegerTag
+{
+	NSInteger			_value;
+	JANBTTagType		_type;
+}
+
+
+- (id) initWithName:(NSString *)name integerValue:(long long)value type:(JANBTTagType)type
+{
+	if ((self = [super initWithName:name]))
+	{
+		switch (type)
+		{
+			case kJANBTTagByte:
+				_value = (int8_t)value;
+				break;
+				
+			case kJANBTTagShort:
+				_value = (int16_t)value;
+				break;
+				
+			case kJANBTTagInt:
+				_value = (int32_t)value;
+				break;
+				
+			case kJANBTTagLong:
+				_value = (int64_t)value;
+				break;
+				
+			default:
+				[self release];
+				return nil;
+		}
+		
+		_type = type;
+	}
+	
+	return self;
+}
+
+
+- (JANBTTagType) type
+{
+	return _type;
+}
+
+
+- (double) doubleValue
+{
+	return _value;
+}
+
+
+- (long long) integerValue
+{
+	return _value;
+}
+
+
+- (id) objectValue
+{
+	return [NSNumber numberWithInteger:_value];
+}
+
+
+- (BOOL) isIntegerType
+{
+	return YES;
+}
+
+@end
+
+
+@implementation JANBTFloatTag
+{
+	float			_value;
+}
+
+- (id) initWithName:(NSString *)name floatValue:(float)value
+{
+	if ((self = [super initWithName:name]))
+	{
+		_value = value;
+	}
+	
+	return self;
+}
+
+
+- (JANBTTagType) type
+{
+	return kJANBTTagFloat;
+}
+
+
+- (double) doubleValue
+{
+	return _value;
+}
+
+
+- (long long) integerValue
+{
+	return _value;
+}
+
+
+- (id) objectValue
+{
+	return [NSNumber numberWithFloat:_value];
+}
+
+
+- (BOOL) isFloatType
+{
+	return YES;
+}
+
+@end
+
+
+@implementation JANBTDoubleTag
+{
+	double			_value;
+}
+
+- (id) initWithName:(NSString *)name doubleValue:(double)value
+{
+	if ((self = [super initWithName:name]))
+	{
+		_value = value;
+	}
+	
+	return self;
+}
+
+
+- (JANBTTagType) type
+{
+	return kJANBTTagDouble;
+}
+
+
+- (double) doubleValue
+{
+	return _value;
+}
+
+
+- (long long) integerValue
+{
+	return _value;
+}
+
+
+- (id) objectValue
+{
+	return [NSNumber numberWithDouble:_value];
+}
+
+
+- (BOOL) isFloatType
+{
+	return YES;
+}
+
+@end
+
+
+@implementation JANBTObjectTag
+{
+	id					_value;
+	JANBTTagType		_type;
+}
+
+- (id) initWithName:(NSString *)name objectValue:(id)value type:(JANBTTagType)type
+{
+	if ((self = [super initWithName:name]))
+	{
+		_value = [value copy];
+		_type = type;
+	}
+	
+	return self;
+}
+
+
+- (void) dealloc
+{
+	[_value release];
+	[super dealloc];
+}
+
+
+- (JANBTTagType) type
+{
+	return _type;
+}
+
+
+- (id) objectValue
+{
+	return _value;
+}
+
+
+- (BOOL) isObjectType
+{
+	return YES;
+}
+
+@end
+
+
 @implementation NSObject (JANBTTag)
 
 - (id) japriv_NBTFromPlistWithName:(NSString *)name
@@ -959,8 +1052,9 @@ static void UnexpectedEOF(void)
 	{
 		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 		JANBTTag *tag = [self priv_parseOneTag];
+		[tag retain];
 		[pool release];
-		return tag;
+		return [tag autorelease]	;
 	}
 	@catch (NSException *e)
 	{
@@ -1139,28 +1233,28 @@ static void UnexpectedEOF(void)
 - (JANBTTag *) priv_parseByteWithName:(NSString *)name
 {
 	int8_t byteVal = [self readByte];
-	return [[[JANBTTag alloc] initWithName:name integerValue:byteVal type:kJANBTTagByte] autorelease];
+	return [[[JANBTIntegerTag alloc] initWithName:name integerValue:byteVal type:kJANBTTagByte] autorelease];
 }
 
 
 - (JANBTTag *) priv_parseShortWithName:(NSString *)name
 {
 	int16_t shortVal = [self readShort];
-	return [[[JANBTTag alloc] initWithName:name integerValue:shortVal type:kJANBTTagShort] autorelease];
+	return [[[JANBTIntegerTag alloc] initWithName:name integerValue:shortVal type:kJANBTTagShort] autorelease];
 }
 
 
 - (JANBTTag *) priv_parseIntWithName:(NSString *)name
 {
 	int32_t intVal = [self readInt];
-	return [[[JANBTTag alloc] initWithName:name integerValue:intVal type:kJANBTTagInt] autorelease];
+	return [[[JANBTIntegerTag alloc] initWithName:name integerValue:intVal type:kJANBTTagInt] autorelease];
 }
 
 
 - (JANBTTag *) priv_parseLongWithName:(NSString *)name
 {
 	int64_t longVal = [self readLong];
-	return [[[JANBTTag alloc] initWithName:name integerValue:longVal type:kJANBTTagLong] autorelease];
+	return [[[JANBTIntegerTag alloc] initWithName:name integerValue:longVal type:kJANBTTagLong] autorelease];
 }
 
 
@@ -1168,7 +1262,7 @@ static void UnexpectedEOF(void)
 {
 	int32_t floatBytes = [self readInt];
 	Float32 floatVal = *(Float32 *)&floatBytes;
-	return [[[JANBTTag alloc] initWithName:name floatValue:floatVal] autorelease];
+	return [[[JANBTFloatTag alloc] initWithName:name floatValue:floatVal] autorelease];
 }
 
 
@@ -1176,7 +1270,7 @@ static void UnexpectedEOF(void)
 {
 	int64_t doubleBytes = [self readLong];
 	Float64 doubleVal = *(Float64 *)&doubleBytes;
-	return [[[JANBTTag alloc] initWithName:name doubleValue:doubleVal] autorelease];
+	return [[[JANBTDoubleTag alloc] initWithName:name doubleValue:doubleVal] autorelease];
 }
 
 
@@ -1197,14 +1291,13 @@ static void UnexpectedEOF(void)
 	}
 	
 	NSData *data = [NSData dataWithBytesNoCopy:bytes length:length freeWhenDone:YES];
-	return [[[JANBTTag alloc] initWithName:name byteArrayValue:data] autorelease];
+	return [JANBTTag tagWithName:name byteArrayValue:data];
 }
 
 
 - (JANBTTag *) priv_parseStringWithName:(NSString *)name
 {
-	NSString *string = [self readString];
-	return [[[JANBTTag alloc] initWithName:name stringValue:string] autorelease];
+	return [JANBTTag tagWithName:name stringValue:[self readString]];
 }
 
 
@@ -1221,7 +1314,7 @@ static void UnexpectedEOF(void)
 	}
 	
 	// NOTE: loses type info if list is empty. This could be a problem.
-	return [[[JANBTTag alloc] initWithName:name listValue:[NSArray arrayWithArray:array]] autorelease];
+	return [JANBTTag tagWithName:name listValue:[NSArray arrayWithArray:array]];
 }
 
 
@@ -1238,7 +1331,7 @@ static void UnexpectedEOF(void)
 		[subTags setObject:tag forKey:key];
 	}
 	
-	return [[[JANBTTag alloc] initWithName:name compoundValue:[NSDictionary dictionaryWithDictionary:subTags]] autorelease];
+	return [JANBTTag tagWithName:name compoundValue:[NSDictionary dictionaryWithDictionary:subTags]];
 }
 
 @end

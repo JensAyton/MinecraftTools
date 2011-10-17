@@ -52,15 +52,6 @@ typedef enum
 
 
 @interface JANBTTag: NSObject <NSCopying>
-{
-	union
-	{
-		id objectVal;
-		long long integerVal;
-		double floatVal;
-		double doubleVal;
-	} _value;
-}
 
 @property (readonly) JANBTTagType type;
 @property (readonly, copy) NSString *name;
