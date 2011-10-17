@@ -28,12 +28,15 @@
 
 
 const MCCell kMCAirCell = { .blockID = kMCBlockAir, .blockData = 0 };
-const MCCell kMCHoleCell = { .blockID = kMCBlockAir, .blockData = kMCInfoAirIsHoleMask };
+const MCCell kMCHoleCell = { .blockID = kMCBlockAir, .blockData = kMCInfoAirIsHole };
 const MCCell kMCStoneCell = { .blockID = kMCBlockSmoothStone, .blockData = 0 };
 const MCGridCoordinates kMCZeroCoordinates = { 0, 0, 0 };
 const MCGridExtents kMCEmptyExtents = { NSIntegerMax, NSIntegerMin, NSIntegerMax, NSIntegerMin, NSIntegerMax, NSIntegerMin };
 const MCGridExtents kMCZeroExtents = { 0, 0, 0, 0, 0, 0 };
 const MCGridExtents kMCInfiniteExtents = { NSIntegerMin, NSIntegerMax, NSIntegerMin, NSIntegerMax, NSIntegerMin, NSIntegerMax };
+
+
+NSString * const kMCTileEntityKeyID = @"id";
 
 
 NSString *MCExpectedTileEntityTypeForBlockID(uint8_t blockID)
@@ -67,7 +70,7 @@ BOOL MCTileEntityIsCompatibleWithCell(NSDictionary *tileEntity, MCCell cell)
 {
 	if (tileEntity == nil)  return YES;		// Even blocks that should have tile entities can have none, for robustness. TODO: test what Minecraft does.
 	
-	NSString *type = [tileEntity ja_stringForKey:@"id"];
+	NSString *type = [tileEntity ja_stringForKey:kMCTileEntityKeyID];
 	if (type == nil)  return NO;
 	NSString *expectedType = MCExpectedTileEntityTypeForBlockID(cell.blockID);
 	
@@ -82,8 +85,37 @@ void MCRequireTileEntityIsCompatibleWithCell(NSDictionary *tileEntity, MCCell ce
 {
 	if (!MCTileEntityIsCompatibleWithCell(tileEntity, cell))
 	{
-		[NSException raise:NSInvalidArgumentException format:@"Tile entity of type \"%@\" cannot be used with block ID %u.", [tileEntity ja_stringForKey:@"id"], cell.blockID];
+		[NSException raise:NSInvalidArgumentException format:@"Tile entity of type \"%@\" cannot be used with block ID %u.", [tileEntity ja_stringForKey:kMCTileEntityKeyID], cell.blockID];
 	}
+}
+
+
+NSDictionary *MCStandardTileEntityForBlockID(uint8_t blockID)
+{
+#if 0
+	// FIXME
+	NSString *tileEntityID = MCExpectedTileEntityTypeForBlockID(blockID);
+	if (tileEntityID == nil || [tileEntityID isEqualToString:@"?"])  return nil;
+	
+	switch (blockID)
+	{
+		case kMCBlockDispenser:			return @"Trap";
+		case kMCBlockMovingPiston:		return @"Piston";
+		case kMCBlockNoteBlock:			return @"Music";
+		case kMCBlockMobSpawner:		return @"Monster Spawner";
+		case kMCBlockChest:				return @"Chest";
+		case kMCBlockFurnace:
+		case kMCBlockBurningFurnace:	return @"Furnace";
+		case kMCBlockSignPost:
+		case kMCBlockWallSign:			return @"Sign";
+		case kMCBlockJukebox:			return @"RecordPlayer";
+		case kMCBlockEnchantmentTable:	return @"EnchantTable";
+		case kMCBlockBrewingStand:		return @"Cauldron";
+		case kMCBlockAirPortal:			return @"Airportal";
+	}
+#endif
+	
+	return nil;
 }
 
 
@@ -291,7 +323,7 @@ MCCell MCRotateCellClockwise(MCCell cell)
 				{
 					orientation = kMCInfoLeverOrientationFloorEW;
 				}
-				cell.blockData = cell.blockData & ~kMCInfoMiscOrientationMask | orientation;
+				cell.blockData = (cell.blockData & ~kMCInfoMiscOrientationMask) | orientation;
 			}
 		}
 		else
@@ -308,7 +340,7 @@ MCCell MCRotateCellClockwise(MCCell cell)
 		uint8_t mask = (cell.blockID == kMCBlockRail) ? kMCInfoRailOrientationMask : kMCInfoPoweredRailOrientationMask;
 		uint8_t maskedData = cell.blockData & mask;
 		maskedData = MCRotateRailDataClockwise(maskedData);
-		cell.blockData = cell.blockData & ~mask | maskedData;
+		cell.blockData = (cell.blockData & ~mask) | maskedData;
 	}
 	
 	return cell;
@@ -340,7 +372,7 @@ MCCell MCRotateCellAntiClockwise(MCCell cell)
 				{
 					orientation = kMCInfoLeverOrientationFloorEW;
 				}
-				cell.blockData = cell.blockData & ~kMCInfoMiscOrientationMask | orientation;
+				cell.blockData = (cell.blockData & ~kMCInfoMiscOrientationMask) | orientation;
 			}
 		}
 		else
@@ -360,7 +392,7 @@ MCCell MCRotateCellAntiClockwise(MCCell cell)
 		maskedData = MCRotateRailDataClockwise(maskedData);
 		maskedData = MCRotateRailDataClockwise(maskedData);
 		maskedData = MCRotateRailDataClockwise(maskedData);
-		cell.blockData = cell.blockData & ~mask | maskedData;
+		cell.blockData = (cell.blockData & ~mask) | maskedData;
 	}
 	
 	return cell;
@@ -398,7 +430,7 @@ MCCell MCRotateCell180Degrees(MCCell cell)
 		// Rotate twice for 180°.
 		maskedData = MCRotateRailDataClockwise(maskedData);
 		maskedData = MCRotateRailDataClockwise(maskedData);
-		cell.blockData = cell.blockData & ~mask | maskedData;
+		cell.blockData = (cell.blockData & ~mask) | maskedData;
 	}
 	
 	return cell;
@@ -420,7 +452,7 @@ MCCell MCFlipCellEastWest(MCCell cell)
 		uint8_t mask = (cell.blockID == kMCBlockRail) ? kMCInfoRailOrientationMask : kMCInfoPoweredRailOrientationMask;
 		uint8_t maskedData = cell.blockData & mask;
 		maskedData = MCFlipRailEastWest(maskedData);
-		cell.blockData = cell.blockData & ~mask | maskedData;
+		cell.blockData = (cell.blockData & ~mask) | maskedData;
 	}
 	
 	return cell;
@@ -453,7 +485,7 @@ MCCell MCFlipCellNorthSouth(MCCell cell)
 		maskedData = MCRotateRailDataClockwise(maskedData);
 		maskedData = MCRotateRailDataClockwise(maskedData);
 		maskedData = MCRotateRailDataClockwise(maskedData);
-		cell.blockData = cell.blockData & ~mask | maskedData;
+		cell.blockData = (cell.blockData & ~mask) | maskedData;
 	}
 	
 	return cell;
@@ -843,5 +875,5 @@ void MCCellSetOrientation(MCCell *cell, MCDirection orientation)
 
 	}
 	
-	cell->blockData = cell->blockData & ~mask | value;
+	cell->blockData = (cell->blockData & ~mask) | value;
 }

@@ -44,6 +44,8 @@
 		1AFE34B713F9321F001A33D4 /* JAValueToString.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFE34B513F9321F001A33D4 /* JAValueToString.m */; };
 		1AFE34BD13F932CC001A33D4 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AFE34BC13F932CC001A33D4 /* libz.dylib */; };
 		1AFE34BF13F932DD001A33D4 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AFE34BE13F932DD001A33D4 /* Carbon.framework */; };
+		1AFE8EC01449A1F6007056C1 /* JAMinecraftBlock.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AFE8EBE1449A1F6007056C1 /* JAMinecraftBlock.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1AFE8EC11449A1F6007056C1 /* JAMinecraftBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFE8EBF1449A1F6007056C1 /* JAMinecraftBlock.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -109,6 +111,8 @@
 		1AFE34BC13F932CC001A33D4 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		1AFE34BE13F932DD001A33D4 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
 		1AFE34DC13F936B0001A33D4 /* attributeMapBuilder.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = attributeMapBuilder.xcodeproj; path = attributeMapBuilder/attributeMapBuilder.xcodeproj; sourceTree = "<group>"; };
+		1AFE8EBE1449A1F6007056C1 /* JAMinecraftBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAMinecraftBlock.h; sourceTree = SOURCE_ROOT; };
+		1AFE8EBF1449A1F6007056C1 /* JAMinecraftBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAMinecraftBlock.m; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -192,6 +196,8 @@
 				1AFE347913F931C3001A33D4 /* JAMinecraftBlockIDs.c */,
 				1AFE347A13F931C3001A33D4 /* JAMinecraftTypes.h */,
 				1AFE347B13F931C3001A33D4 /* JAMinecraftTypes.m */,
+				1AFE8EBE1449A1F6007056C1 /* JAMinecraftBlock.h */,
+				1AFE8EBF1449A1F6007056C1 /* JAMinecraftBlock.m */,
 				1AFE347C13F931C3001A33D4 /* JAMinecraftBlockStore.h */,
 				1AFE347D13F931C3001A33D4 /* JAMinecraftBlockStore.m */,
 				1AFE347E13F931C3001A33D4 /* JAMinecraftSchematic.h */,
@@ -273,6 +279,7 @@
 			files = (
 				1AFE348813F931C3001A33D4 /* JAMinecraftBlockIDs.h in Headers */,
 				1AFE348A13F931C3001A33D4 /* JAMinecraftTypes.h in Headers */,
+				1AFE8EC01449A1F6007056C1 /* JAMinecraftBlock.h in Headers */,
 				1AFE348C13F931C3001A33D4 /* JAMinecraftBlockStore.h in Headers */,
 				1AFE348E13F931C3001A33D4 /* JAMinecraftSchematic.h in Headers */,
 				1AFE349013F931C3001A33D4 /* JAMinecraftMergedBlockStore.h in Headers */,
@@ -319,7 +326,7 @@
 		1AFE344713F930BF001A33D4 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0410;
+				LastUpgradeCheck = 0420;
 				ORGANIZATIONNAME = "Jens Ayton";
 			};
 			buildConfigurationList = 1AFE344A13F930BF001A33D4 /* Build configuration list for PBXProject "MinecraftKit" */;
@@ -387,6 +394,7 @@
 				1AFE34B713F9321F001A33D4 /* JAValueToString.m in Sources */,
 				1AFC074D14404395009666A9 /* JACollectionHelpers.m in Sources */,
 				1AFC075314405F8A009666A9 /* MYCollectionUtilities.m in Sources */,
+				1AFE8EC11449A1F6007056C1 /* JAMinecraftBlock.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -66,7 +66,7 @@ typedef struct MCCell
 
 
 extern const MCCell kMCAirCell;
-extern const MCCell kMCHoleCell;	// Air cell with kMCInfoAirIsHoleMask flag set.
+extern const MCCell kMCHoleCell;	// Air cell with kMCInfoAirIsHole flag set.
 extern const MCCell kMCStoneCell;
 
 static inline BOOL MCCellsEqual(MCCell a, MCCell b) JA_CONST_FUNC;
@@ -83,6 +83,12 @@ BOOL MCTileEntityIsCompatibleWithCell(NSDictionary *tileEntity, MCCell cell) JA_
 
 // As above, but throws NSInvalidArgumentException if not compatible.
 void MCRequireTileEntityIsCompatibleWithCell(NSDictionary *tileEntity, MCCell cell) JA_CONST_FUNC;
+
+// Generate a default tile entity for a block.
+NSDictionary *MCStandardTileEntityForBlockID(uint8_t blockID);
+
+
+extern NSString * const kMCTileEntityKeyID;
 
 
 //	Convenience predicates and info extractors.
@@ -415,7 +421,7 @@ static inline BOOL MCCellIsAir(MCCell cell)
 
 static inline BOOL MCCellIsHole(MCCell cell)
 {
-	return MCBlockIDIsAir(cell.blockID) && cell.blockData & kMCInfoAirIsHoleMask;
+	return MCBlockIDIsAir(cell.blockID) && cell.blockData & kMCInfoAirIsHole;
 }
 
 

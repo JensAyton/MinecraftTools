@@ -183,13 +183,13 @@ enum
 		redstone wire leads into any opaque block, the block is powered, and
 		can turn off torches attached to it (among other things).
 	*/
-	kMCInfoBlockIsPowered					= 0x10,
+	kMCInfoBlockIsPowered					= 0x80,
 	
 	/*	Air: MCKit-internal “hole” flag indicates a block that shouldn’t
 		overwrite other blocks and should be transparent in renderings
 		(corresponding to “shadow” blocks in Redstone Simulator).
 	*/
-	kMCInfoAirIsHoleMask					= 0x10,
+	kMCInfoAirIsHole						= 0x10,
 	
 	/*	Sapling: low 2 bits are kMCInfoWoodTypeMask. The next two bits –
 		kMCInfoSaplingAge – are “age”. This value is incremented randomly until
