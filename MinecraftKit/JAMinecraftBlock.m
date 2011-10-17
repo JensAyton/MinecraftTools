@@ -105,12 +105,15 @@ static inline BOOL BlocksEqual(JAMinecraftBlock *a, JAMinecraftBlock *b)
 
 /*
 	Cache of immutable blocks with zero data and default tile entity.
-	
 	We also cache the hole block as a special case.
+	
+	Alternative caching scheme: use a weak map of existing immutable blocks
+	with no tile entity. There can be at most USHRT_MAX of them. NSNumber
+	keys are near-free in Lion.
 */
-static NSMapTable *sZeroDataCache;
-
+static NSMutableArray *sZeroDataCache;
 static JAMinecraftBlock *sHoleBlock;
+static id sNSNull;
 
 
 static inline BOOL IsEligibleForCache(uint8_t blockID, uint8_t blockData, NSDictionary *tileEntity) __attribute__((const));
@@ -126,7 +129,12 @@ static inline JAMinecraftBlock *GetCachedBlock(uint8_t blockID, uint8_t blockDat
 {
 	if (IsEligibleForCache(blockID, blockData, tileEntity) && sZeroDataCache != NULL)
 	{
-		return NSMapGet(sZeroDataCache, (const void *)blockID);
+		id result = nil;
+		@synchronized (sZeroDataCache)
+		{
+			result = [sZeroDataCache objectAtIndex:blockID];
+		}
+		if (result != sNSNull)  return result;
 	}
 	else if (blockID == kMCBlockAir && blockData == kMCInfoAirIsHole)
 	{
@@ -152,7 +160,13 @@ static inline Class ImmutableBlockClass(void)
 {
 	if (self == [JAMinecraftBlock class])
 	{
-		sZeroDataCache = NSCreateMapTable(NSIntegerMapKeyCallBacks, NSObjectMapValueCallBacks, 256);
+		sNSNull = [NSNull null];
+		sZeroDataCache = [NSMutableArray arrayWithCapacity:256];
+		for (unsigned i = 0; i != 256; i++)
+		{
+			[sZeroDataCache addObject:sNSNull];
+		}
+		
 		sHoleBlock = [self blockWithID:kMCBlockAir data:kMCInfoAirIsHole tileEntity:nil];
 	}
 }
@@ -161,14 +175,17 @@ static inline Class ImmutableBlockClass(void)
 + (id) blockWithID:(uint8_t)blockID data:(uint8_t)blockData tileEntity:(NSDictionary *)tileEntity
 {
 	JAMinecraftBlock *result = GetCachedBlock(blockID, blockData, tileEntity);
-	if (result == nil)
+	if (result == sNSNull)
 	{
 		result = [[JAConcreteMinecraftBlock alloc] initWithID:blockID data:blockData tileEntity:tileEntity mutable:NO];
 		
-		// FIXME: not thread-safe. Use GCD barrier blocks? [Requires Lion, but we’re going there anyway]
 		if (IsEligibleForCache(blockID, blockData, tileEntity))
 		{
-			NSMapInsertKnownAbsent(sZeroDataCache, (const void *)keyKey, result);
+			@synchronized (sZeroDataCache)
+			{
+				// It doesn’t really matter if this happens more than once.
+				[sZeroDataCache replaceObjectAtIndex:blockID withObject:result];
+			}
 		}
 	}
 	
