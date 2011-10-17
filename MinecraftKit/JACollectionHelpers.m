@@ -7,6 +7,13 @@
 
 #import "JACollectionHelpers.h"
 
+#if defined(__has_feature) && __has_feature(objc_arc)
+#define HAS_ARC		1
+#else
+#define HAS_ARC		0
+#endif
+
+
 enum
 {
 	KMaxStackBuffer = 128
@@ -17,10 +24,21 @@ enum
 
 - (NSArray *) ja_map:(id(^)(id value))mapper
 {
-	id			*results = NULL;
-	NSUInteger	count = self.count;
-	size_t		size = sizeof (id) * count;
-	BOOL		useHeap = count > KMaxStackBuffer;
+#if HAS_ARC
+	// FIXME: use horrible pointer cast annotations in ARC?
+	NSMutableArray *result = [NSMutableArray arrayWithCapacity:self.count];
+	
+	for (id value in self)
+	{
+		[result addObject:mapper(value)];
+	}
+	return [result copy];
+	
+#else
+	id				*results = NULL;
+	NSUInteger		count = self.count;
+	size_t			size = sizeof (id) * count;
+	BOOL			useHeap = count > KMaxStackBuffer;
 	
 	results = alloca((!useHeap) ? size : 1);
 	
@@ -47,6 +65,7 @@ enum
 	{
 		if (useHeap)  free(results);
 	}
+#endif
 }
 
 @end
@@ -67,10 +86,24 @@ enum
 
 - (NSDictionary *) ja_dictionaryByRemovingObjectsForKeys:(NSSet *)excludeKeys
 {
-	id			*keys = NULL, *values = NULL;
-	NSUInteger	count = self.count, i = 0;
-	size_t		size = sizeof (id) * count;
-	BOOL		useHeap = count > KMaxStackBuffer / 2;
+#if HAS_ARC
+	// FIXME: use horrible pointer cast annotations in ARC?
+	NSMutableDictionary *result = [NSMutableDictionary dictionaryWithCapacity:self.count];
+	
+	for (id key in self)
+	{
+		if (![excludeKeys containsObject:key])
+		{
+			[result setObject:[self objectForKey:key] forKey:key];
+		}
+	}
+	
+	return [result copy];
+#else
+	id				*keys = NULL, *values = NULL;
+	NSUInteger		count = self.count, i = 0;
+	size_t			size = sizeof (id) * count;
+	BOOL			useHeap = count > KMaxStackBuffer / 2;
 	
 	keys = alloca((!useHeap) ? size : 1);
 	values = alloca((!useHeap) ? size : 1);
@@ -108,6 +141,7 @@ enum
 			free(values);
 		}
 	}
+#endif
 }
 
 @end

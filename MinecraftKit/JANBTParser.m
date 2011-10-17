@@ -1050,11 +1050,12 @@ static void UnexpectedEOF(void)
 {
 	@try
 	{
-		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-		JANBTTag *tag = [self priv_parseOneTag];
-		[tag retain];
-		[pool release];
-		return [tag autorelease]	;
+		JANBTTag *tag = nil;
+		@autoreleasepool
+		{
+			tag = [self priv_parseOneTag];
+		}
+		return tag;
 	}
 	@catch (NSException *e)
 	{
