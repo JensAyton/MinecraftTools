@@ -172,6 +172,12 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 }
 
 
+- (void) dealloc
+{
+	self.store = nil;
+}
+
+
 + (BOOL) accessInstanceVariablesDirectly
 {
 	return NO;
