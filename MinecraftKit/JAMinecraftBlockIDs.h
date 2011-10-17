@@ -10,7 +10,9 @@
 #define JA_INLINE inline
 #endif
 #if __cplusplus
+#ifndef JA_EXTERN
 #define JA_EXTERN extern "C"
+#endif
 #endif
 
 #include <cstdint>

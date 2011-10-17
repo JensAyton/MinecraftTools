@@ -80,30 +80,6 @@ static NSString *NameFromTagType(JANBTTagType type);
 @end
 
 
-static inline BOOL IsObjectType(JANBTTagType type)
-{
-	switch (type)
-	{
-		case kJANBTTagEnd:
-		case kJANBTTagByte:
-		case kJANBTTagShort:
-		case kJANBTTagInt:
-		case kJANBTTagLong:
-		case kJANBTTagFloat:
-		case kJANBTTagDouble:
-			return NO;
-			
-		case kJANBTTagByteArray:
-		case kJANBTTagString:
-		case kJANBTTagList:
-		case kJANBTTagCompound:
-			return YES;
-	}
-	
-	return NO;
-}
-
-
 static inline BOOL IsIntegerType(JANBTTagType type)
 {
 	switch (type)
@@ -997,6 +973,11 @@ static void UnexpectedEOF(void)
 
 
 @implementation JANBTParser
+{
+	NSData					*_data;
+	const uint8_t			*_bytes;
+	size_t					_remaining;
+}
 
 + (JANBTTag *) parseData:(NSData *)data
 {
@@ -1317,6 +1298,10 @@ static void UnexpectedEOF(void)
 
 
 @implementation JANBTEncoder
+{
+	JANBTTag				*_rootTag;
+	NSData					*_data;
+}
 
 + (NSData *) encodeTag:(JANBTTag *)tag
 {

@@ -26,7 +26,6 @@
 */
 
 #import <Foundation/Foundation.h>
-
 #include "JAMinecraftBlockIDs.h"
 
 #ifndef JA_CONST_FUNC

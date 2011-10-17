@@ -2,7 +2,7 @@
 	JAMinecraftGridView.m
 	
 	
-	Copyright © 2010 Jens Ayton
+	Copyright © 2010–2011 Jens Ayton
 	
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),
@@ -111,6 +111,34 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 
 
 @implementation JAMinecraftGridView
+{
+	JAMutableMinecraftBlockStore <NSCopying>	*_store;
+	
+	NSScroller						*_horizontalScroller;
+	NSScroller						*_verticalScroller;
+	
+	NSPoint							_scrollCenter;
+	NSInteger						_currentLayer;
+	
+	JAMCGridViewRenderCB			_renderCallback;
+	
+	uint8_t							_dragAction;
+	
+	MCGridCoordinates				_selectionAnchor;
+	MCGridExtents					_selection;
+	NSTimer							*_selectionUpdateTimer;
+	
+	NSUInteger						_zoomLevel;
+	NSInteger						_cellSize;
+	NSInteger						_gridWidth;
+	
+	JAMinecraftSchematic			*_floatContent;
+	MCGridCoordinates				_floatOffset;
+	MCGridExtents					_floatExtents;
+	BOOL							_floatIsSelection;
+	
+	NSColor							*_emptyOutsidePattern;
+}
 
 - (id)initWithFrame:(NSRect)frame
 {

@@ -49,29 +49,6 @@
 
 
 @interface JAMinecraftSchematic: JAMutableMinecraftBlockStore <NSCopying>
-{
-@private
-	struct InnerNode				*_root;
-	MCGridExtents					_extents;
-	NSInteger						_groundLevel;
-	
-	NSMutableDictionary				*_tileEntities;
-	
-	BOOL							_extentsAreAccurate;
-	uint8_t							_rootLevel;
-	
-	/*
-		Access cache for quicker sequential reads.
-		TODO: keep track of path through tree to cached chunk. This will allow
-		fast access to adjacent chunks, and use of cache on write (by checking
-		for COWed ancestor nodes).
-	*/
-	BOOL							_cacheIsValid;
-	struct Chunk					*_cachedChunk;
-	MCGridCoordinates				_cacheBase;
-	
-	MCGridExtents					_deferredOptimizationRegion;
-}
 
 - (id) initWithGroundLevel:(NSInteger)groundLevel;
 
