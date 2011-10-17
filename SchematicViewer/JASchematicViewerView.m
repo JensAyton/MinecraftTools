@@ -25,6 +25,8 @@
 
 #import "JASchematicViewerView.h"
 #import <JAMinecraftKit/JAMinecraftSchematic.h>
+#import "JAPropertyListAccessors.h"
+#import "MYCollectionUtilities.h"
 
 
 typedef struct
@@ -127,7 +129,7 @@ static NSArray *LoadColorTable(void);
 
 // SUPER MEGA AWESOME template engine.
 #define TEMPLATE(string, NAME)			[string stringByReplacingOccurrencesOfString:(@"<$"#NAME"$>") withString:NAME]
-#define TEMPLATE_KEY(dict, key, NAME)	({ NSString *template = [dict objectForKey:key]; [template isKindOfClass:[NSString class]] ? TEMPLATE(template, NAME) : nil; })
+#define TEMPLATE_KEY(dict, key, NAME)	({ NSString *template = [dict ja_stringForKey:key]; TEMPLATE(template, NAME); })
 
 #define TEMPLATE2(string, NAME1, NAME2)					TEMPLATE(TEMPLATE(string, NAME1), NAME2)
 #define TEMPLATE3(string, NAME1, NAME2, NAME3)			TEMPLATE(TEMPLATE2(string, NAME1, NAME2), NAME3)
@@ -188,6 +190,44 @@ static NSArray *LoadColorTable(void);
 			}
 			break;
 		}
+			
+		case kMCBlockSignPost:
+		case kMCBlockWallSign:
+		{
+			NSMutableArray *lines = [NSMutableArray arrayWithCapacity:4];
+			for (NSUInteger i = 1; i <= 4; i++)
+			{
+				NSString *text = [tileEntity ja_stringForKey:$sprintf(@"Text%u", i)];
+				if (text.length > 0)  [lines addObject:text];
+			}
+			
+			if (lines.count > 0)
+			{
+				NSString *text = [lines componentsJoinedByString:@" / "];
+				extra = TEMPLATE_KEY(_toolTipExtraStrings, @"Quote", text);
+			}
+			else
+			{
+				extra = [_toolTipExtraStrings ja_stringForKey:@"Sign-empty"];
+			}
+			break;
+		}
+			
+		case kMCBlockWoodenDoor:
+		case kMCBlockIronDoor:
+		case kMCBlockTrapdoor:
+		case kMCBlockGate:
+			extra = [_toolTipExtraStrings ja_stringForKey:(cell.blockData & kMCInfoDoorOpen) ? @"Door-open" : @"Door-closed"];
+			break;
+			
+		case kMCBlockLever:
+		case kMCBlockStoneButton:
+			extra = [_toolTipExtraStrings ja_stringForKey:(cell.blockData & kMCInfoLeverOn) ? @"Switch-on" : @"Switch-off"];
+			break;
+			
+		case kMCBlockBed:
+			extra = [_toolTipExtraStrings ja_stringForKey:(cell.blockData & kInfoBedIsHead) ? @"Bed-head" : @"Bed-foot"];
+			break;
 	}
 	
 	if (base != nil)

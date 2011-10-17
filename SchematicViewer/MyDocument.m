@@ -72,6 +72,8 @@
 					toObject:self withKeyPath:@"schematic"
 					 options:nil];
 	[self.schematicView scrollToCenter:nil];
+	
+	self.currentLayer = self.schematic.groundLevel;
 }
 
 

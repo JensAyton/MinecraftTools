@@ -57,6 +57,8 @@
 		1A52C43E128F71D8006E2D65 /* JASchematicViewerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JASchematicViewerView.m; sourceTree = "<group>"; };
 		1A52C455128F7574006E2D65 /* ColorTable.plist */ = {isa = PBXFileReference; explicitFileType = text; fileEncoding = 4; path = ColorTable.plist; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.plist; };
 		1A52C5F1128FF602006E2D65 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		1A732134144CC9D100CCEF43 /* JAPropertyListAccessors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JAPropertyListAccessors.h; path = ../MinecraftKit/JAPropertyListAccessors/JAPropertyListAccessors.h; sourceTree = "<group>"; };
+		1A732135144CC9DB00CCEF43 /* MYCollectionUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MYCollectionUtilities.h; path = ../MinecraftKit/MYCollectionUtilities.h; sourceTree = "<group>"; };
 		1AC44F7B13F93A1F00FB7296 /* MinecraftKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MinecraftKit.xcodeproj; path = ../MinecraftKit/MinecraftKit.xcodeproj; sourceTree = "<group>"; };
 		1AFE8EBA144997BE007056C1 /* CellToolTips.plist */ = {isa = PBXFileReference; explicitFileType = text; path = CellToolTips.plist; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.plist; };
 		1DDD58290DA1D0D100B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MyDocument.xib; sourceTree = "<group>"; };
@@ -152,6 +154,8 @@
 			isa = PBXGroup;
 			children = (
 				2564AD2C0F5327BB00F57823 /* SchematicViewer_Prefix.pch */,
+				1A732134144CC9D100CCEF43 /* JAPropertyListAccessors.h */,
+				1A732135144CC9DB00CCEF43 /* MYCollectionUtilities.h */,
 				2A37F4B0FDCFA73011CA2CEA /* main.m */,
 			);
 			name = "Other Sources";

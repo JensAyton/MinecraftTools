@@ -127,7 +127,7 @@ enum
 	kMCBlockRedstoneRepeaterOff				= 93,	// Data: kMCInfoMisc3OrientationMask and kMCInfoRedstoneRepeaterDelayMask
 	kMCBlockRedstoneRepeaterOn				= 94,	// Data: kMCInfoMisc3OrientationMask and kMCInfoRedstoneRepeaterDelayMask	
 	kMCBlockLockedChest						= 95,	// April 1 2011 easter egg item, currently deteriorates like leaves.
-	kMCBlockTrapdoor						= 96,	// Data: kMCInfoTrapdoorOrientationMask and kMCInfoTrapdoorIsOpen
+	kMCBlockTrapdoor						= 96,	// Data: kMCInfoTrapdoorOrientationMask and kMCInfoDoorOpen
 	kMCBlockStoneWithSilverfish				= 97,	// Data: kMCInfoSilverfishAppearanceMask
 	kMCBlockStoneBrick						= 98,	// Data: kMCInfoStoneBrickAppearanceMask
 	kMCBlockHugeBrownMushroom				= 99,	// Data: kMCInfoMushroomAppearanceMask
@@ -434,8 +434,6 @@ enum
 	kMCInfoTrapdoorOrientationWest			= 0x01,
 	kMCInfoTrapdoorOrientationNorth			= 0x02,
 	kMCInfoTrapdoorOrientationSouth			= 0x03,
-	
-	kMCInfoTrapdoorIsOpen					= 0x04,
 	
 	kMCInfoSilverfishAppearanceMask			= 0x03,
 	kMCInfoSilverfishAppearanceSmoothStone	= 0x00,

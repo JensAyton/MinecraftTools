@@ -143,7 +143,19 @@
 		"Stone brick"
 	);
 	
+	"Sign-empty" = "empty";
+	
+	"Door-open" = "open";
+	"Door-closed" = "closed";
+	
+	"Switch-on" = "on";
+	"Switch-off" = "off";
+	
+	"Bed-head" = "head";
+	"Bed-foot" = "foot";
+	
 	"Parens" = "<$base$> (<$extra$>)";
+	"Quote" = "“<$text$>”";
 	"Unknown" = "Unknown";
 	"UnknownID" = "Unknown (ID <$blockID$>)";
 }
