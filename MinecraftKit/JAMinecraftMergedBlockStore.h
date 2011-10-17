@@ -2,7 +2,7 @@
 	JAMinecraftMergedBlockStore.h
 	
 	A pseudo-store which presents a read-only merged view of two different
-	block stores. This will throw an exception if you try to write to it.
+	block stores.
 	
 	
 	Copyright © 2010–2011 Jens Ayton

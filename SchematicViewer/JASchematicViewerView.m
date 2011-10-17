@@ -46,6 +46,9 @@ static const NSUInteger kZoomLevelCount = sizeof kZoomLevels / sizeof *kZoomLeve
 static const NSUInteger kDefaultZoomLevel = 3;
 
 
+static NSArray *LoadColorTable(void);
+
+
 @interface JASchematicViewerView ()
 
 - (void) setRenderCallback;
@@ -68,42 +71,8 @@ static const NSUInteger kDefaultZoomLevel = 3;
 
 - (void) setRenderCallback
 {
-	// Load colour table.
-	NSURL *url = [[NSBundle mainBundle] URLForResource:@"ColorTable" withExtension:@"plist"];
-	NSArray *colorPList = [NSPropertyListSerialization propertyListFromData:[NSData dataWithContentsOfURL:url]
-														   mutabilityOption:NSPropertyListImmutable
-																	 format:NULL
-														   errorDescription:NULL];
-	if (![colorPList isKindOfClass:[NSArray class]])  colorPList = nil;
-	
-	NSMutableArray *colors = [NSMutableArray arrayWithCapacity:256];
+	NSArray *colors = LoadColorTable();
 	NSColor *white = [NSColor whiteColor];
-	
-	NSUInteger i, count = colorPList.count;
-	for (i = 0; i < count; i++)
-	{
-		NSArray *colorDef = [colorPList objectAtIndex:i];
-		NSColor *color;
-		if ([colorDef isKindOfClass:[NSArray class]] && colorDef.count >= 3)
-		{
-			color = [NSColor colorWithCalibratedRed:[[colorDef objectAtIndex:0] doubleValue] / 255.0
-											  green:[[colorDef objectAtIndex:1] doubleValue] / 255.0
-											   blue:[[colorDef objectAtIndex:2] doubleValue] / 255.0
-											  alpha:1.0];
-		}
-		else
-		{
-			color = white;
-		}
-		[colors addObject:color];
-	}
-	
-	// Ensure entire array is set.
-	NSColor *red = [NSColor redColor];
-	for (; i < 256; i++)
-	{
-		[colors addObject:red];
-	}
 	
 	self.renderCallback = ^(JAMinecraftBlockStore *schematic, MCCell cell, NSDictionary *tileEntity, MCGridCoordinates location, NSRect cellRect)
 	{
@@ -174,3 +143,35 @@ static const NSUInteger kDefaultZoomLevel = 3;
 }
 
 @end
+
+
+static NSArray *LoadColorTable(void)
+{
+	NSURL *url = [[NSBundle mainBundle] URLForResource:@"ColorTable" withExtension:@"plist"];
+	NSArray *colorPList = [NSArray arrayWithContentsOfURL:url];
+	
+	NSMutableArray *colors = [NSMutableArray arrayWithCapacity:256];
+	NSColor *white = [NSColor whiteColor];
+	
+	for (NSArray *colorDef in colorPList)
+	{
+		NSColor *color = white;
+		if ([colorDef isKindOfClass:[NSArray class]] && colorDef.count >= 3)
+		{
+			color = [NSColor colorWithCalibratedRed:[[colorDef objectAtIndex:0] doubleValue] / 255.0
+											  green:[[colorDef objectAtIndex:1] doubleValue] / 255.0
+											   blue:[[colorDef objectAtIndex:2] doubleValue] / 255.0
+											  alpha:1.0];
+		}
+		[colors addObject:color];
+	}
+	
+	// Ensure entire array is set.
+	NSColor *red = [NSColor redColor];
+	for (NSUInteger i = colors.count; i < 256; i++)
+	{
+		[colors addObject:red];
+	}
+	
+	return [colors copy];
+}

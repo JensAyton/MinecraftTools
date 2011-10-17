@@ -20,6 +20,9 @@
 	  write). For example, it is cheap to make a copy of the schematic and
 	  make a single-block edit, and this is the recommended way of implementing
 	  undoable editing.
+	  N.b.: this doesn’t take tile entities into account; at the moment, the
+	  tile entity list is copied wholesale (although the individual entities
+	  are not).
 	
 	
 	Copyright © 2010–2011 Jens Ayton

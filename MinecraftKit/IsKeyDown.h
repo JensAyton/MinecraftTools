@@ -1,7 +1,5 @@
 /*
 	IsKeyDown.h
-	Map Viewer for Redline
-	$Id: IsKeyDown.h 146 2007-01-16 20:23:13Z jayton $
 	
 	Test whether a given key is currently being pressed. Note that this test
 	for _keys_, not _characters_.

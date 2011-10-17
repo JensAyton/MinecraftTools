@@ -54,7 +54,7 @@
 		1A52C37F128F71B1006E2D65 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
 		1A52C43D128F71D8006E2D65 /* JASchematicViewerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JASchematicViewerView.h; sourceTree = "<group>"; };
 		1A52C43E128F71D8006E2D65 /* JASchematicViewerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JASchematicViewerView.m; sourceTree = "<group>"; };
-		1A52C455128F7574006E2D65 /* ColorTable.plist */ = {isa = PBXFileReference; explicitFileType = text.plist; fileEncoding = 4; path = ColorTable.plist; sourceTree = "<group>"; };
+		1A52C455128F7574006E2D65 /* ColorTable.plist */ = {isa = PBXFileReference; explicitFileType = text; fileEncoding = 4; path = ColorTable.plist; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.plist; };
 		1A52C5F1128FF602006E2D65 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		1AC44F7B13F93A1F00FB7296 /* MinecraftKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MinecraftKit.xcodeproj; path = ../MinecraftKit/MinecraftKit.xcodeproj; sourceTree = "<group>"; };
 		1DDD58290DA1D0D100B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MyDocument.xib; sourceTree = "<group>"; };

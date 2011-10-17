@@ -1,10 +1,3 @@
-//
-//  JACollectionHelpers.m
-//
-//  Created by Jens Ayton on 2011-10-08.
-//  Copyright 2011 Jens Ayton. All rights reserved.
-//
-
 #import "JACollectionHelpers.h"
 
 #if defined(__has_feature) && __has_feature(objc_arc)

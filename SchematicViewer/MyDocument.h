@@ -37,6 +37,12 @@
 
 @property (assign) IBOutlet JASchematicViewerView *schematicView;
 
+@end
+
+
+
+@interface MyDocument (UIActions)
+
 - (IBAction) incrementCurrentLayer:(id)sender;
 - (IBAction) decrementCurrentLayer:(id)sender;
 

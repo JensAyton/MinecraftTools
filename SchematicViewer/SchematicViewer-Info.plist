@@ -18,8 +18,6 @@
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>LSMinimumSystemVersion</key>
@@ -28,7 +26,6 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
-	
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
@@ -56,8 +53,6 @@
 			</array>
 		</dict>
 	</array>
-	
-	<!-- I'm assuming none of these have official UTIs, so I made some up. -->
 	<key>UTImportedTypeDeclarations</key>
 	<array>
 		<dict>
@@ -111,7 +106,6 @@
 				</array>
 			</dict>
 		</dict>
-		
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>

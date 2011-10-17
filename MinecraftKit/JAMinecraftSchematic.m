@@ -122,12 +122,6 @@ enum
 
 static id TileEntityKeyForCoords(MCGridCoordinates coords);
 
-static inline BOOL Equal(id a, id b)
-{
-	if (a == nil && b != nil)  return NO;
-	return [a isEqual:b];
-}
-
 
 static inline InnerNode *AllocInnerNode(NSUInteger level);
 static Chunk *AllocChunk(void);
@@ -381,7 +375,7 @@ static inline NSUInteger RepresentedDistance(levels)
 		changed = ChunkSetCell(chunk, location.x - base.x, location.y - base.y, location.z - base.z, cell);
 		
 		id key = TileEntityKeyForCoords(location);
-		if (!changed)  changed = !Equal([_tileEntities objectForKey:key], tileEntity);
+		if (!changed)  changed = !$equal([_tileEntities objectForKey:key], tileEntity);
 		
 		if (tileEntity != nil)
 		{

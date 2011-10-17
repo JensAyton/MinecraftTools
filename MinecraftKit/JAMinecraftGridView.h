@@ -122,7 +122,7 @@ enum
 	rendering. It may be swapped out at any time.
 	
 	Note that the store parameter is the grid view’s “drawing store” (read
-	above), and it is not safe to write to it.
+	above), which is immutable.
 */
 @property (nonatomic, copy) JAMCGridViewRenderCB renderCallback;
 
