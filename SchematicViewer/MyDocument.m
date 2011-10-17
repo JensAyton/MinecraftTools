@@ -49,7 +49,7 @@
 {
 	if ((self = [super init]))
 	{
-		self.schematic = [[JAMinecraftSchematic alloc] init];
+		self.schematic = [JAMinecraftSchematic new];
 	}
 	
 	return self;

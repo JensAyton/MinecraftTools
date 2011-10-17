@@ -52,15 +52,6 @@ typedef enum
 
 
 @interface JANBTTag: NSObject <NSCopying>
-{
-	union
-	{
-		id objectVal;
-		long long integerVal;
-		double floatVal;
-		double doubleVal;
-	} _value;
-}
 
 @property (readonly) JANBTTagType type;
 @property (readonly, copy) NSString *name;
@@ -77,8 +68,14 @@ typedef enum
 - (NSString *) debugDescription;
 #endif
 
+/*
+	A schema is a property list type specifying the expected types of NBT
+	entries. See Schematic.schema for an example and grammar.
+	The schema is advisory; if a value can’t be represented in the specified
+	type, or none is specified, an appropriate type will be selected automatically.
+*/
 - (id) propertyListRepresentation;
-+ (id) tagWithName:(NSString *)name propertyListRepresentation:(id)plist;
++ (id) tagWithName:(NSString *)name propertyListRepresentation:(id)plist schema:(id)schema;
 
 + (id) tagWithName:(NSString *)name integerValue:(long long)value type:(JANBTTagType)type;
 + (id) tagWithName:(NSString *)name integerValue:(long long)value;	// Selects smallest appropriate type.
@@ -86,8 +83,9 @@ typedef enum
 + (id) tagWithName:(NSString *)name doubleValue:(double)value;
 + (id) tagWithName:(NSString *)name byteArrayValue:(NSData *)value;
 + (id) tagWithName:(NSString *)name stringValue:(NSString *)value;
-+ (id) tagWithName:(NSString *)name listValue:(NSArray *)value;
-+ (id) tagWithName:(NSString *)name compoundValue:(NSDictionary *)value;
++ (id) tagWithName:(NSString *)name listValue:(NSArray *)value;		// Value type is inferred from first value. List may not be empty.
++ (id) tagWithName:(NSString *)name listValue:(NSArray *)value elementType:(JANBTTagType)type;
++ (id) tagWithName:(NSString *)name compoundValue:(id)value;		// Value may be dictionary or array of named tags. objectValue will always be dictionary.
 
 @end
 
@@ -98,11 +96,6 @@ typedef enum
 	Deserialize an NBT file into JANBTTags.
 */
 @interface JANBTParser: NSObject
-{
-	NSData					*_data;
-	const uint8_t			*_bytes;
-	size_t					_remaining;
-}
 
 + (JANBTTag *) parseData:(NSData *)data;
 
@@ -121,10 +114,6 @@ typedef enum
 	enforced.
 */
 @interface JANBTEncoder: NSObject
-{
-	JANBTTag				*_rootTag;
-	NSData					*_data;
-}
 
 + (NSData *) encodeTag:(JANBTTag *)tag;
 

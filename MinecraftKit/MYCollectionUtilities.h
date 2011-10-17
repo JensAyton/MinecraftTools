@@ -35,6 +35,9 @@
 extern "C" {
 #endif
 
+// FIXME: $dict isn't ARC-compatible.
+#define MY_USE_DICT 0
+
 // Collection creation conveniences:
 
 #define $array(OBJS...)     ({id objs[]={OBJS}; \
@@ -47,10 +50,12 @@ extern "C" {
 #define $mset(OBJS...)      ({id objs[]={OBJS}; \
                               [NSMutableSet setWithObjects: objs count: sizeof(objs)/sizeof(id)];})
 
+#if MY_USE_DICT
 #define $dict(PAIRS...)     ({struct _dictpair pairs[]={PAIRS}; \
                               OOMYDictOf(pairs,sizeof(pairs)/sizeof(struct _dictpair));})
 #define $mdict(PAIRS...)    ({struct _dictpair pairs[]={PAIRS}; \
                               OOMYMDictOf(pairs,sizeof(pairs)/sizeof(struct _dictpair));})
+#endif
 
 
 // Object conveniences:
@@ -74,10 +79,12 @@ BOOL $equal(id obj1, id obj2);      // Like -isEqual: but works even if either/b
 #define $null		[NSNull null]
 
 
+#if MY_USE_DICT
 // Internals (don't use directly)
 struct _dictpair { id key; id value; };
 NSDictionary* OOMYDictOf(const struct _dictpair*, size_t count);
 NSMutableDictionary* OOMYMDictOf(const struct _dictpair*, size_t count);
+#endif
 
 
 	

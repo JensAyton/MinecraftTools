@@ -8,8 +8,8 @@
 	http://www.minecraftwiki.net/wiki/Schematic_File_Format
 	http://www.minecraft.net/docs/NBT.txt
 	
-	IMPORTANT: this currently ignores all information except the basic block
-	data.
+	IMPORTANT: this does not deal with all aspects of schematics; for instance,
+	entities (not tile entities) are ignored.
 	
 	
 	Copyright © 2010 Jens Ayton

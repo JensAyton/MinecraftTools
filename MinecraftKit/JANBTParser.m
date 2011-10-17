@@ -26,6 +26,7 @@
 #import "JANBTParser.h"
 #import "NSData+DDGZip.h"
 #import "JACollectionHelpers.h"
+#import "MYCollectionUtilities.h"
 
 
 #ifndef NDEBUG
@@ -35,367 +36,70 @@ static NSString *NameFromTagType(JANBTTagType type);
 
 @interface JANBTTag ()
 
-@property (readwrite, setter=priv_setType:) JANBTTagType type;
 @property (readwrite, copy, setter=priv_setName:) NSString *name;
 
-- (id) initWithName:(NSString *)name integerValue:(long long)value type:(JANBTTagType)type;
-- (id) initWithName:(NSString *)name integerValue:(long long)value;	// Selects smallest type.
-- (id) initWithName:(NSString *)name floatValue:(float)value;
-- (id) initWithName:(NSString *)name doubleValue:(double)value;
-- (id) initWithName:(NSString *)name byteArrayValue:(NSData *)value;
-- (id) initWithName:(NSString *)name stringValue:(NSString *)value;
-- (id) initWithName:(NSString *)name listValue:(NSArray *)value;
-- (id) initWithName:(NSString *)name compoundValue:(NSDictionary *)value;
+- (id) initWithName:(NSString *)name;
 
 - (void) encodeInto:(NSMutableData *)data;
-- (void) encodeWithoutHeaderInto:(NSMutableData *)data;
+- (void) encodeWithoutHeaderInto:(NSMutableData *)data;	// Subclass responsibility.
 
 @end
 
 
 @interface NSObject (JANBTTag)
 
-- (id) japriv_NBTFromPlistWithName:(NSString *)name;
+- (id) japriv_NBTFromPlistWithName:(NSString *)name schema:(id)schema;
 
 @end
 
 
-static inline BOOL IsObjectType(JANBTTagType type)
-{
-	switch (type)
-	{
-		case kJANBTTagEnd:
-		case kJANBTTagByte:
-		case kJANBTTagShort:
-		case kJANBTTagInt:
-		case kJANBTTagLong:
-		case kJANBTTagFloat:
-		case kJANBTTagDouble:
-			return NO;
-			
-		case kJANBTTagByteArray:
-		case kJANBTTagString:
-		case kJANBTTagList:
-		case kJANBTTagCompound:
-			return YES;
-	}
-	
-	return NO;
-}
+@interface JANBTIntegerTag: JANBTTag
+
+- (id) initWithName:(NSString *)name integerValue:(long long)value type:(JANBTTagType)type;
+
+@end
 
 
-static inline BOOL IsIntegerType(JANBTTagType type)
-{
-	switch (type)
-	{
-		case kJANBTTagEnd:
-			return NO;
-			
-		case kJANBTTagByte:
-		case kJANBTTagShort:
-		case kJANBTTagInt:
-		case kJANBTTagLong:
-			return YES;
-			
-		case kJANBTTagFloat:
-		case kJANBTTagDouble:
-		case kJANBTTagByteArray:
-		case kJANBTTagString:
-		case kJANBTTagList:
-		case kJANBTTagCompound:
-			return NO;
-	}
-	
-	return NO;
-}
+@interface JANBTFloatTag: JANBTTag
+
+- (id) initWithName:(NSString *)name floatValue:(float)value;
+
+@end
 
 
-static inline BOOL IsFloatType(JANBTTagType type)
-{
-	switch (type)
-	{
-		case kJANBTTagEnd:
-		case kJANBTTagByte:
-		case kJANBTTagShort:
-		case kJANBTTagInt:
-		case kJANBTTagLong:
-			return NO;
-			
-		case kJANBTTagFloat:
-		case kJANBTTagDouble:
-			return YES;
-			
-		case kJANBTTagByteArray:
-		case kJANBTTagString:
-		case kJANBTTagList:
-		case kJANBTTagCompound:
-			return NO;
-	}
-	
-	return NO;
-}
+@interface JANBTDoubleTag: JANBTTag
+
+- (id) initWithName:(NSString *)name doubleValue:(double)value;
+
+@end
 
 
-@implementation JANBTTag
+@interface JANBTObjectTag: JANBTTag
 
-@synthesize type = _type;
-@synthesize name = _name;
+- (id) initWithName:(NSString *)name objectValue:(id)value type:(JANBTTagType)type;
 
-
-+ (id) tagWithName:(NSString *)name integerValue:(long long)value type:(JANBTTagType)type
-{
-	return [[[self alloc] initWithName:name integerValue:value type:type] autorelease];
-}
+@end
 
 
-+ (id) tagWithName:(NSString *)name integerValue:(long long)value
-{
-	return [[[self alloc] initWithName:name integerValue:value] autorelease];
-}
+@interface JANBTListTag: JANBTTag
+
+- (id) initWithName:(NSString *)name
+		  listValue:(NSArray *)value	// May be nil
+		elementType:(JANBTTagType)type	// kJANBTTagEnd indicates type should be inferred; requires non-empty list.
+		   verified:(BOOL)verified;		// True if list is known to be homogeneous.
+
+- (JANBTTagType) elementType;
+
+@end
 
 
-+ (id) tagWithName:(NSString *)name floatValue:(float)value
-{
-	return [[[self alloc] initWithName:name floatValue:value] autorelease];
-}
+@interface JANBTCompoundTag: JANBTTag
 
+- (id) initWithName:(NSString *)name
+	  compoundValue:(id)value			// Dictionary or array.
+		   verified:(BOOL)verified;		// True if known to be valid dictionary.
 
-+ (id) tagWithName:(NSString *)name doubleValue:(double)value
-{
-	return [[[self alloc] initWithName:name doubleValue:value] autorelease];
-}
-
-
-+ (id) tagWithName:(NSString *)name byteArrayValue:(NSData *)value
-{
-	return [[[self alloc] initWithName:name byteArrayValue:value] autorelease];
-}
-
-
-+ (id) tagWithName:(NSString *)name stringValue:(NSString *)value
-{
-	return [[[self alloc] initWithName:name stringValue:value] autorelease];
-}
-
-
-+ (id) tagWithName:(NSString *)name listValue:(NSArray *)value
-{
-	return [[[self alloc] initWithName:name listValue:value] autorelease];
-}
-
-
-+ (id) tagWithName:(NSString *)name compoundValue:(NSDictionary *)value
-{
-	return [[[self alloc] initWithName:name compoundValue:value] autorelease];
-}
-
-
-- (id) initWithName:(NSString *)name integerValue:(long long)value type:(JANBTTagType)type
-{
-	switch (type)
-	{
-		case kJANBTTagByte:
-			value = (int8_t)value;
-			break;
-			
-		case kJANBTTagShort:
-			value = (int16_t)value;
-			break;
-			
-		case kJANBTTagInt:
-			value = (int32_t)value;
-			break;
-			
-		case kJANBTTagLong:
-			value = (int64_t)value;
-			break;
-			
-		default:
-			[self release];
-			return nil;
-	}
-	
-	if ((self = [super init]))
-	{
-		self.type = type;
-		self.name = name;
-		_value.integerVal = value;
-	}
-	
-	return self;
-}
-
-
-- (id) initWithName:(NSString *)name integerValue:(long long)value
-{
-	JANBTTagType type;
-	if (-128 <= value && value <= 127)
-	{
-		type = kJANBTTagByte;
-	}
-	else if (-32768 <= value && value <= 32767)
-	{
-		type = kJANBTTagShort;
-	}
-	else if (-2147483648 <= value && value <= 2147483647)
-	{
-		type = kJANBTTagInt;
-	}
-	else
-	{
-		type = kJANBTTagLong;
-	}
-	
-	return [self initWithName:name integerValue:value type:type];
-}
-
-
-- (id) initWithName:(NSString *)name floatValue:(float)value
-{
-	if ((self = [super init]))
-	{
-		self.type = kJANBTTagFloat;
-		self.name = name;
-		_value.floatVal = value;
-	}
-	return self;
-}
-
-
-- (id) initWithName:(NSString *)name doubleValue:(double)value
-{
-	if ((self = [super init]))
-	{
-		self.type = kJANBTTagDouble;
-		self.name = name;
-		_value.doubleVal = value;
-	}
-	return self;
-}
-
-
-- (id) priv_initWithName:(NSString *)name type:(JANBTTagType)type object:(id)value
-{
-	if ((self = [super init]))
-	{
-		self.type = type;
-		self.name = name;
-		_value.objectVal = [value retain];
-		[[NSGarbageCollector defaultCollector] disableCollectorForPointer:value];
-	}
-	return self;
-}
-
-
-- (id) initWithName:(NSString *)name byteArrayValue:(NSData *)value
-{
-	return [self priv_initWithName:name type:kJANBTTagByteArray object:value];
-}
-
-
-- (id) initWithName:(NSString *)name stringValue:(NSString *)value
-{
-	return [self priv_initWithName:name type:kJANBTTagString object:value];
-}
-
-
-- (id) initWithName:(NSString *)name listValue:(NSArray *)value
-{
-	return [self priv_initWithName:name type:kJANBTTagList object:value];
-}
-
-
-- (id) initWithName:(NSString *)name compoundValue:(NSDictionary *)value
-{
-	return [self priv_initWithName:name type:kJANBTTagCompound object:value];
-}
-
-
-- (void) dealloc
-{
-	self.name = nil;
-	
-	if (IsObjectType(self.type))
-	{
-		[_value.objectVal release];
-		_value.objectVal = nil;
-	}
-	
-	[super dealloc];
-}
-
-
-- (void) finalize
-{
-	[[NSGarbageCollector defaultCollector] enableCollectorForPointer:_value.objectVal];
-	
-	[super finalize];
-}
-
-
-- (id) copyWithZone:(NSZone *)zone
-{
-	return [self retain];
-}
-
-
-- (id) objectValue
-{
-	JANBTTagType type = self.type;
-	if (IsObjectType(type))  return _value.objectVal;
-	if (IsIntegerType(type))  return [NSNumber numberWithLongLong:_value.integerVal];
-	if (type == kJANBTTagFloat)  return [NSNumber numberWithFloat:_value.floatVal];
-	if (type == kJANBTTagDouble)  return [NSNumber numberWithDouble:_value.doubleVal];
-	
-	return nil;
-}
-
-
-- (double) doubleValue
-{
-	JANBTTagType type = self.type;
-	if (type == kJANBTTagFloat)  return _value.floatVal;
-	if (type == kJANBTTagDouble)  return _value.doubleVal;
-	if (IsIntegerType(type))  return _value.integerVal;
-	if (IsObjectType(type) && [_value.objectVal respondsToSelector:@selector(doubleValue)])  return [_value.objectVal doubleValue];
-	
-	return NAN;
-}
-
-
-- (long long) integerValue
-{
-	JANBTTagType type = self.type;
-	if (IsIntegerType(type))  return _value.integerVal;
-	if (type == kJANBTTagFloat)  return _value.floatVal;
-	if (type == kJANBTTagDouble)  return _value.doubleVal;
-	if (IsObjectType(type))
-	{
-		if ([_value.objectVal respondsToSelector:@selector(longLongValue)])  return [_value.objectVal longLongValue];
-		if ([_value.objectVal respondsToSelector:@selector(integerValue)])  return [_value.objectVal integerValue];
-		if ([_value.objectVal respondsToSelector:@selector(intValue)])  return [_value.objectVal intValue];
-	}
-	
-	return 0;
-}
-
-
-- (BOOL) isIntegerType
-{
-	return IsIntegerType(self.type);
-}
-
-
-- (BOOL) isFloatType
-{
-	return self.type == kJANBTTagFloat || self.type == kJANBTTagDouble;
-}
-
-
-- (BOOL) isObjectType
-{
-	return IsObjectType(self.type);
-}
+@end
 
 
 static void WriteByte(NSMutableData *data, uint8_t byteVal)
@@ -453,6 +157,133 @@ static void WriteString(NSMutableData *data, NSString *string)
 }
 
 
+@implementation JANBTTag
+
+@synthesize name = _name;
+
+
++ (id) tagWithName:(NSString *)name integerValue:(long long)value type:(JANBTTagType)type
+{
+	return [[JANBTIntegerTag alloc] initWithName:name integerValue:value type:type];
+}
+
+
++ (id) tagWithName:(NSString *)name integerValue:(long long)value
+{
+	JANBTTagType type;
+	if (INT8_MIN <= value && value <= INT8_MAX)
+	{
+		type = kJANBTTagByte;
+	}
+	else if (INT16_MIN <= value && value <= INT16_MAX)
+	{
+		type = kJANBTTagShort;
+	}
+	else if (INT32_MIN <= value && value <= INT32_MAX)
+	{
+		type = kJANBTTagInt;
+	}
+	else
+	{
+		type = kJANBTTagLong;
+	}
+	
+	return [[JANBTIntegerTag alloc] initWithName:name integerValue:value type:type];
+}
+
+
++ (id) tagWithName:(NSString *)name floatValue:(float)value
+{
+	return [[JANBTFloatTag alloc] initWithName:name floatValue:value];
+}
+
+
++ (id) tagWithName:(NSString *)name doubleValue:(double)value
+{
+	return [[JANBTDoubleTag alloc] initWithName:name doubleValue:value];
+}
+
+
++ (id) tagWithName:(NSString *)name byteArrayValue:(NSData *)value
+{
+	return [[JANBTObjectTag alloc] initWithName:name objectValue:value type:kJANBTTagByteArray];
+}
+
+
++ (id) tagWithName:(NSString *)name stringValue:(NSString *)value
+{
+	return [[JANBTObjectTag alloc] initWithName:name objectValue:value type:kJANBTTagString];
+}
+
+
++ (id) tagWithName:(NSString *)name listValue:(NSArray *)value
+{
+	return [[JANBTListTag alloc] initWithName:name listValue:value elementType:kJANBTTagEnd verified:NO];
+}
+
+
++ (id) tagWithName:(NSString *)name listValue:(NSArray *)value elementType:(JANBTTagType)type
+{
+	return [[JANBTListTag alloc] initWithName:name listValue:value elementType:type verified:NO];
+}
+
+
++ (id) tagWithName:(NSString *)name compoundValue:(NSDictionary *)value
+{
+	return [[JANBTCompoundTag alloc] initWithName:name compoundValue:value verified:NO];
+}
+
+
+- (id) initWithName:(NSString *)name
+{	
+	if ((self = [super init]))
+	{
+		self.name = name;
+	}
+	
+	return self;
+}
+
+
+- (id) copyWithZone:(NSZone *)zone
+{
+	return self;
+}
+
+
+@dynamic type, objectValue;	// Subclass responsibilities
+
+
+- (double) doubleValue
+{
+	return [self.objectValue doubleValue];
+}
+
+
+- (long long) integerValue
+{
+	return [self.objectValue integerValue];
+}
+
+
+- (BOOL) isIntegerType
+{
+	return NO;
+}
+
+
+- (BOOL) isFloatType
+{
+	return NO;
+}
+
+
+- (BOOL) isObjectType
+{
+	return NO;
+}
+
+
 - (void) encodeInto:(NSMutableData *)data
 {
 	JANBTTagType type = self.type;
@@ -466,87 +297,7 @@ static void WriteString(NSMutableData *data, NSString *string)
 
 - (void) encodeWithoutHeaderInto:(NSMutableData *)data
 {
-	switch (self.type)
-	{
-		case kJANBTTagEnd:
-			break;
-			
-		case kJANBTTagByte:
-			WriteByte(data, self.integerValue);
-			break;
-			
-		case kJANBTTagShort:
-			WriteShort(data, self.integerValue);
-			break;
-			
-		case kJANBTTagInt:
-			WriteInt(data, self.integerValue);
-			break;
-			
-		case kJANBTTagLong:
-			WriteLong(data, self.integerValue);
-			break;
-			
-		case kJANBTTagFloat:
-		{
-			Float32 floatVal = self.doubleValue;
-			WriteInt(data, *(int32_t *)&floatVal);
-			break;
-		}
-			
-		case kJANBTTagDouble:
-		{
-			Float64 doubleVal = self.doubleValue;
-			WriteLong(data, *(int64_t *)&doubleVal);
-			break;
-		}
-			
-		case kJANBTTagByteArray:
-		{
-			NSData *byteArrayVal = self.objectValue;
-			WriteInt(data, byteArrayVal.length);
-			[data appendData:byteArrayVal];
-			break;
-		}
-			
-		case kJANBTTagString:
-		{
-			WriteString(data, self.objectValue);
-			break;
-		}
-			
-		case kJANBTTagList:
-		{
-			NSArray *listVal = self.objectValue;
-			
-			// FIXME: store type for collections.
-			NSUInteger count = listVal.count;
-			JANBTTagType subType = kJANBTTagByte;
-			if (count > 0)  subType = [(JANBTTag *)[listVal objectAtIndex:0] type];
-			
-			WriteByte(data, subType);
-			WriteInt(data, count);
-			
-			for (JANBTTag *tag in listVal)
-			{
-				[tag encodeWithoutHeaderInto:data];
-			}
-			break;
-		}
-			
-		case kJANBTTagCompound:
-		{
-			NSDictionary *compoundVal = self.objectValue;
-			for (JANBTTag *tag in compoundVal.allValues)
-			{
-				[tag encodeInto:data];
-			}
-			
-			// Write a TAG_End to terminate.
-			WriteByte(data, kJANBTTagEnd);
-			break;
-		}
-	}
+	[NSException raise:NSGenericException format:@"%s is a subclass responsibility.", __func__];
 }
 
 
@@ -589,58 +340,62 @@ static NSString *IndentString(NSUInteger count)
 		if (self.name.length > 0)  [result appendFormat:@"(\"%@\")", self.name];
 		[result appendString:@": "];
 		
-		JANBTTagType type = self.type;
-		if (IsIntegerType(type))
+		if (self.integerType)
 		{
 			[result appendFormat:@"%lli", self.integerValue];
 		}
-		else if (IsFloatType(type))
+		else if (self.floatType)
 		{
 			[result appendFormat:@"%g", self.doubleValue];
 		}
-		else if (type == kJANBTTagByteArray)
+		else
 		{
-			[result appendFormat:@"[%llu bytes]", (long long)[self.objectValue length]];
-		//	[result appendFormat:@" %@", self.objectValue];
-		}
-		else if (type == kJANBTTagString)
-		{
-			[result appendString:self.objectValue];
-		}
-		else if (type == kJANBTTagList)
-		{
-			NSArray *list = self.objectValue;
-			NSUInteger count = list.count;
-			if (count == 0)  [result appendString:@"0 entries"];	// Strictly, we shouldn't be losing type info in this case.
-			else
+			JANBTTagType type = self.type;
+			
+			if (type == kJANBTTagByteArray)
 			{
-				JANBTTag *subTag = [list objectAtIndex:0];
-				[result appendFormat:@"%llu entries of type %@\n%@{", count, NameFromTagType(subTag.type), IndentString(indent)];
-				
-				for (subTag in list)
-				{
-					[result appendFormat:@"\n%@%@", IndentString(indent + 1), [subTag debugDescriptionWithIndentLevel:indent + 1]];
-				}
-				
-				[result appendFormat:@"\n%@}", IndentString(indent)];
+				[result appendFormat:@"[%llu bytes]", (long long)[self.objectValue length]];
+			//	[result appendFormat:@" %@", self.objectValue];
 			}
-		}
-		else if (type == kJANBTTagCompound)
-		{
-			NSDictionary *dict = self.objectValue;
-			NSUInteger count = dict.count;
-			if (count == 0)  [result appendString:@"0 entries"];	// Strictly, we shouldn't be losing type info in this case.
-			else
+			else if (type == kJANBTTagString)
 			{
-				[result appendFormat:@"%llu entries\n%@{", count, IndentString(indent)];
-				
-				for (NSString *key in dict)
+				[result appendString:self.objectValue];
+			}
+			else if (type == kJANBTTagList)
+			{
+				NSArray *list = self.objectValue;
+				NSUInteger count = list.count;
+				[result appendFormat:@"%llu entries of type %@", count, NameFromTagType([(JANBTListTag *)self elementType])];
+				if (count > 0)
 				{
-					JANBTTag *subTag = [dict objectForKey:key];
-					[result appendFormat:@"\n%@%@", IndentString(indent + 1), [subTag debugDescriptionWithIndentLevel:indent + 1]];
+					JANBTTag *subTag = [list objectAtIndex:0];
+					[result appendFormat:@"\n%@{", IndentString(indent)];
+					
+					for (subTag in list)
+					{
+						[result appendFormat:@"\n%@%@", IndentString(indent + 1), [subTag debugDescriptionWithIndentLevel:indent + 1]];
+					}
+					
+					[result appendFormat:@"\n%@}", IndentString(indent)];
 				}
-				
-				[result appendFormat:@"\n%@}", IndentString(indent)];
+			}
+			else if (type == kJANBTTagCompound)
+			{
+				NSDictionary *dict = self.objectValue;
+				NSUInteger count = dict.count;
+				if (count == 0)  [result appendString:@"0 entries"];	// Strictly, we shouldn't be losing type info in this case.
+				else
+				{
+					[result appendFormat:@"%llu entries\n%@{", count, IndentString(indent)];
+					
+					for (NSString *key in dict)
+					{
+						JANBTTag *subTag = [dict objectForKey:key];
+						[result appendFormat:@"\n%@%@", IndentString(indent + 1), [subTag debugDescriptionWithIndentLevel:indent + 1]];
+					}
+					
+					[result appendFormat:@"\n%@}", IndentString(indent)];
+				}
 			}
 		}
 	}
@@ -717,23 +472,467 @@ static NSString *IndentString(NSUInteger count)
 			return self.objectValue;
 			
 		case kJANBTTagList:
-		{
-			NSArray *array = self.objectValue;
-			return [array ja_map:^(id value){ return [value propertyListRepresentation]; }];
-		}
-			
 		case kJANBTTagCompound:
-		{
-			NSDictionary *dict = self.objectValue;
-			return [dict ja_mapValues:^(id key, id value){ return [value propertyListRepresentation]; }];
-		}
+			return nil;
 	}
 }
 
 
-+ (id) tagWithName:(NSString *)name propertyListRepresentation:(id)plist
++ (id) tagWithName:(NSString *)name propertyListRepresentation:(id)plist schema:(id)schema
 {
-	return [plist japriv_NBTFromPlistWithName:name];
+	return [plist japriv_NBTFromPlistWithName:name schema:schema];
+}
+
+@end
+
+
+@implementation JANBTIntegerTag
+{
+	NSInteger			_value;
+	JANBTTagType		_type;
+}
+
+
+- (id) initWithName:(NSString *)name integerValue:(long long)value type:(JANBTTagType)type
+{
+	if ((self = [super initWithName:name]))
+	{
+		switch (type)
+		{
+			case kJANBTTagByte:
+				_value = (int8_t)value;
+				break;
+				
+			case kJANBTTagShort:
+				_value = (int16_t)value;
+				break;
+				
+			case kJANBTTagInt:
+				_value = (int32_t)value;
+				break;
+				
+			case kJANBTTagLong:
+				_value = (int64_t)value;
+				break;
+				
+			default:
+				return nil;
+		}
+		
+		_type = type;
+	}
+	
+	return self;
+}
+
+
+- (JANBTTagType) type
+{
+	return _type;
+}
+
+
+- (double) doubleValue
+{
+	return _value;
+}
+
+
+- (long long) integerValue
+{
+	return _value;
+}
+
+
+- (id) objectValue
+{
+	return [NSNumber numberWithInteger:_value];
+}
+
+
+- (BOOL) isIntegerType
+{
+	return YES;
+}
+
+
+- (void) encodeWithoutHeaderInto:(NSMutableData *)data
+{
+	switch (self.type)
+	{
+		case kJANBTTagByte:
+			WriteByte(data, self.integerValue);
+			break;
+			
+		case kJANBTTagShort:
+			WriteShort(data, self.integerValue);
+			break;
+			
+		case kJANBTTagInt:
+			WriteInt(data, self.integerValue);
+			break;
+			
+		case kJANBTTagLong:
+			WriteLong(data, self.integerValue);
+			break;
+			
+		default:
+			[super encodeWithoutHeaderInto:data];
+	}
+}
+
+@end
+
+
+@implementation JANBTFloatTag
+{
+	float			_value;
+}
+
+- (id) initWithName:(NSString *)name floatValue:(float)value
+{
+	if ((self = [super initWithName:name]))
+	{
+		_value = value;
+	}
+	
+	return self;
+}
+
+
+- (JANBTTagType) type
+{
+	return kJANBTTagFloat;
+}
+
+
+- (double) doubleValue
+{
+	return _value;
+}
+
+
+- (long long) integerValue
+{
+	return _value;
+}
+
+
+- (id) objectValue
+{
+	return [NSNumber numberWithFloat:_value];
+}
+
+
+- (BOOL) isFloatType
+{
+	return YES;
+}
+
+
+- (void) encodeWithoutHeaderInto:(NSMutableData *)data
+{
+	Float32 value = _value;
+	WriteInt(data, *(int32_t *)&value);
+}
+
+@end
+
+
+@implementation JANBTDoubleTag
+{
+	double			_value;
+}
+
+- (id) initWithName:(NSString *)name doubleValue:(double)value
+{
+	if ((self = [super initWithName:name]))
+	{
+		_value = value;
+	}
+	
+	return self;
+}
+
+
+- (JANBTTagType) type
+{
+	return kJANBTTagDouble;
+}
+
+
+- (double) doubleValue
+{
+	return _value;
+}
+
+
+- (long long) integerValue
+{
+	return _value;
+}
+
+
+- (id) objectValue
+{
+	return [NSNumber numberWithDouble:_value];
+}
+
+
+- (BOOL) isFloatType
+{
+	return YES;
+}
+
+
+- (void) encodeWithoutHeaderInto:(NSMutableData *)data
+{
+	Float64 value = _value;
+	WriteInt(data, *(int64_t *)&value);
+}
+
+@end
+
+
+@implementation JANBTObjectTag
+{
+	id					_value;
+	JANBTTagType		_type;
+}
+
+- (id) initWithName:(NSString *)name objectValue:(id)value type:(JANBTTagType)type
+{
+	if ((self = [super initWithName:name]))
+	{
+		_value = [value copy];
+		_type = type;
+	}
+	
+	return self;
+}
+
+
+- (JANBTTagType) type
+{
+	return _type;
+}
+
+
+- (id) objectValue
+{
+	return _value;
+}
+
+
+- (BOOL) isObjectType
+{
+	return YES;
+}
+
+
+- (void) encodeWithoutHeaderInto:(NSMutableData *)data
+{
+	switch (self.type)
+	{
+		case kJANBTTagByteArray:
+		{
+			NSData *byteArrayVal = self.objectValue;
+			WriteInt(data, byteArrayVal.length);
+			[data appendData:byteArrayVal];
+			break;
+		}
+			
+		case kJANBTTagString:
+		{
+			WriteString(data, self.objectValue);
+			break;
+		}
+			
+		default:
+			[super encodeWithoutHeaderInto:data];
+	}
+}
+
+@end
+
+
+@implementation JANBTListTag
+{
+	JANBTTagType			_elementType;
+	NSArray					*_value;
+}
+
+- (id) initWithName:(NSString *)name
+		  listValue:(NSArray *)value			// May be nil
+		elementType:(JANBTTagType)elementType	// kJANBTTagEnd indicates type should be inferred; requires non-empty list.
+		   verified:(BOOL)verified
+{
+	if (!verified)
+	{
+		// If no type specified, use first in list.
+		if (elementType == kJANBTTagEnd)
+		{
+			//	NSParameterAssert(value.count != 0);
+			// FIXME: empty list should be an error, but we need a schema system to select correct types when converting plists first.
+			if (value.count != 0)
+			{
+				JANBTTag *element = [value objectAtIndex:0];
+				NSParameterAssert([element isKindOfClass:[JANBTTag class]]);
+				
+				elementType = element.type;
+			}
+			else
+			{
+				elementType = kJANBTTagByte;
+			}
+		}
+		else
+		{
+			if (value == nil)  value = [NSArray array];
+		}
+		
+#ifndef NS_BLOCK_ASSERTIONS
+		// Ensure list is homogeneous.
+		for (JANBTTag *element in value)
+		{
+			NSParameterAssert([element isKindOfClass:[JANBTTag class]]);
+			NSParameterAssert(element.type == elementType);
+		}
+#endif
+	}
+	
+	if ((self = [super initWithName:name]))
+	{
+		_value = [value copy];
+		_elementType = elementType;
+	}
+	
+	return self;
+}
+
+
+- (JANBTTagType) type
+{
+	return kJANBTTagList;
+}
+
+
+- (JANBTTagType) elementType
+{
+	return _elementType;
+}
+
+
+- (id) objectValue
+{
+	return _value;
+}
+
+
+- (BOOL) isObjectType
+{
+	return YES;
+}
+
+
+- (void) encodeWithoutHeaderInto:(NSMutableData *)data
+{
+	WriteByte(data, _elementType);
+	WriteInt(data, _value.count);
+	
+	for (JANBTTag *tag in _value)
+	{
+		[tag encodeWithoutHeaderInto:data];
+	}
+}
+
+
+- (id) propertyListRepresentation
+{
+	return [_value ja_map:^(id value){ return [value propertyListRepresentation]; }];
+}
+
+@end
+
+
+@implementation JANBTCompoundTag
+{
+	NSDictionary		*_value;
+}
+
+- (id) initWithName:(NSString *)name compoundValue:(id)value verified:(BOOL)verified
+{
+	if ([value isKindOfClass:[NSArray class]])
+	{
+		NSArray *keys = [value ja_map:^(JANBTTag *element)
+		{
+			NSParameterAssert([element isKindOfClass:[JANBTTag class]]);
+			return element.name;
+		}];
+		value = [NSDictionary dictionaryWithObjects:value forKeys:keys];
+	}
+	else if ([value isKindOfClass:[NSDictionary class]])
+	{
+		for (id key in value)
+		{
+			JANBTTag *element = [value objectForKey:key];
+			NSParameterAssert([element isKindOfClass:[JANBTTag class]]);
+			if (![element.name isEqual:key])
+			{
+				[NSException raise:NSInvalidArgumentException format:@"Entries in a compound NBT tag dictionary must be keyed by their names."];
+			}
+		}
+	}
+	else if (value == nil)
+	{
+		value = [NSDictionary dictionary];
+	}
+	else
+	{
+		[NSException raise:NSInvalidArgumentException format:@"An NBT tag compound value must be an NSArray or NSDictionary."];	
+	}
+	
+	if ((self = [super initWithName:name]))
+	{
+		_value = [value copy];
+	}
+	return self;
+}
+
+
+- (JANBTTagType) type
+{
+	return kJANBTTagCompound;
+}
+
+
+- (id) objectValue
+{
+	return _value;
+}
+
+
+- (BOOL) isObjectType
+{
+	return YES;
+}
+
+
+- (void) encodeWithoutHeaderInto:(NSMutableData *)data
+{
+	for (JANBTTag *tag in _value.allValues)
+	{
+		[tag encodeInto:data];
+	}
+	
+	// Write a TAG_End to terminate.
+	WriteByte(data, kJANBTTagEnd);
+}
+
+
+- (id) propertyListRepresentation
+{
+	return [_value ja_mapValues:^(id key, id value){ return [value propertyListRepresentation]; }];
 }
 
 @end
@@ -741,7 +940,7 @@ static NSString *IndentString(NSUInteger count)
 
 @implementation NSObject (JANBTTag)
 
-- (id) japriv_NBTFromPlistWithName:(NSString *)name
+- (id) japriv_NBTFromPlistWithName:(NSString *)name schema:(id)schema
 {
 	return nil;
 }
@@ -751,17 +950,35 @@ static NSString *IndentString(NSUInteger count)
 
 @implementation NSNumber (JANBTTag)
 
-- (id) japriv_NBTFromPlistWithName:(NSString *)name
+- (id) japriv_NBTFromPlistWithName:(NSString *)name schema:(id)schema
 {
-	const char *type = [self objCType];
-	if (strcmp(type, @encode(float)) == 0)
+	JANBTTagType tagType = kJANBTTagEnd;
+	if ($equal(schema, @"byte"))  tagType = kJANBTTagByte;
+	else if ($equal(schema, @"short"))  tagType = kJANBTTagShort;
+	else if ($equal(schema, @"int"))  tagType = kJANBTTagInt;
+	else if ($equal(schema, @"long"))  tagType = kJANBTTagLong;
+	else if ($equal(schema, @"float"))  tagType = kJANBTTagFloat;
+	else if ($equal(schema, @"double"))  tagType = kJANBTTagDouble;
+	else
 	{
-		return [JANBTTag tagWithName:name floatValue:[self floatValue]];
+		const char *type = [self objCType];
+		if (strcmp(type, @encode(float)) == 0)  tagType = kJANBTTagFloat;
+		if (strcmp(type, @encode(double)) == 0)  tagType = kJANBTTagDouble;
 	}
-	if (strcmp(type, @encode(double)) == 0)
+	
+	if (tagType != kJANBTTagEnd)
 	{
-		return [JANBTTag tagWithName:name doubleValue:[self doubleValue]];
+		if (tagType == kJANBTTagFloat)
+		{
+			return [[JANBTFloatTag alloc] initWithName:name floatValue:[self floatValue]];
+		}
+		if (tagType == kJANBTTagDouble)
+		{
+			return [[JANBTDoubleTag alloc] initWithName:name doubleValue:[self doubleValue]];
+		}
+		return [[JANBTIntegerTag alloc] initWithName:name integerValue:[self integerValue] type:tagType];
 	}
+	
 	return [JANBTTag tagWithName:name integerValue:[self integerValue]];
 }
 
@@ -770,7 +987,7 @@ static NSString *IndentString(NSUInteger count)
 
 @implementation NSData (JANBTTag)
 
-- (id) japriv_NBTFromPlistWithName:(NSString *)name
+- (id) japriv_NBTFromPlistWithName:(NSString *)name schema:(id)schema
 {
 	return [JANBTTag tagWithName:name byteArrayValue:self];
 }
@@ -780,7 +997,7 @@ static NSString *IndentString(NSUInteger count)
 
 @implementation NSString (JANBTTag)
 
-- (id) japriv_NBTFromPlistWithName:(NSString *)name
+- (id) japriv_NBTFromPlistWithName:(NSString *)name schema:(id)schema
 {
 	return [JANBTTag tagWithName:name stringValue:self];
 }
@@ -790,13 +1007,49 @@ static NSString *IndentString(NSUInteger count)
 
 @implementation NSArray (JANBTTag)
 
-- (id) japriv_NBTFromPlistWithName:(NSString *)name
+- (id) japriv_NBTFromPlistWithName:(NSString *)name schema:(id)schema
 {
+	if ([schema isKindOfClass:[NSArray class]] && [schema count] > 0)
+	{
+		schema = [schema objectAtIndex:0];
+	}
+	
 	NSArray *elements = [self ja_map:^(id value)
 	{
-		return [JANBTTag tagWithName:nil propertyListRepresentation:value];
+		return [value japriv_NBTFromPlistWithName:nil schema:schema];
 	}];
-	return [JANBTTag tagWithName:name listValue:elements];	
+	
+	if (schema == nil || elements.count > 0)
+	{
+		return [JANBTTag tagWithName:name listValue:elements];	
+	}
+	else
+	{
+		// Special case to get right nominal type for empty lists.
+		JANBTTagType type = kJANBTTagByte;	// Fallback.
+		
+		if ([schema isKindOfClass:[NSArray class]])
+		{
+			type = kJANBTTagList;
+		}
+		else if ([schema isKindOfClass:[NSDictionary class]])
+		{
+			type = kJANBTTagCompound;
+		}
+		else if ([schema isKindOfClass:[NSString class]])
+		{
+		//	if ($equal(schema, @"byte"))  type = kJANBTTagByte;	// Not needed since it's the default.
+			if ($equal(schema, @"short"))  type = kJANBTTagShort;
+			if ($equal(schema, @"int"))  type = kJANBTTagInt;
+			if ($equal(schema, @"long"))  type = kJANBTTagLong;
+			if ($equal(schema, @"float"))  type = kJANBTTagFloat;
+			if ($equal(schema, @"double"))  type = kJANBTTagDouble;
+			if ($equal(schema, @"data"))  type = kJANBTTagByteArray;
+			if ($equal(schema, @"string"))  type = kJANBTTagString;
+		}
+		
+		return [[JANBTListTag alloc] initWithName:name listValue:[NSArray array] elementType:type verified:YES];
+	}
 }
 
 @end
@@ -804,13 +1057,29 @@ static NSString *IndentString(NSUInteger count)
 
 @implementation NSDictionary (JANBTTag)
 
-- (id) japriv_NBTFromPlistWithName:(NSString *)name
+- (id) japriv_NBTFromPlistWithName:(NSString *)name schema:(id)schema
 {
+	if (![schema isKindOfClass:[NSDictionary class]])
+	{
+		schema = nil;
+	}
+	
 	NSDictionary *elements = [self ja_mapValues:^(id key, id value)
 	{
-		return [JANBTTag tagWithName:key propertyListRepresentation:value];
+		return [value japriv_NBTFromPlistWithName:key schema:[schema objectForKey:key]];
 	}];
-	return [JANBTTag tagWithName:name compoundValue:elements];
+	return [[JANBTCompoundTag alloc] initWithName:name compoundValue:elements verified:YES];
+}
+
+@end
+
+
+@implementation JANBTTag (JANBTTag)
+
+- (id) japriv_NBTFromPlistWithName:(NSString *)name schema:(id)schema
+{
+	if ($equal(self.name, name))  return self;
+	else  return nil;
 }
 
 @end
@@ -912,14 +1181,16 @@ static void UnexpectedEOF(void)
 
 
 @implementation JANBTParser
+{
+	NSData					*_data;
+	const uint8_t			*_bytes;
+	size_t					_remaining;
+}
 
 + (JANBTTag *) parseData:(NSData *)data
 {
 	JANBTParser *parser = [[self alloc] initWithData:data];
-	JANBTTag *result = [parser parsedTags];
-	[parser release];
-	
-	return result;
+	return [parser parsedTags];
 }
 
 
@@ -929,13 +1200,12 @@ static void UnexpectedEOF(void)
 	data = [data dd_gzipInflate];
 	if (data == nil)
 	{
-		[self release];
 		return nil;
 	}
 	
 	if ((self = [super init]))
 	{
-		_data = [data retain];
+		_data = data;
 		_bytes = data.bytes;
 		_remaining = data.length;
 	}
@@ -944,22 +1214,15 @@ static void UnexpectedEOF(void)
 }
 
 
-- (void) dealloc
-{
-	[_data release];
-	_data = nil;
-	
-	[super dealloc];
-}
-
-
 - (JANBTTag *) parsedTags
 {
 	@try
 	{
-		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-		JANBTTag *tag = [self priv_parseOneTag];
-		[pool release];
+		JANBTTag *tag = nil;
+		@autoreleasepool
+		{
+			tag = [self priv_parseOneTag];
+		}
 		return tag;
 	}
 	@catch (NSException *e)
@@ -1068,8 +1331,7 @@ static void UnexpectedEOF(void)
 		[e raise];
 	}
 	
-	NSString *result = [[NSString alloc] initWithBytesNoCopy:bytes length:length encoding:NSUTF8StringEncoding freeWhenDone:YES];
-	return [result autorelease];
+	return [[NSString alloc] initWithBytesNoCopy:bytes length:length encoding:NSUTF8StringEncoding freeWhenDone:YES];
 }
 
 @end
@@ -1139,28 +1401,28 @@ static void UnexpectedEOF(void)
 - (JANBTTag *) priv_parseByteWithName:(NSString *)name
 {
 	int8_t byteVal = [self readByte];
-	return [[[JANBTTag alloc] initWithName:name integerValue:byteVal type:kJANBTTagByte] autorelease];
+	return [[JANBTIntegerTag alloc] initWithName:name integerValue:byteVal type:kJANBTTagByte];
 }
 
 
 - (JANBTTag *) priv_parseShortWithName:(NSString *)name
 {
 	int16_t shortVal = [self readShort];
-	return [[[JANBTTag alloc] initWithName:name integerValue:shortVal type:kJANBTTagShort] autorelease];
+	return [[JANBTIntegerTag alloc] initWithName:name integerValue:shortVal type:kJANBTTagShort];
 }
 
 
 - (JANBTTag *) priv_parseIntWithName:(NSString *)name
 {
 	int32_t intVal = [self readInt];
-	return [[[JANBTTag alloc] initWithName:name integerValue:intVal type:kJANBTTagInt] autorelease];
+	return [[JANBTIntegerTag alloc] initWithName:name integerValue:intVal type:kJANBTTagInt];
 }
 
 
 - (JANBTTag *) priv_parseLongWithName:(NSString *)name
 {
 	int64_t longVal = [self readLong];
-	return [[[JANBTTag alloc] initWithName:name integerValue:longVal type:kJANBTTagLong] autorelease];
+	return [[JANBTIntegerTag alloc] initWithName:name integerValue:longVal type:kJANBTTagLong];
 }
 
 
@@ -1168,7 +1430,7 @@ static void UnexpectedEOF(void)
 {
 	int32_t floatBytes = [self readInt];
 	Float32 floatVal = *(Float32 *)&floatBytes;
-	return [[[JANBTTag alloc] initWithName:name floatValue:floatVal] autorelease];
+	return [[JANBTFloatTag alloc] initWithName:name floatValue:floatVal];
 }
 
 
@@ -1176,7 +1438,7 @@ static void UnexpectedEOF(void)
 {
 	int64_t doubleBytes = [self readLong];
 	Float64 doubleVal = *(Float64 *)&doubleBytes;
-	return [[[JANBTTag alloc] initWithName:name doubleValue:doubleVal] autorelease];
+	return [[JANBTDoubleTag alloc] initWithName:name doubleValue:doubleVal];
 }
 
 
@@ -1197,14 +1459,13 @@ static void UnexpectedEOF(void)
 	}
 	
 	NSData *data = [NSData dataWithBytesNoCopy:bytes length:length freeWhenDone:YES];
-	return [[[JANBTTag alloc] initWithName:name byteArrayValue:data] autorelease];
+	return [JANBTTag tagWithName:name byteArrayValue:data];
 }
 
 
 - (JANBTTag *) priv_parseStringWithName:(NSString *)name
 {
-	NSString *string = [self readString];
-	return [[[JANBTTag alloc] initWithName:name stringValue:string] autorelease];
+	return [JANBTTag tagWithName:name stringValue:[self readString]];
 }
 
 
@@ -1220,8 +1481,7 @@ static void UnexpectedEOF(void)
 		[array addObject:tag];
 	}
 	
-	// NOTE: loses type info if list is empty. This could be a problem.
-	return [[[JANBTTag alloc] initWithName:name listValue:[NSArray arrayWithArray:array]] autorelease];
+	return [[JANBTListTag alloc] initWithName:name listValue:[NSArray arrayWithArray:array] elementType:type verified:YES];
 }
 
 
@@ -1238,50 +1498,35 @@ static void UnexpectedEOF(void)
 		[subTags setObject:tag forKey:key];
 	}
 	
-	return [[[JANBTTag alloc] initWithName:name compoundValue:[NSDictionary dictionaryWithDictionary:subTags]] autorelease];
+	return [JANBTTag tagWithName:name compoundValue:[NSDictionary dictionaryWithDictionary:subTags]];
 }
 
 @end
 
 
 @implementation JANBTEncoder
+{
+	JANBTTag				*_rootTag;
+	NSData					*_data;
+}
 
 + (NSData *) encodeTag:(JANBTTag *)tag
 {
 	JANBTEncoder *encoder = [[self alloc] initWithRootTag:tag];
-	NSData *result = [encoder encodedData];
-	[encoder release];
-	
-	return result;
+	return [encoder encodedData];
 }
 
 
 - (id) initWithRootTag:(JANBTTag *)tag
 {
-	if (tag == nil)
-	{
-		[self release];
-		return nil;
-	}
+	if (tag == nil)  return nil;
 	
 	if ((self = [super init]))
 	{
-		_rootTag = [tag retain];
+		_rootTag = tag;
 	}
 	
 	return self;
-}
-
-
-- (void) dealloc
-{
-	[_rootTag release];
-	_rootTag = nil;
-	
-	[_data release];
-	_data = nil;
-	
-	[super dealloc];
 }
 
 
@@ -1291,8 +1536,7 @@ static void UnexpectedEOF(void)
 	{
 		NSMutableData *rawData = [NSMutableData data];
 		[_rootTag encodeInto:rawData];
-		_data = [[rawData dd_gzipDeflate] retain];
-		[_rootTag release];
+		_data = [rawData dd_gzipDeflate];
 		_rootTag = nil;
 	}
 	

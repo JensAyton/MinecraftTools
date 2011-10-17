@@ -65,10 +65,6 @@ enum
 
 
 @interface JAMutableMinecraftBlockStore: JAMinecraftBlockStore
-{
-	NSUInteger						_bulkLevel;
-	MCGridExtents					_dirtyExtents;
-}
 
 - (void) setCell:(MCCell)cell andTileEntity:(NSDictionary *)tileEntity at:(MCGridCoordinates)location;
 

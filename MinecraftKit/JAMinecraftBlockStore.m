@@ -68,6 +68,10 @@ static void ThrowSubclassResponsibility(const char *func) __attribute__((noretur
 
 
 @implementation JAMutableMinecraftBlockStore
+{
+	NSUInteger						_bulkLevel;
+	MCGridExtents					_dirtyExtents;
+}
 
 - (id) init
 {

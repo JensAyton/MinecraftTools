@@ -2,10 +2,10 @@
 	JAMinecraftMergedBlockStore.h
 	
 	A pseudo-store which presents a read-only merged view of two different
-	block stores. This will throw an exception if you try to write to it.
+	block stores.
 	
 	
-	Copyright © 2010 Jens Ayton
+	Copyright © 2010–2011 Jens Ayton
 	
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),
@@ -32,13 +32,6 @@
 
 
 @interface JAMinecraftMergedBlockStore: JAMinecraftBlockStore
-{
-@private
-	JAMinecraftBlockStore		*_mainStore;
-	JAMinecraftSchematic		*_overlay;
-	MCGridCoordinates			_overlayOffset;
-	MCGridExtents				_overlayExtents;
-}
 
 - (id) initWithMainStore:(JAMinecraftBlockStore <NSCopying> *)mainStore
 				 overlay:(JAMinecraftSchematic *)overlay

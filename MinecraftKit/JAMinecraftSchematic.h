@@ -20,6 +20,9 @@
 	  write). For example, it is cheap to make a copy of the schematic and
 	  make a single-block edit, and this is the recommended way of implementing
 	  undoable editing.
+	  N.b.: this doesn’t take tile entities into account; at the moment, the
+	  tile entity list is copied wholesale (although the individual entities
+	  are not).
 	
 	
 	Copyright © 2010–2011 Jens Ayton
@@ -49,29 +52,6 @@
 
 
 @interface JAMinecraftSchematic: JAMutableMinecraftBlockStore <NSCopying>
-{
-@private
-	struct InnerNode				*_root;
-	MCGridExtents					_extents;
-	NSInteger						_groundLevel;
-	
-	NSMutableDictionary				*_tileEntities;
-	
-	BOOL							_extentsAreAccurate;
-	uint8_t							_rootLevel;
-	
-	/*
-		Access cache for quicker sequential reads.
-		TODO: keep track of path through tree to cached chunk. This will allow
-		fast access to adjacent chunks, and use of cache on write (by checking
-		for COWed ancestor nodes).
-	*/
-	BOOL							_cacheIsValid;
-	struct Chunk					*_cachedChunk;
-	MCGridCoordinates				_cacheBase;
-	
-	MCGridExtents					_deferredOptimizationRegion;
-}
 
 - (id) initWithGroundLevel:(NSInteger)groundLevel;
 

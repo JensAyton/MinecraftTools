@@ -29,7 +29,7 @@
 
 #import "MYCollectionUtilities.h"
 
-
+#if MY_USE_DICT
 NSDictionary* OOMYDictOf(const struct _dictpair* pairs, size_t count)
 {
     id objects[count], keys[count];
@@ -58,6 +58,7 @@ NSMutableDictionary* OOMYMDictOf(const struct _dictpair* pairs, size_t count)
     }
     return [NSMutableDictionary dictionaryWithObjects: objects forKeys: keys count: n];
 }
+#endif
 
 
 BOOL $equal(id obj1, id obj2)      // Like -isEqual: but works even if either/both are nil

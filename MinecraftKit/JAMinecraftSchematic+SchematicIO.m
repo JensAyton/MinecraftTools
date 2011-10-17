@@ -176,34 +176,20 @@ static id KeyForCoords(NSInteger x, NSInteger y, NSInteger z)
 }
 
 
-static JANBTTag *MakeTileEntityNBT(NSDictionary *entityDict, MCGridCoordinates location)
-{
-	NSMutableDictionary *mutableEntityDict = [entityDict mutableCopy];
-	[mutableEntityDict ja_setInteger:location.x forKey:@"x"];
-	[mutableEntityDict ja_setInteger:location.y forKey:@"y"];
-	[mutableEntityDict ja_setInteger:location.z forKey:@"z"];
-	
-	JANBTTag *result = [JANBTTag tagWithName:nil propertyListRepresentation:mutableEntityDict];
-	[mutableEntityDict release];
-	return result;
-}
-
-
 - (NSData *) schematicDataForRegion:(MCGridExtents)region withError:(NSError **)outError
 {
 	NSMutableDictionary *root = [NSMutableDictionary dictionary];
 	
-	// Note that the concept of width and height differs.
 	NSUInteger width = MCGridExtentsWidth(region);
 	NSUInteger length = MCGridExtentsLength(region);
 	NSUInteger height = MCGridExtentsHeight(region);
 	
-	[root ja_setNBTInteger:width type:kJANBTTagShort forKey:kWidthKey];
-	[root ja_setNBTInteger:length type:kJANBTTagShort forKey:kLengthKey];
-	[root ja_setNBTInteger:height type:kJANBTTagShort forKey:kHeightKey];
+	[root ja_setInteger:width forKey:kWidthKey];
+	[root ja_setInteger:length forKey:kLengthKey];
+	[root ja_setInteger:height forKey:kHeightKey];
 	
-	[root ja_setNBTInteger:self.groundLevel forKey:kGroundLevelKey];
-	[root ja_setNBTString:kMaterialsAlpha forKey:kMaterialsKey];
+	[root ja_setInteger:self.groundLevel forKey:kGroundLevelKey];
+	[root setObject:kMaterialsAlpha forKey:kMaterialsKey];
 	
 	NSUInteger planeSize = width * length * height;
 	NSMutableData *blockIDs = [NSMutableData dataWithLength:planeSize];
@@ -235,18 +221,28 @@ static JANBTTag *MakeTileEntityNBT(NSDictionary *entityDict, MCGridCoordinates l
 				
 				if (tileEntity != nil)
 				{
-					[tileEntities addObject:MakeTileEntityNBT(tileEntity, location)];
+					@autoreleasepool
+					{
+						NSMutableDictionary *mutableEntity = [tileEntity mutableCopy];
+						[mutableEntity ja_setInteger:location.x forKey:@"x"];
+						[mutableEntity ja_setInteger:location.y forKey:@"y"];
+						[mutableEntity ja_setInteger:location.z forKey:@"z"];
+						
+						[tileEntities addObject:mutableEntity];
+					}
 				}
 			}
 		}
 	}
 	
-	[root ja_setNBTByteArray:blockIDs forKey:kBlocksKey];
-	[root ja_setNBTByteArray:blockData forKey:kDataKey];
-	[root ja_setNBTList:tileEntities forKey:kTileEntitiesKey];
-	[root ja_setNBTList:[NSArray array] forKey:kEntitiesKey];
+	[root setObject:blockIDs forKey:kBlocksKey];
+	[root setObject:blockData forKey:kDataKey];
+	[root setObject:tileEntities forKey:kTileEntitiesKey];
+	[root setObject:[NSArray array] forKey:kEntitiesKey];
 	
-	JANBTTag *nbtRoot = [root ja_asNBTTagWithName:kSchematicKey];
+	NSDictionary *schema = [NSDictionary dictionaryWithContentsOfURL:[[NSBundle bundleForClass:self.class] URLForResource:@"Schematic" withExtension:@"schema"]];
+	
+	JANBTTag *nbtRoot = [JANBTTag tagWithName:kSchematicKey propertyListRepresentation:root schema:schema];
 	return [JANBTEncoder encodeTag:nbtRoot];
 }
 

@@ -2,7 +2,7 @@
 	JAMinecraftGridView.m
 	
 	
-	Copyright © 2010 Jens Ayton
+	Copyright © 2010–2011 Jens Ayton
 	
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),
@@ -114,6 +114,36 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 
 
 @implementation JAMinecraftGridView
+{
+	JAMutableMinecraftBlockStore <NSCopying>	*_store;
+	
+	NSScroller						*_horizontalScroller;
+	NSScroller						*_verticalScroller;
+	
+	NSPoint							_scrollCenter;
+	NSInteger						_currentLayer;
+	
+	JAMCGridViewRenderCB			_renderCallback;
+	
+	uint8_t							_dragAction;
+	
+	MCGridCoordinates				_selectionAnchor;
+	MCGridExtents					_selection;
+	NSTimer							*_selectionUpdateTimer;
+	
+	NSUInteger						_zoomLevel;
+	NSInteger						_cellSize;
+	NSInteger						_gridWidth;
+	
+	JAMinecraftSchematic			*_floatContent;
+	MCGridCoordinates				_floatOffset;
+	MCGridExtents					_floatExtents;
+	BOOL							_floatIsSelection;
+	
+	NSColor							*_emptyOutsidePattern;
+	
+	NSTimer							*_toolTipUpdateTimer;
+}
 
 - (id)initWithFrame:(NSRect)frame
 {
@@ -146,6 +176,12 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 	}
 	
 	return self;
+}
+
+
+- (void) dealloc
+{
+	self.store = nil;
 }
 
 
@@ -680,7 +716,7 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 		NSRect selectionBounds = self.selectionBounds;
 		if (NSIntersectsRect(dirtyRect, selectionBounds))
 		{
-			NSBezierPath *selectionPath = [NSBezierPath new];
+			NSBezierPath *selectionPath = [NSBezierPath bezierPath];
 			selectionPath.lineWidth = _gridWidth;
 			[selectionPath appendBezierPathWithRect:NSInsetRect(selectionBounds, -0.5 * _gridWidth, -0.5 * _gridWidth)];
 			NSColor *selectionColor = nil;

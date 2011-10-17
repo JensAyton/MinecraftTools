@@ -1,7 +1,5 @@
 /*
 	IsKeyDown.m
-	Map Viewer for Redline
-	$Id: IsKeyDown.c 130 2007-01-10 13:42:23Z jayton $
 	
 	Copyright © 2007 Jens Ayton
 

@@ -32,10 +32,16 @@
 
 @interface MyDocument: NSDocument
 
-@property JAMinecraftSchematic *schematic;
+@property (retain) JAMinecraftSchematic *schematic;
 @property NSUInteger currentLayer;
 
-@property IBOutlet JASchematicViewerView *schematicView;
+@property (assign) IBOutlet JASchematicViewerView *schematicView;
+
+@end
+
+
+
+@interface MyDocument (UIActions)
 
 - (IBAction) incrementCurrentLayer:(id)sender;
 - (IBAction) decrementCurrentLayer:(id)sender;
