@@ -128,10 +128,6 @@
 		1AFE344513F930BF001A33D4 = {
 			isa = PBXGroup;
 			children = (
-				1AFE34BE13F932DD001A33D4 /* Carbon.framework */,
-				1AFE34BC13F932CC001A33D4 /* libz.dylib */,
-				1AFE34BA13F932BD001A33D4 /* ApplicationServices.framework */,
-				1AFE34B813F932B3001A33D4 /* Carbon.framework */,
 				1AFE345A13F930BF001A33D4 /* MinecraftKit */,
 				1AFE345313F930BF001A33D4 /* Frameworks */,
 				1AFE345213F930BF001A33D4 /* Products */,
@@ -150,6 +146,10 @@
 		1AFE345313F930BF001A33D4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1AFE34BE13F932DD001A33D4 /* Carbon.framework */,
+				1AFE34BC13F932CC001A33D4 /* libz.dylib */,
+				1AFE34BA13F932BD001A33D4 /* ApplicationServices.framework */,
+				1AFE34B813F932B3001A33D4 /* Carbon.framework */,
 				1AFE345413F930BF001A33D4 /* Cocoa.framework */,
 				1AFE345613F930BF001A33D4 /* Other Frameworks */,
 			);
