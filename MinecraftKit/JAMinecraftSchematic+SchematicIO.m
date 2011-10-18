@@ -95,7 +95,7 @@ static id KeyForCoords(NSInteger x, NSInteger y, NSInteger z)
 		return nil;
 	}
 	
-	NSMutableDictionary *tileEntities = nil;
+	NSMutableDictionary *tileEntities;
 	NSArray *serializedEntities = [[dict objectForKey:kTileEntitiesKey] objectValue];
 	if ([serializedEntities isKindOfClass:[NSArray class]])
 	{
@@ -214,7 +214,7 @@ static id KeyForCoords(NSInteger x, NSInteger y, NSInteger z)
 		{
 			for (location.x = region.minX; location.x <= region.maxX; location.x++)
 			{
-				NSDictionary *tileEntity = nil;
+				__autoreleasing NSDictionary *tileEntity;
 				MCCell cell = [self cellAt:location gettingTileEntity:&tileEntity];
 				*blockBytes++ = cell.blockID;
 				*metaBytes++ = cell.blockData & kMCInfoStandardBitsMask;

@@ -151,7 +151,7 @@ static void ThrowSubclassResponsibility(const char *func) __attribute__((noretur
 	{
 		NSValue *extentsObj = [NSValue value:&changedExtents withObjCType:@encode(MCGridExtents)];
 		[[NSNotificationCenter defaultCenter] postNotificationName:kJAMinecraftBlockStoreChangedNotification
-															object:self
+		 													object:self
 														  userInfo:[NSDictionary dictionaryWithObject:extentsObj
 																							   forKey:kJAMinecraftBlockStoreChangedExtents]];
 	}
@@ -223,7 +223,7 @@ static void ThrowSubclassResponsibility(const char *func) __attribute__((noretur
 		{
 			for (location.x = region.minX; location.x <= region.maxX; location.x++)
 			{
-				NSDictionary *tileEntity = nil;
+				__autoreleasing NSDictionary *tileEntity;
 				MCCell cell = [source cellAt:location gettingTileEntity:&tileEntity];
 				if (!MCCellIsAir(cell))  [self setCell:cell andTileEntity:tileEntity atX:location.x - offset.x y:location.y - offset.y z:location.z - offset.z];
 			}
@@ -276,7 +276,7 @@ static void ThrowSubclassResponsibility(const char *func) __attribute__((noretur
 
 - (JAMinecraftBlock *) blockAt:(MCGridCoordinates)location
 {
-	__autoreleasing NSDictionary *tileEntity = nil;
+	__autoreleasing NSDictionary *tileEntity;
 	MCCell cell = [self cellAt:location gettingTileEntity:&tileEntity];
 	return [JAMinecraftBlock blockWithCell:cell tileEntity:tileEntity];
 }
@@ -290,7 +290,7 @@ static void ThrowSubclassResponsibility(const char *func) __attribute__((noretur
 
 - (NSDictionary *) tileEntityAt:(MCGridCoordinates)location
 {
-	NSDictionary *result = nil;
+	__autoreleasing NSDictionary *result;
 	[self cellAt:location gettingTileEntity:&result];
 	return result;
 }
@@ -310,7 +310,7 @@ static void ThrowSubclassResponsibility(const char *func) __attribute__((noretur
 
 - (NSDictionary *) tileEntityAtX:(NSInteger)x y:(NSInteger)y z:(NSInteger)z
 {
-	NSDictionary *result = nil;
+	__autoreleasing NSDictionary *result;
 	[self cellAt:(MCGridCoordinates){ x, y, z } gettingTileEntity:&result];
 	return result;	
 }

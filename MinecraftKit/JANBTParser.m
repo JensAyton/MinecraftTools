@@ -1218,7 +1218,7 @@ static void UnexpectedEOF(void)
 {
 	@try
 	{
-		JANBTTag *tag = nil;
+		JANBTTag *tag;
 		@autoreleasepool
 		{
 			tag = [self priv_parseOneTag];
@@ -1343,7 +1343,7 @@ static void UnexpectedEOF(void)
 - (JANBTTag *) priv_parseOneTag
 {
 	JANBTTagType type = [self readByte];
-	NSString *name = nil;
+	NSString *name;
 	if (type != kJANBTTagEnd)
 	{
 		name = [self readString];

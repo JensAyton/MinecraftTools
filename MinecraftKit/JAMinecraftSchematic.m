@@ -2005,7 +2005,7 @@ extern void JAMCSchematicDump(void)
 			}
 			else
 			{
-				NSString *desc = nil;
+				NSString *desc;
 				if (node->tag == kTagDeadInnerNode)  desc = @"released";
 				else if (node->tag == kTagChunk)  desc = @"chunk";
 				else if (node->tag == kTagDeadChunk)  desc = @"released chunk";
@@ -2043,7 +2043,7 @@ extern void JAMCSchematicDump(void)
 			}
 			else
 			{
-				NSString *desc = nil;
+				NSString *desc;
 				if (chunk->tag == kTagDeadChunk)  desc = @"released";
 				else if (chunk->tag == kTagInnerNode)  desc = @"inner node";
 				else if (chunk->tag == kTagDeadInnerNode)  desc = @"released inner node";

@@ -32,10 +32,10 @@
 
 @interface MyDocument: NSDocument
 
-@property (retain) JAMinecraftSchematic *schematic;
+@property (strong) JAMinecraftSchematic *schematic;
 @property NSUInteger currentLayer;
 
-@property (assign) IBOutlet JASchematicViewerView *schematicView;
+@property (weak) IBOutlet JASchematicViewerView *schematicView;
 
 @end
 

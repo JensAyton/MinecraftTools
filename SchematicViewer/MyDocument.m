@@ -233,7 +233,7 @@
 - (IBAction) paste:(id)sender
 {
 	NSPasteboard *pboard = [NSPasteboard generalPasteboard];
-	JAMinecraftSchematic *pasted = nil;
+	JAMinecraftSchematic *pasted;
 	NSData *data = [pboard dataForType:kJAMinecraftSchematicUTI];
 	if (data != nil)  pasted = [[JAMinecraftSchematic alloc] initWithSchematicData:data error:nil];
 	
@@ -333,7 +333,7 @@
 			for (NSUInteger x = 0; x < width; x++)
 			{
 				MCGridCoordinates loc = { extents.minX + x, extents.minY + y, extents.minZ + z };
-				NSDictionary *tileEntity = nil;
+				__autoreleasing NSDictionary *tileEntity;
 				MCCell cell = [currentCircuit cellAt:loc gettingTileEntity:&tileEntity];
 				loc.x = loc.z;
 				loc.z = extents.maxX - x;
@@ -370,7 +370,7 @@
 			for (NSUInteger x = 0; x < width; x++)
 			{
 				MCGridCoordinates loc = { extents.minX + x, extents.minY + y, extents.minZ + z };
-				NSDictionary *tileEntity = nil;
+				__autoreleasing NSDictionary *tileEntity;
 				MCCell cell = [currentCircuit cellAt:loc gettingTileEntity:&tileEntity];
 				loc.z = loc.x;
 				loc.x = extents.maxZ - z;
@@ -407,7 +407,7 @@
 			for (NSUInteger x = 0; x < width; x++)
 			{
 				MCGridCoordinates loc = { extents.minX + x, extents.minY + y, extents.minZ + z };
-				NSDictionary *tileEntity = nil;
+				__autoreleasing NSDictionary *tileEntity;
 				MCCell cell = [currentCircuit cellAt:loc gettingTileEntity:&tileEntity];
 				loc.z = extents.maxZ - z;
 				cell = MCFlipCellEastWest(cell);
@@ -443,7 +443,7 @@
 			for (NSUInteger x = 0; x < width; x++)
 			{
 				MCGridCoordinates loc = { extents.minX + x, extents.minY + y, extents.minZ + z };
-				NSDictionary *tileEntity = nil;
+				__autoreleasing NSDictionary *tileEntity;
 				MCCell cell = [currentCircuit cellAt:loc gettingTileEntity:&tileEntity];
 				loc.x = extents.maxX - x;
 				cell = MCFlipCellNorthSouth(cell);
