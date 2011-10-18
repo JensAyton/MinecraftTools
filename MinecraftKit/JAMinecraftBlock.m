@@ -76,6 +76,12 @@ static inline void ThrowImmutable(const char *name) __attribute((noreturn));
 }
 
 
+- (NSString *) description
+{
+	return $sprintf(@"<%@ %p>{ ID: %u, data: 0x%X }", self.class, self, self.blockID, self.blockData);
+}
+
+
 static inline BOOL BlocksEqual(JAMinecraftBlock *a, JAMinecraftBlock *b) __attribute__((nonnull));
 static inline BOOL BlocksEqual(JAMinecraftBlock *a, JAMinecraftBlock *b)
 {
@@ -111,46 +117,13 @@ static inline BOOL BlocksEqual(JAMinecraftBlock *a, JAMinecraftBlock *b)
 	with no tile entity. There can be at most USHRT_MAX of them. NSNumber
 	keys are near-free in Lion.
 */
-static NSMutableArray *sZeroDataCache;
+static JAMinecraftBlock *sZeroDataBlockCache[kMCLastBlockID + 1];
 static JAMinecraftBlock *sHoleBlock;
-static id sNSNull;
-
-
-static inline BOOL IsEligibleForCache(uint8_t blockID, uint8_t blockData, NSDictionary *tileEntity) __attribute__((const));
 
 
 static inline BOOL IsEligibleForCache(uint8_t blockID, uint8_t blockData, NSDictionary *tileEntity)
 {
-	return blockData == 0 && tileEntity == nil;
-}
-
-
-static inline JAMinecraftBlock *GetCachedBlock(uint8_t blockID, uint8_t blockData, NSDictionary *tileEntity)
-{
-	if (IsEligibleForCache(blockID, blockData, tileEntity) && sZeroDataCache != NULL)
-	{
-		id result = nil;
-		@synchronized (sZeroDataCache)
-		{
-			result = [sZeroDataCache objectAtIndex:blockID];
-		}
-		if (result != sNSNull)  return result;
-	}
-	else if (blockID == kMCBlockAir && blockData == kMCInfoAirIsHole)
-	{
-		return sHoleBlock;
-	}
-	
-	return nil;
-}
-
-
-static inline Class ImmutableBlockClass(void)
-{
-	static Class c = Nil;
-	if (__builtin_expect(c != nil, 1))  return c;
-	c = [JAMinecraftBlock class];
-	return c;
+	return blockData == 0 && tileEntity == nil && blockID <= kMCLastBlockID;
 }
 
 
@@ -160,11 +133,13 @@ static inline Class ImmutableBlockClass(void)
 {
 	if (self == [JAMinecraftBlock class])
 	{
-		sNSNull = [NSNull null];
-		sZeroDataCache = [NSMutableArray arrayWithCapacity:256];
-		for (unsigned i = 0; i != 256; i++)
+		for (unsigned blockID = 0; blockID <= kMCLastBlockID; blockID++)
 		{
-			[sZeroDataCache addObject:sNSNull];
+			NSAssert(IsEligibleForCache(blockID, 0, nil), @"Cache eligibilty definition is inconsistent.");
+					 sZeroDataBlockCache[blockID] = [[JAConcreteMinecraftBlock alloc] initWithID:blockID
+																							data:0
+																					  tileEntity:nil
+																						 mutable:NO];
 		}
 		
 		sHoleBlock = [self blockWithID:kMCBlockAir data:kMCInfoAirIsHole tileEntity:nil];
@@ -174,22 +149,19 @@ static inline Class ImmutableBlockClass(void)
 
 + (id) blockWithID:(uint8_t)blockID data:(uint8_t)blockData tileEntity:(NSDictionary *)tileEntity
 {
-	JAMinecraftBlock *result = GetCachedBlock(blockID, blockData, tileEntity);
-	if (result == sNSNull)
+	if (IsEligibleForCache(blockID, blockData, tileEntity))
 	{
-		result = [[JAConcreteMinecraftBlock alloc] initWithID:blockID data:blockData tileEntity:tileEntity mutable:NO];
-		
-		if (IsEligibleForCache(blockID, blockData, tileEntity))
-		{
-			@synchronized (sZeroDataCache)
-			{
-				// It doesn’t really matter if this happens more than once.
-				[sZeroDataCache replaceObjectAtIndex:blockID withObject:result];
-			}
-		}
+		NSCAssert(sZeroDataBlockCache[blockID] != nil, @"Expected block cache to contain all eligible blocks.");
+		return sZeroDataBlockCache[blockID];
 	}
-	
-	return result;
+	else if (blockID == kMCBlockAir && blockData == kMCInfoAirIsHole)
+	{
+		return sHoleBlock;
+	}
+	else
+	{
+		return [[JAConcreteMinecraftBlock alloc] initWithID:blockID data:blockData tileEntity:tileEntity mutable:NO];
+	}
 }
 
 
@@ -201,7 +173,8 @@ static inline Class ImmutableBlockClass(void)
 
 + (JAMinecraftBlock *) airBlock
 {
-	return [self blockWithID:kMCBlockAir data:0 tileEntity:nil];
+//	return [self blockWithID:kMCBlockAir data:0 tileEntity:nil];
+	return sZeroDataBlockCache[kMCBlockAir];
 }
 
 
@@ -213,7 +186,8 @@ static inline Class ImmutableBlockClass(void)
 
 + (JAMinecraftBlock *) stoneBlock
 {
-	return [self blockWithID:kMCBlockSmoothStone data:0 tileEntity:nil];
+//	return [self blockWithID:kMCBlockSmoothStone data:0 tileEntity:nil];
+	return sZeroDataBlockCache[kMCBlockSmoothStone];
 }
 
 @end
