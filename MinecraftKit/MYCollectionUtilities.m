@@ -29,42 +29,46 @@
 
 #import "MYCollectionUtilities.h"
 
-#if MY_USE_DICT
-NSDictionary* OOMYDictOf(const struct _dictpair* pairs, size_t count)
+
+static id JADictOfImpl(JA_UNSAFE_UNRETAINED id values[], size_t count, Class cls)
 {
-    id objects[count], keys[count];
-    size_t n = 0;
-    for( size_t i=0; i<count; i++,pairs++ ) {
-        if( pairs->value ) {
-            objects[n] = pairs->value;
-            keys[n] = pairs->key;
-            n++;
-        }
-    }
-    return [NSDictionary dictionaryWithObjects: objects forKeys: keys count: n];
+	NSCParameterAssert((count & 1) == 0);
+	JA_UNSAFE_UNRETAINED id objects[count], keys[count];
+	size_t n = 0;
+	for (size_t i = 0; i < count; i += 2)
+	{
+		id key = values[i], value = values[i + 1];
+		if (value != nil)
+		{
+			objects[n] = value;
+			keys[n] = key;
+			n++;
+		}
+	}
+	return [cls dictionaryWithObjects:objects forKeys:keys count:n];
 }
 
 
-NSMutableDictionary* OOMYMDictOf(const struct _dictpair* pairs, size_t count)
+NSDictionary *JADictOf(JA_UNSAFE_UNRETAINED id values[], size_t count)
 {
-    id objects[count], keys[count];
-    size_t n = 0;
-    for( size_t i=0; i<count; i++,pairs++ ) {
-        if( pairs->value ) {
-            objects[n] = pairs->value;
-            keys[n] = pairs->key;
-            n++;
-        }
-    }
-    return [NSMutableDictionary dictionaryWithObjects: objects forKeys: keys count: n];
+	return JADictOfImpl(values, count, [NSDictionary class]);
 }
-#endif
 
 
-BOOL $equal(id obj1, id obj2)      // Like -isEqual: but works even if either/both are nil
+NSDictionary *JAMutableDictOf(JA_UNSAFE_UNRETAINED id values[], size_t count)
 {
-    if( obj1 )
-        return obj2 && [obj1 isEqual: obj2];
-    else
-        return obj2==nil;
+	return JADictOfImpl(values, count, [NSMutableDictionary class]);
+}
+
+
+BOOL $equal(id obj1, id obj2)	  // Like -isEqual: but works even if either/both are nil
+{
+	if (obj1 != nil)
+	{
+		return (obj2 != nil) && [obj1 isEqual:obj2];
+	}
+	else
+	{
+		return obj2 == nil;
+	}
 }
