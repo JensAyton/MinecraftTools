@@ -28,7 +28,7 @@
 #import <Cocoa/Cocoa.h>
 #import "JAMinecraftTypes.h"
 
-@class JAMinecraftBlockStore, JAMutableMinecraftBlockStore, JAMinecraftSchematic;
+@class JAMinecraftBlock, JAMinecraftBlockStore, JAMutableMinecraftBlockStore, JAMinecraftSchematic;
 
 typedef void (^JAMCGridViewRenderCB)(JAMinecraftBlockStore *store, MCCell cell, NSDictionary *tileEntity, MCGridCoordinates location, NSRect drawingRect);
 
@@ -189,9 +189,8 @@ enum
 */
 @property (nonatomic, readonly) BOOL hasCellToolTips;
 
-- (NSString *) stringForToolTipForLocation:(MCGridCoordinates)location
-									  cell:(MCCell)cell
-								tileEntity:(NSDictionary *)tileEntity;
+- (NSString *) stringForToolTipForBlock:(JAMinecraftBlock *)block
+									 at:(MCGridCoordinates)location;
 
 @end
 

@@ -25,6 +25,7 @@
 
 #import "JASchematicViewerView.h"
 #import <JAMinecraftKit/JAMinecraftSchematic.h>
+#import <JAMinecraftKit/JAMinecraftBlock.h>
 #import "JAPropertyListAccessors.h"
 #import "MYCollectionUtilities.h"
 
@@ -138,9 +139,8 @@ static NSArray *LoadColorTable(void);
 #define TEMPLATE_KEY3(dict, key, NAME1, NAME2, NAME3)	TEMPLATE(TEMPLATE_KEY2(dict, key, NAME1, NAME2), NAME3)
 
 
-- (NSString *) stringForToolTipForLocation:(MCGridCoordinates)location
-									  cell:(MCCell)cell
-								tileEntity:(NSDictionary *)tileEntity
+- (NSString *) stringForToolTipForBlock:(JAMinecraftBlock *)block
+									 at:(MCGridCoordinates)location
 {
 	if (_toolTipExtraStrings == nil)
 	{
@@ -151,6 +151,7 @@ static NSArray *LoadColorTable(void);
 	
 	NSString *base = nil;
 	NSString *extra = nil;
+	MCCell cell = block.cell;
 	
 	if (cell.blockID < _toolTipStrings.count)
 	{
@@ -197,7 +198,7 @@ static NSArray *LoadColorTable(void);
 			NSMutableArray *lines = [NSMutableArray arrayWithCapacity:4];
 			for (NSUInteger i = 1; i <= 4; i++)
 			{
-				NSString *text = [tileEntity ja_stringForKey:$sprintf(@"Text%u", i)];
+				NSString *text = [block.tileEntity ja_stringForKey:$sprintf(@"Text%u", i)];
 				if (text.length > 0)  [lines addObject:text];
 			}
 			

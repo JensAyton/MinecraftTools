@@ -4,7 +4,7 @@
 	Abstract block store.
 	
 	
-	Copyright © 2010 Jens Ayton
+	Copyright © 2010–2011 Jens Ayton
 	
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),
@@ -26,6 +26,8 @@
 */
 
 #import "JAMinecraftTypes.h"
+
+@class JAMinecraftBlock;
 
 
 enum
@@ -110,6 +112,8 @@ enum
 @property (readonly) NSUInteger length;
 @property (readonly) NSUInteger height;
 
+- (JAMinecraftBlock *) blockAt:(MCGridCoordinates)location;
+
 - (MCCell) cellAt:(MCGridCoordinates)location;
 - (NSDictionary *) tileEntityAt:(MCGridCoordinates)location;
 
@@ -121,6 +125,8 @@ enum
 
 
 @interface JAMutableMinecraftBlockStore (Conveniences)
+
+- (void) setBlock:(JAMinecraftBlock *)block at:(MCGridCoordinates)location;
 
 /*
 	NOTE: setting cell and tile entity separately is discouraged as it involves

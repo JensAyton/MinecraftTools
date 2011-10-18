@@ -29,6 +29,7 @@
 #import "JAMinecraftMergedBlockStore.h"
 #import "IsKeyDown.h"
 #import "JAMinecraftKitLionInterfaces.h"
+#import "JAMinecraftBlock.h"
 
 
 #define kSelectionRefreshInterval	0.1	// Selection animation interval in seconds
@@ -1091,9 +1092,8 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 	return NO;
 }
 
-- (NSString *) stringForToolTipForLocation:(MCGridCoordinates)location
-									  cell:(MCCell)cell
-								tileEntity:(NSDictionary *)tileEntity
+- (NSString *) stringForToolTipForBlock:(JAMinecraftBlock *)block
+									 at:(MCGridCoordinates)location
 {
 	[NSException raise:NSGenericException format:@"%s is a subclass responsibility (when -hasCellToolTips returns true).", __func__];
 	__builtin_unreachable();
@@ -1108,12 +1108,9 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 	if (view == self)
 	{
 		MCGridCoordinates location = [self cellLocationFromPoint:point];
-		NSDictionary *tileEntity = nil;
-		MCCell cell = [self.store cellAt:location gettingTileEntity:&tileEntity];
+		JAMinecraftBlock *block = [self.store blockAt:location];
 		
-		return [self stringForToolTipForLocation:location
-											cell:cell
-									  tileEntity:tileEntity];
+		return [self stringForToolTipForBlock:block at:location];
 	}
 	else
 	{
