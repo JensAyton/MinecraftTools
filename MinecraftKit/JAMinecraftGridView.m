@@ -96,6 +96,9 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 */
 - (void) updateDrag:(NSEvent *)event;
 
+- (void) startObservingStore:(JAMutableMinecraftBlockStore <NSCopying> *)store;
+- (void) stopObservingStore:(JAMutableMinecraftBlockStore <NSCopying> *)store;
+
 @end
 
 
@@ -182,7 +185,9 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 
 - (void) dealloc
 {
-	self.store = nil;
+	[self stopObservingStore:_store];
+	[_selectionUpdateTimer invalidate];
+	[_toolTipUpdateTimer invalidate];
 }
 
 
@@ -220,20 +225,29 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 }
 
 
+- (void) startObservingStore:(JAMutableMinecraftBlockStore <NSCopying> *)store
+{
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(blockStoreChanged:) name:kJAMinecraftBlockStoreChangedNotification object:store];
+	[store addObserver:self forKeyPath:@"groundLevel" options:0 context:NULL];
+	[store addObserver:self forKeyPath:@"extents" options:0 context:NULL];
+}
+
+
+- (void) stopObservingStore:(JAMutableMinecraftBlockStore <NSCopying> *)store
+{
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:nil object:_store];
+	[_store removeObserver:self forKeyPath:@"groundLevel"];
+	[_store removeObserver:self forKeyPath:@"extents"];
+}
+
+
 - (void) setStore:(JAMutableMinecraftBlockStore <NSCopying> *)store
 {
 	if (store != _store)
 	{
-		NSNotificationCenter *nctr = [NSNotificationCenter defaultCenter];
-		[nctr removeObserver:self name:nil object:_store];
-		[_store removeObserver:self forKeyPath:@"groundLevel"];
-		[_store removeObserver:self forKeyPath:@"extents"];
-		
-		[nctr addObserver:self selector:@selector(blockStoreChanged:) name:kJAMinecraftBlockStoreChangedNotification object:store];
-		[store addObserver:self forKeyPath:@"groundLevel" options:0 context:NULL];
-		[store addObserver:self forKeyPath:@"extents" options:0 context:NULL];
-		
+		[self stopObservingStore:_store];
 		_store = store;
+		[self startObservingStore:_store];
 		
 		[self setNeedsDisplay:YES];
 	}
@@ -525,7 +539,7 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 }
 
 
-- (void) priv_dropFloatingContent
+- (void) dropFloatingContent
 {
 	[self willChangeValueForKey:@"hasFloatingContent"];
 	[self willChangeValueForKey:@"hasFloatingSelection"];
@@ -551,14 +565,14 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 	target.z += region.minZ;
 	[self.store copyRegion:region from:_floatContent at:target];
 	
-	[self priv_dropFloatingContent];
+	[self dropFloatingContent];
 }
 
 
 - (void) discardFloatingContent
 {
 	[[NSNotificationCenter defaultCenter] postNotificationName:kJAMinecraftGridViewWillDiscardSelectionNotification object:self];
-	[self priv_dropFloatingContent];
+	[self dropFloatingContent];
 }
 
 
@@ -626,7 +640,7 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 {
 	if (_emptyOutsidePattern == nil)
 	{
-		NSColor *fillColor = nil;
+		NSColor *fillColor;
 		if (self.currentLayer >= self.store.groundLevel)  fillColor = self.airFillColorOutsideDefinedArea;
 		else  fillColor = self.groundFillColorOutsideDefinedArea;
 		
@@ -698,7 +712,7 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 		for (coords.x = targetExtents.minX; coords.x <= targetExtents.maxX; coords.x++)
 		{
 			NSRect cellRect = [self rectFromCellLocation:coords];
-			NSDictionary *tileEntity = nil;
+			__autoreleasing NSDictionary *tileEntity;
 			MCCell cell = [store cellAt:coords gettingTileEntity:&tileEntity];
 			
 			[gCtxt saveGraphicsState];
@@ -720,7 +734,7 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 			NSBezierPath *selectionPath = [NSBezierPath bezierPath];
 			selectionPath.lineWidth = _gridWidth;
 			[selectionPath appendBezierPathWithRect:NSInsetRect(selectionBounds, -0.5 * _gridWidth, -0.5 * _gridWidth)];
-			NSColor *selectionColor = nil;
+			NSColor *selectionColor;
 			if ([self isFocusedForSelection])
 			{
 				selectionColor = [NSColor selectedTextBackgroundColor];
@@ -1076,11 +1090,8 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 	}
 	else
 	{
-		if (_selectionUpdateTimer != nil)
-		{
-			[_selectionUpdateTimer invalidate];
-			_selectionUpdateTimer = nil;
-		}
+		[_selectionUpdateTimer invalidate];
+		_selectionUpdateTimer = nil;
 	}
 }
 
