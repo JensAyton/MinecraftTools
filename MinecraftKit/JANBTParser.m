@@ -368,10 +368,9 @@ static NSString *IndentString(NSUInteger count)
 				[result appendFormat:@"%llu entries of type %@", count, NameFromTagType([(JANBTListTag *)self elementType])];
 				if (count > 0)
 				{
-					JANBTTag *subTag = [list objectAtIndex:0];
 					[result appendFormat:@"\n%@{", IndentString(indent)];
 					
-					for (subTag in list)
+					for (JANBTTag *subTag in list)
 					{
 						[result appendFormat:@"\n%@%@", IndentString(indent + 1), [subTag debugDescriptionWithIndentLevel:indent + 1]];
 					}
