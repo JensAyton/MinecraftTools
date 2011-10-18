@@ -1155,6 +1155,7 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 	NSRect innerFrame = self.innerFrame;
 	MCGridExtents extents = [self extentsFromRect:innerFrame];
 	MCGridCoordinates loc;
+	loc.y = 0;	// Ignored by rectFromCellLocation:, but static analyzer doesn’t know that.
 	for (loc.x = extents.minX; loc.x <= extents.maxX; loc.x++)
 	{
 		for (loc.z = extents.minZ; loc.z <= extents.maxZ; loc.z++)
