@@ -47,11 +47,6 @@
  *	Conceptually, a cell is a location which contains a block. Alternatively,
  *	you can think of “cell” as a pointless and redundant synonym of “block”
  *	if you prefer.
- *	
- *	A more heavyweight MCBlock class with both “cell” data and tile entity (if
- *	relevant) may be added at a later date. Adding tile entities to MCCell
- *	would be bad because object references in structs aren’t/won’t be supported
- *	in ARC.
  */
 
 typedef struct MCCell
