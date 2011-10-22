@@ -25,6 +25,7 @@
 
 #import "JAMinecraftSchematic+SchematicIO.h"
 #import "JANBTParser.h"
+#import "JANBTSerialization.h"
 #import "JACollectionHelpers.h"
 #import "JAPropertyListAccessors.h"
 #import "MYCollectionUtilities.h"
@@ -67,27 +68,27 @@ static id KeyForCoords(NSInteger x, NSInteger y, NSInteger z)
 		return nil;
 	}
 	
-	JANBTTag *root = [JANBTParser parseData:data];
+	NSDictionary *schema = [NSDictionary dictionaryWithContentsOfURL:[[NSBundle bundleForClass:self.class] URLForResource:kSchematicKey withExtension:@"schema"]];
+	NSString *rootName = kSchematicKey;
 	
-	if (root.type != kJANBTTagCompound || ![root.name isEqualToString:kSchematicKey])
+	NSDictionary *dict = [JANBTSerialization NBTObjectWithData:data rootName:&rootName options:0 schema:schema error:outError];
+	if (dict == nil)
 	{
-		if (outError != nil)  *outError = [NSError errorWithDomain:kJAMinecraftBlockStoreErrorDomain
-															  code:kJABlockStoreErrorWrongFileFormat
-														  userInfo:nil];
+		if (outError != NULL)  *outError = [NSError errorWithDomain:kJAMinecraftBlockStoreErrorDomain
+															   code:kJABlockStoreErrorWrongFileFormat
+														   userInfo:$dict(NSUnderlyingErrorKey, *outError)];
 		return nil;
 	}
 	
-	NSDictionary *dict = root.objectValue;
-	
-	NSUInteger width = [[dict objectForKey:kWidthKey] integerValue];
-	NSUInteger length = [[dict objectForKey:kLengthKey] integerValue];
-	NSUInteger height = [[dict objectForKey:kHeightKey] integerValue];
+	NSUInteger width = [dict ja_integerForKey:kWidthKey];
+	NSUInteger length = [dict ja_integerForKey:kLengthKey];
+	NSUInteger height = [dict ja_integerForKey:kHeightKey];
 	
 	NSUInteger planeSize = width * length * height;
 	
-	NSData *blockIDs = [[dict objectForKey:kBlocksKey] objectValue];
-	NSData *blockData = [[dict objectForKey:kDataKey] objectValue];
-	if (![blockIDs isKindOfClass:[NSData class]] || ![blockData isKindOfClass:[NSData class]] || blockIDs.length < planeSize || blockData.length < planeSize)
+	NSData *blockIDs = [dict objectForKey:kBlocksKey];
+	NSData *blockData = [dict objectForKey:kDataKey];
+	if (blockIDs.length < planeSize || blockData.length < planeSize)
 	{
 		if (outError != nil)  *outError = [NSError errorWithDomain:kJAMinecraftBlockStoreErrorDomain
 															  code:kJABlockStoreErrorTruncatedData
@@ -96,22 +97,19 @@ static id KeyForCoords(NSInteger x, NSInteger y, NSInteger z)
 	}
 	
 	NSMutableDictionary *tileEntities;
-	NSArray *serializedEntities = [[dict objectForKey:kTileEntitiesKey] objectValue];
-	if ([serializedEntities isKindOfClass:[NSArray class]])
+	NSArray *serializedEntities = [dict objectForKey:kTileEntitiesKey];
+	tileEntities = [NSMutableDictionary dictionaryWithCapacity:serializedEntities.count];
+	
+	NSSet *coordKeys = $set(@"x", @"y", @"z");
+	[serializedEntities enumerateObjectsUsingBlock:^(id entityDef, NSUInteger idx, BOOL *stop)
 	{
-		tileEntities = [NSMutableDictionary dictionaryWithCapacity:serializedEntities.count];
+		NSUInteger x = [entityDef ja_integerForKey:@"x"];
+		NSUInteger y = [entityDef ja_integerForKey:@"y"];
+		NSUInteger z = [entityDef ja_integerForKey:@"z"];
+		entityDef = [entityDef ja_dictionaryByRemovingObjectsForKeys:coordKeys];
 		
-		[serializedEntities enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop)
-		{
-			NSDictionary *entityDef = [obj propertyListRepresentation];
-			NSUInteger x = [entityDef ja_integerForKey:@"x"];
-			NSUInteger y = [entityDef ja_integerForKey:@"y"];
-			NSUInteger z = [entityDef ja_integerForKey:@"z"];
-			entityDef = [entityDef ja_dictionaryByRemovingObjectsForKeys:$set(@"x", @"y", @"z")];
-			
-			[tileEntities setObject:entityDef forKey:KeyForCoords(x, y, z)];
-		}];
-	}
+		[tileEntities setObject:entityDef forKey:KeyForCoords(x, y, z)];
+	}];
 	
 	const uint8_t *blockBytes = blockIDs.bytes;
 	const uint8_t *metaBytes = blockData.bytes;
@@ -150,10 +148,8 @@ static id KeyForCoords(NSInteger x, NSInteger y, NSInteger z)
 	
 	[self endBulkUpdate];
 	
-	NSInteger groundLevel;
-	JANBTTag *groundLevelTag = [dict objectForKey:kGroundLevelKey];
-	if (groundLevelTag.integerType)  groundLevel = groundLevelTag.integerValue;
-	else  groundLevel = [self findNaturalGroundLevel];
+	NSInteger groundLevel = [dict ja_integerForKey:kGroundLevelKey defaultValue:NSNotFound];
+	if (groundLevel == NSNotFound)  groundLevel = [self findNaturalGroundLevel];
 	
 	if (groundLevel != 0)
 	{

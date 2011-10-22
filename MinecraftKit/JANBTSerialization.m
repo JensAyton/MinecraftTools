@@ -1200,7 +1200,7 @@ static inline BOOL IsNumericalSchema(id schema)
 	if (schema != nil)
 	{
 		JANBTTagType type = [schema ja_NBTSchemaType];
-		return kJANBTTagByte <= type && type <= kJANBTTagLong;
+		return kJANBTTagByte <= type && type <= kJANBTTagDouble;
 	}
 	return YES;
 }

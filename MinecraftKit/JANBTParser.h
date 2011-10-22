@@ -97,7 +97,7 @@ typedef enum
 */
 @interface JANBTParser: NSObject
 
-+ (JANBTTag *) parseData:(NSData *)data;
++ (JANBTTag *) parseData:(NSData *)data __attribute__((deprecated));
 
 - (id) initWithData:(NSData *)data;
 
