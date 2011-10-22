@@ -33,7 +33,7 @@
 static id JADictOfImpl(JA_UNSAFE_UNRETAINED id values[], size_t count, Class cls)
 {
 	NSCParameterAssert((count & 1) == 0);
-	JA_UNSAFE_UNRETAINED id objects[count], keys[count];
+	JA_UNSAFE_UNRETAINED id objects[count / 2], keys[count / 2];
 	size_t n = 0;
 	for (size_t i = 0; i < count; i += 2)
 	{

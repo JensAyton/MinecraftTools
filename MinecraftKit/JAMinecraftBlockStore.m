@@ -30,7 +30,7 @@
 NSString * const kJAMinecraftBlockStoreChangedNotification	= @"se.ayton.jens JAMinecraftBlockStore Changed";
 NSString * const kJAMinecraftBlockStoreChangedExtents		= @"kJAMinecraftBlockStoreChangedExtents";
 
-NSString * const kJAMinecraftBlockStoreErrorDomain			= @"se.ayton.jens JAMinecraftBlockStore ErrorDomain";
+NSString * const kJAMinecraftBlockStoreErrorDomain			= @"se.ayton.jens.minecraftkit JAMinecraftBlockStore ErrorDomain";
 
 
 @interface JAMutableMinecraftBlockStore ()
