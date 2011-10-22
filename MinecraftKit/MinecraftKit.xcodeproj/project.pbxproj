@@ -9,6 +9,11 @@
 /* Begin PBXBuildFile section */
 		1A64907114517A7300F57924 /* JANBTSerialization.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A64906F14517A7300F57924 /* JANBTSerialization.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A64907214517A7300F57924 /* JANBTSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A64907014517A7300F57924 /* JANBTSerialization.m */; settings = {COMPILER_FLAGS = "-fobjc-arc-exceptions"; }; };
+		1AE0E31714536D57009ACC2B /* JANBTStreamParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AE0E31414536D56009ACC2B /* JANBTStreamParser.h */; };
+		1AE0E31814536D57009ACC2B /* JANBTStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE0E31514536D56009ACC2B /* JANBTStreamParser.m */; };
+		1AE0E31914536D57009ACC2B /* JANBTTagType.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AE0E31614536D57009ACC2B /* JANBTTagType.h */; };
+		1AE0E32114536FFF009ACC2B /* JANBTTypedNumbers.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AE0E31F14536FFE009ACC2B /* JANBTTypedNumbers.h */; };
+		1AE0E32214536FFF009ACC2B /* JANBTTypedNumbers.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE0E32014536FFE009ACC2B /* JANBTTypedNumbers.m */; };
 		1AF8C14A144CA38900D86C3D /* Schematic.schema in Resources */ = {isa = PBXBuildFile; fileRef = 1AF8C149144CA38900D86C3D /* Schematic.schema */; };
 		1AFC074C14404395009666A9 /* JACollectionHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AFC074A14404395009666A9 /* JACollectionHelpers.h */; };
 		1AFC074D14404395009666A9 /* JACollectionHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFC074B14404395009666A9 /* JACollectionHelpers.m */; };
@@ -71,6 +76,11 @@
 /* Begin PBXFileReference section */
 		1A64906F14517A7300F57924 /* JANBTSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTSerialization.h; sourceTree = SOURCE_ROOT; };
 		1A64907014517A7300F57924 /* JANBTSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTSerialization.m; sourceTree = SOURCE_ROOT; };
+		1AE0E31414536D56009ACC2B /* JANBTStreamParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTStreamParser.h; sourceTree = SOURCE_ROOT; };
+		1AE0E31514536D56009ACC2B /* JANBTStreamParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTStreamParser.m; sourceTree = SOURCE_ROOT; };
+		1AE0E31614536D57009ACC2B /* JANBTTagType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTTagType.h; sourceTree = SOURCE_ROOT; };
+		1AE0E31F14536FFE009ACC2B /* JANBTTypedNumbers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTTypedNumbers.h; sourceTree = SOURCE_ROOT; };
+		1AE0E32014536FFE009ACC2B /* JANBTTypedNumbers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTTypedNumbers.m; sourceTree = SOURCE_ROOT; };
 		1AF8C149144CA38900D86C3D /* Schematic.schema */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Schematic.schema; path = Resources/Schematic.schema; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.plist; };
 		1AFC074A14404395009666A9 /* JACollectionHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JACollectionHelpers.h; sourceTree = SOURCE_ROOT; };
 		1AFC074B14404395009666A9 /* JACollectionHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JACollectionHelpers.m; sourceTree = SOURCE_ROOT; };
@@ -135,6 +145,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1AE0E31C14536D59009ACC2B /* NBT */ = {
+			isa = PBXGroup;
+			children = (
+				1AE0E31614536D57009ACC2B /* JANBTTagType.h */,
+				1A64906F14517A7300F57924 /* JANBTSerialization.h */,
+				1A64907014517A7300F57924 /* JANBTSerialization.m */,
+				1AE0E31414536D56009ACC2B /* JANBTStreamParser.h */,
+				1AE0E31514536D56009ACC2B /* JANBTStreamParser.m */,
+				1AE0E31F14536FFE009ACC2B /* JANBTTypedNumbers.h */,
+				1AE0E32014536FFE009ACC2B /* JANBTTypedNumbers.m */,
+			);
+			name = NBT;
+			sourceTree = "<group>";
+		};
 		1AFE344513F930BF001A33D4 = {
 			isa = PBXGroup;
 			children = (
@@ -245,8 +269,7 @@
 				1AFC074B14404395009666A9 /* JACollectionHelpers.m */,
 				1AFC075014405F8A009666A9 /* MYCollectionUtilities.h */,
 				1AFC075114405F8A009666A9 /* MYCollectionUtilities.m */,
-				1A64906F14517A7300F57924 /* JANBTSerialization.h */,
-				1A64907014517A7300F57924 /* JANBTSerialization.m */,
+				1AE0E31C14536D59009ACC2B /* NBT */,
 				1AFE34AE13F931F0001A33D4 /* JAPropertyListAccessors */,
 				1AFE34B313F93209001A33D4 /* JAValueToString */,
 			);
@@ -305,6 +328,9 @@
 				1AFE34AC13F931EE001A33D4 /* NSData+DDGZip.h in Headers */,
 				1AFC074C14404395009666A9 /* JACollectionHelpers.h in Headers */,
 				1AFC075214405F8A009666A9 /* MYCollectionUtilities.h in Headers */,
+				1AE0E31714536D57009ACC2B /* JANBTStreamParser.h in Headers */,
+				1AE0E31914536D57009ACC2B /* JANBTTagType.h in Headers */,
+				1AE0E32114536FFF009ACC2B /* JANBTTypedNumbers.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -407,6 +433,8 @@
 				1AFC075314405F8A009666A9 /* MYCollectionUtilities.m in Sources */,
 				1AFE8EC11449A1F6007056C1 /* JAMinecraftBlock.m in Sources */,
 				1A64907214517A7300F57924 /* JANBTSerialization.m in Sources */,
+				1AE0E31814536D57009ACC2B /* JANBTStreamParser.m in Sources */,
+				1AE0E32214536FFF009ACC2B /* JANBTTypedNumbers.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
