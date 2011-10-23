@@ -91,8 +91,11 @@ static JANBTTagType NormalizedTagType(id value, id schema);
 {
 	if ((self = [super init]))
 	{
-		_compressor = [[JAZLibCompressor alloc] initWithStream:stream mode:kJAZLibCompressionGZip];
-		if (_compressor == nil)  return nil;
+		if (stream != nil)
+		{
+			_compressor = [[JAZLibCompressor alloc] initWithStream:stream mode:kJAZLibCompressionGZip];
+			if (_compressor == nil)  return nil;
+		}
 	}
 	
 	return self;
@@ -106,7 +109,7 @@ static JANBTTagType NormalizedTagType(id value, id schema);
 	@autoreleasepool
 	{
 		OK = [self encodeObjectInner:root withSchema:schema rootName:rootName];
-		if (OK)
+		if (OK && _compressor != nil)
 		{
 			NSError __autoreleasing *error;
 			OK = [_compressor flushWithError:&error];

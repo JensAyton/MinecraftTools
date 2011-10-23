@@ -61,6 +61,7 @@ int main (int argc, const char * argv[])
 		@catch (id e)
 		{
 			fprintf(stderr, "EXCEPTION: %s", [[e description] UTF8String]);
+			return EXIT_FAILURE;
 		}
 	}
 }
