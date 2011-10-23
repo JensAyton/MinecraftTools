@@ -13,17 +13,17 @@
 	the same Objective-C class as the schema expects, reading will fail.
 	(Wrong number types will be glossed over.)
 	
-	When writing, the schema is used to validate the property list and to ensure
-	the correct number types are written. Unknown dictionary keys will still
-	be written, unless the kJANBTWritingStrictSchema flag is passed; for numbers,
-	the smallest type will be used.
-	
 	When reading, numbers whose type is not defined in the schema are tagged
 	with their NBT type. These numbers act like normal NSNumbers, but are
 	costlier (they’re real objects rather than tagged values). This allows
 	you to read and write an NBT without a known schema and maintain type
 	information. Using the same schema on read and write will avoid the cost
 	as long as the NBT strictly conforms to the schema.
+	
+	When writing, the schema is used to validate the property list and to ensure
+	the correct number types are written. Unknown dictionary keys will still
+	be written; for numbers, the smallest possible type will be used unless
+	the number is tagged for round-trip compatibility.
 	
 	
 	Schema format:
@@ -104,12 +104,7 @@ enum
 typedef NSInteger JANBTReadingOptions;
 
 
-enum
-{
-	// Reject dictionaries with keys not covered by schema.
-	kJANBTWritingStrictSchema			= 0x0001
-};
-typedef NSInteger JANBTWritingOptions;
+typedef NSInteger JANBTWritingOptions;	 // No options defined, use 0.
 
 
 @interface JANBTSerialization : NSObject
@@ -154,9 +149,12 @@ enum
 {
 	kJANBTSerializationNoError,
 	kJANBTSerializationMemoryError,
-	kJANBTSerializationUnexpectedEOFError,
+	kJANBTSerializationReadError,
+	kJANBTSerializationWriteError,
+	kJANBTSerializationCompressionError,
 	kJANBTSerializationUnknownTagError,
 	kJANBTSerializationWrongTypeError,
+	kJANBTSerializationObjectTooLargeError,
 	kJANBTSerializationWrongRootNameError,
 	kJANBTSerializationInvalidSchemaError
 };

@@ -30,6 +30,20 @@
 #import "MYCollectionUtilities.h"
 
 
+#define LOG_PARSING 0
+#if LOG_PARSING
+static void ParseLog(NSString *message, NSInteger indent, NSUInteger offset);
+#define PARSE_LOG(format...) ParseLog([NSString stringWithFormat:format], _parseLogIndent, _rawBytesRead);
+#define PARSE_LOG_INDENT() do { _parseLogIndent++; } while (0)
+#define PARSE_LOG_OUTDENT() do { _parseLogIndent--; } while (0)
+#else
+#define PARSE_LOG(...) do {} while (0)
+#define PARSE_LOG_INDENT() do {} while (0)
+#define PARSE_LOG_OUTDENT() do {} while (0)
+#endif
+
+
+
 static inline BOOL IsNumericalSchema(id schema);
 
 
@@ -101,6 +115,11 @@ enum
 	BOOL					_mutableContainers;
 	BOOL					_mutableLeaves;
 	BOOL					_allowFragments;
+	
+#if LOG_PARSING
+	NSInteger				_parseLogIndent;
+	NSUInteger				_rawBytesRead;
+#endif
 }
 
 
@@ -197,7 +216,12 @@ enum
 		REQUIRE(_rootName = [self readStringMutable:NO]);
 		REQUIRE_ERR(expectedName == nil || [_rootName isEqualToString:expectedName], kJANBTSerializationWrongRootNameError, @"Expected NBT root name to be %@, but found %@.", expectedName, _rootName);
 		
+		PARSE_LOG(@"Root %@ [%@] =", _rootName, JANBTTagNameFromTagType(rootType));
+		PARSE_LOG_INDENT();
+		
 		REQUIRE(_result = [self parseOneTagBodyOfType:rootType withSchema:schema]);
+		
+		PARSE_LOG_OUTDENT();
 	}
 	// else empty fragment; result is nil.
 	
@@ -260,6 +284,7 @@ enum
 	
 	int8_t value;
 	REQUIRE([self readByte:&value]);
+	PARSE_LOG(@"BYTE: %i", value);
 	if (schema != nil)  return [NSNumber numberWithChar:value];
 	else  return [[JANBTInteger alloc] initWithValue:value type:kJANBTTagByte];
 }
@@ -271,6 +296,7 @@ enum
 	
 	int16_t value;
 	REQUIRE([self readShort:&value]);
+	PARSE_LOG(@"SHORT: %i", value);
 	if (schema != nil)  return [NSNumber numberWithShort:value];
 	else  return [[JANBTInteger alloc] initWithValue:value type:kJANBTTagShort];
 }
@@ -282,6 +308,7 @@ enum
 	
 	int32_t value;
 	REQUIRE([self readInt:&value]);
+	PARSE_LOG(@"INT: %i", value);
 	if (schema != nil)  return [NSNumber numberWithInt:value];
 	else  return [[JANBTInteger alloc] initWithValue:value type:kJANBTTagInt];
 }
@@ -293,6 +320,7 @@ enum
 	
 	int64_t value;
 	REQUIRE([self readLong:&value]);
+	PARSE_LOG(@"BYTE: %lli", value);
 	if (schema != nil)  return [NSNumber numberWithLong:value];
 	else  return [[JANBTInteger alloc] initWithValue:value type:kJANBTTagLong];
 }
@@ -304,6 +332,7 @@ enum
 	
 	float value;
 	REQUIRE([self readFloat:&value]);
+	PARSE_LOG(@"FLOAT: %g", value);
 	if (schema != nil)  return [NSNumber numberWithFloat:value];
 	else  return [[JANBTFloat alloc] initWithValue:value];
 }
@@ -315,6 +344,7 @@ enum
 	
 	double value;
 	REQUIRE([self readDouble:&value]);
+	PARSE_LOG(@"DOUBLE: %g", value);
 	if (schema != nil)  return [NSNumber numberWithDouble:value];
 	else  return [[JANBTDouble alloc] initWithValue:value];
 }
@@ -326,6 +356,7 @@ enum
 	
 	uint32_t length;
 	REQUIRE([self readInt:(int32_t *)&length]);
+	PARSE_LOG(@"BYTE ARRAY: %u bytes", length);
 	void *bytes = malloc(length);
 	REQUIRE_ERR(bytes, kJANBTSerializationMemoryError, @"Not enough memory for byte array of length %u.", length);
 	
@@ -345,7 +376,9 @@ enum
 - (NSString *) parseStringWithSchema:(id)schema
 {
 	REQUIRE_SCHEMA(schema == nil || [schema isEqual:@"string"], @"TAG_String", schema);
-	return [self readStringMutable:_mutableLeaves];
+	id result = [self readStringMutable:_mutableLeaves];
+	PARSE_LOG(@"STRING: %@", result);
+	return result;
 }
 
 
@@ -358,6 +391,9 @@ enum
 	REQUIRE([self readByte:&type]);
 	REQUIRE([self readInt:(int32_t *)&count]);
 	
+	PARSE_LOG(@"ARRAY: %u x %@", count, JANBTTagNameFromTagType(type));
+	PARSE_LOG_INDENT();
+	
 	NSMutableArray *array = [NSMutableArray arrayWithCapacity:count];
 	schema = [schema objectAtIndex:0];
 	
@@ -367,6 +403,8 @@ enum
 		REQUIRE(value);
 		[array addObject:value];
 	}
+	
+	PARSE_LOG_OUTDENT();
 	
 	if (!_mutableContainers)  array = [array copy];
 	if (schema == nil)  array.ja_NBTListElementType = type;
@@ -380,6 +418,9 @@ enum
 	
 	NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
 	
+	PARSE_LOG(@"COMPOUND:");
+	PARSE_LOG_INDENT();
+	
 	for (;;)
 	{
 		int8_t type;
@@ -389,12 +430,15 @@ enum
 		@autoreleasepool
 		{
 			NSString *key = [self readStringMutable:NO];
+			PARSE_LOG(@"%@ [%@] =", key, JANBTTagNameFromTagType(type));
 			REQUIRE(key);
 			id value = [self parseOneTagBodyOfType:type withSchema:[schema objectForKey:key]];
 			REQUIRE(value);
 			[dictionary setObject:value forKey:key];
 		}
 	}
+	
+	PARSE_LOG_OUTDENT();
 	
 	if (!_mutableContainers)  dictionary = [dictionary copy];
 	return dictionary;
@@ -483,6 +527,10 @@ enum
 	NSParameterAssert(bytes != NULL);
 	char *next = bytes;
 	
+#if LOG_PARSING
+	_rawBytesRead += length;
+#endif
+	
 	while (length > 0)
 	{
 		size_t pending = kBufferLength - _zstream.avail_out;
@@ -531,3 +579,43 @@ enum
 }
 
 @end
+
+
+#if LOG_PARSING
+static NSString *IndentString(NSUInteger count);
+static void ParseLog(NSString *message, NSInteger indent, NSUInteger offset)
+{
+	message = $sprintf(@"%@[%lu] %@", IndentString(indent), offset, message);
+	puts([message UTF8String]);
+}
+
+
+static NSString *IndentString(NSUInteger count)
+{
+	NSString * const staticTabs[] =
+	{
+		@"",
+		@"\t",
+		@"\t\t",
+		@"\t\t\t",
+		@"\t\t\t\t",
+		@"\t\t\t\t\t",
+		@"\t\t\t\t\t\t",
+		@"\t\t\t\t\t\t\t"
+	};
+	
+	if (count < sizeof staticTabs / sizeof *staticTabs)
+	{
+		return staticTabs[count];
+	}
+	else
+	{
+		NSMutableString *result = [NSMutableString stringWithCapacity:count];
+		for (NSUInteger i = 0; i < count; i++)
+		{
+			[result appendString:@"\t"];
+		}
+		return result;
+	}
+}
+#endif

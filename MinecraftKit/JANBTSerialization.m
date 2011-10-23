@@ -26,6 +26,7 @@
 #import "JANBTSerialization.h"
 #import "JANBTTagType.h"
 #import "JANBTStreamParser.h"
+#import "JANBTStreamEncoder.h"
 #import "MYCollectionUtilities.h"
 
 
@@ -43,15 +44,18 @@ static void SetError(NSError **outError, NSInteger errorCode, NSString *format, 
 }
 
 
-+ (BOOL) isValidNBTObject:(id)obj
++ (BOOL) isValidNBTObject:(id)object
 {
-	return [self isValidNBTObject:obj conformingToSchema:nil options:0];
+	return [self isValidNBTObject:object conformingToSchema:nil options:0];
 }
 
 
-+ (BOOL) isValidNBTObject:(id)obj conformingToSchema:(id)schema options:(JANBTWritingOptions)options
++ (BOOL) isValidNBTObject:(id)object conformingToSchema:(id)schema options:(JANBTWritingOptions)options
 {
-	return NO;
+	JANBTStreamEncoder *encoder = [[JANBTStreamEncoder alloc] initWithStream:nil options:options];
+	if (encoder == nil)  return YES;	// Your guess is as good as mine.
+	
+	return [encoder encodeObject:object withSchema:schema rootName:@"" error:NULL];
 }
 
 
@@ -62,9 +66,11 @@ static void SetError(NSError **outError, NSInteger errorCode, NSString *format, 
 						 error:(NSError **)outError
 {
 	NSOutputStream *stream = [NSOutputStream outputStreamToMemory];
+	[stream open];
 	NSInteger bytesWritten = [self writeNBTObject:root rootName:rootName toStream:stream options:options schema:schema error:outError];
-	if (bytesWritten == 0)  return nil;
+	[stream close];
 	
+	if (bytesWritten == 0)  return nil;
 	return [stream propertyForKey:NSStreamDataWrittenToMemoryStreamKey];
 }
 
@@ -76,17 +82,32 @@ static void SetError(NSError **outError, NSInteger errorCode, NSString *format, 
 				   error:(NSError **)outError
 {
 	NSInputStream *stream = [NSInputStream inputStreamWithData:data];
-	return [self NBTObjectWithStream:stream rootName:outRootName options:options schema:schema error:outError];
+	[stream open];
+	id result = [self NBTObjectWithStream:stream rootName:outRootName options:options schema:schema error:outError];
+	[stream close];
+	return result;
 }
 
 
-+ (NSInteger) writeNBTObject:(id)obj
++ (NSInteger) writeNBTObject:(id)object
 					rootName:(NSString *)rootName
 					toStream:(NSOutputStream *)stream
-					 options:(JANBTWritingOptions)opt
+					 options:(JANBTWritingOptions)options
 					  schema:(id)schema
-					   error:(NSError **)error
+					   error:(NSError **)outError
 {
+	if (stream == nil)  return 0;
+	
+	JANBTStreamEncoder *encoder = [[JANBTStreamEncoder alloc] initWithStream:stream options:options];
+	if (encoder == nil)
+	{
+		SetError(outError, kJANBTSerializationMemoryError, @"Could not create NBT encoder.");
+		return 0;
+	}
+	
+	BOOL success = [encoder encodeObject:object withSchema:schema rootName:rootName error:outError];
+	
+	if (success)  return encoder.bytesWritten;
 	return 0;
 }
 
@@ -136,59 +157,4 @@ static void SetError(NSError **outError, NSInteger errorCode, NSString *format, 
 		
 		*outError = [NSError errorWithDomain:kJANBTSerializationErrorDomain code:errorCode userInfo:$dict(NSLocalizedDescriptionKey, message)];
 	}
-}
-
-
-NSString *JANBTTagNameFromSchema(id schema)
-{
-	return JANBTTagNameFromTagType(schema ? [schema ja_NBTSchemaType] : kJANBTTagAny);
-}
-
-
-NSString *JANBTTagNameFromTagType(JANBTTagType type)
-{
-	switch (type)
-	{
-		case kJANBTTagEnd:
-			return @"TAG_End";
-			
-		case kJANBTTagByte:
-			return @"TAG_Byte";
-			
-		case kJANBTTagShort:
-			return @"TAG_Short";
-			
-		case kJANBTTagInt:
-			return @"TAG_Int";
-			
-		case kJANBTTagLong:
-			return @"TAG_Long";
-			
-		case kJANBTTagFloat:
-			return @"TAG_Float";
-			
-		case kJANBTTagDouble:
-			return @"TAG_Double";
-			
-		case kJANBTTagByteArray:
-			return @"TAG_Byte_Array";
-			
-		case kJANBTTagString:
-			return @"TAG_String";
-			
-		case kJANBTTagList:
-			return @"TAG_List";
-			
-		case kJANBTTagCompound:
-			return @"TAG_Compound";
-			
-		case kJANBTTagAny:
-			return @"wildcard";
-			
-		case kJANBTTagUnknown:
-			;
-			// Fall through
-	}
-	
-	return @"**UNKNOWN TAG**";
 }

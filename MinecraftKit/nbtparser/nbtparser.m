@@ -19,41 +19,49 @@ int main (int argc, const char * argv[])
 {
 	@autoreleasepool
 	{
-		if (argc < 2)
+		@try
 		{
-			fprintf(stderr, "Usage: nbtparser filename\n");
-			return EXIT_FAILURE;
-		}
-		
-		NSString *fileName = [[NSString alloc] initWithCString:argv[1] encoding:NSUTF8StringEncoding];
-		NSData *data = [NSData dataWithContentsOfFile:fileName];
-		if (data == nil)
-		{
-			fprintf(stderr, "Could not read file.\n");
-			return EXIT_FAILURE;
-		}
-		
-		NSString __autoreleasing *rootName;
-		NSError __autoreleasing *error;
-		id root = [JANBTSerialization NBTObjectWithData:data rootName:&rootName options:kJANBTReadingAllowFragments schema:nil error:&error];
-		
-		if (root == nil)
-		{
-			if (error == nil)
+			if (argc < 2)
 			{
-				Print(@"Empty.\n");
-				return 0;
-			}
-			else
-			{
-				fprintf(stderr, "Parsing failed. %s\n", [[error description] UTF8String]);
+				fprintf(stderr, "Usage: nbtparser filename\n");
 				return EXIT_FAILURE;
 			}
+			
+			NSString *fileName = [[NSString alloc] initWithCString:argv[1] encoding:NSUTF8StringEncoding];
+			fileName = [[fileName stringByStandardizingPath] stringByExpandingTildeInPath];
+			NSData *data = [NSData dataWithContentsOfFile:fileName];
+			if (data == nil)
+			{
+				fprintf(stderr, "Could not read file.\n");
+				return EXIT_FAILURE;
+			}
+			
+			NSString __autoreleasing *rootName;
+			NSError __autoreleasing *error;
+			id root = [JANBTSerialization NBTObjectWithData:data rootName:&rootName options:kJANBTReadingAllowFragments schema:nil error:&error];
+			
+			if (root == nil)
+			{
+				if (error == nil)
+				{
+					Print(@"Empty.\n");
+					return 0;
+				}
+				else
+				{
+					fprintf(stderr, "Parsing failed. %s\n", [[error description] UTF8String]);
+					return EXIT_FAILURE;
+				}
+			}
+			
+			[root ja_printNBTStructureWithName:rootName indent:0];
+			
+			return 0;
 		}
-		
-		[root ja_printNBTStructureWithName:rootName indent:0];
-		
-		return 0;
+		@catch (id e)
+		{
+			fprintf(stderr, "EXCEPTION: %s", [[e description] UTF8String]);
+		}
 	}
 }
 

@@ -238,8 +238,13 @@ static id KeyForCoords(NSInteger x, NSInteger y, NSInteger z)
 	
 	NSDictionary *schema = [NSDictionary dictionaryWithContentsOfURL:[[NSBundle bundleForClass:self.class] URLForResource:@"Schematic" withExtension:@"schema"]];
 	
-	JANBTTag *nbtRoot = [JANBTTag tagWithName:kSchematicKey propertyListRepresentation:root schema:schema];
-	return [JANBTEncoder encodeTag:nbtRoot];
+	//	JANBTTag *nbtRoot = [JANBTTag tagWithName:kSchematicKey propertyListRepresentation:root schema:schema];
+	//	return [JANBTEncoder encodeTag:nbtRoot];
+	return [JANBTSerialization dataWithNBTObject:root
+										rootName:kSchematicKey
+										 options:0
+										  schema:schema
+										   error:outError];
 }
 
 @end
