@@ -8,8 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		1A4B74121260AEAF00253625 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A4B74111260AEAF00253625 /* libz.dylib */; };
-		1AAD7AF2128B2A9C001FB721 /* JANBTParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD7AEF128B2A9C001FB721 /* JANBTParser.m */; };
-		1AAD7AF3128B2A9C001FB721 /* NSData+DDGZip.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD7AF1128B2A9C001FB721 /* NSData+DDGZip.m */; };
 		1AB23B2A14543ADD008C5723 /* JANBTSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB23B2514543ADD008C5723 /* JANBTSerialization.m */; };
 		1AB23B2B14543ADD008C5723 /* JANBTStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB23B2714543ADD008C5723 /* JANBTStreamParser.m */; };
 		1AB23B2C14543ADD008C5723 /* JANBTTypedNumbers.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB23B2914543ADD008C5723 /* JANBTTypedNumbers.m */; };
@@ -35,10 +33,6 @@
 		08FB7796FE84155DC02AAC07 /* nbtparser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = nbtparser.m; sourceTree = "<group>"; };
 		08FB779EFE84155DC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		1A4B74111260AEAF00253625 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
-		1AAD7AEE128B2A9C001FB721 /* JANBTParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JANBTParser.h; path = ../JANBTParser.h; sourceTree = SOURCE_ROOT; };
-		1AAD7AEF128B2A9C001FB721 /* JANBTParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JANBTParser.m; path = ../JANBTParser.m; sourceTree = SOURCE_ROOT; };
-		1AAD7AF0128B2A9C001FB721 /* NSData+DDGZip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSData+DDGZip.h"; path = "../NSData+DDGZip.h"; sourceTree = SOURCE_ROOT; };
-		1AAD7AF1128B2A9C001FB721 /* NSData+DDGZip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSData+DDGZip.m"; path = "../NSData+DDGZip.m"; sourceTree = SOURCE_ROOT; };
 		1AB23B2314543ADD008C5723 /* JANBTTagType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JANBTTagType.h; path = ../JANBTTagType.h; sourceTree = "<group>"; };
 		1AB23B2414543ADD008C5723 /* JANBTSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JANBTSerialization.h; path = ../JANBTSerialization.h; sourceTree = "<group>"; };
 		1AB23B2514543ADD008C5723 /* JANBTSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JANBTSerialization.m; path = ../JANBTSerialization.m; sourceTree = "<group>"; };
@@ -82,12 +76,6 @@
 			children = (
 				32A70AAB03705E1F00C91783 /* nbtparser_Prefix.pch */,
 				08FB7796FE84155DC02AAC07 /* nbtparser.m */,
-				1AAD7AEE128B2A9C001FB721 /* JANBTParser.h */,
-				1AAD7AEF128B2A9C001FB721 /* JANBTParser.m */,
-				1AF8C16B144CB63C00D86C3D /* MYCollectionUtilities.h */,
-				1AF8C16C144CB63C00D86C3D /* MYCollectionUtilities.m */,
-				1AAD7AF0128B2A9C001FB721 /* NSData+DDGZip.h */,
-				1AAD7AF1128B2A9C001FB721 /* NSData+DDGZip.m */,
 				1AB23B2314543ADD008C5723 /* JANBTTagType.h */,
 				1AB23B2D14543B78008C5723 /* JANBTTagType.m */,
 				1AB23B2414543ADD008C5723 /* JANBTSerialization.h */,
@@ -96,6 +84,8 @@
 				1AB23B2714543ADD008C5723 /* JANBTStreamParser.m */,
 				1AB23B2814543ADD008C5723 /* JANBTTypedNumbers.h */,
 				1AB23B2914543ADD008C5723 /* JANBTTypedNumbers.m */,
+				1AF8C16B144CB63C00D86C3D /* MYCollectionUtilities.h */,
+				1AF8C16C144CB63C00D86C3D /* MYCollectionUtilities.m */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -170,8 +160,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8DD76F9A0486AA7600D96B5E /* nbtparser.m in Sources */,
-				1AAD7AF2128B2A9C001FB721 /* JANBTParser.m in Sources */,
-				1AAD7AF3128B2A9C001FB721 /* NSData+DDGZip.m in Sources */,
 				1AF8C16D144CB63C00D86C3D /* MYCollectionUtilities.m in Sources */,
 				1AB23B2A14543ADD008C5723 /* JANBTSerialization.m in Sources */,
 				1AB23B2B14543ADD008C5723 /* JANBTStreamParser.m in Sources */,

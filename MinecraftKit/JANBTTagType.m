@@ -116,3 +116,13 @@ static const void *kNBTListElementTypeStorageKey = &kNBTListElementTypeStorageKe
 }
 
 @end
+
+
+@implementation NSData (JANBTInternal)
+
+- (JANBTTagType) ja_NBTType
+{
+	return kJANBTTagByteArray;
+}
+
+@end
