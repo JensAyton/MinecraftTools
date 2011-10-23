@@ -26,7 +26,7 @@
 #import "JANBTStreamParser.h"
 #import "JANBTTagType.h"
 #import "JANBTTypedNumbers.h"
-#import <zlib.h>
+#include <zlib.h>
 #import "MYCollectionUtilities.h"
 
 
@@ -51,19 +51,18 @@ enum
 	REQUIRE_ERR() also creates an NSError and puts it in _error if _error is
 	currently nil.
 */
-#define REQUIRE_ERR(COND, ERRCODE, FORMAT...) do { if (__builtin_expect(!(COND), 0)) { [self setErrorIfClear:ERRCODE format:FORMAT]; return 0; }} while (0)
+#define REQUIRE_ERR(COND, ERRCODE, FORMAT...) do { if (__builtin_expect(!(COND), 0)) { [self setErrorIfClear:ERRCODE underlyingError:nil format:FORMAT]; return 0; }} while (0)
 
 #define REQUIRE(COND) do { if (__builtin_expect(!(COND), 0))  return 0; } while (0)
 
 
 @interface JANBTStreamParser ()
 
-// Parsing internals.
 - (BOOL) parseWithSchemaInner:(id)schema expectedRootName:(NSString *)expectedName  __attribute__((warn_unused_result));
 - (id) parseOneTagBodyOfType:(JANBTTagType)type withSchema:(id)schema;
 
 - (void) cleanUp;
-- (void) setErrorIfClear:(NSInteger)errorCode format:(NSString *)format, ... NS_FORMAT_FUNCTION(2, 3);
+- (void) setErrorIfClear:(NSInteger)errorCode underlyingError:(NSError *)underlyingError format:(NSString *)format, ... NS_FORMAT_FUNCTION(3, 4);
 
 - (NSNumber *) parseByteWithSchema:(id)schema;
 - (NSNumber *) parseShortWithSchema:(id)schema;
@@ -93,12 +92,12 @@ enum
 {
 	id						_result;
 	NSString				*_rootName;
+	NSInputStream			*_stream;
 	NSMutableData			*_readBuffer;
 	NSMutableData			*_expandBuffer;
-	NSInputStream			*_stream;
+	NSError					*_error;
 	z_stream				_zstream;
 	uInt					_readCursor;
-	NSError					*_error;
 	BOOL					_mutableContainers;
 	BOOL					_mutableLeaves;
 	BOOL					_allowFragments;
@@ -118,8 +117,8 @@ enum
 		_zstream.next_in = _readBuffer.mutableBytes;
 		_zstream.next_out = _expandBuffer.mutableBytes;
 		_zstream.avail_out = kBufferLength;
-		int zerror = inflateInit2(&_zstream, 31);
-		if (zerror != Z_OK)  return nil;
+		int zstatus = inflateInit2(&_zstream, 31);
+		if (zstatus != Z_OK)  return nil;
 		
 		_stream = stream;
 		_mutableContainers = options & kJANBTReadingMutableContainers;
@@ -147,7 +146,7 @@ enum
 }
 
 
-- (void) setErrorIfClear:(NSInteger)errorCode format:(NSString *)format, ...
+- (void) setErrorIfClear:(NSInteger)errorCode underlyingError:(NSError *)underlyingError format:(NSString *)format, ...
 {
 	if (_error != nil)  return;
 	
@@ -161,7 +160,7 @@ enum
 		va_end(args);
 	}
 	
-	_error = [NSError errorWithDomain:kJANBTSerializationErrorDomain code:errorCode userInfo:$dict(NSLocalizedDescriptionKey, message)];
+	_error = [NSError errorWithDomain:kJANBTSerializationErrorDomain code:errorCode userInfo:$dict(NSLocalizedDescriptionKey, message, NSUnderlyingErrorKey, underlyingError)];
 }
 
 
@@ -246,13 +245,13 @@ enum
 			;
 	}
 	
-	[self setErrorIfClear:kJANBTSerializationUnknownTagError format:@"Unknown NBT tag %u.", type];
+	[self setErrorIfClear:kJANBTSerializationUnknownTagError underlyingError:nil format:@"Unknown NBT tag %u.", type];
 	return nil;
 }
 
 
-#define REQUIRE_SCHEMA(COND, EXPECTED, GOT)  REQUIRE_ERR(COND, kJANBTSerializationWrongTypeError, @"Wrong type in NBT - expected %@, got %@.", EXPECTED, JANBTTagNameFromSchema(GOT))
-#define REQUIRE_NUMERICAL_SCHEMA(SCH)  REQUIRE_SCHEMA(IsNumericalSchema(SCH), @"numerical type", SCH)
+#define REQUIRE_SCHEMA(COND, GOT, SCH)  REQUIRE_ERR(COND, kJANBTSerializationWrongTypeError, @"Wrong type in NBT - expected %@, got %@.", JANBTTagNameFromSchema(SCH), GOT)
+#define REQUIRE_NUMERICAL_SCHEMA(SCH)  REQUIRE_SCHEMA(JANBTIsNumericalSchema(SCH), @"numerical type", SCH)
 
 
 - (NSNumber *) parseByteWithSchema:(id)schema
@@ -323,7 +322,7 @@ enum
 
 - (NSData *) parseByteArrayWithSchema:(id)schema
 {
-	REQUIRE_SCHEMA(schema == nil || [schema isEqual:@"data"], @"byte array", schema);
+	REQUIRE_SCHEMA(schema == nil || [schema isEqual:@"data"], @"TAG_Byte_Array", schema);
 	
 	uint32_t length;
 	REQUIRE([self readInt:(int32_t *)&length]);
@@ -345,14 +344,14 @@ enum
 
 - (NSString *) parseStringWithSchema:(id)schema
 {
-	REQUIRE_SCHEMA(schema == nil || [schema isEqual:@"string"], @"string", schema);
+	REQUIRE_SCHEMA(schema == nil || [schema isEqual:@"string"], @"TAG_String", schema);
 	return [self readStringMutable:_mutableLeaves];
 }
 
 
 - (NSArray *) parseListWithSchema:(id)schema
 {
-	REQUIRE_SCHEMA(schema == nil || ([schema isKindOfClass:[NSArray class]] && [schema count] == 1), @"list", schema);
+	REQUIRE_SCHEMA(schema == nil || ([schema isKindOfClass:[NSArray class]] && [schema count] == 1), @"TAG_List", schema);
 	
 	int8_t type;
 	uint32_t i, count;
@@ -377,7 +376,7 @@ enum
 
 - (NSDictionary *) parseCompoundWithSchema:(id)schema
 {
-	REQUIRE_SCHEMA(schema == nil || [schema isKindOfClass:[NSDictionary class]], @"compound", schema);
+	REQUIRE_SCHEMA(schema == nil || [schema isKindOfClass:[NSDictionary class]], @"TAG_Compound", schema);
 	
 	NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
 	
@@ -510,12 +509,21 @@ enum
 			{
 				_zstream.next_in = _readBuffer.mutableBytes;
 				NSInteger status = [_stream read:_zstream.next_in maxLength:kBufferLength];
-				if (status > 1)  _zstream.avail_in = status;
-				else  REQUIRE_ERR(status == 0, kJANBTSerializationUnexpectedEOFError, @"Premature end of file.");
+				if (status > 0)  _zstream.avail_in = status;
+				else
+				{
+					if (status == 0)  [self setErrorIfClear:kJANBTSerializationReadError
+											underlyingError:nil
+													 format:@"Premature end of file."];
+					else  [self setErrorIfClear:kJANBTSerializationReadError
+								underlyingError:_stream.streamError
+										 format:@"Read error."];
+						return NO;
+				}
 			}
 			
-			int zstate = inflate(&_zstream, Z_SYNC_FLUSH);
-			REQUIRE_ERR(zstate == Z_OK || zstate == Z_STREAM_END, kJANBTSerializationUnexpectedEOFError, @"Zlib error %i.", zstate);
+			int zstatus = inflate(&_zstream, Z_SYNC_FLUSH);
+			REQUIRE_ERR(zstatus == Z_OK || zstatus == Z_STREAM_END, kJANBTSerializationCompressionError, @"Zlib error %i.", zstatus);
 		}
 	}
 	
@@ -523,14 +531,3 @@ enum
 }
 
 @end
-
-
-static inline BOOL IsNumericalSchema(id schema)
-{
-	if (schema != nil)
-	{
-		JANBTTagType type = [schema ja_NBTSchemaType];
-		return kJANBTTagByte <= type && type <= kJANBTTagDouble;
-	}
-	return YES;
-}

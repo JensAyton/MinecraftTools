@@ -49,6 +49,7 @@ typedef enum
 
 NSString *JANBTTagNameFromTagType(JANBTTagType type);
 NSString *JANBTTagNameFromSchema(id schema);
+BOOL JANBTIsKnownTagType(JANBTTagType type);	// True if type is valid for use in NBT file. (Doesn’t include kJANBTTagEnd, which is only valid in specific circumstances.)
 
 
 @interface NSObject (JANBTInternal)
@@ -64,3 +65,19 @@ NSString *JANBTTagNameFromSchema(id schema);
 @property (nonatomic, setter=ja_setNBTListElementType:) JANBTTagType ja_NBTListElementType;
 
 @end
+
+
+static inline BOOL JANBTIsNumericalTagType(JANBTTagType type)
+{
+	return kJANBTTagByte <= type && type <= kJANBTTagDouble;
+}
+
+
+static inline BOOL JANBTIsNumericalSchema(id schema)
+{
+	if (schema != nil)
+	{
+		return JANBTIsNumericalTagType([schema ja_NBTSchemaType]);
+	}
+	return YES;
+}

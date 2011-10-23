@@ -126,3 +126,85 @@ static const void *kNBTListElementTypeStorageKey = &kNBTListElementTypeStorageKe
 }
 
 @end
+
+
+NSString *JANBTTagNameFromSchema(id schema)
+{
+	return JANBTTagNameFromTagType(schema ? [schema ja_NBTSchemaType] : kJANBTTagAny);
+}
+
+
+NSString *JANBTTagNameFromTagType(JANBTTagType type)
+{
+	switch (type)
+	{
+		case kJANBTTagEnd:
+			return @"TAG_End";
+			
+		case kJANBTTagByte:
+			return @"TAG_Byte";
+			
+		case kJANBTTagShort:
+			return @"TAG_Short";
+			
+		case kJANBTTagInt:
+			return @"TAG_Int";
+			
+		case kJANBTTagLong:
+			return @"TAG_Long";
+			
+		case kJANBTTagFloat:
+			return @"TAG_Float";
+			
+		case kJANBTTagDouble:
+			return @"TAG_Double";
+			
+		case kJANBTTagByteArray:
+			return @"TAG_Byte_Array";
+			
+		case kJANBTTagString:
+			return @"TAG_String";
+			
+		case kJANBTTagList:
+			return @"TAG_List";
+			
+		case kJANBTTagCompound:
+			return @"TAG_Compound";
+			
+		case kJANBTTagAny:
+			return @"wildcard";
+			
+		case kJANBTTagUnknown:
+			;
+			// Fall through
+	}
+	
+	return @"**UNKNOWN TAG**";
+}
+
+
+BOOL JANBTIsKnownTagType(JANBTTagType type)
+{
+	switch (type)
+	{
+		case kJANBTTagByte:
+		case kJANBTTagShort:
+		case kJANBTTagInt:
+		case kJANBTTagLong:
+		case kJANBTTagFloat:
+		case kJANBTTagDouble:
+		case kJANBTTagByteArray:
+		case kJANBTTagString:
+		case kJANBTTagList:
+		case kJANBTTagCompound:
+			return YES;
+			
+		case kJANBTTagEnd:
+		case kJANBTTagAny:
+		case kJANBTTagUnknown:
+			;
+			// Fall through
+	}
+	
+	return NO;
+}
