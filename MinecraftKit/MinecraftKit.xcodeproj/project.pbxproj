@@ -10,6 +10,7 @@
 		1A64907114517A7300F57924 /* JANBTSerialization.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A64906F14517A7300F57924 /* JANBTSerialization.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A64907214517A7300F57924 /* JANBTSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A64907014517A7300F57924 /* JANBTSerialization.m */; settings = {COMPILER_FLAGS = "-fobjc-arc-exceptions"; }; };
 		1AB23B3014543B81008C5723 /* JANBTTagType.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB23B2F14543B81008C5723 /* JANBTTagType.m */; };
+		1AB23B4014544547008C5723 /* JANBTParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFE34A313F931EE001A33D4 /* JANBTParser.m */; };
 		1AE0E31714536D57009ACC2B /* JANBTStreamParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AE0E31414536D56009ACC2B /* JANBTStreamParser.h */; };
 		1AE0E31814536D57009ACC2B /* JANBTStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE0E31514536D56009ACC2B /* JANBTStreamParser.m */; };
 		1AE0E31914536D57009ACC2B /* JANBTTagType.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AE0E31614536D57009ACC2B /* JANBTTagType.h */; };
@@ -44,7 +45,6 @@
 		1AFE34A813F931EE001A33D4 /* IsKeyDown.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AFE34A013F931EE001A33D4 /* IsKeyDown.h */; };
 		1AFE34A913F931EE001A33D4 /* IsKeyDown.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AFE34A113F931EE001A33D4 /* IsKeyDown.c */; };
 		1AFE34AA13F931EE001A33D4 /* JANBTParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AFE34A213F931EE001A33D4 /* JANBTParser.h */; };
-		1AFE34AB13F931EE001A33D4 /* JANBTParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFE34A313F931EE001A33D4 /* JANBTParser.m */; };
 		1AFE34AC13F931EE001A33D4 /* NSData+DDGZip.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AFE34A413F931EE001A33D4 /* NSData+DDGZip.h */; };
 		1AFE34AD13F931EE001A33D4 /* NSData+DDGZip.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFE34A513F931EE001A33D4 /* NSData+DDGZip.m */; };
 		1AFE34B113F93207001A33D4 /* JAPropertyListAccessors.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AFE34AF13F93207001A33D4 /* JAPropertyListAccessors.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -428,7 +428,6 @@
 				1AFE349C13F931D1001A33D4 /* JAMinecraftGridView.m in Sources */,
 				1AFE34A713F931EE001A33D4 /* JAHashEnumeration.m in Sources */,
 				1AFE34A913F931EE001A33D4 /* IsKeyDown.c in Sources */,
-				1AFE34AB13F931EE001A33D4 /* JANBTParser.m in Sources */,
 				1AFE34AD13F931EE001A33D4 /* NSData+DDGZip.m in Sources */,
 				1AFE34B213F93207001A33D4 /* JAPropertyListAccessors.m in Sources */,
 				1AFE34B713F9321F001A33D4 /* JAValueToString.m in Sources */,
@@ -439,6 +438,7 @@
 				1AE0E31814536D57009ACC2B /* JANBTStreamParser.m in Sources */,
 				1AE0E32214536FFF009ACC2B /* JANBTTypedNumbers.m in Sources */,
 				1AB23B3014543B81008C5723 /* JANBTTagType.m in Sources */,
+				1AB23B4014544547008C5723 /* JANBTParser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

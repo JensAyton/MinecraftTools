@@ -22,6 +22,10 @@
 		1AAD778A1288AE90001FB721 /* JAMinecraftSchematic+RDatIO.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD77821288AE90001FB721 /* JAMinecraftSchematic+RDatIO.m */; };
 		1AAD778C1288AE90001FB721 /* JAMinecraftSchematic+SchematicIO.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD77861288AE90001FB721 /* JAMinecraftSchematic+SchematicIO.m */; };
 		1AAD7959128B04C7001FB721 /* JAMinecraftBlockIDs.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD7958128B04C7001FB721 /* JAMinecraftBlockIDs.c */; };
+		1AB23B3C145444F0008C5723 /* JANBTTagType.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB23B35145444F0008C5723 /* JANBTTagType.m */; };
+		1AB23B3D145444F0008C5723 /* JANBTSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB23B37145444F0008C5723 /* JANBTSerialization.m */; };
+		1AB23B3E145444F0008C5723 /* JANBTStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB23B39145444F0008C5723 /* JANBTStreamParser.m */; };
+		1AB23B3F145444F0008C5723 /* JANBTTypedNumbers.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB23B3B145444F0008C5723 /* JANBTTypedNumbers.m */; };
 		8DD76F9A0486AA7600D96B5E /* mcxform.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FB7796FE84155DC02AAC07 /* mcxform.m */; settings = {ATTRIBUTES = (); }; };
 		8DD76F9C0486AA7600D96B5E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FB779EFE84155DC02AAC07 /* Foundation.framework */; };
 /* End PBXBuildFile section */
@@ -89,6 +93,14 @@
 		1AAD77861288AE90001FB721 /* JAMinecraftSchematic+SchematicIO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "JAMinecraftSchematic+SchematicIO.m"; sourceTree = "<group>"; };
 		1AAD7958128B04C7001FB721 /* JAMinecraftBlockIDs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = JAMinecraftBlockIDs.c; sourceTree = "<group>"; };
 		1AAD7B06128B2B34001FB721 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		1AB23B34145444F0008C5723 /* JANBTTagType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTTagType.h; sourceTree = "<group>"; };
+		1AB23B35145444F0008C5723 /* JANBTTagType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTTagType.m; sourceTree = "<group>"; };
+		1AB23B36145444F0008C5723 /* JANBTSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTSerialization.h; sourceTree = "<group>"; };
+		1AB23B37145444F0008C5723 /* JANBTSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTSerialization.m; sourceTree = "<group>"; };
+		1AB23B38145444F0008C5723 /* JANBTStreamParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTStreamParser.h; sourceTree = "<group>"; };
+		1AB23B39145444F0008C5723 /* JANBTStreamParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTStreamParser.m; sourceTree = "<group>"; };
+		1AB23B3A145444F0008C5723 /* JANBTTypedNumbers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTTypedNumbers.h; sourceTree = "<group>"; };
+		1AB23B3B145444F0008C5723 /* JANBTTypedNumbers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTTypedNumbers.m; sourceTree = "<group>"; };
 		32A70AAB03705E1F00C91783 /* mcxform_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mcxform_Prefix.pch; sourceTree = "<group>"; };
 		8DD76FA10486AA7600D96B5E /* mcxform */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mcxform; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -190,12 +202,28 @@
 				1A5BF23E1440B936006E9405 /* JACollectionHelpers.m */,
 				1A6490681451785800F57924 /* MYCollectionUtilities.h */,
 				1A6490691451785800F57924 /* MYCollectionUtilities.m */,
+				1AB23B33145444F0008C5723 /* NBT */,
 				1A0C64ED13E6F67200722B66 /* JAPropertyListAccessors */,
 				1A0C654A13E6F67200722B66 /* JAValueToString */,
 			);
 			name = MinecraftKit;
 			path = ../MinecraftKit;
 			sourceTree = SOURCE_ROOT;
+		};
+		1AB23B33145444F0008C5723 /* NBT */ = {
+			isa = PBXGroup;
+			children = (
+				1AB23B34145444F0008C5723 /* JANBTTagType.h */,
+				1AB23B35145444F0008C5723 /* JANBTTagType.m */,
+				1AB23B36145444F0008C5723 /* JANBTSerialization.h */,
+				1AB23B37145444F0008C5723 /* JANBTSerialization.m */,
+				1AB23B38145444F0008C5723 /* JANBTStreamParser.h */,
+				1AB23B39145444F0008C5723 /* JANBTStreamParser.m */,
+				1AB23B3A145444F0008C5723 /* JANBTTypedNumbers.h */,
+				1AB23B3B145444F0008C5723 /* JANBTTypedNumbers.m */,
+			);
+			name = NBT;
+			sourceTree = "<group>";
 		};
 		1AB674ADFE9D54B511CA2CBB /* Products */ = {
 			isa = PBXGroup;
@@ -290,6 +318,10 @@
 				1A5BF23F1440B936006E9405 /* JACollectionHelpers.m in Sources */,
 				1A64906A1451785800F57924 /* MYCollectionUtilities.m in Sources */,
 				1A64906E1451787C00F57924 /* JAMinecraftBlock.m in Sources */,
+				1AB23B3C145444F0008C5723 /* JANBTTagType.m in Sources */,
+				1AB23B3D145444F0008C5723 /* JANBTSerialization.m in Sources */,
+				1AB23B3E145444F0008C5723 /* JANBTStreamParser.m in Sources */,
+				1AB23B3F145444F0008C5723 /* JANBTTypedNumbers.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
