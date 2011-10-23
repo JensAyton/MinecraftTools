@@ -120,54 +120,6 @@ static void SetError(NSError **outError, NSInteger errorCode, NSString *format, 
 @end
 
 
-@implementation NSObject (JANBTInternal)
-
-- (JANBTTagType) ja_NBTSchemaType
-{
-	return kJANBTTagUnknown;
-}
-
-@end
-
-
-@implementation NSArray (JANBTInternal)
-
-- (JANBTTagType) ja_NBTSchemaType
-{
-	return kJANBTTagList;
-}
-
-@end
-
-
-@implementation NSDictionary (JANBTInternal)
-
-- (JANBTTagType) ja_NBTSchemaType
-{
-	return kJANBTTagCompound;
-}
-
-@end
-
-
-@implementation NSString (JANBTInternal)
-
-- (JANBTTagType) ja_NBTSchemaType
-{
-	if ([self isEqualToString:@"byte"])		return kJANBTTagByte;
-	if ([self isEqualToString:@"short"])	return kJANBTTagShort;
-	if ([self isEqualToString:@"int"])		return kJANBTTagInt;
-	if ([self isEqualToString:@"long"])		return kJANBTTagLong;
-	if ([self isEqualToString:@"float"])	return kJANBTTagFloat;
-	if ([self isEqualToString:@"double"])	return kJANBTTagDouble;
-	if ([self isEqualToString:@"data"])		return kJANBTTagByteArray;
-	if ([self isEqualToString:@"string"])	return kJANBTTagString;
-	return kJANBTTagUnknown;
-}
-
-@end
-
-
 static void SetError(NSError **outError, NSInteger errorCode, NSString *format, ...)
 {
 	if (outError != nil)

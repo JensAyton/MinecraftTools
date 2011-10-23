@@ -54,10 +54,3 @@
 - (id) initWithValue:(Float64)value;
 
 @end
-
-
-@interface NSNumber (JANBTNumberType)
-
-- (JANBTTagType) ja_NBTType;
-
-@end

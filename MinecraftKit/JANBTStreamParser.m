@@ -370,6 +370,7 @@ enum
 	}
 	
 	if (!_mutableContainers)  array = [array copy];
+	if (schema == nil)  array.ja_NBTListElementType = type;
 	return array;
 }
 

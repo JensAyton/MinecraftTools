@@ -1,5 +1,9 @@
 #import <Foundation/Foundation.h>
+#if 0
 #import "JANBTParser.h"
+#endif
+#import "JANBTSerialization.h"
+#import "JANBTTagType.h"
 
 
 int main (int argc, const char * argv[])
@@ -20,8 +24,10 @@ int main (int argc, const char * argv[])
 			return EXIT_FAILURE;
 		}
 		
+#if 0
 		JANBTTag *root = [JANBTParser parseData:data];
 		NSLog(@"Tags:\n%@", [root debugDescription]);
+#endif
 		
 		return 0;
 	}

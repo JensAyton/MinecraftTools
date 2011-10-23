@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1A64907114517A7300F57924 /* JANBTSerialization.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A64906F14517A7300F57924 /* JANBTSerialization.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A64907214517A7300F57924 /* JANBTSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A64907014517A7300F57924 /* JANBTSerialization.m */; settings = {COMPILER_FLAGS = "-fobjc-arc-exceptions"; }; };
+		1AB23B3014543B81008C5723 /* JANBTTagType.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB23B2F14543B81008C5723 /* JANBTTagType.m */; };
 		1AE0E31714536D57009ACC2B /* JANBTStreamParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AE0E31414536D56009ACC2B /* JANBTStreamParser.h */; };
 		1AE0E31814536D57009ACC2B /* JANBTStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE0E31514536D56009ACC2B /* JANBTStreamParser.m */; };
 		1AE0E31914536D57009ACC2B /* JANBTTagType.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AE0E31614536D57009ACC2B /* JANBTTagType.h */; };
@@ -76,6 +77,7 @@
 /* Begin PBXFileReference section */
 		1A64906F14517A7300F57924 /* JANBTSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTSerialization.h; sourceTree = SOURCE_ROOT; };
 		1A64907014517A7300F57924 /* JANBTSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTSerialization.m; sourceTree = SOURCE_ROOT; };
+		1AB23B2F14543B81008C5723 /* JANBTTagType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTTagType.m; sourceTree = SOURCE_ROOT; };
 		1AE0E31414536D56009ACC2B /* JANBTStreamParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTStreamParser.h; sourceTree = SOURCE_ROOT; };
 		1AE0E31514536D56009ACC2B /* JANBTStreamParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTStreamParser.m; sourceTree = SOURCE_ROOT; };
 		1AE0E31614536D57009ACC2B /* JANBTTagType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTTagType.h; sourceTree = SOURCE_ROOT; };
@@ -149,6 +151,7 @@
 			isa = PBXGroup;
 			children = (
 				1AE0E31614536D57009ACC2B /* JANBTTagType.h */,
+				1AB23B2F14543B81008C5723 /* JANBTTagType.m */,
 				1A64906F14517A7300F57924 /* JANBTSerialization.h */,
 				1A64907014517A7300F57924 /* JANBTSerialization.m */,
 				1AE0E31414536D56009ACC2B /* JANBTStreamParser.h */,
@@ -435,6 +438,7 @@
 				1A64907214517A7300F57924 /* JANBTSerialization.m in Sources */,
 				1AE0E31814536D57009ACC2B /* JANBTStreamParser.m in Sources */,
 				1AE0E32214536FFF009ACC2B /* JANBTTypedNumbers.m in Sources */,
+				1AB23B3014543B81008C5723 /* JANBTTagType.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -53,6 +53,14 @@ NSString *JANBTTagNameFromSchema(id schema);
 
 @interface NSObject (JANBTInternal)
 
+- (JANBTTagType) ja_NBTType;
 - (JANBTTagType) ja_NBTSchemaType;
+
+@end
+
+
+@interface NSArray (JANBTInternal)
+
+@property (nonatomic, setter=ja_setNBTListElementType:) JANBTTagType ja_NBTListElementType;
 
 @end
