@@ -165,37 +165,6 @@ static JANBTTagType NormalizedTagType(id value, id schema);
 		overridden to lie.
 	*/
 	
-#if 0
-	if (schema != nil && [value isKindOfClass:[NSNumber class]])
-	{
-		// Encode all numbers in accordance with schema regardless of tagged or inferred type.
-		switch ([schema ja_NBTSchemaType])
-		{
-			case kJANBTTagByte:
-				return [self writeByte:[value charValue]];
-				
-			case kJANBTTagShort:
-				return [self writeShort:[value shortValue]];
-				
-			case kJANBTTagInt:
-				return [self writeInt:[value intValue]];
-				
-			case kJANBTTagLong:
-				return [self writeLong:[value longLongValue]];
-				
-			case kJANBTTagFloat:
-				return [self writeFloat:[value floatValue]];
-				
-			case kJANBTTagDouble:
-				return [self writeDouble:[value doubleValue]];
-				
-			default:
-				[self setErrorIfClear:kJANBTSerializationWrongTypeError underlyingError:nil format:@"Object does not conform to schema; expected %@, got %@.", JANBTTagNameFromSchema(schema), JANBTTagNameFromTagType(type)];
-				return NO;
-		}
-	}
-#endif
-	
 	switch (type)
 	{
 		case kJANBTTagByte:
