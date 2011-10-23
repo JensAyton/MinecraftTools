@@ -30,7 +30,7 @@
 
 enum
 {
-	kBufferSize					= 128,// << 10,
+	kBufferSize					= 128 << 10,
 	kFlushThreshold				= kBufferSize * 3 / 4
 };
 
