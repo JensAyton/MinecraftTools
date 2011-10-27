@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A3AAB6514592FA0006C7043 /* Data.schema in Resources */ = {isa = PBXBuildFile; fileRef = 1A3AAB6414592FA0006C7043 /* Data.schema */; };
 		1A64907114517A7300F57924 /* JANBTSerialization.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A64906F14517A7300F57924 /* JANBTSerialization.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AB23B3014543B81008C5723 /* JANBTTagType.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB23B2F14543B81008C5723 /* JANBTTagType.m */; };
 		1AB23B5B14544AAB008C5723 /* JANBTStreamEncoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AB23B5914544AAA008C5723 /* JANBTStreamEncoder.h */; };
@@ -75,6 +76,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1A3AAB6414592FA0006C7043 /* Data.schema */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Data.schema; path = Resources/Data.schema; sourceTree = SOURCE_ROOT; };
 		1A64906F14517A7300F57924 /* JANBTSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTSerialization.h; sourceTree = SOURCE_ROOT; };
 		1A64907014517A7300F57924 /* JANBTSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTSerialization.m; sourceTree = SOURCE_ROOT; };
 		1AB23B2F14543B81008C5723 /* JANBTTagType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTTagType.m; sourceTree = SOURCE_ROOT; };
@@ -222,6 +224,7 @@
 			isa = PBXGroup;
 			children = (
 				1AFE345C13F930BF001A33D4 /* MinecraftKit-Info.plist */,
+				1A3AAB6414592FA0006C7043 /* Data.schema */,
 				1AF8C149144CA38900D86C3D /* Schematic.schema */,
 			);
 			path = Resources;
@@ -407,6 +410,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1AF8C14A144CA38900D86C3D /* Schematic.schema in Resources */,
+				1A3AAB6514592FA0006C7043 /* Data.schema in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

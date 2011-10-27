@@ -1,0 +1,59 @@
+{
+	Time = long;
+	LastPlayed = long;
+	SpawnX = int;
+	SpawnY = int;
+	SpawnZ = int;
+	SizeOnDisk = long;
+	RandomSeed = long;
+	version = int;
+	LevelName = string;
+	raining = byte;
+	thundering = byte;
+	rainTime = int;
+	thunderTime = int;
+	GameType = int;
+	MapFeatures = byte;
+	hardcore = byte;
+	
+	Player =
+	{
+		Pos = ( double );
+		Motion = ( double );
+		Rotation = ( float );
+		FallDistance = float;
+		Air = short;
+		Fire = short;
+		OnGround = byte;
+		AttackTime = short;
+		DeathTime = short;
+		Health = short;
+		HurtTime = short;
+		Inventory =
+		(
+			{
+				id = short;
+				Damage = short;
+				Count = byte;
+				Slot = byte;
+			}
+		);
+		Score = int;
+		Dimension = int;
+		Sleeping = byte;
+		SleepTimer = short;
+		AttackTime = short;
+		XpLevel = int;
+		Xp = int;
+		XpTotal = int;
+		HurtTime = short;
+		foodTickTimer = int;
+		foodExhaustionLevel = float;
+		foodSaturationLevel = float;
+		foodLevel = int;
+		SpawnX = int;
+		SpawnY = int;
+		SpawnZ = int;
+		
+	};
+}
