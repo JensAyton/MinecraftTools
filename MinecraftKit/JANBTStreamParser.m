@@ -26,14 +26,14 @@
 #import "JANBTStreamParser.h"
 #import "JANBTTagType.h"
 #import "JANBTTypedNumbers.h"
-#include <zlib.h>
+#import "JAZLibCompressor.h"
 #import "MYCollectionUtilities.h"
 
 
 #define LOG_PARSING 0
 #if LOG_PARSING
 static void ParseLog(NSString *message, NSInteger indent, NSUInteger offset);
-#define PARSE_LOG(format...) ParseLog([NSString stringWithFormat:format], _parseLogIndent, _rawBytesRead);
+#define PARSE_LOG(format...) ParseLog([NSString stringWithFormat:format], _parseLogIndent, _decompressor.rawBytesRead);
 #define PARSE_LOG_INDENT() do { _parseLogIndent++; } while (0)
 #define PARSE_LOG_OUTDENT() do { _parseLogIndent--; } while (0)
 #else
@@ -45,12 +45,6 @@ static void ParseLog(NSString *message, NSInteger indent, NSUInteger offset);
 
 
 static inline BOOL IsNumericalSchema(id schema);
-
-
-enum
-{
-	kBufferLength				= 32 << 10
-};
 
 
 /*
@@ -75,7 +69,6 @@ enum
 - (BOOL) parseWithSchemaInner:(id)schema expectedRootName:(NSString *)expectedName  __attribute__((warn_unused_result));
 - (id) parseOneTagBodyOfType:(JANBTTagType)type withSchema:(id)schema;
 
-- (void) cleanUp;
 - (void) setErrorIfClear:(NSInteger)errorCode underlyingError:(NSError *)underlyingError format:(NSString *)format, ... NS_FORMAT_FUNCTION(3, 4);
 
 - (NSNumber *) parseByteWithSchema:(id)schema;
@@ -106,19 +99,14 @@ enum
 {
 	id						_result;
 	NSString				*_rootName;
-	NSInputStream			*_stream;
-	NSMutableData			*_readBuffer;
-	NSMutableData			*_expandBuffer;
+	JAZlibDecompressor		*_decompressor;
 	NSError					*_error;
-	z_stream				_zstream;
-	uInt					_readCursor;
 	BOOL					_mutableContainers;
 	BOOL					_mutableLeaves;
 	BOOL					_allowFragments;
 	
 #if LOG_PARSING
 	NSInteger				_parseLogIndent;
-	NSUInteger				_rawBytesRead;
 #endif
 }
 
@@ -129,39 +117,13 @@ enum
 	
 	if ((self = [super init]))
 	{
-		_readBuffer = [NSMutableData dataWithLength:kBufferLength];
-		_expandBuffer = [NSMutableData dataWithLength:kBufferLength];
-		if (_readBuffer == nil || _expandBuffer == nil)  return nil;
+		_decompressor = [[JAZlibDecompressor alloc] initWithStream:stream mode:kJAZLibCompressionGZip];
 		
-		_zstream.next_in = _readBuffer.mutableBytes;
-		_zstream.next_out = _expandBuffer.mutableBytes;
-		_zstream.avail_out = kBufferLength;
-		int zstatus = inflateInit2(&_zstream, 31);
-		if (zstatus != Z_OK)  return nil;
-		
-		_stream = stream;
 		_mutableContainers = options & kJANBTReadingMutableContainers;
 		_mutableLeaves = options & kJANBTReadingMutableLeaves;
 		_allowFragments = options & kJANBTReadingAllowFragments;
 	}
 	return self;
-}
-
-
-- (void) dealloc
-{
-	[self cleanUp];
-}
-
-
-- (void) cleanUp
-{
-	inflateEnd(&_zstream);
-	_stream.delegate = nil;
-	_stream = nil;
-	_readBuffer = nil;
-	_expandBuffer = nil;
-	_error = nil;
 }
 
 
@@ -193,10 +155,9 @@ enum
 	
 	@autoreleasepool
 	{
-		[_stream open];
 		OK = [self parseWithSchemaInner:schema expectedRootName:expectedName];
 		if (!OK)  error = _error;
-		[self cleanUp];
+		_decompressor = nil;
 	}
 	
 	if (!OK && outError != NULL)  *outError = error;
@@ -524,58 +485,20 @@ enum
 
 - (BOOL) readBytes:(void *)bytes length:(NSUInteger)length
 {
-	NSParameterAssert(bytes != NULL);
-	char *next = bytes;
+	NSParameterAssert(length <= NSIntegerMax);
 	
-#if LOG_PARSING
-	_rawBytesRead += length;
-#endif
+	NSError *error;
+	NSInteger read = [_decompressor read:bytes length:length error:&error];
+	if (read == (NSInteger)length)  return YES;
 	
-	while (length > 0)
-	{
-		size_t pending = kBufferLength - _zstream.avail_out;
-		
-		if (pending != 0)
-		{
-			NSUInteger toCopy = MIN(pending, length);
-			bcopy(_expandBuffer.bytes + _readCursor, next, toCopy);
-			
-			next += toCopy;
-			_readCursor += toCopy;
-			length -= toCopy;
-			
-			if (_zstream.avail_out == 0)
-			{
-				_zstream.next_out = _expandBuffer.mutableBytes;
-				_zstream.avail_out = kBufferLength;
-				_readCursor = 0;
-			}
-		}
-		else
-		{
-			if (_zstream.avail_in == 0)
-			{
-				_zstream.next_in = _readBuffer.mutableBytes;
-				NSInteger status = [_stream read:_zstream.next_in maxLength:kBufferLength];
-				if (status > 0)  _zstream.avail_in = status;
-				else
-				{
-					if (status == 0)  [self setErrorIfClear:kJANBTSerializationReadError
-											underlyingError:nil
-													 format:@"Premature end of file."];
-					else  [self setErrorIfClear:kJANBTSerializationReadError
-								underlyingError:_stream.streamError
-										 format:@"Read error."];
-						return NO;
-				}
-			}
-			
-			int zstatus = inflate(&_zstream, Z_SYNC_FLUSH);
-			REQUIRE_ERR(zstatus == Z_OK || zstatus == Z_STREAM_END, kJANBTSerializationCompressionError, @"Zlib error %i.", zstatus);
-		}
-	}
+	if (read >= 0)  [self setErrorIfClear:kJANBTSerializationReadError
+						  underlyingError:nil
+								   format:@"Premature end of file."];
+	else  [self setErrorIfClear:kJANBTSerializationReadError
+				underlyingError:error
+						 format:@"Read error."];
 	
-	return YES;
+	return NO;
 }
 
 @end

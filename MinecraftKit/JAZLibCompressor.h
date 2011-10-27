@@ -1,10 +1,8 @@
 /*
 	JAZLibCompressor.h
 	
-	Streaming ZLib compressor which takes data, compresses it and writes it to
-	a stream. Not an NSOutputStream itself because it doesn’t support
-	asynchronous operation on a run loop. Writing through a JAZLibCompressor
-	is currently synchronous/blocking, but may not be in future.
+	Streaming ZLib compressor and decompressor. Not a NSStreams themselves
+	because they don’t support asynchronous operation on a run loop.
 	
 	
 	Copyright © 2011 Jens Ayton
@@ -36,7 +34,8 @@ typedef enum
 {
 	kJAZLibCompressionRawDeflate,
 	kJAZLibCompressionZLib,
-	kJAZLibCompressionGZip
+	kJAZLibCompressionGZip,
+	kJAZLibCompressionAutoDetect	// Gzip or zlib, decompression only.
 } JAZLibCompressionMode;
 
 
@@ -49,6 +48,20 @@ typedef enum
 
 @property (readonly) NSUInteger rawBytesWritten;
 @property (readonly) NSUInteger compressedBytesWritten;
+
+@end
+
+
+@interface JAZlibDecompressor: NSObject
+
+- (id) initWithStream:(NSInputStream *)stream mode:(JAZLibCompressionMode)mode;
+
+/*
+	Read from stream, returning number of bytes read. This will differ from
+	requested amount only if the end of the stream is reached or an error
+	occurs. In the case of an error, the result will be negative.
+*/
+- (NSInteger) read:(uint8_t *)bytes length:(NSInteger)length error:(NSError **)outError;
 
 @end
 

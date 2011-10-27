@@ -30,6 +30,7 @@
 
 enum
 {
+	// Note: each compressor/decompressor has two buffers of size kBufferSize, plus zlib-internal buffers.
 	kBufferSize					= 128 << 10,
 	kFlushThreshold				= kBufferSize * 3 / 4
 };
@@ -59,15 +60,15 @@ static void SetZLibError(int code, z_stream *stream, NSError **outError);
 	
 	if ((self = [super init]))
 	{
-		_inBuffer = malloc(kBufferSize);
-		_outBuffer = malloc(kBufferSize);
+		_inBuffer = malloc(kBufferSize * 2);
 		
-		if (_inBuffer == nil || _outBuffer == nil)
+		if (_inBuffer == nil)
 		{
 			free(_inBuffer);
-			free(_outBuffer);
 			[NSException raise:NSMallocException format:@"Could not allocate space for zlib compression."];
 		}
+		
+		_outBuffer = _inBuffer + kBufferSize;
 		
 		_stream = stream;
 		if (stream.streamStatus == NSStreamStatusNotOpen)
@@ -83,6 +84,7 @@ static void SetZLibError(int code, z_stream *stream, NSError **outError);
 				windowBits = -windowBits;
 				break;
 				
+			case kJAZLibCompressionAutoDetect:
 			case kJAZLibCompressionZLib:
 				break;
 				
@@ -112,7 +114,6 @@ static void SetZLibError(int code, z_stream *stream, NSError **outError);
 	if (_streamWasClosed)  [_stream close];
 	
 	free(_inBuffer);
-	free(_outBuffer);
 }
 
 
@@ -234,6 +235,162 @@ static void SetZLibError(int code, z_stream *stream, NSError **outError);
 - (NSUInteger) compressedBytesWritten
 {
 	return _zstream.total_out;
+}
+
+@end
+
+
+@implementation JAZlibDecompressor
+{
+	NSInputStream				*_stream;
+	uint8_t						*_inBuffer;
+	uint8_t						*_outBuffer;
+	z_stream					_zstream;
+	uInt						_readCursor;
+	BOOL						_streamWasClosed;
+	BOOL						_zOpen;
+}
+
+- (id) initWithStream:(NSInputStream *)stream mode:(JAZLibCompressionMode)mode
+{
+	if (stream == nil)  return nil;
+	
+	if ((self = [super init]))
+	{
+		_inBuffer = malloc(kBufferSize * 2);
+		
+		if (_inBuffer == nil)
+		{
+			free(_inBuffer);
+			[NSException raise:NSMallocException format:@"Could not allocate space for zlib decompression."];
+		}
+		
+		_outBuffer = _inBuffer + kBufferSize;
+		
+		_stream = stream;
+		if (stream.streamStatus == NSStreamStatusNotOpen)
+		{
+			_streamWasClosed = YES;
+			[stream open];
+		}
+		
+		int windowBits = 15;
+		switch (mode)
+		{
+			case kJAZLibCompressionRawDeflate:
+				windowBits = -windowBits;
+				break;
+				
+			case kJAZLibCompressionZLib:
+				break;
+				
+			case kJAZLibCompressionGZip:
+				windowBits += 16;
+				break;
+				
+			case kJAZLibCompressionAutoDetect:
+				windowBits += 32;
+				break;
+		}
+		
+		_zstream.next_in = _inBuffer;
+		_zstream.next_out = _outBuffer;
+		_zstream.avail_out = kBufferSize;
+		
+		int zstatus = inflateInit2(&_zstream, windowBits);
+		if (zstatus != Z_OK)  return nil;
+		
+		_zOpen = YES;
+	}
+	
+	return self;
+}
+
+
+- (void) dealloc
+{
+	if (_zOpen)  inflateEnd(&_zstream);
+	if (_streamWasClosed)  [_stream close];
+	
+	free(_inBuffer);
+}
+
+
+- (NSInteger) read:(uint8_t *)bytes length:(NSInteger)length error:(NSError **)outError
+{
+	NSParameterAssert(bytes != NULL && length >= 0);
+	
+	NSInteger readCount = 0;
+	
+	while (length > 0)
+	{
+		NSInteger pending = kBufferSize - _zstream.avail_out - _readCursor;
+		
+		if (pending != 0)
+		{
+			// Decompressed data is waiting.
+			NSInteger toCopy = MIN(pending, length);
+			bcopy(_outBuffer + _readCursor, bytes, toCopy);
+			
+			bytes += toCopy;
+			_readCursor += toCopy;
+			length -= toCopy;
+			readCount += toCopy;
+			
+			if (pending == toCopy)
+			{
+				_zstream.next_out = _outBuffer;
+				_zstream.avail_out = kBufferSize;
+				_readCursor = 0;
+			}
+		}
+		else if (_zOpen)
+		{
+			// Read some input if necessary, and pump the inflator.
+			BOOL flush = YES;
+			if (_zstream.avail_in == 0)
+			{
+				flush = NO;
+				_zstream.next_in = _inBuffer;
+				NSInteger status = [_stream read:_zstream.next_in maxLength:kBufferSize];
+				if (status > 0)
+				{
+					_zstream.avail_in = status;
+				}
+				else
+				{
+					if (status == 0)  break;
+					else
+					{
+						if (outError != NULL)  *outError = _stream.streamError;
+						return status;
+					}
+				}
+			}
+			
+			int zstatus = inflate(&_zstream, flush ? Z_SYNC_FLUSH : 0);
+			if (zstatus != Z_OK)
+			{
+				if (zstatus == Z_STREAM_END)
+				{
+					_zOpen = NO;
+					inflateEnd(&_zstream);
+				}
+				else
+				{
+					SetZLibError(zstatus, &_zstream, outError);
+					return -1;
+				}
+			}
+		}
+		else
+		{
+			// !_zOpen, we’ve reached end of stream.
+			break;
+		}
+	}
+	
+	return readCount;
 }
 
 @end
