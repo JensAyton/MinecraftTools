@@ -101,6 +101,7 @@
 		1AB23BA11454A5CE008C5723 /* JANBTStreamEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTStreamEncoder.m; sourceTree = "<group>"; };
 		1AB23BA21454A5CE008C5723 /* JAZLibCompressor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAZLibCompressor.h; sourceTree = "<group>"; };
 		1AB23BA31454A5CE008C5723 /* JAZLibCompressor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAZLibCompressor.m; sourceTree = "<group>"; };
+		1AE8E952145A0736000ED823 /* shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = shared.xcconfig; path = /Users/jayton/Programming/Projects/MinecraftTools/MinecraftKit/nbtparser/../shared.xcconfig; sourceTree = "<absolute>"; };
 		32A70AAB03705E1F00C91783 /* mcxform_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mcxform_Prefix.pch; sourceTree = "<group>"; };
 		8DD76FA10486AA7600D96B5E /* mcxform */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mcxform; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -122,6 +123,7 @@
 			isa = PBXGroup;
 			children = (
 				1AAD7B06128B2B34001FB721 /* README */,
+				1AE8E952145A0736000ED823 /* shared.xcconfig */,
 				08FB7795FE84155DC02AAC07 /* Source */,
 				1A9FB1DE1281F88B003DD1C3 /* MinecraftKit */,
 				08FB779DFE84155DC02AAC07 /* External Frameworks and Libraries */,
@@ -339,19 +341,12 @@
 		1DEB927508733DD40010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CLANG_ENABLE_OBJC_ARC = YES;
 				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
 					"DEBUG_MCSCHEMATIC=1",
 					$VERSION_MACROS,
 				);
-				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_NAME = mcxform;
 				RUN_CLANG_STATIC_ANALYZER = YES;
@@ -362,9 +357,6 @@
 		1DEB927608733DD40010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CLANG_ENABLE_OBJC_ARC = YES;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -375,47 +367,30 @@
 					"DEBUG_MCSCHEMATIC=0",
 					$VERSION_MACROS,
 				);
-				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_NAME = mcxform;
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				VERSION_MACROS = "VERSION_STRING=\"\\\"0.4\\\"\"";
-				WARNING_CFLAGS = (
-					"-Wall",
-					"-Wextra",
-					"-Wno-unused-parameter",
-					"-Wno-unused-function",
-					"-Wno-missing-field-initializers",
-				);
 			};
 			name = Release;
 		};
 		1DEB927908733DD40010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1AE8E952145A0736000ED823 /* shared.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MCKIT_ROOT = ..;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx10.7;
-				SYMROOT = ../build;
 			};
 			name = Debug;
 		};
 		1DEB927A08733DD40010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1AE8E952145A0736000ED823 /* shared.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MCKIT_ROOT = ..;
 				SDKROOT = macosx10.7;
-				SYMROOT = ../build;
 			};
 			name = Release;
 		};
