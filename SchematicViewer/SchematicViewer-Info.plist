@@ -75,7 +75,7 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
-				<string>public.data</string>
+				<string>org.gnu.gnu-zip-archive</string>
 			</array>
 			<key>UTTypeDescription</key>
 			<string>Minecraft Data File</string>
@@ -86,6 +86,7 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>nbt</string>
+					<string>dat</string>
 				</array>
 			</dict>
 		</dict>
