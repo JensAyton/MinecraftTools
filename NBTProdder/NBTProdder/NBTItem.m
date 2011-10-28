@@ -44,7 +44,9 @@
 		if (type == kJANBTTagUnknown)  return nil;
 		
 		self.type = type;
+		self.elementType = kJANBTTagInt;	// Because it has to be something.
 		self.name = name;
+		
 		if (type == kJANBTTagList)
 		{
 			NSMutableArray *children = [NSMutableArray arrayWithCapacity:[plist count]];
@@ -240,6 +242,16 @@
 }
 
 
+- (void) setType:(JANBTTagType)type
+{
+	if (self.parent.type == kJANBTTagList && self.parent.children.count == 1)
+	{
+		self.parent.elementType = type;
+	}
+	_type = type;
+}
+
+
 - (BOOL )isTypeEditable
 {
 	return self.parent.type != kJANBTTagList;
@@ -277,12 +289,45 @@
 }
 
 
+- (NSMutableArray *) children
+{
+	JANBTTagType type = self.type;
+	if (type == kJANBTTagList || type == kJANBTTagCompound)
+	{
+		if (_children == nil)  _children = [NSMutableArray array];
+		return _children;
+	}
+	return nil;
+}
+
+
 - (void) setChildren:(NSMutableArray *)children
 {
 	if (children != _children)
 	{
 		[_children enumerateObjectsUsingBlock:^(NBTItem *object, NSUInteger index, BOOL *stop) { object.parent = nil; }];
 		[children enumerateObjectsUsingBlock:^(NBTItem *object, NSUInteger index, BOOL *stop) { object.parent = self; }];
+		
+		if (self.type == kJANBTTagList)
+		{
+			// Ensure lists are homogeneous.
+			BOOL wasEmpty = _children.count == 0;
+			if (wasEmpty && children.count != 0)
+			{
+				self.elementType = [(NBTItem *)[children objectAtIndex:0] type];
+			}
+			JANBTTagType elemType = self.elementType;
+			[children enumerateObjectsUsingBlock:^(NBTItem *object, NSUInteger index, BOOL *stop)
+			{
+				if (object.type != elemType)
+				{
+					object.parent = nil;
+					object.type = elemType;
+					object.parent = self;
+				}
+			}];
+		}
+		
 		_children = children;
 	}
 }
