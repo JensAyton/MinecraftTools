@@ -36,6 +36,7 @@
 @property (strong) IBOutlet NSTreeController *treeController;
 
 - (IBAction) addItem:(id)sender;
+- (IBAction) removeItem:(id)sender;
 
 @end
 
@@ -142,12 +143,33 @@
 }
 
 
+- (BOOL) canRemoveItem
+{
+	NSArray *selected = self.treeController.selectedObjects;
+	if (selected.count != 1)  return NO;
+	
+	NBTItem *selItem = [selected objectAtIndex:0];
+	return selItem.parent != nil;
+}
+
+
+- (IBAction) removeItem:(id)sender
+{
+	if (!self.canRemoveItem)  return;
+	[self.treeController removeObjectAtArrangedObjectIndexPath:self.treeController.selectionIndexPath];
+}
+
+
 - (BOOL) validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)item
 {
 	SEL action = item.action;
 	if (action == @selector(addItem:))
 	{
 		return self.canAddItem;
+	}
+	else if (action == @selector(addItem:))
+	{
+		return self.canRemoveItem;
 	}
 	return YES;
 }
