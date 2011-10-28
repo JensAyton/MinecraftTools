@@ -7,6 +7,9 @@
    <FileRef
       location = "group:SchematicViewer/SchematicViewer.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:NBTProdder/NBTProdder.xcodeproj">
+   </FileRef>
    <Group
       location = "container:"
       name = "Tools">

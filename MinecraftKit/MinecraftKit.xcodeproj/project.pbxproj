@@ -22,9 +22,9 @@
 		1AE0E32214536FFF009ACC2B /* JANBTTypedNumbers.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE0E32014536FFE009ACC2B /* JANBTTypedNumbers.m */; };
 		1AE8E94D145A013A000ED823 /* shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1AE8E94C145A013A000ED823 /* shared.xcconfig */; };
 		1AF8C14A144CA38900D86C3D /* Schematic.schema in Resources */ = {isa = PBXBuildFile; fileRef = 1AF8C149144CA38900D86C3D /* Schematic.schema */; };
-		1AFC074C14404395009666A9 /* JACollectionHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AFC074A14404395009666A9 /* JACollectionHelpers.h */; };
+		1AFC074C14404395009666A9 /* JACollectionHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AFC074A14404395009666A9 /* JACollectionHelpers.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AFC074D14404395009666A9 /* JACollectionHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFC074B14404395009666A9 /* JACollectionHelpers.m */; };
-		1AFC075214405F8A009666A9 /* MYCollectionUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AFC075014405F8A009666A9 /* MYCollectionUtilities.h */; };
+		1AFC075214405F8A009666A9 /* MYCollectionUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AFC075014405F8A009666A9 /* MYCollectionUtilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AFC075314405F8A009666A9 /* MYCollectionUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFC075114405F8A009666A9 /* MYCollectionUtilities.m */; };
 		1AFE345513F930BF001A33D4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AFE345413F930BF001A33D4 /* Cocoa.framework */; };
 		1AFE348813F931C3001A33D4 /* JAMinecraftBlockIDs.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AFE347813F931C3001A33D4 /* JAMinecraftBlockIDs.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -318,6 +318,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1AFC075214405F8A009666A9 /* MYCollectionUtilities.h in Headers */,
+				1AFC074C14404395009666A9 /* JACollectionHelpers.h in Headers */,
 				1A64907114517A7300F57924 /* JANBTSerialization.h in Headers */,
 				1AFE348813F931C3001A33D4 /* JAMinecraftBlockIDs.h in Headers */,
 				1AFE348A13F931C3001A33D4 /* JAMinecraftTypes.h in Headers */,
@@ -333,8 +335,6 @@
 				1AFE34B613F9321F001A33D4 /* JAValueToString.h in Headers */,
 				1AFE34A613F931EE001A33D4 /* JAHashEnumeration.h in Headers */,
 				1AFE34A813F931EE001A33D4 /* IsKeyDown.h in Headers */,
-				1AFC074C14404395009666A9 /* JACollectionHelpers.h in Headers */,
-				1AFC075214405F8A009666A9 /* MYCollectionUtilities.h in Headers */,
 				1AE0E31714536D57009ACC2B /* JANBTStreamParser.h in Headers */,
 				1AE0E31914536D57009ACC2B /* JANBTTagType.h in Headers */,
 				1AE0E32114536FFF009ACC2B /* JANBTTypedNumbers.h in Headers */,

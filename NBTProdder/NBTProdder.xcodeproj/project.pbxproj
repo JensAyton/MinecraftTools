@@ -1,0 +1,373 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1AE8E9C3145A0ABC000ED823 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AE8E9C2145A0ABC000ED823 /* Cocoa.framework */; };
+		1AE8E9CD145A0ABC000ED823 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1AE8E9CB145A0ABC000ED823 /* InfoPlist.strings */; };
+		1AE8E9CF145A0ABC000ED823 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE8E9CE145A0ABC000ED823 /* main.m */; };
+		1AE8E9D3145A0ABC000ED823 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 1AE8E9D1145A0ABC000ED823 /* Credits.rtf */; };
+		1AE8E9D6145A0ABC000ED823 /* NBTDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE8E9D5145A0ABC000ED823 /* NBTDocument.m */; };
+		1AE8E9D9145A0ABC000ED823 /* NBTDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1AE8E9D7145A0ABC000ED823 /* NBTDocument.xib */; };
+		1AE8E9DC145A0ABD000ED823 /* NBTProdder.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1AE8E9DA145A0ABD000ED823 /* NBTProdder.xib */; };
+		1AE8E9E3145A0BEF000ED823 /* shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1AE8E9E2145A0BEF000ED823 /* shared.xcconfig */; };
+		1AE8E9EA145A0CB3000ED823 /* JAMinecraftKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AE8E9E9145A0CA1000ED823 /* JAMinecraftKit.framework */; };
+		1AE8E9EC145A0CD3000ED823 /* JAMinecraftKit.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1AE8E9E9145A0CA1000ED823 /* JAMinecraftKit.framework */; };
+		1AFB0EAC145AD25A00CDFCCB /* NBTItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFB0EAB145AD25A00CDFCCB /* NBTItem.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1AE8E9E8145A0CA1000ED823 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1AE8E9E4145A0CA0000ED823 /* MinecraftKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1AFE345113F930BF001A33D4;
+			remoteInfo = MinecraftKit;
+		};
+		1AE8E9ED145A0CE4000ED823 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1AE8E9E4145A0CA0000ED823 /* MinecraftKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1AFE345013F930BF001A33D4;
+			remoteInfo = MinecraftKit;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		1AE8E9EB145A0CB9000ED823 /* Copy Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				1AE8E9EC145A0CD3000ED823 /* JAMinecraftKit.framework in Copy Frameworks */,
+			);
+			name = "Copy Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		1ADE40FA145AE2CF008263C8 /* JANBTTypedNumbers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JANBTTypedNumbers.h; path = ../../MinecraftKit/JANBTTypedNumbers.h; sourceTree = "<group>"; };
+		1AE8E9BE145A0ABC000ED823 /* NBTProdder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NBTProdder.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1AE8E9C2145A0ABC000ED823 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		1AE8E9C5145A0ABC000ED823 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		1AE8E9C6145A0ABC000ED823 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		1AE8E9C7145A0ABC000ED823 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		1AE8E9CA145A0ABC000ED823 /* NBTProdder-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "NBTProdder-Info.plist"; sourceTree = "<group>"; };
+		1AE8E9CC145A0ABC000ED823 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1AE8E9CE145A0ABC000ED823 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		1AE8E9D0145A0ABC000ED823 /* NBTProdder-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NBTProdder-Prefix.pch"; sourceTree = "<group>"; };
+		1AE8E9D2145A0ABC000ED823 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		1AE8E9D4145A0ABC000ED823 /* NBTDocument.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NBTDocument.h; sourceTree = "<group>"; };
+		1AE8E9D5145A0ABC000ED823 /* NBTDocument.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NBTDocument.m; sourceTree = "<group>"; };
+		1AE8E9D8145A0ABC000ED823 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/NBTDocument.xib; sourceTree = "<group>"; };
+		1AE8E9DB145A0ABD000ED823 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/NBTProdder.xib; sourceTree = "<group>"; };
+		1AE8E9E2145A0BEF000ED823 /* shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = shared.xcconfig; path = /Users/jayton/Programming/Projects/MinecraftTools/SchematicViewer/../MinecraftKit/shared.xcconfig; sourceTree = "<absolute>"; };
+		1AE8E9E4145A0CA0000ED823 /* MinecraftKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MinecraftKit.xcodeproj; path = ../MinecraftKit/MinecraftKit.xcodeproj; sourceTree = "<group>"; };
+		1AFB0EAA145AD25A00CDFCCB /* NBTItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NBTItem.h; sourceTree = "<group>"; };
+		1AFB0EAB145AD25A00CDFCCB /* NBTItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NBTItem.m; sourceTree = "<group>"; };
+		1AFB0EAD145AD2C800CDFCCB /* JANBTTagType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JANBTTagType.h; path = ../../MinecraftKit/JANBTTagType.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1AE8E9BB145A0ABC000ED823 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1AE8E9EA145A0CB3000ED823 /* JAMinecraftKit.framework in Frameworks */,
+				1AE8E9C3145A0ABC000ED823 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1AE8E9B3145A0ABC000ED823 = {
+			isa = PBXGroup;
+			children = (
+				1AE8E9E2145A0BEF000ED823 /* shared.xcconfig */,
+				1AE8E9C8145A0ABC000ED823 /* NBTProdder */,
+				1AE8E9C1145A0ABC000ED823 /* Frameworks */,
+				1AE8E9BF145A0ABC000ED823 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1AE8E9BF145A0ABC000ED823 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1AE8E9BE145A0ABC000ED823 /* NBTProdder.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1AE8E9C1145A0ABC000ED823 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1AE8E9E4145A0CA0000ED823 /* MinecraftKit.xcodeproj */,
+				1AE8E9C2145A0ABC000ED823 /* Cocoa.framework */,
+				1AE8E9C4145A0ABC000ED823 /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		1AE8E9C4145A0ABC000ED823 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1AE8E9C5145A0ABC000ED823 /* AppKit.framework */,
+				1AE8E9C6145A0ABC000ED823 /* CoreData.framework */,
+				1AE8E9C7145A0ABC000ED823 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		1AE8E9C8145A0ABC000ED823 /* NBTProdder */ = {
+			isa = PBXGroup;
+			children = (
+				1AE8E9D4145A0ABC000ED823 /* NBTDocument.h */,
+				1AE8E9D5145A0ABC000ED823 /* NBTDocument.m */,
+				1AFB0EAA145AD25A00CDFCCB /* NBTItem.h */,
+				1AFB0EAB145AD25A00CDFCCB /* NBTItem.m */,
+				1AFB0EAD145AD2C800CDFCCB /* JANBTTagType.h */,
+				1ADE40FA145AE2CF008263C8 /* JANBTTypedNumbers.h */,
+				1AE8E9D7145A0ABC000ED823 /* NBTDocument.xib */,
+				1AE8E9DA145A0ABD000ED823 /* NBTProdder.xib */,
+				1AE8E9C9145A0ABC000ED823 /* Supporting Files */,
+			);
+			path = NBTProdder;
+			sourceTree = "<group>";
+		};
+		1AE8E9C9145A0ABC000ED823 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				1AE8E9CA145A0ABC000ED823 /* NBTProdder-Info.plist */,
+				1AE8E9CB145A0ABC000ED823 /* InfoPlist.strings */,
+				1AE8E9CE145A0ABC000ED823 /* main.m */,
+				1AE8E9D0145A0ABC000ED823 /* NBTProdder-Prefix.pch */,
+				1AE8E9D1145A0ABC000ED823 /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		1AE8E9E5145A0CA0000ED823 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1AE8E9E9145A0CA1000ED823 /* JAMinecraftKit.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1AE8E9BD145A0ABC000ED823 /* NBTProdder */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1AE8E9DF145A0ABD000ED823 /* Build configuration list for PBXNativeTarget "NBTProdder" */;
+			buildPhases = (
+				1AE8E9BA145A0ABC000ED823 /* Sources */,
+				1AE8E9BB145A0ABC000ED823 /* Frameworks */,
+				1AE8E9BC145A0ABC000ED823 /* Resources */,
+				1AE8E9EB145A0CB9000ED823 /* Copy Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1AE8E9EE145A0CE4000ED823 /* PBXTargetDependency */,
+			);
+			name = NBTProdder;
+			productName = NBTProdder;
+			productReference = 1AE8E9BE145A0ABC000ED823 /* NBTProdder.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1AE8E9B5145A0ABC000ED823 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+				ORGANIZATIONNAME = "Jens Ayton";
+			};
+			buildConfigurationList = 1AE8E9B8145A0ABC000ED823 /* Build configuration list for PBXProject "NBTProdder" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 1AE8E9B3145A0ABC000ED823;
+			productRefGroup = 1AE8E9BF145A0ABC000ED823 /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 1AE8E9E5145A0CA0000ED823 /* Products */;
+					ProjectRef = 1AE8E9E4145A0CA0000ED823 /* MinecraftKit.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				1AE8E9BD145A0ABC000ED823 /* NBTProdder */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		1AE8E9E9145A0CA1000ED823 /* JAMinecraftKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = JAMinecraftKit.framework;
+			remoteRef = 1AE8E9E8145A0CA1000ED823 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1AE8E9BC145A0ABC000ED823 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1AE8E9CD145A0ABC000ED823 /* InfoPlist.strings in Resources */,
+				1AE8E9D3145A0ABC000ED823 /* Credits.rtf in Resources */,
+				1AE8E9D9145A0ABC000ED823 /* NBTDocument.xib in Resources */,
+				1AE8E9DC145A0ABD000ED823 /* NBTProdder.xib in Resources */,
+				1AE8E9E3145A0BEF000ED823 /* shared.xcconfig in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1AE8E9BA145A0ABC000ED823 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1AE8E9CF145A0ABC000ED823 /* main.m in Sources */,
+				1AE8E9D6145A0ABC000ED823 /* NBTDocument.m in Sources */,
+				1AFB0EAC145AD25A00CDFCCB /* NBTItem.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1AE8E9EE145A0CE4000ED823 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MinecraftKit;
+			targetProxy = 1AE8E9ED145A0CE4000ED823 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		1AE8E9CB145A0ABC000ED823 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1AE8E9CC145A0ABC000ED823 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		1AE8E9D1145A0ABC000ED823 /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1AE8E9D2145A0ABC000ED823 /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		1AE8E9D7145A0ABC000ED823 /* NBTDocument.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1AE8E9D8145A0ABC000ED823 /* en */,
+			);
+			name = NBTDocument.xib;
+			sourceTree = "<group>";
+		};
+		1AE8E9DA145A0ABD000ED823 /* NBTProdder.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1AE8E9DB145A0ABD000ED823 /* en */,
+			);
+			name = NBTProdder.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		1AE8E9DD145A0ABD000ED823 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1AE8E9E2145A0BEF000ED823 /* shared.xcconfig */;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				MCKIT_ROOT = ..;
+				ONLY_ACTIVE_ARCH = YES;
+			};
+			name = Debug;
+		};
+		1AE8E9DE145A0ABD000ED823 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1AE8E9E2145A0BEF000ED823 /* shared.xcconfig */;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				MCKIT_ROOT = ..;
+			};
+			name = Release;
+		};
+		1AE8E9E0145A0ABD000ED823 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "NBTProdder/NBTProdder-Prefix.pch";
+				INFOPLIST_FILE = "NBTProdder/NBTProdder-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks/";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		1AE8E9E1145A0ABD000ED823 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "NBTProdder/NBTProdder-Prefix.pch";
+				INFOPLIST_FILE = "NBTProdder/NBTProdder-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks/";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1AE8E9B8145A0ABC000ED823 /* Build configuration list for PBXProject "NBTProdder" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1AE8E9DD145A0ABD000ED823 /* Debug */,
+				1AE8E9DE145A0ABD000ED823 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1AE8E9DF145A0ABD000ED823 /* Build configuration list for PBXNativeTarget "NBTProdder" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1AE8E9E0145A0ABD000ED823 /* Debug */,
+				1AE8E9E1145A0ABD000ED823 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1AE8E9B5145A0ABC000ED823 /* Project object */;
+}
