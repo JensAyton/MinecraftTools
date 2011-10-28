@@ -38,6 +38,10 @@
 - (IBAction) addItem:(id)sender;
 - (IBAction) removeItem:(id)sender;
 
+// Primitives for undoable insertion and removal.
+- (void) insertItem:(NBTItem *)item atPath:(NSIndexPath *)path;
+- (void) removeItem:(NBTItem *)item atPath:(NSIndexPath *)path;
+
 @end
 
 
@@ -66,8 +70,6 @@
 {
 	id plist = [self.root propertyListRepresentation];
 	if (plist == nil)  return nil;
-	
-	NSLog(@"%@", plist);
 	
 	return [JANBTSerialization dataWithNBTObject:plist rootName:self.root.name options:0 schema:nil error:outError];
 }
@@ -139,7 +141,23 @@
 	{
 		new.type = type;
 	}
-	[self.treeController insertObject:new atArrangedObjectIndexPath:selPath];
+	
+	[self.undoManager setActionName:NSLocalizedString(@"Add", @"Add item undo action name")];
+	[self insertItem:new atPath:selPath];
+}
+
+
+- (void) insertItem:(NBTItem *)item atPath:(NSIndexPath *)selPath
+{
+	[[self.undoManager prepareWithInvocationTarget:self] removeItem:item atPath:selPath];
+	[self.treeController insertObject:item atArrangedObjectIndexPath:selPath];
+}
+
+
+- (void) removeItem:(NBTItem *)item atPath:(NSIndexPath *)selPath
+{
+	[[self.undoManager prepareWithInvocationTarget:self] insertItem:item atPath:selPath];
+	[self.treeController removeObjectAtArrangedObjectIndexPath:selPath];
 }
 
 
@@ -156,7 +174,12 @@
 - (IBAction) removeItem:(id)sender
 {
 	if (!self.canRemoveItem)  return;
-	[self.treeController removeObjectAtArrangedObjectIndexPath:self.treeController.selectionIndexPath];
+	
+	NBTItem *selected = [self.treeController.selectedObjects objectAtIndex:0];
+	NSIndexPath *selPath = self.treeController.selectionIndexPath;
+	
+	[self.undoManager setActionName:NSLocalizedString(@"Remove", @"Remove item undo action name")];
+	[self removeItem:selected atPath:selPath];
 }
 
 

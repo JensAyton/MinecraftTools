@@ -479,7 +479,7 @@
 									<string key="NSResourceName">NSRemoveTemplate</string>
 								</object>
 								<string key="NSAlternateContents"/>
-								<string key="NSKeyEquivalent"/>
+								<string type="base64-UTF8" key="NSKeyEquivalent">CA</string>
 								<int key="NSPeriodicDelay">400</int>
 								<int key="NSPeriodicInterval">75</int>
 							</object>
@@ -739,7 +739,6 @@
 								<int key="contentType">3</int>
 								<reference key="containingView" ref="568628114"/>
 							</object>
-							<reference ref="378894198"/>
 							<object class="IBNSLayoutConstraint" id="244493846">
 								<reference key="firstItem" ref="378894198"/>
 								<int key="firstAttribute">5</int>
@@ -804,6 +803,7 @@
 								<int key="contentType">3</int>
 								<reference key="containingView" ref="568628114"/>
 							</object>
+							<reference ref="378894198"/>
 						</array>
 						<reference key="parent" ref="275939982"/>
 					</object>
