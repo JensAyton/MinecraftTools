@@ -2,9 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:Build All.xcodeproj">
-   </FileRef>
-   <FileRef
       location = "group:SchematicViewer/SchematicViewer.xcodeproj">
    </FileRef>
    <FileRef
@@ -13,6 +10,9 @@
    <Group
       location = "container:"
       name = "Tools">
+      <FileRef
+         location = "group:Build All.xcodeproj">
+      </FileRef>
       <FileRef
          location = "group:mcxform/mcxform.xcodeproj">
       </FileRef>
