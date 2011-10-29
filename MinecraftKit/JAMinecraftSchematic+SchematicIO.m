@@ -28,6 +28,7 @@
 #import "JACollectionHelpers.h"
 #import "JAPropertyListAccessors.h"
 #import "MYCollectionUtilities.h"
+#import "MCKitSchema.h"
 
 
 NSString * const kJAMinecraftSchematicUTI = @"com.davidvierra.mcedit.schematic";
@@ -67,7 +68,7 @@ static id KeyForCoords(NSInteger x, NSInteger y, NSInteger z)
 		return nil;
 	}
 	
-	NSDictionary *schema = [NSDictionary dictionaryWithContentsOfURL:[[NSBundle bundleForClass:self.class] URLForResource:kSchematicKey withExtension:@"schema"]];
+	NSDictionary *schema = GetSchematicSchema();
 	NSString *rootName = kSchematicKey;
 	
 	NSDictionary *dict = [JANBTSerialization NBTObjectWithData:data rootName:&rootName options:0 schema:schema error:outError];
@@ -235,7 +236,7 @@ static id KeyForCoords(NSInteger x, NSInteger y, NSInteger z)
 	[root setObject:tileEntities forKey:kTileEntitiesKey];
 	[root setObject:[NSArray array] forKey:kEntitiesKey];
 	
-	NSDictionary *schema = [NSDictionary dictionaryWithContentsOfURL:[[NSBundle bundleForClass:self.class] URLForResource:@"Schematic" withExtension:@"schema"]];
+	NSDictionary *schema = GetSchematicSchema();
 	
 	//	JANBTTag *nbtRoot = [JANBTTag tagWithName:kSchematicKey propertyListRepresentation:root schema:schema];
 	//	return [JANBTEncoder encodeTag:nbtRoot];

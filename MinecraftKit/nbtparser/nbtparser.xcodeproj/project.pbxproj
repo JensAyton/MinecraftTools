@@ -8,16 +8,34 @@
 
 /* Begin PBXBuildFile section */
 		1A4B74121260AEAF00253625 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A4B74111260AEAF00253625 /* libz.dylib */; };
-		1AB23B8814547BC0008C5723 /* JANBTSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB23B7B14547BC0008C5723 /* JANBTSerialization.m */; };
-		1AB23B8914547BC0008C5723 /* JANBTTagType.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB23B7D14547BC0008C5723 /* JANBTTagType.m */; };
-		1AB23B8A14547BC0008C5723 /* JANBTTypedNumbers.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB23B7F14547BC0008C5723 /* JANBTTypedNumbers.m */; };
-		1AB23B8B14547BC0008C5723 /* JANBTStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB23B8114547BC0008C5723 /* JANBTStreamParser.m */; };
-		1AB23B95145497FF008C5723 /* JANBTStreamEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB23B92145497FE008C5723 /* JANBTStreamEncoder.m */; };
-		1AB23B96145497FF008C5723 /* JAZLibCompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB23B94145497FE008C5723 /* JAZLibCompressor.m */; };
-		1AF8C16D144CB63C00D86C3D /* MYCollectionUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF8C16C144CB63C00D86C3D /* MYCollectionUtilities.m */; };
+		1AF54078145C3B710049CCEB /* libminecraftkit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AF54075145C3B580049CCEB /* libminecraftkit.a */; };
 		8DD76F9A0486AA7600D96B5E /* nbtparser.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FB7796FE84155DC02AAC07 /* nbtparser.m */; settings = {ATTRIBUTES = (); }; };
 		8DD76F9C0486AA7600D96B5E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FB779EFE84155DC02AAC07 /* Foundation.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1AF54072145C3B580049CCEB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1AF5406D145C3B570049CCEB /* MinecraftKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1AFE345113F930BF001A33D4;
+			remoteInfo = MinecraftKit;
+		};
+		1AF54074145C3B580049CCEB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1AF5406D145C3B570049CCEB /* MinecraftKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1AF54038145C38AE0049CCEB;
+			remoteInfo = libminecraftkit;
+		};
+		1AF54076145C3B6A0049CCEB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1AF5406D145C3B570049CCEB /* MinecraftKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1AF54037145C38AE0049CCEB;
+			remoteInfo = libminecraftkit;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		8DD76F9E0486AA7600D96B5E /* CopyFiles */ = {
@@ -35,21 +53,8 @@
 		08FB7796FE84155DC02AAC07 /* nbtparser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = nbtparser.m; sourceTree = "<group>"; };
 		08FB779EFE84155DC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		1A4B74111260AEAF00253625 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
-		1AB23B7A14547BC0008C5723 /* JANBTSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTSerialization.h; sourceTree = "<group>"; };
-		1AB23B7B14547BC0008C5723 /* JANBTSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTSerialization.m; sourceTree = "<group>"; };
-		1AB23B7C14547BC0008C5723 /* JANBTTagType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTTagType.h; sourceTree = "<group>"; };
-		1AB23B7D14547BC0008C5723 /* JANBTTagType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTTagType.m; sourceTree = "<group>"; };
-		1AB23B7E14547BC0008C5723 /* JANBTTypedNumbers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTTypedNumbers.h; sourceTree = "<group>"; };
-		1AB23B7F14547BC0008C5723 /* JANBTTypedNumbers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTTypedNumbers.m; sourceTree = "<group>"; };
-		1AB23B8014547BC0008C5723 /* JANBTStreamParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTStreamParser.h; sourceTree = "<group>"; };
-		1AB23B8114547BC0008C5723 /* JANBTStreamParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTStreamParser.m; sourceTree = "<group>"; };
-		1AB23B91145497FE008C5723 /* JANBTStreamEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTStreamEncoder.h; sourceTree = "<group>"; };
-		1AB23B92145497FE008C5723 /* JANBTStreamEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTStreamEncoder.m; sourceTree = "<group>"; };
-		1AB23B93145497FE008C5723 /* JAZLibCompressor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAZLibCompressor.h; sourceTree = "<group>"; };
-		1AB23B94145497FE008C5723 /* JAZLibCompressor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAZLibCompressor.m; sourceTree = "<group>"; };
 		1AE8E951145A065C000ED823 /* shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = shared.xcconfig; path = ../shared.xcconfig; sourceTree = "<group>"; };
-		1AF8C16B144CB63C00D86C3D /* MYCollectionUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MYCollectionUtilities.h; path = ../MYCollectionUtilities.h; sourceTree = "<group>"; };
-		1AF8C16C144CB63C00D86C3D /* MYCollectionUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MYCollectionUtilities.m; path = ../MYCollectionUtilities.m; sourceTree = "<group>"; };
+		1AF5406D145C3B570049CCEB /* MinecraftKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MinecraftKit.xcodeproj; path = ../MinecraftKit.xcodeproj; sourceTree = "<group>"; };
 		32A70AAB03705E1F00C91783 /* nbtparser_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nbtparser_Prefix.pch; sourceTree = "<group>"; };
 		8DD76FA10486AA7600D96B5E /* nbtparser */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = nbtparser; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -59,6 +64,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1AF54078145C3B710049CCEB /* libminecraftkit.a in Frameworks */,
 				8DD76F9C0486AA7600D96B5E /* Foundation.framework in Frameworks */,
 				1A4B74121260AEAF00253625 /* libz.dylib in Frameworks */,
 			);
@@ -84,9 +90,6 @@
 			children = (
 				32A70AAB03705E1F00C91783 /* nbtparser_Prefix.pch */,
 				08FB7796FE84155DC02AAC07 /* nbtparser.m */,
-				1AF8C16B144CB63C00D86C3D /* MYCollectionUtilities.h */,
-				1AF8C16C144CB63C00D86C3D /* MYCollectionUtilities.m */,
-				1AB23B7114547BC0008C5723 /* NBT */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -95,34 +98,24 @@
 			isa = PBXGroup;
 			children = (
 				08FB779EFE84155DC02AAC07 /* Foundation.framework */,
+				1AF5406D145C3B570049CCEB /* MinecraftKit.xcodeproj */,
 			);
 			name = "External Frameworks and Libraries";
-			sourceTree = "<group>";
-		};
-		1AB23B7114547BC0008C5723 /* NBT */ = {
-			isa = PBXGroup;
-			children = (
-				1AB23B7A14547BC0008C5723 /* JANBTSerialization.h */,
-				1AB23B7B14547BC0008C5723 /* JANBTSerialization.m */,
-				1AB23B7C14547BC0008C5723 /* JANBTTagType.h */,
-				1AB23B7D14547BC0008C5723 /* JANBTTagType.m */,
-				1AB23B7E14547BC0008C5723 /* JANBTTypedNumbers.h */,
-				1AB23B7F14547BC0008C5723 /* JANBTTypedNumbers.m */,
-				1AB23B8014547BC0008C5723 /* JANBTStreamParser.h */,
-				1AB23B8114547BC0008C5723 /* JANBTStreamParser.m */,
-				1AB23B91145497FE008C5723 /* JANBTStreamEncoder.h */,
-				1AB23B92145497FE008C5723 /* JANBTStreamEncoder.m */,
-				1AB23B93145497FE008C5723 /* JAZLibCompressor.h */,
-				1AB23B94145497FE008C5723 /* JAZLibCompressor.m */,
-			);
-			name = NBT;
-			path = ..;
 			sourceTree = "<group>";
 		};
 		1AB674ADFE9D54B511CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				8DD76FA10486AA7600D96B5E /* nbtparser */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1AF5406E145C3B570049CCEB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1AF54073145C3B580049CCEB /* JAMinecraftKit.framework */,
+				1AF54075145C3B580049CCEB /* libminecraftkit.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -141,6 +134,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				1AF54077145C3B6A0049CCEB /* PBXTargetDependency */,
 			);
 			name = nbtparser;
 			productInstallPath = "$(HOME)/bin";
@@ -168,6 +162,12 @@
 			);
 			mainGroup = 08FB7794FE84155DC02AAC07 /* nbtparser */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 1AF5406E145C3B570049CCEB /* Products */;
+					ProjectRef = 1AF5406D145C3B570049CCEB /* MinecraftKit.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				8DD76F960486AA7600D96B5E /* nbtparser */,
@@ -175,23 +175,41 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXReferenceProxy section */
+		1AF54073145C3B580049CCEB /* JAMinecraftKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = JAMinecraftKit.framework;
+			remoteRef = 1AF54072145C3B580049CCEB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1AF54075145C3B580049CCEB /* libminecraftkit.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libminecraftkit.a;
+			remoteRef = 1AF54074145C3B580049CCEB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
 /* Begin PBXSourcesBuildPhase section */
 		8DD76F990486AA7600D96B5E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				8DD76F9A0486AA7600D96B5E /* nbtparser.m in Sources */,
-				1AF8C16D144CB63C00D86C3D /* MYCollectionUtilities.m in Sources */,
-				1AB23B8814547BC0008C5723 /* JANBTSerialization.m in Sources */,
-				1AB23B8914547BC0008C5723 /* JANBTTagType.m in Sources */,
-				1AB23B8A14547BC0008C5723 /* JANBTTypedNumbers.m in Sources */,
-				1AB23B8B14547BC0008C5723 /* JANBTStreamParser.m in Sources */,
-				1AB23B95145497FF008C5723 /* JANBTStreamEncoder.m in Sources */,
-				1AB23B96145497FF008C5723 /* JAZLibCompressor.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1AF54077145C3B6A0049CCEB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = libminecraftkit;
+			targetProxy = 1AF54076145C3B6A0049CCEB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		1DEB927508733DD40010E9CD /* Debug */ = {
@@ -201,6 +219,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = nbtparser_Prefix.pch;
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = nbtparser;
 			};
 			name = Debug;
@@ -211,6 +230,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = nbtparser_Prefix.pch;
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = nbtparser;
 			};
 			name = Release;

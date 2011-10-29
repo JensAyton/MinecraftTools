@@ -1,0 +1,199 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1AF54089145C3C860049CCEB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AF54088145C3C860049CCEB /* Foundation.framework */; };
+		1AF5408C145C3C860049CCEB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF5408B145C3C860049CCEB /* main.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		1AF54082145C3C850049CCEB /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		1AF54084145C3C850049CCEB /* plistpacker */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = plistpacker; sourceTree = BUILT_PRODUCTS_DIR; };
+		1AF54088145C3C860049CCEB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		1AF5408B145C3C860049CCEB /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		1AF5409C145C3CB00049CCEB /* shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = shared.xcconfig; path = ../shared.xcconfig; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1AF54081145C3C850049CCEB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1AF54089145C3C860049CCEB /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1AF54079145C3C850049CCEB = {
+			isa = PBXGroup;
+			children = (
+				1AF5409C145C3CB00049CCEB /* shared.xcconfig */,
+				1AF5408A145C3C860049CCEB /* plistpacker */,
+				1AF54087145C3C850049CCEB /* Frameworks */,
+				1AF54085145C3C850049CCEB /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1AF54085145C3C850049CCEB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1AF54084145C3C850049CCEB /* plistpacker */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1AF54087145C3C850049CCEB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1AF54088145C3C860049CCEB /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		1AF5408A145C3C860049CCEB /* plistpacker */ = {
+			isa = PBXGroup;
+			children = (
+				1AF5408B145C3C860049CCEB /* main.m */,
+			);
+			path = plistpacker;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1AF54083145C3C850049CCEB /* plistpacker */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1AF54093145C3C860049CCEB /* Build configuration list for PBXNativeTarget "plistpacker" */;
+			buildPhases = (
+				1AF54080145C3C850049CCEB /* Sources */,
+				1AF54081145C3C850049CCEB /* Frameworks */,
+				1AF54082145C3C850049CCEB /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = plistpacker;
+			productName = plistpacker;
+			productReference = 1AF54084145C3C850049CCEB /* plistpacker */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1AF5407B145C3C850049CCEB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+				ORGANIZATIONNAME = "Jens Ayton";
+			};
+			buildConfigurationList = 1AF5407E145C3C850049CCEB /* Build configuration list for PBXProject "plistpacker" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 1AF54079145C3C850049CCEB;
+			productRefGroup = 1AF54085145C3C850049CCEB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1AF54083145C3C850049CCEB /* plistpacker */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1AF54080145C3C850049CCEB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1AF5408C145C3C860049CCEB /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1AF54091145C3C860049CCEB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1AF5409C145C3CB00049CCEB /* shared.xcconfig */;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				MCKIT_ROOT = ../..;
+				ONLY_ACTIVE_ARCH = YES;
+			};
+			name = Debug;
+		};
+		1AF54092145C3C860049CCEB /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1AF5409C145C3CB00049CCEB /* shared.xcconfig */;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				MCKIT_ROOT = ../..;
+			};
+			name = Release;
+		};
+		1AF54094145C3C860049CCEB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		1AF54095145C3C860049CCEB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1AF5407E145C3C850049CCEB /* Build configuration list for PBXProject "plistpacker" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1AF54091145C3C860049CCEB /* Debug */,
+				1AF54092145C3C860049CCEB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1AF54093145C3C860049CCEB /* Build configuration list for PBXNativeTarget "plistpacker" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1AF54094145C3C860049CCEB /* Debug */,
+				1AF54095145C3C860049CCEB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1AF5407B145C3C850049CCEB /* Project object */;
+}

@@ -7,43 +7,33 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1A0C657513E6F67200722B66 /* JAPropertyListAccessors.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A0C654113E6F67200722B66 /* JAPropertyListAccessors.m */; };
-		1A0C657913E6F67200722B66 /* JAValueToString.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A0C657213E6F67200722B66 /* JAValueToString.m */; };
-		1A52C8B712903870006E2D65 /* JAMinecraftBlockStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A52C8B612903870006E2D65 /* JAMinecraftBlockStore.m */; };
-		1A54A7A9129B214500977657 /* JAHashEnumeration.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A54A7A8129B214500977657 /* JAHashEnumeration.m */; };
-		1A5BF23F1440B936006E9405 /* JACollectionHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A5BF23E1440B936006E9405 /* JACollectionHelpers.m */; };
-		1A64906A1451785800F57924 /* MYCollectionUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6490691451785800F57924 /* MYCollectionUtilities.m */; };
-		1A64906E1451787C00F57924 /* JAMinecraftBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A64906D1451787C00F57924 /* JAMinecraftBlock.m */; };
-		1A9FB1ED1281F88B003DD1C3 /* JAMinecraftTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A9FB1E31281F88B003DD1C3 /* JAMinecraftTypes.m */; };
 		1A9FB22A1281F913003DD1C3 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A9FB2291281F913003DD1C3 /* libz.dylib */; };
-		1AAD77891288AE90001FB721 /* JAMinecraftSchematic.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD77801288AE90001FB721 /* JAMinecraftSchematic.m */; };
-		1AAD778A1288AE90001FB721 /* JAMinecraftSchematic+RDatIO.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD77821288AE90001FB721 /* JAMinecraftSchematic+RDatIO.m */; };
-		1AAD778C1288AE90001FB721 /* JAMinecraftSchematic+SchematicIO.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD77861288AE90001FB721 /* JAMinecraftSchematic+SchematicIO.m */; };
-		1AAD7959128B04C7001FB721 /* JAMinecraftBlockIDs.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AAD7958128B04C7001FB721 /* JAMinecraftBlockIDs.c */; };
-		1AB23BA41454A5CE008C5723 /* JANBTSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB23B991454A5CE008C5723 /* JANBTSerialization.m */; };
-		1AB23BA51454A5CE008C5723 /* JANBTTagType.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB23B9B1454A5CE008C5723 /* JANBTTagType.m */; };
-		1AB23BA61454A5CE008C5723 /* JANBTTypedNumbers.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB23B9D1454A5CE008C5723 /* JANBTTypedNumbers.m */; };
-		1AB23BA71454A5CE008C5723 /* JANBTStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB23B9F1454A5CE008C5723 /* JANBTStreamParser.m */; };
-		1AB23BA81454A5CE008C5723 /* JANBTStreamEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB23BA11454A5CE008C5723 /* JANBTStreamEncoder.m */; };
-		1AB23BA91454A5CE008C5723 /* JAZLibCompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB23BA31454A5CE008C5723 /* JAZLibCompressor.m */; };
+		1AF54062145C3AA40049CCEB /* libminecraftkit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AF54061145C3A870049CCEB /* libminecraftkit.a */; };
 		8DD76F9A0486AA7600D96B5E /* mcxform.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FB7796FE84155DC02AAC07 /* mcxform.m */; settings = {ATTRIBUTES = (); }; };
 		8DD76F9C0486AA7600D96B5E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FB779EFE84155DC02AAC07 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		1A0C64B113E6DF0C00722B66 /* PBXContainerItemProxy */ = {
+		1AF5405E145C3A870049CCEB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 1A0C64A913E6DF0C00722B66 /* attributeMapBuilder.xcodeproj */;
+			containerPortal = 1AF54059145C3A860049CCEB /* MinecraftKit.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 8DD76FA10486AA7600D96B5E;
-			remoteInfo = attributeMapBuilder;
+			remoteGlobalIDString = 1AFE345113F930BF001A33D4;
+			remoteInfo = MinecraftKit;
 		};
-		1A0C64B313E6DF1600722B66 /* PBXContainerItemProxy */ = {
+		1AF54060145C3A870049CCEB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 1A0C64A913E6DF0C00722B66 /* attributeMapBuilder.xcodeproj */;
+			containerPortal = 1AF54059145C3A860049CCEB /* MinecraftKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1AF54038145C38AE0049CCEB;
+			remoteInfo = libminecraftkit;
+		};
+		1AF54063145C3AAB0049CCEB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1AF54059145C3A860049CCEB /* MinecraftKit.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 1A0C648213E6DC4800722B66;
-			remoteInfo = "Update attribute map";
+			remoteGlobalIDString = 1AF54037145C38AE0049CCEB;
+			remoteInfo = libminecraftkit;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -62,46 +52,10 @@
 /* Begin PBXFileReference section */
 		08FB7796FE84155DC02AAC07 /* mcxform.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mcxform.m; sourceTree = "<group>"; };
 		08FB779EFE84155DC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		1A0C64A913E6DF0C00722B66 /* attributeMapBuilder.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = attributeMapBuilder.xcodeproj; path = ../MinecraftKit/attributeMapBuilder/attributeMapBuilder.xcodeproj; sourceTree = "<group>"; };
-		1A0C654013E6F67200722B66 /* JAPropertyListAccessors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAPropertyListAccessors.h; sourceTree = "<group>"; };
-		1A0C654113E6F67200722B66 /* JAPropertyListAccessors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAPropertyListAccessors.m; sourceTree = "<group>"; };
-		1A0C657113E6F67200722B66 /* JAValueToString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAValueToString.h; sourceTree = "<group>"; };
-		1A0C657213E6F67200722B66 /* JAValueToString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAValueToString.m; sourceTree = "<group>"; };
-		1A52C8B512903870006E2D65 /* JAMinecraftBlockStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAMinecraftBlockStore.h; sourceTree = "<group>"; };
-		1A52C8B612903870006E2D65 /* JAMinecraftBlockStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAMinecraftBlockStore.m; sourceTree = "<group>"; };
-		1A54A7A7129B214500977657 /* JAHashEnumeration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAHashEnumeration.h; sourceTree = "<group>"; };
-		1A54A7A8129B214500977657 /* JAHashEnumeration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAHashEnumeration.m; sourceTree = "<group>"; };
-		1A5BF23D1440B936006E9405 /* JACollectionHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JACollectionHelpers.h; sourceTree = "<group>"; };
-		1A5BF23E1440B936006E9405 /* JACollectionHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JACollectionHelpers.m; sourceTree = "<group>"; };
-		1A6490681451785800F57924 /* MYCollectionUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYCollectionUtilities.h; sourceTree = "<group>"; };
-		1A6490691451785800F57924 /* MYCollectionUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYCollectionUtilities.m; sourceTree = "<group>"; };
-		1A64906C1451787C00F57924 /* JAMinecraftBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAMinecraftBlock.h; sourceTree = "<group>"; };
-		1A64906D1451787C00F57924 /* JAMinecraftBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAMinecraftBlock.m; sourceTree = "<group>"; };
-		1A9FB1E11281F88B003DD1C3 /* JAMinecraftBlockIDs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAMinecraftBlockIDs.h; sourceTree = "<group>"; };
-		1A9FB1E21281F88B003DD1C3 /* JAMinecraftTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAMinecraftTypes.h; sourceTree = "<group>"; };
-		1A9FB1E31281F88B003DD1C3 /* JAMinecraftTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAMinecraftTypes.m; sourceTree = "<group>"; };
 		1A9FB2291281F913003DD1C3 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
-		1AAD777F1288AE90001FB721 /* JAMinecraftSchematic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAMinecraftSchematic.h; sourceTree = "<group>"; };
-		1AAD77801288AE90001FB721 /* JAMinecraftSchematic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAMinecraftSchematic.m; sourceTree = "<group>"; };
-		1AAD77811288AE90001FB721 /* JAMinecraftSchematic+RDatIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "JAMinecraftSchematic+RDatIO.h"; sourceTree = "<group>"; };
-		1AAD77821288AE90001FB721 /* JAMinecraftSchematic+RDatIO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "JAMinecraftSchematic+RDatIO.m"; sourceTree = "<group>"; };
-		1AAD77851288AE90001FB721 /* JAMinecraftSchematic+SchematicIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "JAMinecraftSchematic+SchematicIO.h"; sourceTree = "<group>"; };
-		1AAD77861288AE90001FB721 /* JAMinecraftSchematic+SchematicIO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "JAMinecraftSchematic+SchematicIO.m"; sourceTree = "<group>"; };
-		1AAD7958128B04C7001FB721 /* JAMinecraftBlockIDs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = JAMinecraftBlockIDs.c; sourceTree = "<group>"; };
 		1AAD7B06128B2B34001FB721 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
-		1AB23B981454A5CE008C5723 /* JANBTSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTSerialization.h; sourceTree = "<group>"; };
-		1AB23B991454A5CE008C5723 /* JANBTSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTSerialization.m; sourceTree = "<group>"; };
-		1AB23B9A1454A5CE008C5723 /* JANBTTagType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTTagType.h; sourceTree = "<group>"; };
-		1AB23B9B1454A5CE008C5723 /* JANBTTagType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTTagType.m; sourceTree = "<group>"; };
-		1AB23B9C1454A5CE008C5723 /* JANBTTypedNumbers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTTypedNumbers.h; sourceTree = "<group>"; };
-		1AB23B9D1454A5CE008C5723 /* JANBTTypedNumbers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTTypedNumbers.m; sourceTree = "<group>"; };
-		1AB23B9E1454A5CE008C5723 /* JANBTStreamParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTStreamParser.h; sourceTree = "<group>"; };
-		1AB23B9F1454A5CE008C5723 /* JANBTStreamParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTStreamParser.m; sourceTree = "<group>"; };
-		1AB23BA01454A5CE008C5723 /* JANBTStreamEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTStreamEncoder.h; sourceTree = "<group>"; };
-		1AB23BA11454A5CE008C5723 /* JANBTStreamEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTStreamEncoder.m; sourceTree = "<group>"; };
-		1AB23BA21454A5CE008C5723 /* JAZLibCompressor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAZLibCompressor.h; sourceTree = "<group>"; };
-		1AB23BA31454A5CE008C5723 /* JAZLibCompressor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAZLibCompressor.m; sourceTree = "<group>"; };
 		1AE8E952145A0736000ED823 /* shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = shared.xcconfig; path = /Users/jayton/Programming/Projects/MinecraftTools/MinecraftKit/nbtparser/../shared.xcconfig; sourceTree = "<absolute>"; };
+		1AF54059145C3A860049CCEB /* MinecraftKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MinecraftKit.xcodeproj; path = ../MinecraftKit/MinecraftKit.xcodeproj; sourceTree = "<group>"; };
 		32A70AAB03705E1F00C91783 /* mcxform_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mcxform_Prefix.pch; sourceTree = "<group>"; };
 		8DD76FA10486AA7600D96B5E /* mcxform */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mcxform; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -111,6 +65,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1AF54062145C3AA40049CCEB /* libminecraftkit.a in Frameworks */,
 				8DD76F9C0486AA7600D96B5E /* Foundation.framework in Frameworks */,
 				1A9FB22A1281F913003DD1C3 /* libz.dylib in Frameworks */,
 			);
@@ -125,11 +80,10 @@
 				1AAD7B06128B2B34001FB721 /* README */,
 				1AE8E952145A0736000ED823 /* shared.xcconfig */,
 				08FB7795FE84155DC02AAC07 /* Source */,
-				1A9FB1DE1281F88B003DD1C3 /* MinecraftKit */,
 				08FB779DFE84155DC02AAC07 /* External Frameworks and Libraries */,
 				1AB674ADFE9D54B511CA2CBB /* Products */,
 				1A9FB2291281F913003DD1C3 /* libz.dylib */,
-				1A0C64A913E6DF0C00722B66 /* attributeMapBuilder.xcodeproj */,
+				1AF54059145C3A860049CCEB /* MinecraftKit.xcodeproj */,
 			);
 			name = mcxform;
 			sourceTree = "<group>";
@@ -151,86 +105,19 @@
 			name = "External Frameworks and Libraries";
 			sourceTree = "<group>";
 		};
-		1A0C64AA13E6DF0C00722B66 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				1A0C64B213E6DF0C00722B66 /* attributeMapBuilder */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		1A0C64ED13E6F67200722B66 /* JAPropertyListAccessors */ = {
-			isa = PBXGroup;
-			children = (
-				1A0C654013E6F67200722B66 /* JAPropertyListAccessors.h */,
-				1A0C654113E6F67200722B66 /* JAPropertyListAccessors.m */,
-			);
-			path = JAPropertyListAccessors;
-			sourceTree = "<group>";
-		};
-		1A0C654A13E6F67200722B66 /* JAValueToString */ = {
-			isa = PBXGroup;
-			children = (
-				1A0C657113E6F67200722B66 /* JAValueToString.h */,
-				1A0C657213E6F67200722B66 /* JAValueToString.m */,
-			);
-			path = JAValueToString;
-			sourceTree = "<group>";
-		};
-		1A9FB1DE1281F88B003DD1C3 /* MinecraftKit */ = {
-			isa = PBXGroup;
-			children = (
-				1A52C8B512903870006E2D65 /* JAMinecraftBlockStore.h */,
-				1A52C8B612903870006E2D65 /* JAMinecraftBlockStore.m */,
-				1A64906C1451787C00F57924 /* JAMinecraftBlock.h */,
-				1A64906D1451787C00F57924 /* JAMinecraftBlock.m */,
-				1AAD777F1288AE90001FB721 /* JAMinecraftSchematic.h */,
-				1AAD77801288AE90001FB721 /* JAMinecraftSchematic.m */,
-				1AAD77811288AE90001FB721 /* JAMinecraftSchematic+RDatIO.h */,
-				1AAD77821288AE90001FB721 /* JAMinecraftSchematic+RDatIO.m */,
-				1AAD77851288AE90001FB721 /* JAMinecraftSchematic+SchematicIO.h */,
-				1AAD77861288AE90001FB721 /* JAMinecraftSchematic+SchematicIO.m */,
-				1A9FB1E11281F88B003DD1C3 /* JAMinecraftBlockIDs.h */,
-				1AAD7958128B04C7001FB721 /* JAMinecraftBlockIDs.c */,
-				1A9FB1E21281F88B003DD1C3 /* JAMinecraftTypes.h */,
-				1A9FB1E31281F88B003DD1C3 /* JAMinecraftTypes.m */,
-				1A54A7A7129B214500977657 /* JAHashEnumeration.h */,
-				1A54A7A8129B214500977657 /* JAHashEnumeration.m */,
-				1A5BF23D1440B936006E9405 /* JACollectionHelpers.h */,
-				1A5BF23E1440B936006E9405 /* JACollectionHelpers.m */,
-				1A6490681451785800F57924 /* MYCollectionUtilities.h */,
-				1A6490691451785800F57924 /* MYCollectionUtilities.m */,
-				1AB23B971454A5CE008C5723 /* NBT */,
-				1A0C64ED13E6F67200722B66 /* JAPropertyListAccessors */,
-				1A0C654A13E6F67200722B66 /* JAValueToString */,
-			);
-			name = MinecraftKit;
-			path = ../MinecraftKit;
-			sourceTree = SOURCE_ROOT;
-		};
-		1AB23B971454A5CE008C5723 /* NBT */ = {
-			isa = PBXGroup;
-			children = (
-				1AB23B981454A5CE008C5723 /* JANBTSerialization.h */,
-				1AB23B991454A5CE008C5723 /* JANBTSerialization.m */,
-				1AB23B9A1454A5CE008C5723 /* JANBTTagType.h */,
-				1AB23B9B1454A5CE008C5723 /* JANBTTagType.m */,
-				1AB23B9C1454A5CE008C5723 /* JANBTTypedNumbers.h */,
-				1AB23B9D1454A5CE008C5723 /* JANBTTypedNumbers.m */,
-				1AB23B9E1454A5CE008C5723 /* JANBTStreamParser.h */,
-				1AB23B9F1454A5CE008C5723 /* JANBTStreamParser.m */,
-				1AB23BA01454A5CE008C5723 /* JANBTStreamEncoder.h */,
-				1AB23BA11454A5CE008C5723 /* JANBTStreamEncoder.m */,
-				1AB23BA21454A5CE008C5723 /* JAZLibCompressor.h */,
-				1AB23BA31454A5CE008C5723 /* JAZLibCompressor.m */,
-			);
-			name = NBT;
-			sourceTree = "<group>";
-		};
 		1AB674ADFE9D54B511CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				8DD76FA10486AA7600D96B5E /* mcxform */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1AF5405A145C3A860049CCEB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1AF5405F145C3A870049CCEB /* JAMinecraftKit.framework */,
+				1AF54061145C3A870049CCEB /* libminecraftkit.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -249,7 +136,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				1A0C64B413E6DF1600722B66 /* PBXTargetDependency */,
+				1AF54064145C3AAB0049CCEB /* PBXTargetDependency */,
 			);
 			name = mcxform;
 			productInstallPath = "$(HOME)/bin";
@@ -279,8 +166,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 1A0C64AA13E6DF0C00722B66 /* Products */;
-					ProjectRef = 1A0C64A913E6DF0C00722B66 /* attributeMapBuilder.xcodeproj */;
+					ProductGroup = 1AF5405A145C3A860049CCEB /* Products */;
+					ProjectRef = 1AF54059145C3A860049CCEB /* MinecraftKit.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -291,11 +178,18 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		1A0C64B213E6DF0C00722B66 /* attributeMapBuilder */ = {
+		1AF5405F145C3A870049CCEB /* JAMinecraftKit.framework */ = {
 			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = attributeMapBuilder;
-			remoteRef = 1A0C64B113E6DF0C00722B66 /* PBXContainerItemProxy */;
+			fileType = wrapper.framework;
+			path = JAMinecraftKit.framework;
+			remoteRef = 1AF5405E145C3A870049CCEB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1AF54061145C3A870049CCEB /* libminecraftkit.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libminecraftkit.a;
+			remoteRef = 1AF54060145C3A870049CCEB /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -306,34 +200,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				8DD76F9A0486AA7600D96B5E /* mcxform.m in Sources */,
-				1A9FB1ED1281F88B003DD1C3 /* JAMinecraftTypes.m in Sources */,
-				1AAD77891288AE90001FB721 /* JAMinecraftSchematic.m in Sources */,
-				1AAD778A1288AE90001FB721 /* JAMinecraftSchematic+RDatIO.m in Sources */,
-				1AAD778C1288AE90001FB721 /* JAMinecraftSchematic+SchematicIO.m in Sources */,
-				1AAD7959128B04C7001FB721 /* JAMinecraftBlockIDs.c in Sources */,
-				1A52C8B712903870006E2D65 /* JAMinecraftBlockStore.m in Sources */,
-				1A54A7A9129B214500977657 /* JAHashEnumeration.m in Sources */,
-				1A0C657513E6F67200722B66 /* JAPropertyListAccessors.m in Sources */,
-				1A0C657913E6F67200722B66 /* JAValueToString.m in Sources */,
-				1A5BF23F1440B936006E9405 /* JACollectionHelpers.m in Sources */,
-				1A64906A1451785800F57924 /* MYCollectionUtilities.m in Sources */,
-				1A64906E1451787C00F57924 /* JAMinecraftBlock.m in Sources */,
-				1AB23BA41454A5CE008C5723 /* JANBTSerialization.m in Sources */,
-				1AB23BA51454A5CE008C5723 /* JANBTTagType.m in Sources */,
-				1AB23BA61454A5CE008C5723 /* JANBTTypedNumbers.m in Sources */,
-				1AB23BA71454A5CE008C5723 /* JANBTStreamParser.m in Sources */,
-				1AB23BA81454A5CE008C5723 /* JANBTStreamEncoder.m in Sources */,
-				1AB23BA91454A5CE008C5723 /* JAZLibCompressor.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		1A0C64B413E6DF1600722B66 /* PBXTargetDependency */ = {
+		1AF54064145C3AAB0049CCEB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = "Update attribute map";
-			targetProxy = 1A0C64B313E6DF1600722B66 /* PBXContainerItemProxy */;
+			name = libminecraftkit;
+			targetProxy = 1AF54063145C3AAB0049CCEB /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -381,6 +257,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				MCKIT_ROOT = ..;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "-ObjC";
 				SDKROOT = macosx10.7;
 			};
 			name = Debug;
@@ -390,6 +267,7 @@
 			baseConfigurationReference = 1AE8E952145A0736000ED823 /* shared.xcconfig */;
 			buildSettings = {
 				MCKIT_ROOT = ..;
+				OTHER_LDFLAGS = "-ObjC";
 				SDKROOT = macosx10.7;
 			};
 			name = Release;

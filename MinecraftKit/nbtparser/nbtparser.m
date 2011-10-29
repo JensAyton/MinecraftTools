@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
-#import "JANBTSerialization.h"
-#import "JANBTTagType.h"
+#import <JAMinecraftKit/JANBTSerialization.h>
+#import "../JANBTTagType.h"
 
 
 @interface NSObject (NBTParser)

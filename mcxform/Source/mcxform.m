@@ -27,10 +27,10 @@
 
 
 #import <Foundation/Foundation.h>
-#import "JAMinecraftSchematic.h"
-#import "JAMinecraftSchematic+RDatIO.h"
-#import "JAMinecraftSchematic+SchematicIO.h"
-#import "JAValueToString.h"
+#import <JAMinecraftKit/JAMinecraftSchematic.h>
+#import <JAMinecraftKit/JAMinecraftSchematic+RDatIO.h>
+#import <JAMinecraftKit/JAMinecraftSchematic+SchematicIO.h>
+#import <JAMinecraftKit/JAValueToString.h>
 
 
 #define DEBUG_LOGGING	(!defined(NDEBUG))
@@ -144,94 +144,96 @@ const NSUInteger kProcessCount = sizeof kProcesses / sizeof *kProcesses;
 
 int main (int argc, const char * argv[])
 {
-	if (argc < 2 || strcasecmp(argv[1], "--help") == 0 || strcmp(argv[1], "-?") == 0)
+	@autoreleasepool
 	{
-		PrintHelpAndExit();
-	}
-	
-	NSString *outputPath = GetPath(argv[1]);
-	if (outputPath == nil)
-	{
-		EPrint(@"Failed to resolve output path \"%s\".\n", argv[1]);
-		return EXIT_FAILURE;
-	}
-	
-	JAMinecraftSchematic *outputCircuit = [JAMinecraftSchematic new];
-	
-	for (int n = 2; n < argc; n++)
-	{
-		LOG(@"[processing command \"%s\"]\n", argv[n]);
-		
-		char shortcut = 0;
-		const char *arg = argv[n];
-		if (arg[0] == '-')
+		if (argc < 2 || strcasecmp(argv[1], "--help") == 0 || strcmp(argv[1], "-?") == 0)
 		{
-			if (arg[1] == '-')  arg += 2;
-			else  shortcut = arg[1];
+			PrintHelpAndExit();
 		}
 		
-		BOOL match = NO;
-		for (NSUInteger p = 0; p < kProcessCount; p++)
+		NSString *outputPath = GetPath(argv[1]);
+		if (outputPath == nil)
 		{
-			const ProcessDefinition *process = &kProcesses[p];
-			if (shortcut != 0)  match = (shortcut == process->shortcut);
-			else  match = !strcmp(arg, process->command);
-			
-			if (match)
-			{
-				if ((unsigned)argc <= process->minArgs)
-				{
-					EPrint(@"Not enough arguments to command %s.\n", arg);
-					return EXIT_FAILURE;
-				}
-				
-				NSUInteger consumed = process->minArgs;
-				outputCircuit = process->process(outputCircuit, argc - n, &consumed, argv + n);
-				n += consumed;
-				
-				break;
-			}
-		}
-		
-		if (!match)
-		{
-			EPrint(@"Unknown command %s.\n", arg);
+			EPrint(@"Failed to resolve output path \"%s\".\n", argv[1]);
 			return EXIT_FAILURE;
 		}
 		
-		LOG(@"[extents: %@]\n", ExtentsDesc(outputCircuit.extents));
+		JAMinecraftSchematic *outputCircuit = [JAMinecraftSchematic new];
+		
+		for (int n = 2; n < argc; n++)
+		{
+			LOG(@"[processing command \"%s\"]\n", argv[n]);
+			
+			char shortcut = 0;
+			const char *arg = argv[n];
+			if (arg[0] == '-')
+			{
+				if (arg[1] == '-')  arg += 2;
+				else  shortcut = arg[1];
+			}
+			
+			BOOL match = NO;
+			for (NSUInteger p = 0; p < kProcessCount; p++)
+			{
+				const ProcessDefinition *process = &kProcesses[p];
+				if (shortcut != 0)  match = (shortcut == process->shortcut);
+				else  match = !strcmp(arg, process->command);
+				
+				if (match)
+				{
+					if ((unsigned)argc <= process->minArgs)
+					{
+						EPrint(@"Not enough arguments to command %s.\n", arg);
+						return EXIT_FAILURE;
+					}
+					
+					NSUInteger consumed = process->minArgs;
+					outputCircuit = process->process(outputCircuit, argc - n, &consumed, argv + n);
+					n += consumed;
+					
+					break;
+				}
+			}
+			
+			if (!match)
+			{
+				EPrint(@"Unknown command %s.\n", arg);
+				return EXIT_FAILURE;
+			}
+			
+			LOG(@"[extents: %@]\n", ExtentsDesc(outputCircuit.extents));
+		}
+		
+		MCGridExtents outputExtents = outputCircuit.extents;
+		if (MCGridExtentsEmpty(outputExtents))
+		{
+			Print(@"Resulting schematic is empty, not writing.\n");
+			return EXIT_SUCCESS;
+		}
+		else
+		{
+			Print(@"Resulting schematic size is %lu × %lu × %lu.\n", MCGridExtentsLength(outputExtents), MCGridExtentsWidth(outputExtents), MCGridExtentsHeight(outputExtents));
+		}
+		
+		NSData *outputData = nil;
+		NSError *error = nil;
+		if ([[[outputPath pathExtension] lowercaseString] isEqualToString:@"rdat"])
+		{
+			outputData = [outputCircuit rDatDataWithError:&error];
+		}
+		else
+		{
+			outputData = [outputCircuit schematicDataWithError:&error];
+		}
+		
+		if (outputData == nil)
+		{
+			EPrint(@"Could not write schematic data.\n");
+			return EXIT_FAILURE;
+		}
+		
+		[outputData writeToFile:outputPath atomically:YES];
 	}
-	
-	MCGridExtents outputExtents = outputCircuit.extents;
-	if (MCGridExtentsEmpty(outputExtents))
-	{
-		Print(@"Resulting schematic is empty, not writing.\n");
-		return EXIT_SUCCESS;
-	}
-	else
-	{
-		Print(@"Resulting schematic size is %lu × %lu × %lu.\n", MCGridExtentsLength(outputExtents), MCGridExtentsWidth(outputExtents), MCGridExtentsHeight(outputExtents));
-	}
-	
-	NSData *outputData = nil;
-	NSError *error = nil;
-	if ([[[outputPath pathExtension] lowercaseString] isEqualToString:@"rdat"])
-	{
-		outputData = [outputCircuit rDatDataWithError:&error];
-	}
-	else
-	{
-		outputData = [outputCircuit schematicDataWithError:&error];
-	}
-	
-	if (outputData == nil)
-	{
-		EPrint(@"Could not write schematic data.\n");
-		return EXIT_FAILURE;
-	}
-	
-	[outputData writeToFile:outputPath atomically:YES];
-	
     return 0;
 }
 
