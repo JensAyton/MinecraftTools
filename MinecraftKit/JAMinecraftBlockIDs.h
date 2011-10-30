@@ -139,8 +139,8 @@ enum
 	kMCBlockMelonStem						= 105,	// Data: kMCInfoGourdStemAge
 	kMCBlockVines							= 106,	// Data: kMCInfoVineAttachmentMask
 	kMCBlockGate							= 107,	// Data: kMCInfoDoorOrientationMask and kMCInfoDoorOpen.
-	kMCBlockBrickStairs						= 108,	// Data: kMCInfoStairOrientation
-	kMCBlockStoneBrickStairs				= 109,	// Data: kMCInfoStairOrientation
+	kMCBlockBrickStairs						= 108,	// Data: kMCInfoStairOrientationMask
+	kMCBlockStoneBrickStairs				= 109,	// Data: kMCInfoStairOrientationMask
 	
 	// 1.9 PRERELEASE beyond this point.
 	kMCBlockMycelium						= 110,

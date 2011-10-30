@@ -527,6 +527,7 @@ MCDirection MCCellGetOrientation(MCCell cell)
 			
 		case kMCBlockWoodenDoor:
 		case kMCBlockIronDoor:
+		case kMCBlockGate:
 			switch (blockData & kMCInfoDoorOrientationMask)
 			{
 				case kMCInfoDoorOrientationEast:
@@ -547,6 +548,7 @@ MCDirection MCCellGetOrientation(MCCell cell)
 		case kMCBlockCobblestoneStairs:
 		case kMCBlockBrickStairs:
 		case kMCBlockStoneBrickStairs:
+		case kMCBlockNetherBrickStairs:
 			switch (blockData & kMCInfoStairOrientationMask)
 			{
 				case kMCInfoStairOrientationSouth:
@@ -591,6 +593,8 @@ MCDirection MCCellGetOrientation(MCCell cell)
 		case kMCBlockBed:
 		case kMCBlockPumpkin:
 		case kMCBlockJackOLantern:
+		case kMCBlockRedstoneRepeaterOn:
+		case kMCBlockRedstoneRepeaterOff:
 			switch (blockData & kMCInfoMisc3OrientationMask)
 			{
 				case kMCInfoMisc3OrientationEast:
@@ -717,6 +721,7 @@ void MCCellSetOrientation(MCCell *cell, MCDirection orientation)
 			
 		case kMCBlockWoodenDoor:
 		case kMCBlockIronDoor:
+		case kMCBlockGate:
 			mask = kMCInfoDoorOrientationMask;
 			switch (orientation)
 			{
@@ -743,6 +748,7 @@ void MCCellSetOrientation(MCCell *cell, MCDirection orientation)
 		case kMCBlockCobblestoneStairs:
 		case kMCBlockBrickStairs:
 		case kMCBlockStoneBrickStairs:
+		case kMCBlockNetherBrickStairs:
 			mask = kMCInfoStairOrientationMask;
 				switch (orientation)
 			{
@@ -795,6 +801,8 @@ void MCCellSetOrientation(MCCell *cell, MCDirection orientation)
 		case kMCBlockBed:
 		case kMCBlockPumpkin:
 		case kMCBlockJackOLantern:
+		case kMCBlockRedstoneRepeaterOn:
+		case kMCBlockRedstoneRepeaterOff:
 			mask = kMCInfoMisc3OrientationMask;
 			switch (orientation)
 			{
