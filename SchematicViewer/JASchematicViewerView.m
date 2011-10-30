@@ -2,7 +2,7 @@
 	JASchematicViewerView.m
 	
 	
-	Copyright © 2010 Jens Ayton
+	Copyright © 2010–2011 Jens Ayton
 	
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),
@@ -229,6 +229,14 @@ static NSArray *LoadColorTable(void);
 		case kMCBlockBed:
 			extra = [_toolTipExtraStrings ja_stringForKey:(cell.blockData & kInfoBedIsHead) ? @"Bed-head" : @"Bed-foot"];
 			break;
+			
+		case kMCBlockRedstoneRepeaterOn:
+		case kMCBlockRedstoneRepeaterOff:
+		{
+			NSString *delay = $sprintf(@"%u", ((cell.blockData & kMCInfoRedstoneRepeaterDelayMask) >> 2) + 1);
+			NSString *state = [_toolTipExtraStrings ja_stringForKey:(cell.blockID == kMCBlockRedstoneRepeaterOn) ? @"Switch-on" : @"Switch-off"];
+			extra = TEMPLATE_KEY2(_toolTipExtraStrings, @"Repeater", delay, state);
+		}
 	}
 	
 	if (base != nil)

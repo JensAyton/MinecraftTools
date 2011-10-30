@@ -94,8 +94,8 @@
 		"Portal",
 		"Jack-o-lantern",
 		"Cake",
-		"Redstone repeater (off)",
-		"Redstone repeater (on)",
+		"Redstone repeater",	// off
+		"Redstone repeater",	// on
 		"Locked chest",
 		"Trapdoor",
 		"Hidden silverfish",
@@ -135,6 +135,8 @@
 	
 	"Redstone0" = "off";
 	"Redstone" = "level <$level$>";
+	
+	"Repeater" = "<$state$>, delay: <$delay$>";
 	
 	"Silverfish" =
 	(

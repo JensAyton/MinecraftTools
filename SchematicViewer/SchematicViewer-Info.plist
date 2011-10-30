@@ -87,6 +87,7 @@
 				<array>
 					<string>nbt</string>
 					<string>dat</string>
+					<string>dat_old</string>
 				</array>
 			</dict>
 		</dict>

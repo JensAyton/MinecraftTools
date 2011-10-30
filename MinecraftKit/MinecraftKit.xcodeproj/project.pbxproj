@@ -738,6 +738,7 @@
 				1AF54043145C38AE0049CCEB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		1AFE344A13F930BF001A33D4 /* Build configuration list for PBXProject "MinecraftKit" */ = {
 			isa = XCConfigurationList;
