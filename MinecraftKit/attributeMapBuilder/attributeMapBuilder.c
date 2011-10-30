@@ -90,6 +90,7 @@ static const uint8_t kFullySolidIDs[] =
 	kMCBlockWatermelon,
 	kMCBlockMycelium,
 	kMCBlockNetherBrick,
+	kMCBlockEndStone
 };
 
 
@@ -108,7 +109,7 @@ static const uint8_t kQuasiSolidIDs[] =
 	kMCBlockBrickStairs,
 	kMCBlockStoneBrickStairs,
 	kMCBlockNetherBrickStairs,
-	kMCBlockAirPortalFrame	// FIXME: test with redstone. Has both filled and unfilled appearances.
+	kMCBlockEndPortalFrame	// FIXME: test with redstone. Has both filled and unfilled appearances.
 };
 
 
@@ -175,7 +176,7 @@ static const uint8_t kItemIDs[] =
 	kMCBlockEnchantmentTable,
 	kMCBlockBrewingStand,
 	kMCBlockCauldron,
-	kMCBlockAirPortal
+	kMCBlockEndPortal
 };
 
 
@@ -197,7 +198,7 @@ static const uint8_t kTileEntityIDs[] =
 	kMCBlockJukebox,
 	kMCBlockEnchantmentTable,
 	kMCBlockBrewingStand,
-	kMCBlockAirPortal
+	kMCBlockEndPortal
 };
 
 
@@ -303,7 +304,7 @@ int main (int argc, const char * argv[])
 		classification, and all unknown block IDs don’t.
 	*/
 	unsigned i;
-	for (i = 1; i < kMCLastBlockID; i++)
+	for (i = 1; i <= kMCLastBlockID; i++)
 	{
 		JAMCBlockIDMetadata attr = attributeMap[i] & 0x0F;
 		if (attr == 0)

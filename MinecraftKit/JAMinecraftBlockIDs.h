@@ -152,12 +152,13 @@ enum
 	kMCBlockEnchantmentTable				= 116,	// Tile entity: EnchantTable
 	kMCBlockBrewingStand					= 117,	// Data: FIXME unknown; tile entity: Cauldron
 	kMCBlockCauldron						= 118,	// Data: kMCInfoCauldronFillLevel
-	kMCBlockAirPortal						= 119,	// Tile entity: Airportal
-	kMCBlockAirPortalFrame					= 120	// Data: kMCInfoAirPortalFrameBroken
+	kMCBlockEndPortal						= 119,	// Tile entity: Airportal
+	kMCBlockEndPortalFrame					= 120,	// Data: kMCInfoAirPortalFrameBroken
+	kMCBlockEndStone						= 121
 };
 
 
-#define kMCLastBlockID kMCBlockAirPortalFrame
+#define kMCLastBlockID kMCBlockEndStone
 
 
 enum

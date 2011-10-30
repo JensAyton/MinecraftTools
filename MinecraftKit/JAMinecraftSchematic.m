@@ -802,16 +802,17 @@ const int8_t kGroundLevelWeights[256] =
 	-8,		// Enchantment table
 	-8,		// Brewing stand
 	-8,		// Cauldron
-	-8,		// Air portal
+	-8,		// End portal
 	
-	-6,		// Air portal frame
+	-6,		// End portal frame
+	6,		// End stone
 	
 	0
 };
 
 enum
 {
-	kLastWeight = kMCBlockAirPortalFrame
+	kLastWeight = kMCBlockEndStone
 };
 
 

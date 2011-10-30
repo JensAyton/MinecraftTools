@@ -55,7 +55,7 @@ NSString *MCExpectedTileEntityTypeForBlockID(uint8_t blockID)
 		case kMCBlockJukebox:			return @"RecordPlayer";
 		case kMCBlockEnchantmentTable:	return @"EnchantTable";
 		case kMCBlockBrewingStand:		return @"Cauldron";
-		case kMCBlockAirPortal:			return @"Airportal";
+		case kMCBlockEndPortal:			return @"Airportal";
 			
 		default:
 			if (!MCBlockIDHasTileEntity(blockID))  return nil;
