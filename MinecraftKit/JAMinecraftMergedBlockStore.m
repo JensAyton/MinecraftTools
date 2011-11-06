@@ -62,20 +62,21 @@
 }
 
 
-- (MCCell) cellAt:(MCGridCoordinates)coordinates
+- (MCCell) cellAt:(MCGridCoordinates)location gettingTileEntity:(NSDictionary **)outTileEntity
 {
-	MCCell cell;
-	
-	if (MCGridCoordinatesAreWithinExtents(coordinates, _overlayExtents))
+	if (MCGridCoordinatesAreWithinExtents(location, _overlayExtents))
 	{
-		cell = [_overlay cellAtX:coordinates.x - _overlayOffset.x
-							   y:coordinates.y - _overlayOffset.y
-							   z:coordinates.z - _overlayOffset.z];
+		location.x -= _overlayOffset.x;
+		location.y -= _overlayOffset.y;
+		location.z -= _overlayOffset.z;
 		
+		MCCell cell = [_overlay cellAt:location gettingTileEntity:outTileEntity];
 		if (!MCCellIsHole(cell))  return cell;
+		
+		if (outTileEntity != NULL)  *outTileEntity = nil;
 	}
 	
-	return [_mainStore cellAt:coordinates];
+	return [_mainStore cellAt:location gettingTileEntity:outTileEntity];
 }
 
 
