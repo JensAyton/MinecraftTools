@@ -71,7 +71,7 @@
 	[self.schematicView bind:@"store"
 					toObject:self withKeyPath:@"schematic"
 					 options:nil];
-	[self.schematicView scrollToCenter:nil];
+	//	[self.schematicView scrollToCenter:nil];
 	
 	self.currentLayer = self.schematic.groundLevel;
 }
@@ -249,7 +249,8 @@
 		return;
 	}
 	
-	[self.schematicView setFloatingContent:pasted centeredAt:self.schematicView.scrollCenterCoordinates asSelection:YES];
+	// FIXME: coordinates for centre of view (was schematicView.scrollCenterCoordinates).
+	[self.schematicView setFloatingContent:pasted centeredAt:kMCZeroCoordinates asSelection:YES];
 }
 
 

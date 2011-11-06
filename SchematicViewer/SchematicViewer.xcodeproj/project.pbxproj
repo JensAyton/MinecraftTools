@@ -26,6 +26,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		1A0766A314632410004E99A8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1AC44F7B13F93A1F00FB7296 /* MinecraftKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1AF54038145C38AE0049CCEB;
+			remoteInfo = libminecraftkit;
+		};
 		1AC44F8613F93A1F00FB7296 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1AC44F7B13F93A1F00FB7296 /* MinecraftKit.xcodeproj */;
@@ -123,6 +130,7 @@
 			isa = PBXGroup;
 			children = (
 				1AC44F8713F93A1F00FB7296 /* JAMinecraftKit.framework */,
+				1A0766A414632410004E99A8 /* libminecraftkit.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -243,6 +251,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		1A0766A414632410004E99A8 /* libminecraftkit.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libminecraftkit.a;
+			remoteRef = 1A0766A314632410004E99A8 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		1AC44F8713F93A1F00FB7296 /* JAMinecraftKit.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;

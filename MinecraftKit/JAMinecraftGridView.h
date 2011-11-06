@@ -52,19 +52,11 @@ enum
 */
 @property (nonatomic, readonly) JAMinecraftBlockStore *drawingStore;
 
-// Scroll location, in floating-point cell coordinates.
-@property (nonatomic) NSPoint scrollCenter;
-@property (nonatomic) NSInteger currentLayer;
-
-@property (nonatomic) MCGridCoordinates scrollCenterCoordinates;
-
 @property (nonatomic) MCGridExtents selection;
 
+@property (nonatomic) NSInteger currentLayer;
 @property (nonatomic) NSUInteger zoomLevel;
 @property (nonatomic, readonly) NSUInteger maximumZoomLevel;
-
-// Recentre on middle of document.
-- (IBAction) scrollToCenter:(id)sender;
 
 /*
 	Floating content:

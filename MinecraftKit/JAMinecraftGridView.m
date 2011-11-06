@@ -30,6 +30,8 @@
 #import "IsKeyDown.h"
 #import "JAMinecraftKitLionInterfaces.h"
 #import "JAMinecraftBlock.h"
+#import "JAPointMaths.h"
+#import "MYCollectionUtilities.h"
 
 
 #define kSelectionRefreshInterval	0.1	// Selection animation interval in seconds
@@ -42,8 +44,8 @@
 #define USE_BACKGROUND_CACHE		1
 
 
-NSString * const kJAMinecraftGridViewWillFreezeSelectionNotification = @"se.ayton.jens JAMinecraftGridView will freeze selection";
-NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayton.jens JAMinecraftGridView will discard selection";
+NSString * const kJAMinecraftGridViewWillFreezeSelectionNotification = @"se.ayton.jens.minecraftkit JAMinecraftGridView will freeze selection";
+NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayton.jens.minecraftkit JAMinecraftGridView will discard selection";
 
 
 @interface JAMinecraftGridView ()
@@ -60,6 +62,8 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 
 - (void) setNeedsDisplayInExtents:(MCGridExtents)extents;
 
+@property NSPoint drawingOffset;
+
 // Selection
 - (BOOL) hasVisibleSelection;
 - (BOOL) isFocusedForSelection;
@@ -73,19 +77,6 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 
 // Tool tips
 - (void) updateToolTipTracking;
-
-// Scrolling
-- (void) updateScrollers;
-
-- (void) scrollContentOriginTo:(NSPoint)point;
-
-- (IBAction) horizontalScrollAction:(id)sender;
-- (IBAction) verticalScrollAction:(id)sender;
-
-- (void)scrollPageLeft:(id)sender;
-- (void)scrollPageRight:(id)sender;
-- (void)scrollColumnLeft:(id)sender;
-- (void)scrollColumnRight:(id)sender;
 
 // Zooming
 - (void) performSwitchZoomLevel;
@@ -104,10 +95,6 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 
 @interface JAMinecraftGridView (Geometry)
 
-@property (readonly, nonatomic) NSRect horizontalScrollerFrame;
-@property (readonly, nonatomic) NSRect verticalScrollerFrame;
-@property (readonly, nonatomic) NSRect scrollerCornerFrame;
-@property (readonly, nonatomic) NSRect innerFrame;
 @property (readonly, nonatomic) NSRect nonEmptyContentFrame;
 @property (readonly, nonatomic) NSRect virtualBounds;
 
@@ -121,10 +108,6 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 {
 	JAMutableMinecraftBlockStore <NSCopying>	*_store;
 	
-	NSScroller						*_horizontalScroller;
-	NSScroller						*_verticalScroller;
-	
-	NSPoint							_scrollCenter;
 	NSInteger						_currentLayer;
 	
 	JAMCGridViewRenderCB			_renderCallback;
@@ -149,20 +132,13 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 	NSTimer							*_toolTipUpdateTimer;
 }
 
+@synthesize drawingOffset;
+
+
 - (id)initWithFrame:(NSRect)frame
 {
 	if ((self = [super initWithFrame:frame]))
 	{
-		_horizontalScroller = [[NSScroller alloc] initWithFrame:self.horizontalScrollerFrame];
-		_horizontalScroller.action = @selector(horizontalScrollAction:);
-		_horizontalScroller.target = self;
-		[self addSubview:_horizontalScroller];
-		
-		_verticalScroller = [[NSScroller alloc] initWithFrame:self.verticalScrollerFrame];
-		_verticalScroller.action = @selector(verticalScrollAction:);
-		_verticalScroller.target = self;
-		[self addSubview:_verticalScroller];
-		
 		_selection = kMCEmptyExtents;
 		
 		[self updateToolTipTracking];
@@ -177,6 +153,9 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 			else  [[NSColor blueColor] set];
 			[NSBezierPath fillRect:drawingRect];
 		};
+		
+		// FIXME: this should be updated in collusion with scroll view.
+		//self.drawingOffset = (NSPoint){ 120, 80 };
 	}
 	
 	return self;
@@ -284,42 +263,6 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 		if ([keyPath isEqualToString:@"groundLevel"])  [self invalidateDrawingCaches];
 		[self setNeedsDisplay:YES];
 	}
-}
-
-
-- (NSPoint) scrollCenter
-{
-	return _scrollCenter;
-}
-
-
-- (void) setScrollCenter:(NSPoint)value
-{
-	if (!NSEqualPoints(_scrollCenter, value))
-	{
-		_scrollCenter = value;
-		[self setNeedsDisplay:YES];
-		[self updateScrollers];
-	}
-}
-
-
-- (MCGridCoordinates) scrollCenterCoordinates
-{
-	return (MCGridCoordinates){ round(_scrollCenter.y), _currentLayer, round(_scrollCenter.x) };
-}
-
-
-- (void) setScrollCenterCoordinates:(MCGridCoordinates)value
-{
-	self.scrollCenter = (NSPoint){ value.z, value.x };
-	self.currentLayer = value.y;
-}
-
-
-+ (NSSet *) keyPathsForValuesAffectingScrollCenterCoordinates
-{
-	return [NSSet setWithObjects:@"scrollCenter", @"currentLayer", nil];
 }
 
 
@@ -653,10 +596,7 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 
 - (void) drawBasicsAndClipToDirtyRect:(NSRect)dirtyRect
 {
-	/*	Fill background with grid colour; we will then overdraw this with cells.
-		This also fills the area behind the scroll bars, fulfilling our claim
-		to be opaque without relying on the NSScrollers being opaque.
-	*/
+	//	Fill background with grid colour; we will then overdraw this with cells.
 	
 #if USE_BACKGROUND_CACHE
 	[self.emptyOutsidePattern set];
@@ -670,18 +610,6 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 #endif
 	
 	[NSBezierPath fillRect:dirtyRect];
-	
-	// Fill in corner between scroll bars.
-	NSRect cornerFrame = self.scrollerCornerFrame;
-	if (NSIntersectsRect(dirtyRect, cornerFrame))
-	{
-		[[NSColor whiteColor] set];
-		[NSBezierPath fillRect:cornerFrame];
-	}
-	
-	// Exclude scroll bar area from consideration.
-	dirtyRect = NSIntersectionRect(dirtyRect, self.innerFrame);
-	[NSBezierPath clipRect:dirtyRect];
 	
 	// Draw inner grid (i.e., grid for area that has non-empty blocks).
 	NSRect nonEmptyFrame = self.nonEmptyContentFrame;
@@ -756,10 +684,9 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 #if DEBUG_DRAWING
 - (void) drawDebugStuffInDirtyRect:(NSRect)dirtyRect
 {
-	// Draw blue cross at origin. The offset is to get on the top side of the cell.
-	NSPoint pt = [self rectFromCellLocation:kMCZeroCoordinates].origin;
-	pt.x += (_cellSize + _gridWidth) - 0.5 * _gridWidth;
-	pt.y += (_cellSize + _gridWidth) - 0.5 * _gridWidth;
+	// Draw blue cross at origin.
+	NSRect originCellRect = [self rectFromCellLocation:kMCZeroCoordinates];
+	NSPoint pt = { NSMidX(originCellRect), NSMidY(originCellRect) };
 	NSBezierPath *path = [NSBezierPath new];
 	path.lineWidth = 3;
 	[[NSColor blueColor] set];
@@ -767,18 +694,6 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 	[path lineToPoint:(NSPoint){ pt.x + 10, pt.y }];
 	[path moveToPoint:(NSPoint){ pt.x, pt.y - 10 }];
 	[path lineToPoint:(NSPoint){ pt.x, pt.y + 10 }];
-	[path stroke];
-	
-	// Draw green cross at scrollCenter.
-	pt = [self projectFromFlattenedCellSpace:self.scrollCenter];
-	pt.x -= 0.5 * _gridWidth;
-	pt.y += (_cellSize + _gridWidth) - 0.5 * _gridWidth;
-	[path removeAllPoints];
-	[[NSColor greenColor] set];
-	[path moveToPoint:(NSPoint){ pt.x - 8, pt.y }];
-	[path lineToPoint:(NSPoint){ pt.x + 8, pt.y }];
-	[path moveToPoint:(NSPoint){ pt.x, pt.y - 8 }];
-	[path lineToPoint:(NSPoint){ pt.x, pt.y + 8 }];
 	[path stroke];
 	
 	// Frame individual dirty rects in yellow.
@@ -895,10 +810,7 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 	{
 		case kDragPan:
 		{
-			NSRect contentFrame = self.innerFrame;
-			contentFrame.origin.x -= event.deltaX;
-			contentFrame.origin.y += event.deltaY;
-			[self scrollContentOriginTo:contentFrame.origin];
+			// FIXME: reimplement drag panning.
 			break;
 		}
 	}
@@ -921,26 +833,6 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 			
 		case kVK_PageDown:
 			self.currentLayer--;
-			break;
-			
-		case kVK_Home:
-			[self scrollToCenter:nil];
-			break;
-			
-		case kVK_LeftArrow:
-			[self scrollColumnLeft:nil];
-			break;
-			
-		case kVK_RightArrow:
-			[self scrollColumnRight:nil];
-			break;
-			
-		case kVK_UpArrow:
-			[self scrollLineUp:nil];
-			break;
-			
-		case kVK_DownArrow:
-			[self scrollLineDown:nil];
 			break;
 			
 		default:
@@ -987,13 +879,6 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 {
 	[self setNeedsDisplayInSelectionRect];
 	[self updateSelectionTimer];
-}
-
-
-- (void) resizeSubviewsWithOldSize:(NSSize)oldSize
-{
-	[self updateScrollers];
-	[super resizeSubviewsWithOldSize:oldSize];
 }
 
 
@@ -1052,19 +937,19 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 {
 	if ([self hasVisibleSelection])
 	{
-		NSRect innerFrame = self.innerFrame;
+		NSRect frame = self.frame;
 		NSRect selectionBounds = [self selectionBounds];
 		selectionBounds = NSInsetRect(selectionBounds, -_gridWidth, -_gridWidth);
 		
 		NSRect partial = { selectionBounds.origin, { _gridWidth, selectionBounds.size.height }};
-		[self setNeedsDisplayInRect:NSIntersectionRect(partial, innerFrame)];
+		[self setNeedsDisplayInRect:NSIntersectionRect(partial, frame)];
 		partial.origin.x += selectionBounds.size.width - _gridWidth;
-		[self setNeedsDisplayInRect:NSIntersectionRect(partial, innerFrame)];
+		[self setNeedsDisplayInRect:NSIntersectionRect(partial, frame)];
 		
 		partial = (NSRect){ selectionBounds.origin, { selectionBounds.size.width, _gridWidth }};
-		[self setNeedsDisplayInRect:NSIntersectionRect(partial, innerFrame)];
+		[self setNeedsDisplayInRect:NSIntersectionRect(partial, frame)];
 		partial.origin.y += selectionBounds.size.height - _gridWidth;
-		[self setNeedsDisplayInRect:NSIntersectionRect(partial, innerFrame)];
+		[self setNeedsDisplayInRect:NSIntersectionRect(partial, frame)];
 	}
 }
 
@@ -1121,7 +1006,11 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 		MCGridCoordinates location = [self cellLocationFromPoint:point];
 		JAMinecraftBlock *block = [self.store blockAt:location];
 		
-		return [self stringForToolTipForBlock:block at:location];
+		NSString *result = [self stringForToolTipForBlock:block at:location];
+#if DEBUG_DRAWING
+		result = $sprintf(@"%li, %li, %li\n%@", location.x, location.y, location.z, result);
+#endif
+		return result;
 	}
 	else
 	{
@@ -1152,8 +1041,8 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 {
 	_toolTipUpdateTimer = nil;
 	
-	NSRect innerFrame = self.innerFrame;
-	MCGridExtents extents = [self extentsFromRect:innerFrame];
+	NSRect frame = self.frame;
+	MCGridExtents extents = [self extentsFromRect:frame];
 	MCGridCoordinates loc;
 	loc.y = 0;	// Ignored by rectFromCellLocation:, but static analyzer doesn’t know that.
 	for (loc.x = extents.minX; loc.x <= extents.maxX; loc.x++)
@@ -1161,258 +1050,10 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 		for (loc.z = extents.minZ; loc.z <= extents.maxZ; loc.z++)
 		{
 			NSRect cellRect = [self rectFromCellLocation:loc];
-			cellRect = NSIntersectionRect(cellRect, innerFrame);
+			cellRect = NSIntersectionRect(cellRect, frame);
 			[self addToolTipRect:cellRect owner:self userData:nil];
 		}
 	}
-}
-
-
-#pragma mark Scrolling
-
-- (IBAction) scrollToCenter:(id)sender
-{
-	MCGridExtents extents = self.store.extents;
-	if (!MCGridExtentsEmpty(extents))
-	{
-		self.scrollCenter = (NSPoint)
-		{
-			extents.minZ + (extents.maxZ - extents.minZ - 1) * 0.5,
-			extents.minX + (extents.maxX - extents.minX + 1) * 0.5
-		};
-	}
-	else
-	{
-		self.scrollCenter = NSZeroPoint;
-	}
-	[self updateScrollers];
-}
-
-
-- (void) scrollContentOriginTo:(NSPoint)point
-{
-	// Convert scroll position from content frame origin change to scroll center change.
-	
-	NSRect contentFrame = self.innerFrame;
-	NSRect virtualBounds = self.virtualBounds;
-	NSPoint scrollCenter = self.scrollCenter;
-	
-	point.x = MAX(point.x, virtualBounds.origin.x);
-	point.y = MAX(point.y, virtualBounds.origin.y);
-	
-	point.x = MIN(point.x, NSMaxX(virtualBounds) - contentFrame.size.width);
-	point.y = MIN(point.y, NSMaxY(virtualBounds) - contentFrame.size.height);
-	
-	CGFloat deltaX = contentFrame.origin.x - point.x;
-	CGFloat deltaY = contentFrame.origin.y - point.y;
-	
-	scrollCenter.x += deltaX / (_cellSize + _gridWidth);
-	scrollCenter.y += deltaY / (_cellSize + _gridWidth);
-	
-	self.scrollCenter = scrollCenter;
-}
-
-
-- (void) updateScrollers
-{
-	_horizontalScroller.frame = self.horizontalScrollerFrame;
-	_verticalScroller.frame = self.verticalScrollerFrame;
-	
-	NSRect contentFrame = self.innerFrame;
-	NSRect virtualBounds = self.virtualBounds;
-	
-	BOOL enabled = !MCGridExtentsEmpty(self.store.extents);
-	if (enabled)
-	{
-		[_horizontalScroller setEnabled:contentFrame.size.width < virtualBounds.size.width];
-		_horizontalScroller.doubleValue = (contentFrame.origin.x - virtualBounds.origin.x) / (virtualBounds.size.width - contentFrame.size.width);
-		_horizontalScroller.knobProportion = contentFrame.size.width / virtualBounds.size.width;
-		
-		[_verticalScroller setEnabled:contentFrame.size.height < virtualBounds.size.height];
-		_verticalScroller.doubleValue = 1.0 - (contentFrame.origin.y - virtualBounds.origin.y) / (virtualBounds.size.height - contentFrame.size.height);
-		_verticalScroller.knobProportion = contentFrame.size.height / virtualBounds.size.height;
-	}
-	else
-	{
-		[_horizontalScroller setEnabled:NO];
-		[_verticalScroller setEnabled:NO];
-	}
-
-	[self updateToolTipTracking];
-	[self updateSelectionTimer];
-}
-
-
-- (IBAction) horizontalScrollAction:(id)sender
-{
-	switch ([sender hitPart])
-	{
-		case NSScrollerDecrementPage:
-			[self scrollPageLeft:sender];
-			break;
-			
-		case NSScrollerIncrementPage:
-			[self scrollPageRight:sender];
-			break;
-			
-		case NSScrollerDecrementLine:
-			[self scrollColumnLeft:sender];
-			break;
-			
-		case NSScrollerIncrementLine:
-			[self scrollColumnRight:sender];
-			break;
-			
-		case NSScrollerKnob:
-		case NSScrollerKnobSlot:
-		{
-			NSRect contentFrame = self.innerFrame;
-			CGFloat proportion = [sender doubleValue];
-			NSRect virtualBounds = self.virtualBounds;
-			
-			contentFrame.origin.x = proportion * (virtualBounds.size.width - contentFrame.size.width) + virtualBounds.origin.x;
-			[self scrollContentOriginTo:contentFrame.origin];
-			break;
-		}
-	}
-}
-
-
-- (IBAction) verticalScrollAction:(id)sender
-{
-	switch ([sender hitPart])
-	{
-		case NSScrollerDecrementPage:
-			[self scrollPageUp:sender];
-			break;
-			
-		case NSScrollerIncrementPage:
-			[self scrollPageDown:sender];
-			break;
-			
-		case NSScrollerDecrementLine:
-			[self scrollLineUp:sender];
-			break;
-			
-		case NSScrollerIncrementLine:
-			[self scrollLineDown:sender];
-			break;
-			
-		case NSScrollerKnob:
-		case NSScrollerKnobSlot:
-		{
-			NSRect contentFrame = self.innerFrame;
-			CGFloat proportion = 1.0 - [sender doubleValue];
-			NSRect virtualBounds = self.virtualBounds;
-			
-			contentFrame.origin.y = proportion * (virtualBounds.size.height - contentFrame.size.height) + virtualBounds.origin.y;
-			[self scrollContentOriginTo:contentFrame.origin];
-			break;
-		}
-	}
-}
-
-
-- (void)scrollPageUp:(id)sender
-{
-	NSRect contentFrame = self.innerFrame;
-	contentFrame.origin.y += contentFrame.size.height - 2 * (_cellSize + _gridWidth);
-	[self scrollContentOriginTo:contentFrame.origin];
-}
-
-
-- (void)scrollPageDown:(id)sender
-{
-	NSRect contentFrame = self.innerFrame;
-	contentFrame.origin.y -= contentFrame.size.height - 2 * (_cellSize + _gridWidth);
-	[self scrollContentOriginTo:contentFrame.origin];
-}
-
-
-- (void)scrollLineUp:(id)sender
-{
-	NSRect contentFrame = self.innerFrame;
-	contentFrame.origin.y += (_cellSize + _gridWidth);
-	[self scrollContentOriginTo:contentFrame.origin];
-}
-
-
-- (void)scrollLineDown:(id)sender
-{
-	NSRect contentFrame = self.innerFrame;
-	contentFrame.origin.y -= (_cellSize + _gridWidth);
-	[self scrollContentOriginTo:contentFrame.origin];
-}
-
-
-- (void)scrollPageLeft:(id)sender
-{
-	NSRect contentFrame = self.innerFrame;
-	contentFrame.origin.x -= contentFrame.size.width - 2 * (_cellSize + _gridWidth);
-	[self scrollContentOriginTo:contentFrame.origin];
-}
-
-
-- (void)scrollPageRight:(id)sender
-{
-	NSRect contentFrame = self.innerFrame;
-	contentFrame.origin.x += contentFrame.size.width - 2 * (_cellSize + _gridWidth);
-	[self scrollContentOriginTo:contentFrame.origin];
-}
-
-
-- (void)scrollColumnLeft:(id)sender
-{
-	NSRect contentFrame = self.innerFrame;
-	contentFrame.origin.x -= (_cellSize + _gridWidth);
-	[self scrollContentOriginTo:contentFrame.origin];
-}
-
-
-- (void)scrollColumnRight:(id)sender
-{
-	NSRect contentFrame = self.innerFrame;
-	contentFrame.origin.x += (_cellSize + _gridWidth);
-	[self scrollContentOriginTo:contentFrame.origin];
-}
-
-
-- (void)scrollToBeginningOfDocument:(id)sender
-{
-	NSRect contentFrame = self.innerFrame;
-	contentFrame.origin.y -= contentFrame.size.height - contentFrame.origin.y;
-	[self scrollContentOriginTo:contentFrame.origin];
-}
-
-
-- (void)scrollToEndOfDocument:(id)sender
-{
-	NSRect contentFrame = self.innerFrame;
-	contentFrame.origin.y = 0;
-	[self scrollContentOriginTo:contentFrame.origin];
-}
-
-
-- (void) scrollWheel:(NSEvent *)event
-{
-	NSRect contentFrame = self.innerFrame;
-	CGFloat deltaX, deltaY;
-	
-	if ([event respondsToSelector:@selector(hasPreciseScrollingDeltas)] && [event hasPreciseScrollingDeltas])
-	{
-		// FIXME: should let sub-point values accumulate and clean up when drawing. More importantly, this doesn’t quite work; we sometimes get misaligned tiles.
-		deltaX = round(event.scrollingDeltaX);
-		deltaY = round(event.scrollingDeltaY);
-	}
-	else
-	{
-		deltaX = event.deltaX * (_cellSize + _gridWidth);
-		deltaY = event.deltaY * (_cellSize + _gridWidth);
-	}
-	
-	contentFrame.origin.x -= deltaX;
-	contentFrame.origin.y += deltaY;
-	[self scrollContentOriginTo:contentFrame.origin];
 }
 
 
@@ -1464,7 +1105,6 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 	[self switchToZoomLevel:_zoomLevel];
 	
 	[self invalidateDrawingCaches];
-	[self updateScrollers];
 	[self setNeedsDisplay:YES];
 }
 
@@ -1501,41 +1141,6 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 
 #pragma mark Geometry
 
-- (NSRect) horizontalScrollerFrame
-{
-	NSSize size = self.frame.size;
-	CGFloat scrollerWidth = [NSScroller scrollerWidth];
-	
-	return (NSRect){ NSZeroPoint, { size.width - scrollerWidth, scrollerWidth }};
-}
-
-
-- (NSRect) verticalScrollerFrame
-{
-	NSSize size = self.frame.size;
-	CGFloat scrollerWidth = [NSScroller scrollerWidth];
-	
-	return (NSRect){{ size.width - scrollerWidth, scrollerWidth }, { scrollerWidth, size.height - scrollerWidth }};
-}
-
-
-- (NSRect) scrollerCornerFrame
-{
-	NSSize size = self.frame.size;
-	CGFloat scrollerWidth = [NSScroller scrollerWidth];
-	
-	return (NSRect) {{ size.width - scrollerWidth, 0 }, { scrollerWidth, scrollerWidth }};
-}
-
-
-- (NSRect) innerFrame
-{
-	NSSize frameSize = self.frame.size;
-	CGFloat scrollerWidth = [NSScroller scrollerWidth];
-	return (NSRect){ { 0, scrollerWidth }, { frameSize.width - scrollerWidth, frameSize.height - scrollerWidth }};
-}
-
-
 - (NSRect) nonEmptyContentFrame
 {
 	MCGridExtents extents = self.store.extents;
@@ -1558,7 +1163,7 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 - (NSRect) virtualBounds
 {
 	NSRect virtualBounds = self.nonEmptyContentFrame;
-	NSRect contentFrame = self.innerFrame;
+	NSRect contentFrame = self.frame;
 	
 	if (self.infiniteCanvas)
 	{
@@ -1582,37 +1187,25 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 
 - (NSPoint) projectToFlattenedCellSpace:(NSPoint)point
 {
-	CGFloat x = point.x, y = point.y;
-	NSRect innerFrame = self.innerFrame;
-	
-	x = innerFrame.size.width - x - innerFrame.origin.x;
-	y = innerFrame.size.height - y - innerFrame.origin.y;
-	
-	x -= innerFrame.size.width * 0.5;
-	y -= innerFrame.size.height * 0.5;
-	
-	x *= 1.0 / (_cellSize + _gridWidth);
-	y *= 1.0 / (_cellSize + _gridWidth);
-	
-	x += _scrollCenter.x;
-	y += _scrollCenter.y;
-	
-	return (NSPoint) { x, y };
+	point.y = self.frame.size.height - point.y;
+	point = PtSub(point, self.drawingOffset);
+	point = PtScale(point, 1.0 / (_cellSize + _gridWidth));
+	return point;
 }
 
 
 - (MCGridCoordinates) cellLocationFromPoint:(NSPoint)point
 {
 	NSPoint projected = [self projectToFlattenedCellSpace:point];
-	return (MCGridCoordinates){ ceil(projected.y), self.currentLayer, ceil(projected.x) };
+	return (MCGridCoordinates){ floor(projected.x), self.currentLayer, floor(projected.y) };
 }
 
 
 - (MCGridExtents) extentsFromRect:(NSRect)rect
 {
-	// Note that min and max are swapped, because the coordinate schemes run in opposite directions.
-	MCGridCoordinates minl = [self cellLocationFromPoint:(NSPoint){ NSMaxX(rect), NSMaxY(rect) }];
-	MCGridCoordinates maxl = [self cellLocationFromPoint:(NSPoint){ NSMinX(rect), NSMinY(rect) }];
+	// Note that Y min and max are swapped, because the coordinate schemes run in opposite directions.
+	MCGridCoordinates minl = [self cellLocationFromPoint:(NSPoint){ NSMinX(rect), NSMaxY(rect) }];
+	MCGridCoordinates maxl = [self cellLocationFromPoint:(NSPoint){ NSMaxX(rect), NSMinY(rect) }];
 	
 	return (MCGridExtents)
 	{
@@ -1625,34 +1218,23 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 
 - (NSPoint) projectFromFlattenedCellSpace:(NSPoint)point
 {
-	NSRect innerFrame = self.innerFrame;
-	
-	CGFloat x = point.x - _scrollCenter.x;
-	CGFloat y = point.y - _scrollCenter.y;
-	
-	x *= (_cellSize + _gridWidth);
-	y *= (_cellSize + _gridWidth);
-	
-	x += innerFrame.size.width * 0.5;
-	y += innerFrame.size.height * 0.5;
-	
-	x = innerFrame.size.width - x - innerFrame.origin.x;
-	y = innerFrame.size.height - y - innerFrame.origin.y;
-	
-	return (NSPoint){ x, y };
+	point = PtScale(point, _cellSize + _gridWidth);
+	point = PtAdd(point, self.drawingOffset);
+	point.y = self.frame.size.height - point.y;
+	return point;
 }
 
 
 - (NSRect) rectFromCellLocation:(MCGridCoordinates)location
 {
-	NSPoint origin = [self projectFromFlattenedCellSpace:(NSPoint){ location.z, location.x }];
+	NSPoint origin = [self projectFromFlattenedCellSpace:(NSPoint){ location.x, location.z }];
 	origin = [self convertPointToBase:origin];
 	origin.x = round(origin.x);
 	origin.y = round(origin.y);
 	origin = [self convertPointFromBase:origin];
 	return (NSRect)
 	{
-		origin,
+		{ origin.x, origin.y - _cellSize },
 		{ _cellSize, _cellSize }
 	};
 }
@@ -1662,12 +1244,10 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 {
 	if (MCGridExtentsEmpty(extents))  return NSZeroRect;
 	
-	NSRect rect = [self rectFromCellLocation:MCGridExtentsMaximum(extents)];
+	NSRect min = [self rectFromCellLocation:MCGridExtentsMinimum(extents)];
+	NSRect max = [self rectFromCellLocation:MCGridExtentsMaximum(extents)];
 	
-	rect.size.width = MCGridExtentsLength(extents) * (_cellSize + _gridWidth) - _gridWidth;
-	rect.size.height = MCGridExtentsWidth(extents) * (_cellSize + _gridWidth) - _gridWidth;
-	
-	return rect;
+	return NSUnionRect(min, max);
 }
 
 

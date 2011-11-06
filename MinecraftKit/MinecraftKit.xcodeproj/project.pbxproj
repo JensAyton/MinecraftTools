@@ -15,6 +15,7 @@
 		1AB23B6F1454793D008C5723 /* JANBTSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A64907014517A7300F57924 /* JANBTSerialization.m */; };
 		1AB23B8F14547EF6008C5723 /* JAZLibCompressor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AB23B8D14547EF4008C5723 /* JAZLibCompressor.h */; };
 		1AB23B9014547EF6008C5723 /* JAZLibCompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB23B8E14547EF5008C5723 /* JAZLibCompressor.m */; };
+		1AC7953114643DE3008BBFA4 /* JAPointMaths.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AC7953014643DE3008BBFA4 /* JAPointMaths.h */; };
 		1AE0E31714536D57009ACC2B /* JANBTStreamParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AE0E31414536D56009ACC2B /* JANBTStreamParser.h */; };
 		1AE0E31814536D57009ACC2B /* JANBTStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE0E31514536D56009ACC2B /* JANBTStreamParser.m */; };
 		1AE0E31914536D57009ACC2B /* JANBTTagType.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AE0E31614536D57009ACC2B /* JANBTTagType.h */; };
@@ -140,6 +141,7 @@
 		1AB23B5A14544AAA008C5723 /* JANBTStreamEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTStreamEncoder.m; sourceTree = SOURCE_ROOT; };
 		1AB23B8D14547EF4008C5723 /* JAZLibCompressor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAZLibCompressor.h; sourceTree = SOURCE_ROOT; };
 		1AB23B8E14547EF5008C5723 /* JAZLibCompressor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAZLibCompressor.m; sourceTree = SOURCE_ROOT; };
+		1AC7953014643DE3008BBFA4 /* JAPointMaths.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAPointMaths.h; sourceTree = SOURCE_ROOT; };
 		1AE0E31414536D56009ACC2B /* JANBTStreamParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTStreamParser.h; sourceTree = SOURCE_ROOT; };
 		1AE0E31514536D56009ACC2B /* JANBTStreamParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTStreamParser.m; sourceTree = SOURCE_ROOT; };
 		1AE0E31614536D57009ACC2B /* JANBTTagType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTTagType.h; sourceTree = SOURCE_ROOT; };
@@ -359,6 +361,7 @@
 				1AFC074B14404395009666A9 /* JACollectionHelpers.m */,
 				1AFC075014405F8A009666A9 /* MYCollectionUtilities.h */,
 				1AFC075114405F8A009666A9 /* MYCollectionUtilities.m */,
+				1AC7953014643DE3008BBFA4 /* JAPointMaths.h */,
 				1AE0E31C14536D59009ACC2B /* NBT */,
 				1AFE34AE13F931F0001A33D4 /* JAPropertyListAccessors */,
 				1AFE34B313F93209001A33D4 /* JAValueToString */,
@@ -431,6 +434,7 @@
 				1AB23B5B14544AAB008C5723 /* JANBTStreamEncoder.h in Headers */,
 				1AB23B8F14547EF6008C5723 /* JAZLibCompressor.h in Headers */,
 				1AF540A3145C488C0049CCEB /* MCKitSchema.h in Headers */,
+				1AC7953114643DE3008BBFA4 /* JAPointMaths.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
