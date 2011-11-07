@@ -230,23 +230,26 @@ uint8_t MCRotateRailDataClockwise(uint8_t railBlockData)
 {
 	switch (railBlockData)
 	{
-		case kMCInfoRailOrientationNorthSouth:
-			return kMCInfoRailOrientationEastWest;
-			
-		case kMCInfoRailOrientationEastWest:
+		case kMCInfoRailOrientationWestEast:
 			return kMCInfoRailOrientationNorthSouth;
 			
-		case kMCInfoRailOrientationRisingSouth:
-			return kMCInfoRailOrientationRisingWest;
-			
-		case kMCInfoRailOrientationRisingNorth:
-			return kMCInfoRailOrientationRisingEast;
+		case kMCInfoRailOrientationNorthSouth:
+			return kMCInfoRailOrientationWestEast;
 			
 		case kMCInfoRailOrientationRisingEast:
 			return kMCInfoRailOrientationRisingSouth;
 			
 		case kMCInfoRailOrientationRisingWest:
 			return kMCInfoRailOrientationRisingNorth;
+			
+		case kMCInfoRailOrientationRisingNorth:
+			return kMCInfoRailOrientationRisingEast;
+			
+		case kMCInfoRailOrientationRisingSouth:
+			return kMCInfoRailOrientationRisingWest;
+			
+		case kMCInfoRailOrientationSouthEast:
+			return kMCInfoRailOrientationWestSouth;
 			
 		case kMCInfoRailOrientationWestSouth:
 			return kMCInfoRailOrientationNorthWest;
@@ -256,9 +259,6 @@ uint8_t MCRotateRailDataClockwise(uint8_t railBlockData)
 			
 		case kMCInfoRailOrientationEastNorth:
 			return kMCInfoRailOrientationSouthEast;
-			
-		case kMCInfoRailOrientationSouthEast:
-			return kMCInfoRailOrientationWestSouth;
 			
 		default:
 			return railBlockData;
@@ -270,28 +270,28 @@ uint8_t MCFlipRailEastWest(uint8_t railBlockData)
 {
 	switch (railBlockData)
 	{
-		case kMCInfoRailOrientationRisingEast:
-			return kMCInfoRailOrientationRisingWest;
+		case kMCInfoRailOrientationRisingNorth:
+			return kMCInfoRailOrientationRisingSouth;
 			
-		case kMCInfoRailOrientationRisingWest:
-			return kMCInfoRailOrientationRisingEast;
-			
-		case kMCInfoRailOrientationWestSouth:
-			return kMCInfoRailOrientationSouthEast;
-			
-		case kMCInfoRailOrientationNorthWest:
-			return kMCInfoRailOrientationEastNorth;
-			
-		case kMCInfoRailOrientationEastNorth:
-			return kMCInfoRailOrientationNorthWest;
+		case kMCInfoRailOrientationRisingSouth:
+			return kMCInfoRailOrientationRisingNorth;
 			
 		case kMCInfoRailOrientationSouthEast:
+			return kMCInfoRailOrientationEastNorth;
+			
+		case kMCInfoRailOrientationWestSouth:
+			return kMCInfoRailOrientationNorthWest;
+			
+		case kMCInfoRailOrientationNorthWest:
 			return kMCInfoRailOrientationWestSouth;
 			
+		case kMCInfoRailOrientationEastNorth:
+			return kMCInfoRailOrientationSouthEast;
+			
+		case kMCInfoRailOrientationWestEast:
 		case kMCInfoRailOrientationNorthSouth:
-		case kMCInfoRailOrientationEastWest:
-		case kMCInfoRailOrientationRisingNorth:
-		case kMCInfoRailOrientationRisingSouth:
+		case kMCInfoRailOrientationRisingWest:
+		case kMCInfoRailOrientationRisingEast:
 		default:
 			return railBlockData;
 	}
@@ -504,17 +504,17 @@ MCDirection MCCellGetOrientation(MCCell cell)
 		case kMCBlockStoneButton:
 			switch (blockData & kMCInfoMiscOrientationMask)
 			{
+				case kMCInfoMiscOrientationSouth:
+					return kMCDirectionSouth;
+					
+				case kMCInfoMiscOrientationNorth:
+					return kMCDirectionNorth;
+					
 				case kMCInfoMiscOrientationWest:
 					return kMCDirectionWest;
 					
 				case kMCInfoMiscOrientationEast:
 					return kMCDirectionEast;
-					
-				case kMCInfoMiscOrientationNorth:
-					return kMCDirectionNorth;
-					
-				case kMCInfoMiscOrientationSouth:
-					return kMCDirectionSouth;
 					
 					// 5 and 6 are different orientations for ground levers, with different effects on wires. Needs special handling.
 				case kMCInfoMiscOrientationFloor:
@@ -530,9 +530,6 @@ MCDirection MCCellGetOrientation(MCCell cell)
 		case kMCBlockGate:
 			switch (blockData & kMCInfoDoorOrientationMask)
 			{
-				case kMCInfoDoorOrientationEast:
-					return kMCDirectionEast;
-					
 				case kMCInfoDoorOrientationNorth:
 					return kMCDirectionNorth;
 					
@@ -541,6 +538,9 @@ MCDirection MCCellGetOrientation(MCCell cell)
 					
 				case kMCInfoDoorOrientationSouth:
 					return kMCDirectionSouth;
+					
+				case kMCInfoDoorOrientationEast:
+					return kMCDirectionEast;
 			}
 			__builtin_unreachable();
 			
@@ -551,17 +551,17 @@ MCDirection MCCellGetOrientation(MCCell cell)
 		case kMCBlockNetherBrickStairs:
 			switch (blockData & kMCInfoStairOrientationMask)
 			{
+				case kMCInfoStairOrientationEast:
+					return kMCDirectionEast;
+					
+				case kMCInfoStairOrientationWest:
+					return kMCDirectionWest;
+					
 				case kMCInfoStairOrientationSouth:
 					return kMCDirectionSouth;
 					
 				case kMCInfoStairOrientationNorth:
 					return kMCDirectionNorth;
-					
-				case kMCInfoStairOrientationWest:
-					return kMCDirectionWest;
-					
-				case kMCInfoStairOrientationEast:
-					return kMCDirectionEast;
 					
 				default:
 					return kMCDirectionUnknown;
@@ -574,17 +574,17 @@ MCDirection MCCellGetOrientation(MCCell cell)
 		case kMCBlockDispenser:
 			switch (blockData & kMCInfoMisc2OrientationMask)
 			{
-				case kMCInfoMisc2OrientationEast:
-					return kMCDirectionEast;
-					
-				case kMCInfoMisc2OrientationWest:
-					return kMCDirectionWest;
-					
 				case kMCInfoMisc2OrientationNorth:
 					return kMCDirectionNorth;
 					
 				case kMCInfoMisc2OrientationSouth:
 					return kMCDirectionSouth;
+					
+				case kMCInfoMisc2OrientationWest:
+					return kMCDirectionWest;
+					
+				case kMCInfoMisc2OrientationEast:
+					return kMCDirectionEast;
 					
 				default:
 					return kMCDirectionUnknown;
@@ -597,6 +597,9 @@ MCDirection MCCellGetOrientation(MCCell cell)
 		case kMCBlockRedstoneRepeaterOff:
 			switch (blockData & kMCInfoMisc3OrientationMask)
 			{
+				case kMCInfoMisc3OrientationNorth:
+					return kMCDirectionNorth;
+					
 				case kMCInfoMisc3OrientationEast:
 					return kMCDirectionEast;
 					
@@ -605,9 +608,6 @@ MCDirection MCCellGetOrientation(MCCell cell)
 					
 				case kMCInfoMisc3OrientationWest:
 					return kMCDirectionWest;
-					
-				case kMCInfoMisc3OrientationNorth:
-					return kMCDirectionNorth;
 					
 				default:
 					return kMCDirectionUnknown;
@@ -624,17 +624,17 @@ MCDirection MCCellGetOrientation(MCCell cell)
 				case kMCInfoPistonOrientationUp:
 					return kMCDirectionUp;
 					
-				case kMCInfoPistonOrientationEast:
-					return kMCDirectionEast;
-					
-				case kMCInfoPistonOrientationWest:
-					return kMCDirectionWest;
-					
 				case kMCInfoPistonOrientationNorth:
 					return kMCDirectionNorth;
 					
 				case kMCInfoPistonOrientationSouth:
 					return kMCDirectionSouth;
+					
+				case kMCInfoPistonOrientationWest:
+					return kMCDirectionWest;
+					
+				case kMCInfoPistonOrientationEast:
+					return kMCDirectionEast;
 					
 				default:
 					return kMCDirectionUnknown;
@@ -643,17 +643,17 @@ MCDirection MCCellGetOrientation(MCCell cell)
 		case kMCBlockTrapdoor:
 			switch (blockData & kMCInfoTrapdoorOrientationMask)
 			{
-				case kMCInfoTrapdoorOrientationEast:
-					return kMCDirectionEast;
-					
-				case kMCInfoTrapdoorOrientationWest:
-					return kMCDirectionWest;
-					
 				case kMCInfoTrapdoorOrientationNorth:
 					return kMCDirectionNorth;
 					
 				case kMCInfoTrapdoorOrientationSouth:
 					return kMCDirectionSouth;
+					
+				case kMCInfoTrapdoorOrientationWest:
+					return kMCDirectionWest;
+					
+				case kMCInfoTrapdoorOrientationEast:
+					return kMCDirectionEast;
 			}
 			
 		default:
@@ -709,7 +709,7 @@ void MCCellSetOrientation(MCCell *cell, MCDirection orientation)
 					else if (cell->blockID == kMCBlockStoneButton)
 					{
 						// For stone buttons, down is meaningless.
-						value = kMCInfoMiscOrientationNorth;
+						value = kMCInfoMiscOrientationWest;
 					}
 					else
 					{

@@ -108,11 +108,11 @@ static inline uint8_t MCWirePowerLevel(MCCell cell) JA_CONST_FUNC;
  *	A grid location.
  *
  *	The Minecraft coordinate system is right-handed and based on the
- *	perspective of a character looking due east:
+ *	perspective of a character looking due north:
  *	
- *	+x is south, -x is north.
+ *	+x is east, -x is west.
  *	+y is up, -y is down.
- *	+z is west, -z is east.
+ *	+z is south, -z is north.
  */
 
 typedef struct
@@ -359,8 +359,8 @@ uint8_t MCFlipRailEastWest(uint8_t railBlockData);
 /*
 	General cell rotation and flipping.
 	
-	These functions work for both MCDirection-compliant types and rails. For
-	cells with no orientation, they do nothing.
+	These functions work for MCDirection-compliant types, rails and signposts.
+	For cells with no orientation, they do nothing.
  */
 MCCell MCRotateCellClockwise(MCCell cell);
 MCCell MCRotateCellAntiClockwise(MCCell cell);
@@ -560,19 +560,19 @@ static inline MCGridCoordinates MCStepCoordinatesBody(MCGridCoordinates coords, 
 	switch (direction)
 	{
 		case kMCDirectionNorth:
-			coords.x -= 1;
-			break;
-			
-		case kMCDirectionSouth:
-			coords.x += 1;
-			break;
-			
-		case kMCDirectionEast:
 			coords.z -= 1;
 			break;
 			
-		case kMCDirectionWest:
+		case kMCDirectionSouth:
 			coords.z += 1;
+			break;
+			
+		case kMCDirectionEast:
+			coords.x += 1;
+			break;
+			
+		case kMCDirectionWest:
+			coords.x -= 1;
 			break;
 			
 		case kMCDirectionUp:

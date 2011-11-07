@@ -261,10 +261,10 @@ enum
 			Stone button
 	*/
 	kMCInfoMiscOrientationMask				= 0x07,
-	kMCInfoMiscOrientationSouth				= 0x01,
-	kMCInfoMiscOrientationNorth				= 0x02,
-	kMCInfoMiscOrientationWest				= 0x03,
-	kMCInfoMiscOrientationEast				= 0x04,
+	kMCInfoMiscOrientationEast				= 0x01,
+	kMCInfoMiscOrientationWest				= 0x02,
+	kMCInfoMiscOrientationSouth				= 0x03,
+	kMCInfoMiscOrientationNorth				= 0x04,
 	kMCInfoMiscOrientationFloor				= 0x05,	// See also: kMCInfoLeverOrientationFloorEW and kMCInfoLeverOrientationFloorNS
 	
 	/*	Bed flag: set for head block, clear for foot block.
@@ -275,10 +275,10 @@ enum
 		The labels are intended to refer to the _ascending_ direction.
 	*/
 	kMCInfoStairOrientationMask				= 0x03,
-	kMCInfoStairOrientationSouth			= 0x00,
-	kMCInfoStairOrientationNorth			= 0x01,
-	kMCInfoStairOrientationWest				= 0x02,
-	kMCInfoStairOrientationEast				= 0x03,
+	kMCInfoStairOrientationEast			= 0x00,
+	kMCInfoStairOrientationWest			= 0x01,
+	kMCInfoStairOrientationSouth				= 0x02,
+	kMCInfoStairOrientationNorth				= 0x03,
 	
 	/*	Redstone signal strength varies from 0 to 15.
 	*/
@@ -300,10 +300,10 @@ enum
 		swing anti-clockwise.
 	 */
 	kMCInfoDoorOrientationMask				= 0x03,
-	kMCInfoDoorOrientationWest				= 0x00,
-	kMCInfoDoorOrientationNorth				= 0x01,
-	kMCInfoDoorOrientationEast				= 0x02,
-	kMCInfoDoorOrientationSouth				= 0x03,
+	kMCInfoDoorOrientationSouth				= 0x00,
+	kMCInfoDoorOrientationWest				= 0x01,
+	kMCInfoDoorOrientationNorth				= 0x02,
+	kMCInfoDoorOrientationEast				= 0x03,
 	kMCInfoDoorOpen							= 0x04,
 	kMCInfoDoorTopHalf						= 0x08,
 	
@@ -315,10 +315,10 @@ enum
 		* Dispensers
 	*/
 	kMCInfoMisc2OrientationMask				= 0x07,
-	kMCInfoMisc2OrientationEast				= 0x02,
-	kMCInfoMisc2OrientationWest				= 0x03,
-	kMCInfoMisc2OrientationNorth			= 0x04,
-	kMCInfoMisc2OrientationSouth			= 0x05,
+	kMCInfoMisc2OrientationNorth				= 0x02,
+	kMCInfoMisc2OrientationSouth				= 0x03,
+	kMCInfoMisc2OrientationWest			= 0x04,
+	kMCInfoMisc2OrientationEast			= 0x05,
 	
 	/*	Minecart track orientations. Note that these don’t map to the same
 		set of orientations as most of the other “orientation” value sets.
@@ -330,18 +330,18 @@ enum
 	kMCInfoRailOrientationMask				= 0x0F,
 	kMCInfoPoweredRailOrientationMask		= 0x07,
 	// Straight sections.
-	kMCInfoRailOrientationNorthSouth		= 0x00,
-	kMCInfoRailOrientationEastWest			= 0x01,
+	kMCInfoRailOrientationWestEast		= 0x00,
+	kMCInfoRailOrientationNorthSouth			= 0x01,
 	// Hill sections.
-	kMCInfoRailOrientationRisingSouth		= 0x02,
-	kMCInfoRailOrientationRisingNorth		= 0x03,
-	kMCInfoRailOrientationRisingEast		= 0x04,
-	kMCInfoRailOrientationRisingWest		= 0x05,
+	kMCInfoRailOrientationRisingEast		= 0x02,
+	kMCInfoRailOrientationRisingWest		= 0x03,
+	kMCInfoRailOrientationRisingNorth		= 0x04,
+	kMCInfoRailOrientationRisingSouth		= 0x05,
 	// Curve sections, with endpoint (outward) directions in clockwise order.
-	kMCInfoRailOrientationWestSouth			= 0x06,	// ◝
-	kMCInfoRailOrientationNorthWest			= 0x07,	// ◞
-	kMCInfoRailOrientationEastNorth			= 0x08,	// ◟
-	kMCInfoRailOrientationSouthEast			= 0x09,	// ◜
+	kMCInfoRailOrientationSouthEast			= 0x06,	// ◝
+	kMCInfoRailOrientationWestSouth			= 0x07,	// ◞
+	kMCInfoRailOrientationNorthWest			= 0x08,	// ◟
+	kMCInfoRailOrientationEastNorth			= 0x09,	// ◜
 	
 	kMCInfoPoweredRailIsPowered				= 0x08,
 	
@@ -367,10 +367,10 @@ enum
 	/*	Pumpkin/Jack-o-lanternU/bed orientation.
 	*/
 	kMCInfoMisc3OrientationMask				= 0x03,
-	kMCInfoMisc3OrientationEast				= 0x00,
-	kMCInfoMisc3OrientationSouth			= 0x01,
-	kMCInfoMisc3OrientationWest				= 0x02,
-	kMCInfoMisc3OrientationNorth			= 0x03,
+	kMCInfoMisc3OrientationNorth				= 0x00,
+	kMCInfoMisc3OrientationEast			= 0x01,
+	kMCInfoMisc3OrientationSouth				= 0x02,
+	kMCInfoMisc3OrientationWest			= 0x03,
 	
 	/*	Orientation values for pistons and piston heads. These represent the
 		facing of the piston head surface.
@@ -378,10 +378,10 @@ enum
 	kMCInfoPistonOrientationMask			= 0x07,
 	kMCInfoPistonOrientationDown			= 0x00,
 	kMCInfoPistonOrientationUp				= 0x01,
-	kMCInfoPistonOrientationEast			= 0x02,
-	kMCInfoPistonOrientationWest			= 0x03,
-	kMCInfoPistonOrientationNorth			= 0x04,
-	kMCInfoPistonOrientationSouth			= 0x05,
+	kMCInfoPistonOrientationNorth			= 0x02,
+	kMCInfoPistonOrientationSouth			= 0x03,
+	kMCInfoPistonOrientationWest			= 0x04,
+	kMCInfoPistonOrientationEast			= 0x05,
 	
 	/*	Sticky and non-sticky piston bases are distinguished by type, but heads
 		use a flag. Oh, that wacky Jeb.
@@ -431,10 +431,10 @@ enum
 		the usage on the wiki, which is silly).
 	*/
 	kMCInfoTrapdoorOrientationMask			= 0x03,
-	kMCInfoTrapdoorOrientationEast			= 0x00,
-	kMCInfoTrapdoorOrientationWest			= 0x01,
-	kMCInfoTrapdoorOrientationNorth			= 0x02,
-	kMCInfoTrapdoorOrientationSouth			= 0x03,
+	kMCInfoTrapdoorOrientationNorth			= 0x00,
+	kMCInfoTrapdoorOrientationSouth			= 0x01,
+	kMCInfoTrapdoorOrientationWest			= 0x02,
+	kMCInfoTrapdoorOrientationEast			= 0x03,
 	
 	kMCInfoSilverfishAppearanceMask			= 0x03,
 	kMCInfoSilverfishAppearanceSmoothStone	= 0x00,
@@ -469,10 +469,10 @@ enum
 		be attached to multiple sides at once.
 	*/
 	kMCInfoVineAttachmentMask				= 0x0F,
-	kMCInfoVineAttachmentWest				= 0x01,
-	kMCInfoVineAttachmentNorth				= 0x02,
-	kMCInfoVineAttachmentEast				= 0x04,
-	kMCInfoVineAttachmentSouth				= 0x08,
+	kMCInfoVineAttachmentSouth				= 0x01,
+	kMCInfoVineAttachmentWest				= 0x02,
+	kMCInfoVineAttachmentNorth				= 0x04,
+	kMCInfoVineAttachmentEast				= 0x08,
 	
 	/*
 		Nether Wart age ranges from 0 to 3, with 1 and 2 looking the same.
