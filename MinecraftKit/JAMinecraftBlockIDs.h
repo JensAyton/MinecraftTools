@@ -49,7 +49,7 @@ enum
 	kMCBlockIronOre							= 15,
 	kMCBlockCoalOre							= 16,	// “Coal ore”? Meh. You get the point.
 	kMCBlockLog								= 17,	// Data: kMCInfoWoodType
-	kMCBlockLeaves							= 18,	// Data: kMCInfoLeafUpdatePendingMask and kMCInfoWoodType
+	kMCBlockLeaves							= 18,	// Data: kMCInfoLeafUpdatePending, kMCInfoLeafPermanent and kMCInfoWoodTypeMask
 	kMCBlockSponge							= 19,
 	kMCBlockGlass							= 20,
 	kMCBlockLapisLazuliOre					= 21,
@@ -117,12 +117,12 @@ enum
 	kMCBlockReed							= 83,
 	kMCBlockJukebox							= 84,	// Tile entity: RecordPlayer
 	kMCBlockFence							= 85,
-	kMCBlockPumpkin							= 86,	// Data: kMCInfoMisc3Orientation.
+	kMCBlockPumpkin							= 86,	// Data: kMCInfoPumpkinOrientation.
 	kMCBlockNetherrack						= 87,
 	kMCBlockSoulSand						= 88,
 	kMCBlockGlowstone						= 89,
 	kMCBlockPortal							= 90,
-	kMCBlockJackOLantern					= 91,	// Data: kMCInfoMisc3Orientation
+	kMCBlockJackOLantern					= 91,	// Data: kMCInfoPumpkinOrientation
 	kMCBlockCake							= 92,	// Data: kMCInfoCakeSliceCountMask
 	kMCBlockRedstoneRepeaterOff				= 93,	// Data: kMCInfoMisc3OrientationMask and kMCInfoRedstoneRepeaterDelayMask
 	kMCBlockRedstoneRepeaterOn				= 94,	// Data: kMCInfoMisc3OrientationMask and kMCInfoRedstoneRepeaterDelayMask	
@@ -222,14 +222,15 @@ enum
 	kMCInfoWoodTypeBirch					= 0x02,
 	
 	/*
-		Leaves: if this flag is set, the leaf block will be checked for random
-		decay. If it’s clear, the block won’t decay (but the flag is set again
-		if any adjacent block changes).
+		Leaves: if the pending flag is set, the leaf block will be checked for
+		random decay. If it’s clear, the block won’t decay (but the flag is
+		set again if any adjacent block changes).
 		
-		Advice: if adding leaf blocks, set the flag and let Minecraft clear it
-		when valid.
-	*/
-	kMCInfoLeafUpdatePendingMask			= 0x04,
+		Advice: if adding leaf blocks, set the pending flag and let Minecraft
+		clear it when valid.
+	 */
+	kMCInfoLeafUpdatePending				= 0x04,
+	kMCInfoLeafPermanent					= 0x08,
 	
 	/*	Wool: colour.
 		This is represented by different block IDs in Creative.
@@ -275,10 +276,10 @@ enum
 		The labels are intended to refer to the _ascending_ direction.
 	*/
 	kMCInfoStairOrientationMask				= 0x03,
-	kMCInfoStairOrientationEast			= 0x00,
-	kMCInfoStairOrientationWest			= 0x01,
-	kMCInfoStairOrientationSouth				= 0x02,
-	kMCInfoStairOrientationNorth				= 0x03,
+	kMCInfoStairOrientationEast				= 0x00,
+	kMCInfoStairOrientationWest				= 0x01,
+	kMCInfoStairOrientationSouth			= 0x02,
+	kMCInfoStairOrientationNorth			= 0x03,
 	
 	/*	Redstone signal strength varies from 0 to 15.
 	*/
@@ -300,10 +301,10 @@ enum
 		swing anti-clockwise.
 	 */
 	kMCInfoDoorOrientationMask				= 0x03,
-	kMCInfoDoorOrientationSouth				= 0x00,
-	kMCInfoDoorOrientationWest				= 0x01,
-	kMCInfoDoorOrientationNorth				= 0x02,
-	kMCInfoDoorOrientationEast				= 0x03,
+	kMCInfoDoorOrientationWest				= 0x00,
+	kMCInfoDoorOrientationSouth				= 0x01,
+	kMCInfoDoorOrientationEast				= 0x02,
+	kMCInfoDoorOrientationNorth				= 0x03,
 	kMCInfoDoorOpen							= 0x04,
 	kMCInfoDoorTopHalf						= 0x08,
 	
@@ -315,10 +316,10 @@ enum
 		* Dispensers
 	*/
 	kMCInfoMisc2OrientationMask				= 0x07,
-	kMCInfoMisc2OrientationNorth				= 0x02,
-	kMCInfoMisc2OrientationSouth				= 0x03,
-	kMCInfoMisc2OrientationWest			= 0x04,
-	kMCInfoMisc2OrientationEast			= 0x05,
+	kMCInfoMisc2OrientationNorth			= 0x02,
+	kMCInfoMisc2OrientationSouth			= 0x03,
+	kMCInfoMisc2OrientationWest				= 0x04,
+	kMCInfoMisc2OrientationEast				= 0x05,
 	
 	/*	Minecart track orientations. Note that these don’t map to the same
 		set of orientations as most of the other “orientation” value sets.
@@ -330,18 +331,18 @@ enum
 	kMCInfoRailOrientationMask				= 0x0F,
 	kMCInfoPoweredRailOrientationMask		= 0x07,
 	// Straight sections.
-	kMCInfoRailOrientationWestEast		= 0x00,
-	kMCInfoRailOrientationNorthSouth			= 0x01,
+	kMCInfoRailOrientationWestEast			= 0x00,
+	kMCInfoRailOrientationNorthSouth		= 0x01,
 	// Hill sections.
 	kMCInfoRailOrientationRisingEast		= 0x02,
 	kMCInfoRailOrientationRisingWest		= 0x03,
 	kMCInfoRailOrientationRisingNorth		= 0x04,
 	kMCInfoRailOrientationRisingSouth		= 0x05,
 	// Curve sections, with endpoint (outward) directions in clockwise order.
-	kMCInfoRailOrientationSouthEast			= 0x06,	// ◝
-	kMCInfoRailOrientationWestSouth			= 0x07,	// ◞
-	kMCInfoRailOrientationNorthWest			= 0x08,	// ◟
-	kMCInfoRailOrientationEastNorth			= 0x09,	// ◜
+	kMCInfoRailOrientationSouthEast			= 0x06,	// ◜
+	kMCInfoRailOrientationWestSouth			= 0x07,	// ◝
+	kMCInfoRailOrientationNorthWest			= 0x08,	// ◞
+	kMCInfoRailOrientationEastNorth			= 0x09,	// ◟
 	
 	kMCInfoPoweredRailIsPowered				= 0x08,
 	
@@ -364,13 +365,21 @@ enum
 	*/
 	kMCInfoCactusAgeMask					= 0x0F,
 	
-	/*	Pumpkin/Jack-o-lanternU/bed orientation.
+	/*	Pumpkin/Jack-o-lanternU orientation.
+	*/
+	kMCInfoPumpkinOrientationMask			= 0x03,
+	kMCInfoPumpkinOrientationSouth			= 0x00,
+	kMCInfoPumpkinOrientationEast			= 0x01,
+	kMCInfoPumpkinOrientationNorth			= 0x02,
+	kMCInfoPumpkinOrientationWest			= 0x03,
+	
+	/*	Bed/redstone repeater orientation.
 	*/
 	kMCInfoMisc3OrientationMask				= 0x03,
-	kMCInfoMisc3OrientationNorth				= 0x00,
-	kMCInfoMisc3OrientationEast			= 0x01,
-	kMCInfoMisc3OrientationSouth				= 0x02,
-	kMCInfoMisc3OrientationWest			= 0x03,
+	kMCInfoMisc3OrientationNorth			= 0x00,
+	kMCInfoMisc3OrientationEast				= 0x01,
+	kMCInfoMisc3OrientationSouth			= 0x02,
+	kMCInfoMisc3OrientationWest				= 0x03,
 	
 	/*	Orientation values for pistons and piston heads. These represent the
 		facing of the piston head surface.
@@ -514,17 +523,17 @@ enum
 enum
 {
 	// Primary attributes. Every known block type except air is exactly one of these.
-	kMCBlockIsFullySolid			= 0x0001,
-	kMCBlockIsQuasiSolid			= 0x0002,
-	kMCBlockIsLiquid				= 0x0004,
-	kMCBlockIsItem					= 0x0008,
+	kMCBlockIsFullySolid					= 0x0001,
+	kMCBlockIsQuasiSolid					= 0x0002,
+	kMCBlockIsLiquid						= 0x0004,
+	kMCBlockIsItem							= 0x0008,
 	
-	kMCBlockIsSolid					= kMCBlockIsFullySolid | kMCBlockIsQuasiSolid,
+	kMCBlockIsSolid							= kMCBlockIsFullySolid | kMCBlockIsQuasiSolid,
 	
 	/*
 		Storage type attribute: identifies blocks with special storage requirements.
 	*/
-	kMCBlockHasTileEntity			= 0x8000,
+	kMCBlockHasTileEntity					= 0x8000,
 	
 	/*	Secondary attributes.
 		
@@ -532,31 +541,31 @@ enum
 		since it’s generally easier to think of redstone torches as one type
 		and state as metadata even though they aren’t encoded that way.
 	*/
-	kMCBlockIsPowerSource			= 0x0010,
-	kMCBlockIsPowerSink				= 0x0020,
-	kMCBlockIsPowerActive			= kMCBlockIsPowerSource | kMCBlockIsPowerSink,
+	kMCBlockIsPowerSource					= 0x0010,
+	kMCBlockIsPowerSink						= 0x0020,
+	kMCBlockIsPowerActive					= kMCBlockIsPowerSource | kMCBlockIsPowerSink,
 	
 	/*
 		Logs (but not planks and other crafted wood), leaves, flowers, cactus,
 		reeds, pumpkins (but not jack-o-lanterns), mushrooms (eat it,
 		biologists), long grass and shrubs. Not grass blocks.
 	*/
-	kMCBlockIsVegetable				= 0x0040,
+	kMCBlockIsVegetable						= 0x0040,
 	
 	/*
 		Coal, iron, redstone, diamond or lapis ore blocks. Eat it, geologists.
 	*/
-	kMCBlockIsOre					= 0x0080,
+	kMCBlockIsOre							= 0x0080,
 	
 	/*
 		Rail, powered rail or detector rail.
 	*/
-	kMCBlockIsRail					= 0x0100,
+	kMCBlockIsRail							= 0x0100,
 	
 	/*
 		Piston, sticky piston or piston head.
 	*/
-	kMCBlockIsPiston				= 0x0200
+	kMCBlockIsPiston						= 0x0200
 };
 
 
