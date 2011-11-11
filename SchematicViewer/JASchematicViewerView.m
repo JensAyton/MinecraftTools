@@ -152,6 +152,7 @@ static NSArray *LoadColorTable(void);
 	NSString *base = nil;
 	NSString *extra = nil;
 	MCCell cell = block.cell;
+	BOOL handleOrientationGenerically = YES;
 	
 	if (cell.blockID < _toolTipStrings.count)
 	{
@@ -236,6 +237,21 @@ static NSArray *LoadColorTable(void);
 			NSString *delay = $sprintf(@"%u", ((cell.blockData & kMCInfoRedstoneRepeaterDelayMask) >> 2) + 1);
 			NSString *state = [_toolTipExtraStrings ja_stringForKey:(cell.blockID == kMCBlockRedstoneRepeaterOn) ? @"Switch-on" : @"Switch-off"];
 			extra = TEMPLATE_KEY2(_toolTipExtraStrings, @"Repeater", delay, state);
+		}
+	}
+	
+	if (handleOrientationGenerically)
+	{
+		unsigned orientationVal = MCCellGetOrientation(cell);
+		if (orientationVal < kMCDirectionUnknown)
+		{
+			NSArray *orientationStrings = [_toolTipExtraStrings ja_arrayForKey:@"Orientation"];
+			if (orientationVal < orientationStrings.count)
+			{
+				NSString *orientation = [orientationStrings ja_stringAtIndex:orientationVal];
+				if (extra == nil)  extra = TEMPLATE_KEY(_toolTipExtraStrings, @"Orientation-alone", orientation);
+				else  extra = TEMPLATE_KEY2(_toolTipExtraStrings, @"Orientation-append", extra, orientation);
+			}
 		}
 	}
 	

@@ -145,6 +145,19 @@
 		"Stone brick"
 	);
 	
+	"Orientation" =
+	(
+		"north",
+		"south",
+		"east",
+		"west",
+		"up",
+		"down"
+	);
+	
+	"Orientation-alone" = "facing <$orientation$>";
+	"Orientation-append" = "<$extra$>, facing <$orientation$>";
+	
 	"Sign-empty" = "empty";
 	
 	"Door-open" = "open";
