@@ -2,7 +2,7 @@ Example/test bed for JAMinecraftGridView.
 
 This application can read and write schematic and rdat files, and display them
 as a grid, one layer at a time. The grid shows solid blocks as, er, solid
-blocks, quasi-solid blocks as outlines and items as inset squares. The block
+blocks, transparent blocks as outlines and items as inset squares. The block
 types are colour-coded. Blocks with tile entities have dotted orange outlines.
 
 The rendering and scaling is implemented in JASchematicViewerView.m, a

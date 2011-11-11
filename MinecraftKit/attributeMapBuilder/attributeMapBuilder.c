@@ -38,7 +38,7 @@
 #include <string.h>
 
 
-static const uint8_t kFullySolidIDs[] =
+static const uint8_t kOpaqueIDs[] =
 {
 	kMCBlockSmoothStone,
 	kMCBlockGrass,
@@ -94,9 +94,9 @@ static const uint8_t kFullySolidIDs[] =
 };
 
 
-// Blocks which appear as solid but act as air for redstone.
-static const uint8_t kQuasiSolidIDs[] =
+static const uint8_t kTransparentIDs[] =
 {
+	kMCBlockAir,
 	kMCBlockLeaves,
 	kMCBlockGlass,
 	kMCBlockStickyPiston,
@@ -294,17 +294,17 @@ int main (int argc, const char * argv[])
 	JAMCBlockIDMetadata attributeMap[256];
 	memset(attributeMap, 0, sizeof attributeMap);
 	
-	APPLY_ATTRIBUTE(kFullySolidIDs, kMCBlockIsFullySolid);
-	APPLY_ATTRIBUTE(kQuasiSolidIDs, kMCBlockIsQuasiSolid);
+	APPLY_ATTRIBUTE(kOpaqueIDs, kMCBlockIsOpaque);
+	APPLY_ATTRIBUTE(kTransparentIDs, kMCBlockIsTransparent);
 	APPLY_ATTRIBUTE(kLiquidIDs, kMCBlockIsLiquid);
 	APPLY_ATTRIBUTE(kItemIDs, kMCBlockIsItem);
 	
 	/*
-		Sanity check: ensure all known block IDs except air have a
+		Sanity check: ensure all known block IDs have a
 		classification, and all unknown block IDs don’t.
 	*/
 	unsigned i;
-	for (i = 1; i <= kMCLastBlockID; i++)
+	for (i = 0; i <= kMCLastBlockID; i++)
 	{
 		JAMCBlockIDMetadata attr = attributeMap[i] & 0x0F;
 		if (attr == 0)
@@ -312,7 +312,7 @@ int main (int argc, const char * argv[])
 			fprintf(stderr, "Error: block ID %u has no basic category.\n", i);
 			exit(EXIT_FAILURE);
 		}
-		if (attr != kMCBlockIsFullySolid && attr != kMCBlockIsQuasiSolid && attr != kMCBlockIsLiquid && attr != kMCBlockIsItem)
+		if (attr != kMCBlockIsOpaque && attr != kMCBlockIsTransparent && attr != kMCBlockIsLiquid && attr != kMCBlockIsItem)
 		{
 			fprintf(stderr, "Error: block ID %u has more than one basic category (0x%X).\n", i, attr);
 			exit(EXIT_FAILURE);

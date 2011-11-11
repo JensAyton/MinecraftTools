@@ -500,21 +500,20 @@ enum
 /*
 	Block type classifications.
 	
-	Every known block type except air is classified in exactly one of four
-	categories: fully-solid, quasi-solid, liquid, or item.
-	* Quasi-solids look like solid objects, but don’t block redstone: glass,
-	  leaves, single steps, stairs, mob spawners.
-	* Fully-solid blocks fill their cell and block redstone. This includes
+	Every known block type is classified in exactly one of four
+	categories: opaque, transparent, liquid, or item.
+	* Transparent blocks can’t have most items attached to them and don’t block
+	  redstone diagonally. This includes air, glass, leaves, stairs, and slabs.
+	* Opaque blocks completely fill their cell and block redstone. This includes
 	  all normal building blocks, as well as workbenches, furnaces, jukeboxes,
-	  TNT, pumpkins and jack-o-lanterns.
+ 	  TNT, pumpkins, jack-o-lanterns and melons.
 	* Liquids are moving and stationary water and lava.
-	* Items are everything else.
+	* Items are similar to transparent blocks, but don’t look like blocks –
+	  flowers, torches, doors, rails etc.
 	
-	The classifications are somewhat arbitrary. For example, cactus could be
-	considered a solid or quasi-solid block (I haven’t tested which applies),
-	but is classified as an item because of its placing restrictions. On the
-	other hand, pumpkins are considered solid blocks despite being a vegetable,
-	and sand is considered a solid block despite having placement restrictions.
+	The distinction between transparent blocks and items is somewhat arbitrary.
+	As far as I’m aware, they’re the same category as far as Minecraft is
+	concerned.
 	
 	There are also some non-exclusive metadata flags.
 */
@@ -522,13 +521,11 @@ enum
 
 enum
 {
-	// Primary attributes. Every known block type except air is exactly one of these.
-	kMCBlockIsFullySolid					= 0x0001,
-	kMCBlockIsQuasiSolid					= 0x0002,
+	// Primary attributes. Every known block type is exactly one of these.
+	kMCBlockIsOpaque						= 0x0001,
+	kMCBlockIsTransparent					= 0x0002,
 	kMCBlockIsLiquid						= 0x0004,
 	kMCBlockIsItem							= 0x0008,
-	
-	kMCBlockIsSolid							= kMCBlockIsFullySolid | kMCBlockIsQuasiSolid,
 	
 	/*
 		Storage type attribute: identifies blocks with special storage requirements.
@@ -577,19 +574,19 @@ JA_EXTERN const JAMCBlockIDMetadata kMCBlockTypeClassifications[256];
 
 JA_INLINE bool MCBlockIDIsFullySolid(uint8_t blockID)
 {
-	return kMCBlockTypeClassifications[blockID] & kMCBlockIsFullySolid;
+	return kMCBlockTypeClassifications[blockID] & kMCBlockIsOpaque;
 }
 
 
 JA_INLINE bool MCBlockIDIsQuasiSolid(uint8_t blockID)
 {
-	return kMCBlockTypeClassifications[blockID] & kMCBlockIsQuasiSolid;
+	return kMCBlockTypeClassifications[blockID] & kMCBlockIsTransparent;
 }
 
 
 JA_INLINE bool MCBlockIDIsSolid(uint8_t blockID)
 {
-	return kMCBlockTypeClassifications[blockID] & kMCBlockIsSolid;
+	return (kMCBlockTypeClassifications[blockID] & (kMCBlockIsOpaque | kMCBlockIsTransparent)) && (blockID != kMCBlockAir);
 }
 
 
