@@ -562,7 +562,12 @@ enum
 	/*
 		Piston, sticky piston or piston head.
 	*/
-	kMCBlockIsPiston						= 0x0200
+	kMCBlockIsPiston						= 0x0200,
+	
+	/*
+		Any type of staircase.
+	*/
+	kMCBlockIsStairs						= 0x0400
 };
 
 
