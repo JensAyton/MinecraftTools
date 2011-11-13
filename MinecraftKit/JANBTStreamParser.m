@@ -117,7 +117,7 @@ static inline BOOL IsNumericalSchema(id schema);
 	
 	if ((self = [super init]))
 	{
-		_decompressor = [[JAZlibDecompressor alloc] initWithStream:stream mode:kJAZLibCompressionGZip];
+		_decompressor = [[JAZlibDecompressor alloc] initWithStream:stream mode:kJAZLibCompressionAutoDetect];
 		
 		_mutableContainers = options & kJANBTReadingMutableContainers;
 		_mutableLeaves = options & kJANBTReadingMutableLeaves;

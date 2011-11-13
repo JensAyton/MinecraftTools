@@ -63,6 +63,11 @@ typedef enum
 */
 - (NSInteger) read:(uint8_t *)bytes length:(NSInteger)length error:(NSError **)outError;
 
+/*
+	Read until end of compressed data.
+*/
+- (NSData *) readToEndWithError:(NSError **)outError;
+
 @end
 
 

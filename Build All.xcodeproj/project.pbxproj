@@ -13,6 +13,7 @@
 			buildPhases = (
 			);
 			dependencies = (
+				1AF703EC14707DF60096EDF1 /* PBXTargetDependency */,
 				1ADE4125145AEB05008263C8 /* PBXTargetDependency */,
 				1AE8E9B2145A09B9000ED823 /* PBXTargetDependency */,
 				1AE8E9B0145A09B7000ED823 /* PBXTargetDependency */,
@@ -80,6 +81,20 @@
 			remoteGlobalIDString = 8D15AC270486D014006FF6A4;
 			remoteInfo = SchematicViewer;
 		};
+		1AF703E014707DD50096EDF1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1AF703DC14707DD40096EDF1 /* regiondump.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DD76FA10486AA7600D96B5E;
+			remoteInfo = regiondump;
+		};
+		1AF703EB14707DF60096EDF1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1AF703DC14707DD40096EDF1 /* regiondump.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DD76F960486AA7600D96B5E;
+			remoteInfo = regiondump;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -88,6 +103,7 @@
 		1AE8E995145A098E000ED823 /* SchematicViewer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SchematicViewer.xcodeproj; path = SchematicViewer/SchematicViewer.xcodeproj; sourceTree = "<group>"; };
 		1AE8E99B145A0998000ED823 /* mcxform.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = mcxform.xcodeproj; path = mcxform/mcxform.xcodeproj; sourceTree = "<group>"; };
 		1AE8E9A7145A09A3000ED823 /* nbtparser.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = nbtparser.xcodeproj; path = mcxform/../MinecraftKit/nbtparser/nbtparser.xcodeproj; sourceTree = "<group>"; };
+		1AF703DC14707DD40096EDF1 /* regiondump.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = regiondump.xcodeproj; path = regiondump/regiondump.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -107,6 +123,7 @@
 				1AE8E9A7145A09A3000ED823 /* nbtparser.xcodeproj */,
 				1AE8E99B145A0998000ED823 /* mcxform.xcodeproj */,
 				1AE8E995145A098E000ED823 /* SchematicViewer.xcodeproj */,
+				1AF703DC14707DD40096EDF1 /* regiondump.xcodeproj */,
 			);
 			sourceTree = "<group>";
 		};
@@ -130,6 +147,14 @@
 			isa = PBXGroup;
 			children = (
 				1AE8E9AC145A09A3000ED823 /* nbtparser */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1AF703DD14707DD40096EDF1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1AF703E114707DD50096EDF1 /* regiondump */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -163,6 +188,10 @@
 				{
 					ProductGroup = 1ADE411E145AEAFC008263C8 /* Products */;
 					ProjectRef = 1ADE411D145AEAFC008263C8 /* NBTProdder.xcodeproj */;
+				},
+				{
+					ProductGroup = 1AF703DD14707DD40096EDF1 /* Products */;
+					ProjectRef = 1AF703DC14707DD40096EDF1 /* regiondump.xcodeproj */;
 				},
 				{
 					ProductGroup = 1AE8E996145A098E000ED823 /* Products */;
@@ -205,6 +234,13 @@
 			remoteRef = 1AE8E9AB145A09A3000ED823 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		1AF703E114707DD50096EDF1 /* regiondump */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = regiondump;
+			remoteRef = 1AF703E014707DD50096EDF1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXTargetDependency section */
@@ -227,6 +263,11 @@
 			isa = PBXTargetDependency;
 			name = SchematicViewer;
 			targetProxy = 1AE8E9B1145A09B9000ED823 /* PBXContainerItemProxy */;
+		};
+		1AF703EC14707DF60096EDF1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = regiondump;
+			targetProxy = 1AF703EB14707DF60096EDF1 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

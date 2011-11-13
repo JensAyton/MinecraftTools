@@ -49,6 +49,10 @@
 		1AF540A4145C488C0049CCEB /* MCKitSchema.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AF540A2145C488B0049CCEB /* MCKitSchema.h */; };
 		1AF540A7145C4D290049CCEB /* DataSchema.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AF540A5145C4D290049CCEB /* DataSchema.c */; };
 		1AF540A8145C4D290049CCEB /* SchematicSchema.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AF540A6145C4D290049CCEB /* SchematicSchema.c */; };
+		1AF70347147060840096EDF1 /* JAMinecraftRegionReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AF70345147060840096EDF1 /* JAMinecraftRegionReader.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1AF70348147060840096EDF1 /* JAMinecraftRegionReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AF70345147060840096EDF1 /* JAMinecraftRegionReader.h */; };
+		1AF70349147060840096EDF1 /* JAMinecraftRegionReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF70346147060840096EDF1 /* JAMinecraftRegionReader.m */; };
+		1AF7034A147060840096EDF1 /* JAMinecraftRegionReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF70346147060840096EDF1 /* JAMinecraftRegionReader.m */; };
 		1AF8C14A144CA38900D86C3D /* Schematic.schema in Resources */ = {isa = PBXBuildFile; fileRef = 1AF8C149144CA38900D86C3D /* Schematic.schema */; };
 		1AFC074C14404395009666A9 /* JACollectionHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AFC074A14404395009666A9 /* JACollectionHelpers.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AFC074D14404395009666A9 /* JACollectionHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFC074B14404395009666A9 /* JACollectionHelpers.m */; };
@@ -153,6 +157,8 @@
 		1AF540A2145C488B0049CCEB /* MCKitSchema.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCKitSchema.h; sourceTree = SOURCE_ROOT; };
 		1AF540A5145C4D290049CCEB /* DataSchema.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = DataSchema.c; path = ../../../build/MinecraftKit.build/Debug/libminecraftkit.build/DerivedSources/DataSchema.c; sourceTree = "<group>"; };
 		1AF540A6145C4D290049CCEB /* SchematicSchema.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = SchematicSchema.c; path = ../../../build/MinecraftKit.build/Debug/libminecraftkit.build/DerivedSources/SchematicSchema.c; sourceTree = "<group>"; };
+		1AF70345147060840096EDF1 /* JAMinecraftRegionReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAMinecraftRegionReader.h; sourceTree = SOURCE_ROOT; };
+		1AF70346147060840096EDF1 /* JAMinecraftRegionReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAMinecraftRegionReader.m; sourceTree = SOURCE_ROOT; };
 		1AF8C149144CA38900D86C3D /* Schematic.schema */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Schematic.schema; path = Resources/Schematic.schema; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.plist; };
 		1AFC074A14404395009666A9 /* JACollectionHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JACollectionHelpers.h; sourceTree = SOURCE_ROOT; };
 		1AFC074B14404395009666A9 /* JACollectionHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JACollectionHelpers.m; sourceTree = SOURCE_ROOT; };
@@ -337,6 +343,8 @@
 				1AFE348513F931C3001A33D4 /* JAMinecraftSchematic+SchematicIO.m */,
 				1AFE348613F931C3001A33D4 /* JAMinecraftBlockStore+RedstoneHelpers.h */,
 				1AFE348713F931C3001A33D4 /* JAMinecraftBlockStore+RedstoneHelpers.m */,
+				1AF70345147060840096EDF1 /* JAMinecraftRegionReader.h */,
+				1AF70346147060840096EDF1 /* JAMinecraftRegionReader.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -404,6 +412,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1AF540A4145C488C0049CCEB /* MCKitSchema.h in Headers */,
+				1AF70348147060840096EDF1 /* JAMinecraftRegionReader.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -426,6 +435,7 @@
 				1AFE349B13F931D1001A33D4 /* JAMinecraftGridView.h in Headers */,
 				1AFE34B113F93207001A33D4 /* JAPropertyListAccessors.h in Headers */,
 				1AFE34B613F9321F001A33D4 /* JAValueToString.h in Headers */,
+				1AF70347147060840096EDF1 /* JAMinecraftRegionReader.h in Headers */,
 				1AFE34A613F931EE001A33D4 /* JAHashEnumeration.h in Headers */,
 				1AFE34A813F931EE001A33D4 /* IsKeyDown.h in Headers */,
 				1AE0E31714536D57009ACC2B /* JANBTStreamParser.h in Headers */,
@@ -600,6 +610,7 @@
 				1AF5406C145C3B010049CCEB /* JAZLibCompressor.m in Sources */,
 				1AF540A7145C4D290049CCEB /* DataSchema.c in Sources */,
 				1AF540A8145C4D290049CCEB /* SchematicSchema.c in Sources */,
+				1AF7034A147060840096EDF1 /* JAMinecraftRegionReader.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -629,6 +640,7 @@
 				1AB23B5C14544AAB008C5723 /* JANBTStreamEncoder.m in Sources */,
 				1AB23B6F1454793D008C5723 /* JANBTSerialization.m in Sources */,
 				1AB23B9014547EF6008C5723 /* JAZLibCompressor.m in Sources */,
+				1AF70349147060840096EDF1 /* JAMinecraftRegionReader.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

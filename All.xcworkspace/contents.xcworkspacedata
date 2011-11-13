@@ -19,6 +19,9 @@
       <FileRef
          location = "group:MinecraftKit/nbtparser/nbtparser.xcodeproj">
       </FileRef>
+      <FileRef
+         location = "group:regiondump/regiondump.xcodeproj">
+      </FileRef>
    </Group>
    <FileRef
       location = "group:MinecraftKit/MinecraftKit.xcodeproj">

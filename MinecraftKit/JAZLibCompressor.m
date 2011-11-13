@@ -393,6 +393,39 @@ static void SetZLibError(int code, z_stream *stream, NSError **outError);
 	return readCount;
 }
 
+
+- (NSData *) readToEndWithError:(NSError **)outError
+{
+	NSMutableData *result = [NSMutableData new];
+	void *bytes = malloc(kBufferSize);
+	if (bytes == NULL)
+	{
+		if (outError != NULL)
+		{
+			*outError = [NSError errorWithDomain:NSPOSIXErrorDomain code:ENOMEM userInfo:NULL];
+		}
+		return nil;
+	}
+	
+	for (;;)
+	{
+		NSInteger readCount = [self read:bytes length:kBufferSize error:outError];
+		
+		if (readCount > 0)
+		{
+			[result appendBytes:bytes length:readCount];
+		}
+		else
+		{
+			if (readCount < 0)  result = nil;
+			break;
+		}
+	}
+	
+	free(bytes);
+	return result;
+}
+
 @end
 
 
