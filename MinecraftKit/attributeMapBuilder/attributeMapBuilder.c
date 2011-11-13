@@ -109,7 +109,8 @@ static const uint8_t kTransparentIDs[] =
 	kMCBlockBrickStairs,
 	kMCBlockStoneBrickStairs,
 	kMCBlockNetherBrickStairs,
-	kMCBlockEndPortalFrame	// FIXME: test with redstone. Has both filled and unfilled appearances.
+	kMCBlockEndPortalFrame,
+	kMCBlockDragonEgg
 };
 
 

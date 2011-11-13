@@ -806,13 +806,14 @@ const int8_t kGroundLevelWeights[256] =
 	
 	-6,		// End portal frame
 	6,		// End stone
+	-8,		// Dragon egg
 	
 	0
 };
 
 enum
 {
-	kLastWeight = kMCBlockEndStone
+	kLastWeight = kMCBlockDragonEgg
 };
 
 

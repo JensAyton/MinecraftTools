@@ -154,11 +154,12 @@ enum
 	kMCBlockCauldron						= 118,	// Data: kMCInfoCauldronFillLevel
 	kMCBlockEndPortal						= 119,	// Tile entity: Airportal
 	kMCBlockEndPortalFrame					= 120,	// Data: kMCInfoAirPortalFrameBroken
-	kMCBlockEndStone						= 121
+	kMCBlockEndStone						= 121,
+	kMCBlockDragonEgg						= 122
 };
 
 
-#define kMCLastBlockID kMCBlockEndStone
+#define kMCLastBlockID kMCBlockDragonEgg
 
 
 enum
