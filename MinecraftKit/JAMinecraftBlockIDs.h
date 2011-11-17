@@ -141,8 +141,6 @@ enum
 	kMCBlockGate							= 107,	// Data: kMCInfoDoorOrientationMask and kMCInfoDoorOpen.
 	kMCBlockBrickStairs						= 108,	// Data: kMCInfoStairOrientationMask
 	kMCBlockStoneBrickStairs				= 109,	// Data: kMCInfoStairOrientationMask
-	
-	// 1.9 PRERELEASE beyond this point.
 	kMCBlockMycelium						= 110,
 	kMCBlockLilyPad							= 111,
 	kMCBlockNetherBrick						= 112,
@@ -505,6 +503,8 @@ enum
 	categories: opaque, transparent, liquid, or item.
 	* Transparent blocks can’t have most items attached to them and don’t block
 	  redstone diagonally. This includes air, glass, leaves, stairs, and slabs.
+	  Glowstone is also “transparent” (since 1.9pre6, for technical reasons
+	  involving lighting).
 	* Opaque blocks completely fill their cell and block redstone. This includes
 	  all normal building blocks, as well as workbenches, furnaces, jukeboxes,
  	  TNT, pumpkins, jack-o-lanterns and melons.
@@ -513,10 +513,9 @@ enum
 	  flowers, torches, doors, rails etc.
 	
 	The distinction between transparent blocks and items is somewhat arbitrary.
-	As far as I’m aware, they’re the same category as far as Minecraft is
-	concerned.
+	As far as I’m aware, there is no corresponding distinction within Minecraft.
 	
-	There are also some non-exclusive metadata flags.
+	There are also some non-exclusive metadata flags, desribed below.
 */
 
 

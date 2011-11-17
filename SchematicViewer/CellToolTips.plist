@@ -110,7 +110,20 @@
 		"Vines",
 		"Gate",
 		"Brick stairs",
-		"Stone brick stairs"
+		"Stone brick stairs",
+		"Mycelium",
+		"Lily pad",
+		"Nether brick",
+		"Nether brick fence",
+		"Nether brick stairs",
+		"Nether wart",
+		"Enchantment table",
+		"Brewing stand",
+		"Cauldron",
+		"End portal",
+		"End portal frame",
+		"End stone",
+		"Dragon egg"
 	);
 	
 	"Wool" =
