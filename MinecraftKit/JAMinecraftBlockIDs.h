@@ -148,10 +148,10 @@ enum
 	kMCBlockNetherBrickStairs				= 114,	// Data: kMCInfoStairOrientation
 	kMCBlockNetherWart						= 115,	// Data: kMCInfoNetherWartAge
 	kMCBlockEnchantmentTable				= 116,	// Tile entity: EnchantTable
-	kMCBlockBrewingStand					= 117,	// Data: FIXME unknown; tile entity: Cauldron
+	kMCBlockBrewingStand					= 117,	// Data: kMCInfoBrewingStandBottleSlotX; tile entity: Cauldron
 	kMCBlockCauldron						= 118,	// Data: kMCInfoCauldronFillLevel
 	kMCBlockEndPortal						= 119,	// Tile entity: Airportal
-	kMCBlockEndPortalFrame					= 120,	// Data: kMCInfoAirPortalFrameBroken
+	kMCBlockEndPortalFrame					= 120,	// Data: FIXME: orientation convention?, kMCInfoAirPortalFrameHasEye
 	kMCBlockEndStone						= 121,
 	kMCBlockDragonEgg						= 122
 };
@@ -488,11 +488,20 @@ enum
 	kMCInfoNetherWartAge					= 0x03,
 	
 	/*
+		Flags indicating which of a brewing stand’s three slots are occupied
+		by bottles. Note that actual information about bottles is in tile
+		entity.
+	*/
+	kMCInfoBrewingStandBottleSlotEast		= 0x01,
+	kMCInfoBrewingStandBottleSlotSouthWest	= 0x02,
+	kMCInfoBrewingStandBottleSlotNorthWest	= 0x04,
+	
+	/*
 		Cauldron fill level ranges from 0 to 3.
 	*/
 	kMCInfoCauldronFillLevel				= 0x03,
 	
-	kMCInfoAirPortalFrameBroken				= 0x01
+	kMCInfoAirPortalFrameHasEye				= 0x04
 };
 
 
