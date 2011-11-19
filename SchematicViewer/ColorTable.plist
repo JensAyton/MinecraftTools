@@ -95,5 +95,31 @@
 	(128, 64, 64),		// Redstone repeater (off)
 	(255, 64, 64),		// Redstone repeater (on)
 	(150, 90, 40),		// Locked chest
-	(175, 126, 46)		// Trapdoor
+	(175, 126, 46),		// Trapdoor
+	(200, 200, 200),	// Stone with silverfish
+	(180, 180, 180),	// Stone brick
+	(230, 225, 180),	// Huge brown mushroom
+	(230, 210, 185),	// Huge red mushroom
+	(80, 80, 80),		// Iron bars
+	(180, 255, 255),	// Glass pane
+	(170, 215, 95),		// Watermelon
+	(180, 200, 85),		// Pumpkin stem
+	(180, 200, 85),		// Melon stem
+	(25, 128, 30),		// Vines
+	(175, 126, 46),		// Gate
+	(200, 60, 30),		// Brick stairs
+	(180, 180, 180),	// Stone brick stairs
+	(150, 140, 130),	// Mycelium
+	(25, 128, 30),		// Lily pad
+	(60, 0, 0),			// Nether brick
+	(60, 0, 0),			// Nether brick fence
+	(60, 0, 0),			// Nether brick stairs
+	(128, 0, 0),		// Nether wart
+	(64, 128, 128),		// Enchantment table
+	(128, 128, 64),		// Brewing stand
+	(64, 64, 64),		// Cauldron
+	(0, 0, 0),			// End portal
+	(170, 230, 0),		// End portal frame
+	(220, 220, 140),	// End stone
+	(32, 0, 64)			// Dragon egg
 )
