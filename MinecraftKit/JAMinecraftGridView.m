@@ -48,6 +48,9 @@ NSString * const kJAMinecraftGridViewWillFreezeSelectionNotification = @"se.ayto
 NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayton.jens.minecraftkit JAMinecraftGridView will discard selection";
 
 
+static void *kStoreObservingContext = &kStoreObservingContext;
+
+
 @interface JAMinecraftGridView ()
 
 // Drawing
@@ -57,6 +60,7 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 #if DEBUG_DRAWING
 - (void) drawDebugStuffInDirtyRect:(NSRect)dirtyRect;
 #endif
+- (void) updateScrollView;
 
 @property (readonly, nonatomic) NSColor *emptyOutsidePattern;
 
@@ -207,16 +211,16 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 - (void) startObservingStore:(JAMutableMinecraftBlockStore <NSCopying> *)store
 {
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(blockStoreChanged:) name:kJAMinecraftBlockStoreChangedNotification object:store];
-	[store addObserver:self forKeyPath:@"groundLevel" options:0 context:NULL];
-	[store addObserver:self forKeyPath:@"extents" options:0 context:NULL];
+	[store addObserver:self forKeyPath:@"groundLevel" options:0 context:kStoreObservingContext];
+	[store addObserver:self forKeyPath:@"extents" options:0 context:kStoreObservingContext];
 }
 
 
 - (void) stopObservingStore:(JAMutableMinecraftBlockStore <NSCopying> *)store
 {
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:nil object:_store];
-	[_store removeObserver:self forKeyPath:@"groundLevel"];
-	[_store removeObserver:self forKeyPath:@"extents"];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:kJAMinecraftBlockStoreChangedNotification object:_store];
+	[_store removeObserver:self forKeyPath:@"groundLevel" context:kStoreObservingContext];
+	[_store removeObserver:self forKeyPath:@"extents" context:kStoreObservingContext];
 }
 
 
@@ -258,9 +262,10 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-	if (object == _store)
+	if (object == _store && context == kStoreObservingContext)
 	{
 		if ([keyPath isEqualToString:@"groundLevel"])  [self invalidateDrawingCaches];
+		else  [self updateScrollView];
 		[self setNeedsDisplay:YES];
 	}
 }
@@ -1092,11 +1097,41 @@ NSString * const kJAMinecraftGridViewWillDiscardSelectionNotification = @"se.ayt
 }
 
 
+- (void) updateScrollView
+{
+	NSScrollView *scrollView = self.enclosingScrollView;
+	if (scrollView == nil)  return;
+	
+	NSInteger totalCellSize = _cellSize + _gridWidth;
+	scrollView.lineScroll = totalCellSize;
+	
+	NSSize viewSize = scrollView.documentVisibleRect.size;
+	CGFloat horzPadding = ((NSUInteger)(viewSize.width / totalCellSize) - 1) * totalCellSize;
+	CGFloat vertPadding = ((NSUInteger)(viewSize.height / totalCellSize) - 1) * totalCellSize;
+	
+	NSRect contentFrame = self.nonEmptyContentFrame;
+	contentFrame = NSInsetRect(contentFrame, -horzPadding, -vertPadding);
+	[self setFrameSize:contentFrame.size];
+	self.drawingOffset = (NSPoint){ horzPadding, vertPadding };
+	
+	[scrollView flashScrollers];
+	
+}
+
+
 - (void) invalidateDrawingCaches
 {
+	NSInteger oldCellSize = _cellSize;
+	NSInteger oldGridWidth = _cellSize;
+	
 	_cellSize = [self cellSizeForZoomLevel:_zoomLevel];
 	_gridWidth = [self gridWidthForZoomLevel:_zoomLevel];
 	_emptyOutsidePattern = nil;
+	
+	if (oldCellSize != _cellSize || oldGridWidth != _gridWidth)
+	{
+		[self updateScrollView];
+	}
 }
 
 
