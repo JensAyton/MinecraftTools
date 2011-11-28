@@ -128,20 +128,23 @@ static id KeyForCoords(NSInteger x, NSInteger y, NSInteger z)
 	NSUInteger x, y, z;
 	for (y = 0; y < height; y++)
 	{
-		for (z = 0; z < length; z++)
+		@autoreleasepool
 		{
-			for (x = 0; x < width; x++)
+			for (z = 0; z < length; z++)
 			{
-				uint8_t blockID = *blockBytes++;
-				uint8_t meta = *metaBytes++;
-				
-				MCCell cell = { .blockID = blockID, .blockData = meta & kMCInfoStandardBitsMask };
-				
-				NSDictionary *entity = [tileEntities objectForKey:KeyForCoords(x, y, z)];
-				
-				[self setCell:cell
-				andTileEntity:entity
-						   at:(MCGridCoordinates){x, y, z}];
+				for (x = 0; x < width; x++)
+				{
+					uint8_t blockID = *blockBytes++;
+					uint8_t meta = *metaBytes++;
+					
+					MCCell cell = { .blockID = blockID, .blockData = meta & kMCInfoStandardBitsMask };
+					
+					NSDictionary *entity = [tileEntities objectForKey:KeyForCoords(x, y, z)];
+					
+					[self setCell:cell
+					andTileEntity:entity
+							   at:(MCGridCoordinates){x, y, z}];
+				}
 			}
 		}
 	}
@@ -238,8 +241,6 @@ static id KeyForCoords(NSInteger x, NSInteger y, NSInteger z)
 	
 	NSDictionary *schema = GetSchematicSchema();
 	
-	//	JANBTTag *nbtRoot = [JANBTTag tagWithName:kSchematicKey propertyListRepresentation:root schema:schema];
-	//	return [JANBTEncoder encodeTag:nbtRoot];
 	return [JANBTSerialization dataWithNBTObject:root
 										rootName:kSchematicKey
 										 options:0

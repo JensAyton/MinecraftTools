@@ -39,7 +39,8 @@
 #define LOG_STRUCTURE			(0 && LOGGING)
 
 // Tracking of node instances; dump from debugger by calling p JAMCSchematicDump().
-#define TRACK_NODE_INSTANCES	(1 && DEBUG_MCSCHEMATIC)
+// WARNING: causes multithreaded clients to crash randomly.
+#define TRACK_NODE_INSTANCES	(0 && DEBUG_MCSCHEMATIC)
 
 // Logging of access cache hit rate.
 #define PROFILE_CACHE			0
@@ -1586,7 +1587,8 @@ static NSHashTable *sLiveChunks = NULL;
 
 static id TileEntityKeyForCoords(MCGridCoordinates coords)
 {
-	return [NSString stringWithFormat:@"%lli,%lli,%lli", coords.x, coords.y, coords.z];
+	// FIXME: this is a major performance bottleneck. Need a better store for tile entities.
+	return [NSValue valueWithBytes:&coords objCType:@encode(MCGridCoordinates)];
 }
 
 

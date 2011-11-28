@@ -18,7 +18,7 @@ int RealMain(int argc, const char * argv[])
 	NSData *data = [NSData dataWithContentsOfFile:fileName];
 	if (data == nil)
 	{
-		Print(stderr, @"Could not read file %@.\n", fileName);
+		Print(stderr, @"error: could not read file %@.\n", fileName);
 		return EXIT_FAILURE;
 	}
 	
@@ -30,7 +30,7 @@ int RealMain(int argc, const char * argv[])
 												errorDescription:&errDesc];
 	if (plist == nil)
 	{
-		Print(stderr, @"%@\n", errDesc);
+		Print(stderr, @"error: could not parse property list %@. %@\n", fileName.lastPathComponent, errDesc);
 		return EXIT_FAILURE;
 	}
 	
@@ -40,7 +40,7 @@ int RealMain(int argc, const char * argv[])
 											errorDescription:&errDesc];
 	if (data == nil)
 	{
-		Print(stderr, @"%@\n", errDesc);
+		Print(stderr, @"error: could not reserialize property list %@. %@\n", fileName.lastPathComponent, errDesc);
 		return EXIT_FAILURE;
 	}
 	
@@ -53,7 +53,7 @@ int RealMain(int argc, const char * argv[])
 	if (header == NULL)
 	{
 		
-		Print(stderr, @"Could not open %@.h for output: %s\n", outputName, strerror(errno));
+		Print(stderr, @"error: could not open %@.h for output. %s\n", outputName, strerror(errno));
 		return EXIT_FAILURE;
 	}
 	Print(header,
@@ -93,7 +93,7 @@ int RealMain(int argc, const char * argv[])
 	if (cfile == NULL)
 	{
 		
-		Print(stderr, @"Could not open %@.c for output: %s\n", outputName, strerror(errno));
+		Print(stderr, @"error: could not open %@.c for output. %s\n", outputName, strerror(errno));
 		return EXIT_FAILURE;
 	}
 	Print(cfile, @"/*\n\t%@.c\n\t\n\tAutomatically generated from %@. Do not edit.\n*/\n\n#include \"%@.h\"\n\n\nchar k%@[k%@Size] =\n{", outputName, [fileName lastPathComponent], outputName, outputName, outputName);
