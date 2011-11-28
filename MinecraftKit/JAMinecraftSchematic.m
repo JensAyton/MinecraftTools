@@ -295,18 +295,12 @@ static inline NSUInteger RepresentedDistance(levels)
 }
 
 
-- (void) finalize
+- (void) dealloc
 {
-	//	The tree is not thread-safe, so we need to release it on the main thread.
-	
-	InnerNode *root = _root;
-	if (root != NULL)
+	if (_root != NULL)
 	{
-		NSUInteger level = _rootLevel;
-		[[NSOperationQueue mainQueue] addOperationWithBlock: ^{ ReleaseInnerNode(root, level); }];
+		ReleaseInnerNode(_root, _rootLevel);
 	}
-	
-	[super finalize];
 }
 
 
