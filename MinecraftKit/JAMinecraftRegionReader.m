@@ -24,6 +24,7 @@
 */
 
 #import "JAMinecraftRegionReader.h"
+#import "JAMinecraftChunkBlockStore.h"
 #import "JAZLibCompressor.h"
 
 
@@ -123,6 +124,12 @@ static inline uint16_t ChunkIndexFromLocalCoords(uint16_t x, uint16_t z)
 {
 	NSParameterAssert(x < kChunksPerRegionSide && z < kChunksPerRegionSide);
 	return _offsets[ChunkIndexFromLocalCoords(x, z)] != 0;
+}
+
+
+- (JAMinecraftChunkBlockStore *) chunkAtLocalX:(uint8_t)x localZ:(uint8_t)z
+{
+	return [[JAMinecraftChunkBlockStore alloc] initWithData:[self chunkDataAtLocalX:x localZ:z] error:NULL];
 }
 
 

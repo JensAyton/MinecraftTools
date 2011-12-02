@@ -1,11 +1,7 @@
 /*
-	JAMinecraftRegionReader.h
+	JAMinecraftChunkBlockStore.h
 	
-	Read-only extractor for Minecraft region files.
-	
-	Looking forward, we want read-only and read-write block stores representing
-	entire worlds, but extracting individual chunks as schematics is a
-	reasonable starting point.
+	Block store representing one chunk of a map. Size is fixed.
 	
 	
 	Copyright © 2011 Jens Ayton
@@ -29,23 +25,13 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#import <Foundation/Foundation.h>
-
-@class JAMinecraftChunkBlockStore;
+#import "JAMinecraftBlockStore.h"
 
 
-@interface JAMinecraftRegionReader: NSObject
+@interface JAMinecraftChunkBlockStore: JAMutableMinecraftBlockStore
 
-+ (id) regionReaderWithData:(NSData *)regionData;
-+ (id) regionReaderWithURL:(NSURL *)regionFileURL;
+- (id) initWithData:(NSData *)data error:(NSError **)outError;
 
-// Chunk coordinates range from 0 to 32 in region-local space.
-- (BOOL) hasChunkAtLocalX:(uint8_t)x localZ:(uint8_t)z;
-
-// Retrieve chunk.
-- (JAMinecraftChunkBlockStore *) chunkAtLocalX:(uint8_t)x localZ:(uint8_t)z;
-
-// Retrieve chunk NBT data.
-- (NSData *) chunkDataAtLocalX:(uint8_t)x localZ:(uint8_t)z;
+@property (nonatomic, copy) NSDictionary *metadata;
 
 @end

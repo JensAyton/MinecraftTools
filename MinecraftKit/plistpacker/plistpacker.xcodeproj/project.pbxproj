@@ -192,6 +192,7 @@
 				1AF54095145C3C860049CCEB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -10,7 +10,7 @@ CLANG_ENABLE_OBJC_ARC			= YES
 ALWAYS_SEARCH_USER_PATHS		= NO
 
 
-WARNING_CFLAGS					= -Wall -Wextra -Wno-unused-parameter -Wno-unused-function -Wno-missing-field-initializers
+WARNING_CFLAGS					= -Wall -Wextra -Wno-unused-parameter -Wno-unused-function -Wno-missing-field-initializers -Wformat
 GCC_TREAT_WARNINGS_AS_ERRORS	= YES
 
 

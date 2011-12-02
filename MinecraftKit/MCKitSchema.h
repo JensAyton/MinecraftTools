@@ -9,6 +9,7 @@
 
 #import "SchematicSchema.h"
 #import "DataSchema.h"
+#import "ChunkSchema.h"
 
 #else
 #import "JAMinecraftBlock.h"
@@ -28,6 +29,12 @@ static inline id GetSchematicSchema(void)
 static inline id GetDataSchema(void)
 {
 	return GetNamedSchema(@"Data");
+}
+
+
+static inline id GetChunkSchema(void)
+{
+	return GetNamedSchema(@"Chunk");
 }
 
 #endif

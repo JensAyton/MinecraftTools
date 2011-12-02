@@ -1,0 +1,130 @@
+/*
+	Definitions of expected types for chunk structure in region files.
+	Note: the root key of a chunk is the empty string. The empty string-keyed
+	outer compound contains a single compound keyed "Level".
+*/
+
+{
+	Level =
+	{
+		Blocks = data;
+		Data = data;
+		SkyLight = data;
+		BlockLight = data;
+		HeightMap = data;
+		LastUpdate = long;
+		xPos = int;
+		zPos = int;
+		TerrainPopulated = byte;
+		
+		TileTicks =
+		(
+			{
+				i = int;
+				t = int;
+				x = int;
+				y = int;
+				z = int;
+			}
+		);
+		
+		Entities =
+		(
+			{
+				id = string;
+				
+				Pos = ( double );
+				Motion = ( double );
+				Rotation = ( float );
+				FallDistance = float;
+				Air = short;
+				Fire = short;
+				OnGround = byte;
+				AttackTime = short;
+				DeathTime = short;
+				Health = short;
+				HurtTime = short;
+				Saddle = byte;
+				Sheared = byte;
+				Color = byte;
+				powered = byte;
+				Size = int;
+				Owner = string;
+				Sitting = byte;
+				Angry = byte;
+				Anger = short;
+				carried = short;
+				carriedData = short;
+				Age = short;
+				Health = short;
+				xTile = short;
+				yTile = short;
+				zTile = short;
+				inTile = byte;
+				shake = byte;
+				inGround = byte;
+				Dir = byte;
+				Motive = string;
+				TileX = int;
+				TileY = int;
+				TileZ = int;
+				Value = short;
+				Type = int;
+				PushX = double;
+				PushY = double;
+				Fuel = short;
+				Fuse = byte;
+				Tile = byte;
+				Item =
+				{
+					id = short;
+					damage = short;
+					count = byte;
+				};
+				Items =
+				(
+					{
+						id = short;
+						Count = byte;
+						Slot = byte;
+						Damage = short;
+					}
+				);
+			}
+		);
+		TileEntities =
+		(
+			{
+				id = string;
+				x = int;
+				y = int;
+				z = int;
+				BurnTime = short;
+				CookTime = short;
+				Text1 = string;
+				Text2 = string;
+				Text3 = string;
+				Text4 = string;
+				EntityId = string;
+				Delay = short;
+				note = byte;
+				Record = int;
+				blockId = int;
+				blockData = int;
+				facing = int;
+				progress = float;
+				extending = byte;
+				brewTime = int;
+				Items =
+				(
+					{
+						id = short;
+						Count = byte;
+						Slot = byte;
+						Damage = short;
+					}
+				);
+			}
+		);
+	};
+}

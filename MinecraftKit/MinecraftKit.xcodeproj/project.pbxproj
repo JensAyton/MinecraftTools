@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A164B78148938010079962D /* JAMinecraftChunkBlockStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A164B76148938010079962D /* JAMinecraftChunkBlockStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A164B79148938010079962D /* JAMinecraftChunkBlockStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A164B77148938010079962D /* JAMinecraftChunkBlockStore.m */; };
+		1A164B7C14893F670079962D /* JAMinecraftChunkBlockStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A164B77148938010079962D /* JAMinecraftChunkBlockStore.m */; };
 		1A3AAB6514592FA0006C7043 /* Data.schema in Resources */ = {isa = PBXBuildFile; fileRef = 1A3AAB6414592FA0006C7043 /* Data.schema */; };
 		1A64907114517A7300F57924 /* JANBTSerialization.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A64906F14517A7300F57924 /* JANBTSerialization.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AB23B3014543B81008C5723 /* JANBTTagType.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB23B2F14543B81008C5723 /* JANBTTagType.m */; };
@@ -21,6 +24,8 @@
 		1AE0E31914536D57009ACC2B /* JANBTTagType.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AE0E31614536D57009ACC2B /* JANBTTagType.h */; };
 		1AE0E32114536FFF009ACC2B /* JANBTTypedNumbers.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AE0E31F14536FFE009ACC2B /* JANBTTypedNumbers.h */; };
 		1AE0E32214536FFF009ACC2B /* JANBTTypedNumbers.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE0E32014536FFE009ACC2B /* JANBTTypedNumbers.m */; };
+		1AE1B0A5148292DE006070F2 /* Chunk.schema in Resources */ = {isa = PBXBuildFile; fileRef = 1AE1B0A4148292DE006070F2 /* Chunk.schema */; };
+		1AE1B0CF1482A4A8006070F2 /* ChunkSchema.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AE1B0CE1482A4A8006070F2 /* ChunkSchema.c */; };
 		1AE8E94D145A013A000ED823 /* shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1AE8E94C145A013A000ED823 /* shared.xcconfig */; };
 		1AF54039145C38AE0049CCEB /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AFE345413F930BF001A33D4 /* Cocoa.framework */; };
 		1AF54045145C39740049CCEB /* JAMinecraftBlockIDs.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AFE347913F931C3001A33D4 /* JAMinecraftBlockIDs.c */; };
@@ -137,6 +142,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1A164B76148938010079962D /* JAMinecraftChunkBlockStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAMinecraftChunkBlockStore.h; sourceTree = SOURCE_ROOT; };
+		1A164B77148938010079962D /* JAMinecraftChunkBlockStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAMinecraftChunkBlockStore.m; sourceTree = SOURCE_ROOT; };
 		1A3AAB6414592FA0006C7043 /* Data.schema */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Data.schema; path = Resources/Data.schema; sourceTree = SOURCE_ROOT; };
 		1A64906F14517A7300F57924 /* JANBTSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTSerialization.h; sourceTree = SOURCE_ROOT; };
 		1A64907014517A7300F57924 /* JANBTSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTSerialization.m; sourceTree = SOURCE_ROOT; };
@@ -151,12 +158,14 @@
 		1AE0E31614536D57009ACC2B /* JANBTTagType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTTagType.h; sourceTree = SOURCE_ROOT; };
 		1AE0E31F14536FFE009ACC2B /* JANBTTypedNumbers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTTypedNumbers.h; sourceTree = SOURCE_ROOT; };
 		1AE0E32014536FFE009ACC2B /* JANBTTypedNumbers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTTypedNumbers.m; sourceTree = SOURCE_ROOT; };
+		1AE1B0A4148292DE006070F2 /* Chunk.schema */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Chunk.schema; path = Resources/Chunk.schema; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.plist; };
+		1AE1B0CE1482A4A8006070F2 /* ChunkSchema.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ChunkSchema.c; path = ../MinecraftKit.build/$CONFIGURATION/libminecraftkit.build/DerivedSources/ChunkSchema.c; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AE8E94C145A013A000ED823 /* shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = shared.xcconfig; sourceTree = "<group>"; };
 		1AF54038145C38AE0049CCEB /* libminecraftkit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libminecraftkit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AF54096145C3C860049CCEB /* plistpacker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = plistpacker.xcodeproj; path = plistpacker/plistpacker.xcodeproj; sourceTree = "<group>"; };
 		1AF540A2145C488B0049CCEB /* MCKitSchema.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCKitSchema.h; sourceTree = SOURCE_ROOT; };
-		1AF540A5145C4D290049CCEB /* DataSchema.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = DataSchema.c; path = ../../../build/MinecraftKit.build/Debug/libminecraftkit.build/DerivedSources/DataSchema.c; sourceTree = "<group>"; };
-		1AF540A6145C4D290049CCEB /* SchematicSchema.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = SchematicSchema.c; path = ../../../build/MinecraftKit.build/Debug/libminecraftkit.build/DerivedSources/SchematicSchema.c; sourceTree = "<group>"; };
+		1AF540A5145C4D290049CCEB /* DataSchema.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = DataSchema.c; path = ../MinecraftKit.build/$CONFIGURATION/libminecraftkit.build/DerivedSources/DataSchema.c; sourceTree = BUILT_PRODUCTS_DIR; };
+		1AF540A6145C4D290049CCEB /* SchematicSchema.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = SchematicSchema.c; path = ../MinecraftKit.build/$CONFIGURATION/libminecraftkit.build/DerivedSources/SchematicSchema.c; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AF70345147060840096EDF1 /* JAMinecraftRegionReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAMinecraftRegionReader.h; sourceTree = SOURCE_ROOT; };
 		1AF70346147060840096EDF1 /* JAMinecraftRegionReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAMinecraftRegionReader.m; sourceTree = SOURCE_ROOT; };
 		1AF8C149144CA38900D86C3D /* Schematic.schema */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Schematic.schema; path = Resources/Schematic.schema; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.plist; };
@@ -315,9 +324,11 @@
 			children = (
 				1AF540A5145C4D290049CCEB /* DataSchema.c */,
 				1AF540A6145C4D290049CCEB /* SchematicSchema.c */,
+				1AE1B0CE1482A4A8006070F2 /* ChunkSchema.c */,
 				1AFE345C13F930BF001A33D4 /* MinecraftKit-Info.plist */,
 				1A3AAB6414592FA0006C7043 /* Data.schema */,
 				1AF8C149144CA38900D86C3D /* Schematic.schema */,
+				1AE1B0A4148292DE006070F2 /* Chunk.schema */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -337,14 +348,16 @@
 				1AFE347F13F931C3001A33D4 /* JAMinecraftSchematic.m */,
 				1AFE348013F931C3001A33D4 /* JAMinecraftMergedBlockStore.h */,
 				1AFE348113F931C3001A33D4 /* JAMinecraftMergedBlockStore.m */,
-				1AFE348213F931C3001A33D4 /* JAMinecraftSchematic+RDatIO.h */,
-				1AFE348313F931C3001A33D4 /* JAMinecraftSchematic+RDatIO.m */,
 				1AFE348413F931C3001A33D4 /* JAMinecraftSchematic+SchematicIO.h */,
 				1AFE348513F931C3001A33D4 /* JAMinecraftSchematic+SchematicIO.m */,
+				1AFE348213F931C3001A33D4 /* JAMinecraftSchematic+RDatIO.h */,
+				1AFE348313F931C3001A33D4 /* JAMinecraftSchematic+RDatIO.m */,
 				1AFE348613F931C3001A33D4 /* JAMinecraftBlockStore+RedstoneHelpers.h */,
 				1AFE348713F931C3001A33D4 /* JAMinecraftBlockStore+RedstoneHelpers.m */,
 				1AF70345147060840096EDF1 /* JAMinecraftRegionReader.h */,
 				1AF70346147060840096EDF1 /* JAMinecraftRegionReader.m */,
+				1A164B76148938010079962D /* JAMinecraftChunkBlockStore.h */,
+				1A164B77148938010079962D /* JAMinecraftChunkBlockStore.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -429,13 +442,14 @@
 				1AFE348C13F931C3001A33D4 /* JAMinecraftBlockStore.h in Headers */,
 				1AFE348E13F931C3001A33D4 /* JAMinecraftSchematic.h in Headers */,
 				1AFE349013F931C3001A33D4 /* JAMinecraftMergedBlockStore.h in Headers */,
-				1AFE349213F931C3001A33D4 /* JAMinecraftSchematic+RDatIO.h in Headers */,
 				1AFE349413F931C3001A33D4 /* JAMinecraftSchematic+SchematicIO.h in Headers */,
+				1AFE349213F931C3001A33D4 /* JAMinecraftSchematic+RDatIO.h in Headers */,
 				1AFE349613F931C3001A33D4 /* JAMinecraftBlockStore+RedstoneHelpers.h in Headers */,
 				1AFE349B13F931D1001A33D4 /* JAMinecraftGridView.h in Headers */,
 				1AFE34B113F93207001A33D4 /* JAPropertyListAccessors.h in Headers */,
 				1AFE34B613F9321F001A33D4 /* JAValueToString.h in Headers */,
 				1AF70347147060840096EDF1 /* JAMinecraftRegionReader.h in Headers */,
+				1A164B78148938010079962D /* JAMinecraftChunkBlockStore.h in Headers */,
 				1AFE34A613F931EE001A33D4 /* JAHashEnumeration.h in Headers */,
 				1AFE34A813F931EE001A33D4 /* IsKeyDown.h in Headers */,
 				1AE0E31714536D57009ACC2B /* JANBTStreamParser.h in Headers */,
@@ -553,6 +567,7 @@
 				1AF8C14A144CA38900D86C3D /* Schematic.schema in Resources */,
 				1A3AAB6514592FA0006C7043 /* Data.schema in Resources */,
 				1AE8E94D145A013A000ED823 /* shared.xcconfig in Resources */,
+				1AE1B0A5148292DE006070F2 /* Chunk.schema in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -568,6 +583,7 @@
 				"$(SRCROOT)/Resources/Schematic.schema",
 				"$(SRCROOT)/Resources/Data.schema",
 				"$(BUILT_PRODUCTS_DIR)/plistpacker",
+				"$(SRCROOT)/Resources/Chunk.schema",
 			);
 			name = "Pack schemata";
 			outputPaths = (
@@ -575,10 +591,12 @@
 				"$(DERIVED_FILE_DIR)/DataSchema.c",
 				"$(DERIVED_FILE_DIR)/SchematicSchema.h",
 				"$(DERIVED_FILE_DIR)/SchematicSchema.c",
+				"$(DERIVED_FILE_DIR)/ChunkSchema.h",
+				"$(DERIVED_FILE_DIR)/ChunkSchema.c",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "mkdir -p \"$DERIVED_FILE_DIR\"\ncd \"$DERIVED_FILE_DIR\"\n\"$BUILT_PRODUCTS_DIR/plistpacker\" \"$SRCROOT/Resources/Data.schema\" DataSchema\n\"$BUILT_PRODUCTS_DIR/plistpacker\" \"$SRCROOT/Resources/Schematic.schema\" SchematicSchema\n";
+			shellScript = "mkdir -p \"$DERIVED_FILE_DIR\"\ncd \"$DERIVED_FILE_DIR\"\n\"$BUILT_PRODUCTS_DIR/plistpacker\" \"$SRCROOT/Resources/Data.schema\" DataSchema\n\"$BUILT_PRODUCTS_DIR/plistpacker\" \"$SRCROOT/Resources/Schematic.schema\" SchematicSchema\n\"$BUILT_PRODUCTS_DIR/plistpacker\" \"$SRCROOT/Resources/Chunk.schema\" ChunkSchema\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -611,6 +629,8 @@
 				1AF540A7145C4D290049CCEB /* DataSchema.c in Sources */,
 				1AF540A8145C4D290049CCEB /* SchematicSchema.c in Sources */,
 				1AF7034A147060840096EDF1 /* JAMinecraftRegionReader.m in Sources */,
+				1AE1B0CF1482A4A8006070F2 /* ChunkSchema.c in Sources */,
+				1A164B7C14893F670079962D /* JAMinecraftChunkBlockStore.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -641,6 +661,7 @@
 				1AB23B6F1454793D008C5723 /* JANBTSerialization.m in Sources */,
 				1AB23B9014547EF6008C5723 /* JAZLibCompressor.m in Sources */,
 				1AF70349147060840096EDF1 /* JAMinecraftRegionReader.m in Sources */,
+				1A164B79148938010079962D /* JAMinecraftChunkBlockStore.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
