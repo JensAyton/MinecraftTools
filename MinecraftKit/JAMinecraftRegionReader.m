@@ -140,15 +140,15 @@ static inline uint16_t ChunkIndexFromLocalCoords(uint16_t x, uint16_t z)
 	NSUInteger length = htonl(*(uint32_t *)bytes);
 	if (offset + kChunkHeaderSize + length >= totalSize)  return nil;	// Corrupt region file; chunk is out of bounds.
 	
-	JAZLibCompressionMode compressionMode;
+	// JAZLibCompressionMode compressionMode;
 	switch (bytes[4])
 	{
 		case kChunkCompressionModeGZip:
-			compressionMode = kJAZLibCompressionGZip;
+			//	compressionMode = kJAZLibCompressionGZip;
 			break;
 			
 		case kChunkCompressionModeZLib:
-			compressionMode = kJAZLibCompressionZLib;
+			//	compressionMode = kJAZLibCompressionZLib;
 			break;
 			
 		default:
