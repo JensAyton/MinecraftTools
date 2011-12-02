@@ -1,0 +1,301 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1AE1B04D14827145006070F2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AE1B04C14827145006070F2 /* Foundation.framework */; };
+		1AE1B05014827145006070F2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE1B04F14827145006070F2 /* main.m */; };
+		1AE1B09214827218006070F2 /* libminecraftkit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AE1B090148271F7006070F2 /* libminecraftkit.a */; };
+		1AE1B09A148273C9006070F2 /* JAPrintf.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE1B099148273C9006070F2 /* JAPrintf.m */; };
+		1AE1B09D1482879C006070F2 /* JATerrainStatistics.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE1B09C1482879C006070F2 /* JATerrainStatistics.m */; };
+		1AE1B0CD1482A451006070F2 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AE1B0CC1482A451006070F2 /* libz.dylib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1AE1B08D148271F7006070F2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1AE1B05F1482719A006070F2 /* MinecraftKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1AFE345113F930BF001A33D4;
+			remoteInfo = MinecraftKit;
+		};
+		1AE1B08F148271F7006070F2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1AE1B05F1482719A006070F2 /* MinecraftKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1AF54038145C38AE0049CCEB;
+			remoteInfo = libminecraftkit;
+		};
+		1AE1B0931482721F006070F2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1AE1B05F1482719A006070F2 /* MinecraftKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1AF54037145C38AE0049CCEB;
+			remoteInfo = libminecraftkit;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		1AE1B04614827145006070F2 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		1AE1B04814827145006070F2 /* terrainstats */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = terrainstats; sourceTree = BUILT_PRODUCTS_DIR; };
+		1AE1B04C14827145006070F2 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		1AE1B04F14827145006070F2 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		1AE1B05214827145006070F2 /* terrainstats-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "terrainstats-Prefix.pch"; sourceTree = "<group>"; };
+		1AE1B05F1482719A006070F2 /* MinecraftKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MinecraftKit.xcodeproj; path = ../MinecraftKit/MinecraftKit.xcodeproj; sourceTree = "<group>"; };
+		1AE1B076148271CE006070F2 /* shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = shared.xcconfig; path = ../../MinecraftKit/shared.xcconfig; sourceTree = "<group>"; };
+		1AE1B098148273C9006070F2 /* JAPrintf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JAPrintf.h; path = ../../Shared/JAPrintf.h; sourceTree = "<group>"; };
+		1AE1B099148273C9006070F2 /* JAPrintf.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JAPrintf.m; path = ../../Shared/JAPrintf.m; sourceTree = "<group>"; };
+		1AE1B09B1482879C006070F2 /* JATerrainStatistics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JATerrainStatistics.h; sourceTree = "<group>"; };
+		1AE1B09C1482879C006070F2 /* JATerrainStatistics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JATerrainStatistics.m; sourceTree = "<group>"; };
+		1AE1B0CC1482A451006070F2 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1AE1B04514827145006070F2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1AE1B0CD1482A451006070F2 /* libz.dylib in Frameworks */,
+				1AE1B09214827218006070F2 /* libminecraftkit.a in Frameworks */,
+				1AE1B04D14827145006070F2 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1AE1B03D14827144006070F2 = {
+			isa = PBXGroup;
+			children = (
+				1AE1B04E14827145006070F2 /* terrainstats */,
+				1AE1B04B14827145006070F2 /* Frameworks */,
+				1AE1B04914827145006070F2 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1AE1B04914827145006070F2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1AE1B04814827145006070F2 /* terrainstats */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1AE1B04B14827145006070F2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1AE1B0CC1482A451006070F2 /* libz.dylib */,
+				1AE1B05F1482719A006070F2 /* MinecraftKit.xcodeproj */,
+				1AE1B04C14827145006070F2 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		1AE1B04E14827145006070F2 /* terrainstats */ = {
+			isa = PBXGroup;
+			children = (
+				1AE1B04F14827145006070F2 /* main.m */,
+				1AE1B09B1482879C006070F2 /* JATerrainStatistics.h */,
+				1AE1B09C1482879C006070F2 /* JATerrainStatistics.m */,
+				1AE1B098148273C9006070F2 /* JAPrintf.h */,
+				1AE1B099148273C9006070F2 /* JAPrintf.m */,
+				1AE1B05114827145006070F2 /* Supporting Files */,
+			);
+			path = terrainstats;
+			sourceTree = "<group>";
+		};
+		1AE1B05114827145006070F2 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				1AE1B076148271CE006070F2 /* shared.xcconfig */,
+				1AE1B05214827145006070F2 /* terrainstats-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		1AE1B089148271F7006070F2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1AE1B08E148271F7006070F2 /* JAMinecraftKit.framework */,
+				1AE1B090148271F7006070F2 /* libminecraftkit.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1AE1B04714827145006070F2 /* terrainstats */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1AE1B05714827145006070F2 /* Build configuration list for PBXNativeTarget "terrainstats" */;
+			buildPhases = (
+				1AE1B04414827145006070F2 /* Sources */,
+				1AE1B04514827145006070F2 /* Frameworks */,
+				1AE1B04614827145006070F2 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1AE1B0941482721F006070F2 /* PBXTargetDependency */,
+			);
+			name = terrainstats;
+			productName = terrainstats;
+			productReference = 1AE1B04814827145006070F2 /* terrainstats */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1AE1B03F14827144006070F2 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+			};
+			buildConfigurationList = 1AE1B04214827144006070F2 /* Build configuration list for PBXProject "terrainstats" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 1AE1B03D14827144006070F2;
+			productRefGroup = 1AE1B04914827145006070F2 /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 1AE1B089148271F7006070F2 /* Products */;
+					ProjectRef = 1AE1B05F1482719A006070F2 /* MinecraftKit.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				1AE1B04714827145006070F2 /* terrainstats */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		1AE1B08E148271F7006070F2 /* JAMinecraftKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = JAMinecraftKit.framework;
+			remoteRef = 1AE1B08D148271F7006070F2 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1AE1B090148271F7006070F2 /* libminecraftkit.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libminecraftkit.a;
+			remoteRef = 1AE1B08F148271F7006070F2 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1AE1B04414827145006070F2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1AE1B05014827145006070F2 /* main.m in Sources */,
+				1AE1B09A148273C9006070F2 /* JAPrintf.m in Sources */,
+				1AE1B09D1482879C006070F2 /* JATerrainStatistics.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1AE1B0941482721F006070F2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = libminecraftkit;
+			targetProxy = 1AE1B0931482721F006070F2 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		1AE1B05514827145006070F2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1AE1B076148271CE006070F2 /* shared.xcconfig */;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				MCKIT_ROOT = ..;
+				ONLY_ACTIVE_ARCH = YES;
+			};
+			name = Debug;
+		};
+		1AE1B05614827145006070F2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1AE1B076148271CE006070F2 /* shared.xcconfig */;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_PREPROCESSOR_DEFINITIONS = "NDEBUG=1";
+				MCKIT_ROOT = ..;
+			};
+			name = Release;
+		};
+		1AE1B05814827145006070F2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "terrainstats/terrainstats-Prefix.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		1AE1B05914827145006070F2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "terrainstats/terrainstats-Prefix.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1AE1B04214827144006070F2 /* Build configuration list for PBXProject "terrainstats" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1AE1B05514827145006070F2 /* Debug */,
+				1AE1B05614827145006070F2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1AE1B05714827145006070F2 /* Build configuration list for PBXNativeTarget "terrainstats" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1AE1B05814827145006070F2 /* Debug */,
+				1AE1B05914827145006070F2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1AE1B03F14827144006070F2 /* Project object */;
+}

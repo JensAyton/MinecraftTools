@@ -13,6 +13,7 @@
 			buildPhases = (
 			);
 			dependencies = (
+				1A164BB8148943740079962D /* PBXTargetDependency */,
 				1AF703EC14707DF60096EDF1 /* PBXTargetDependency */,
 				1ADE4125145AEB05008263C8 /* PBXTargetDependency */,
 				1AE8E9B2145A09B9000ED823 /* PBXTargetDependency */,
@@ -25,6 +26,20 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXContainerItemProxy section */
+		1A164BB51489436A0079962D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A164BB1148943690079962D /* terrainstats.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1AE1B04814827145006070F2;
+			remoteInfo = terrainstats;
+		};
+		1A164BB7148943740079962D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1A164BB1148943690079962D /* terrainstats.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1AE1B04714827145006070F2;
+			remoteInfo = terrainstats;
+		};
 		1ADE4121145AEAFD008263C8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1ADE411D145AEAFC008263C8 /* NBTProdder.xcodeproj */;
@@ -98,6 +113,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1A164BB1148943690079962D /* terrainstats.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = terrainstats.xcodeproj; path = terrainstats/terrainstats.xcodeproj; sourceTree = "<group>"; };
 		1ADE411D145AEAFC008263C8 /* NBTProdder.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = NBTProdder.xcodeproj; path = NBTProdder/NBTProdder.xcodeproj; sourceTree = "<group>"; };
 		1AE8E979145A0865000ED823 /* shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = shared.xcconfig; path = /Users/jayton/Programming/Projects/MinecraftTools/SchematicViewer/../MinecraftKit/shared.xcconfig; sourceTree = "<absolute>"; };
 		1AE8E995145A098E000ED823 /* SchematicViewer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SchematicViewer.xcodeproj; path = SchematicViewer/SchematicViewer.xcodeproj; sourceTree = "<group>"; };
@@ -107,6 +123,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
+		1A164BB2148943690079962D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1A164BB61489436A0079962D /* terrainstats */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		1ADE411E145AEAFC008263C8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -119,6 +143,7 @@
 			isa = PBXGroup;
 			children = (
 				1AE8E979145A0865000ED823 /* shared.xcconfig */,
+				1A164BB1148943690079962D /* terrainstats.xcodeproj */,
 				1ADE411D145AEAFC008263C8 /* NBTProdder.xcodeproj */,
 				1AE8E9A7145A09A3000ED823 /* nbtparser.xcodeproj */,
 				1AE8E99B145A0998000ED823 /* mcxform.xcodeproj */,
@@ -197,6 +222,10 @@
 					ProductGroup = 1AE8E996145A098E000ED823 /* Products */;
 					ProjectRef = 1AE8E995145A098E000ED823 /* SchematicViewer.xcodeproj */;
 				},
+				{
+					ProductGroup = 1A164BB2148943690079962D /* Products */;
+					ProjectRef = 1A164BB1148943690079962D /* terrainstats.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -206,6 +235,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		1A164BB61489436A0079962D /* terrainstats */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = terrainstats;
+			remoteRef = 1A164BB51489436A0079962D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		1ADE4122145AEAFD008263C8 /* NBTProdder.app */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.application;
@@ -244,6 +280,11 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXTargetDependency section */
+		1A164BB8148943740079962D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = terrainstats;
+			targetProxy = 1A164BB7148943740079962D /* PBXContainerItemProxy */;
+		};
 		1ADE4125145AEB05008263C8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = NBTProdder;

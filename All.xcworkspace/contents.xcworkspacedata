@@ -22,6 +22,9 @@
       <FileRef
          location = "group:regiondump/regiondump.xcodeproj">
       </FileRef>
+      <FileRef
+         location = "group:terrainstats/terrainstats.xcodeproj">
+      </FileRef>
    </Group>
    <FileRef
       location = "group:MinecraftKit/MinecraftKit.xcodeproj">
