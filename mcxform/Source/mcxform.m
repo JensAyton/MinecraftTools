@@ -31,6 +31,7 @@
 #import <JAMinecraftKit/JAMinecraftSchematic+RDatIO.h>
 #import <JAMinecraftKit/JAMinecraftSchematic+SchematicIO.h>
 #import <JAMinecraftKit/JAValueToString.h>
+#import "JAPrintf.h"
 
 
 #define DEBUG_LOGGING	(!defined(NDEBUG))
@@ -44,12 +45,6 @@ static inline NSString *ExtentsDesc(MCGridExtents extents)
 #define LOG(...) do {} while (0)
 #endif
 
-
-static NSString *GetPath(const char *path);
-static void FPrintv(FILE *file, NSString *format, va_list args);
-static void Print(NSString *format, ...);
-static void FPrint(FILE *file, NSString *format, ...);
-static void EPrint(NSString *format, ...);
 
 static void PrintHelpAndExit(void) __attribute__((noreturn));
 
@@ -151,7 +146,7 @@ int main (int argc, const char * argv[])
 			PrintHelpAndExit();
 		}
 		
-		NSString *outputPath = GetPath(argv[1]);
+		NSString *outputPath = RealPathFromCString(argv[1]);
 		if (outputPath == nil)
 		{
 			EPrint(@"Failed to resolve output path \"%s\".\n", argv[1]);
@@ -240,7 +235,7 @@ int main (int argc, const char * argv[])
 
 static JAMinecraftSchematic *ProcessInputFile(JAMinecraftSchematic *currentCircuit, NSUInteger argc, NSUInteger *consumed, const char *argv[])
 {
-	NSString *path = GetPath(argv[1]);
+	NSString *path = RealPathFromCString(argv[1]);
 	NSData *data = [NSData dataWithContentsOfFile:path];
 	
 	JAMinecraftSchematic *loaded = nil;
@@ -478,46 +473,4 @@ static void PrintHelpAndExit(void)
 	}
 	
 	exit(EXIT_SUCCESS);
-}
-
-
-static NSString *GetPath(const char *path)
-{
-	char buffer[PATH_MAX];
-	realpath(path, buffer);
-	return [NSString stringWithUTF8String:buffer];
-}
-
-
-static void FPrintv(FILE *file, NSString *format, va_list args)
-{
-	NSString *string = [[NSString alloc] initWithFormat:format arguments:args];
-	fputs([string UTF8String], file);
-}
-
-
-static void FPrint(FILE *file, NSString *format, ...)
-{
-	va_list args;
-	va_start(args, format);
-	FPrintv(file, format, args);
-	va_end(args);
-}
-
-
-static void Print(NSString *format, ...)
-{
-	va_list args;
-	va_start(args, format);
-	FPrintv(stdout, format, args);
-	va_end(args);
-}
-
-
-static void EPrint(NSString *format, ...)
-{
-	va_list args;
-	va_start(args, format);
-	FPrintv(stderr, format, args);
-	va_end(args);
 }

@@ -30,13 +30,8 @@
 #import <JAMinecraftKit/JANBTSerialization.h>
 #import <JAMinecraftKit/JAPropertyListAccessors.h>
 #import <JAMinecraftKit/MYCollectionUtilities.h>
+#import "JAPrintf.h"
 
-
-static NSString *GetPath(const char *path);
-static void FPrintv(FILE *file, NSString *format, va_list args);
-static void Print(NSString *format, ...);
-static void FPrint(FILE *file, NSString *format, ...);
-static void EPrint(NSString *format, ...);
 
 static void PrintHelpAndExit(void) __attribute__((noreturn));
 
@@ -55,7 +50,7 @@ int main (int argc, const char * argv[])
 			PrintHelpAndExit();
 		}
 		
-		NSString *inputPath = GetPath(argv[1]);
+		NSString *inputPath = RealPathFromCString(argv[1]);
 		if (inputPath == nil)
 		{
 			EPrint(@"Failed to resolve input path \"%s\".\n", argv[1]);
@@ -209,46 +204,4 @@ static void PrintHelpAndExit(void)
 	printf("Usage: regiondump <file.mcr>");
 	
 	exit(EXIT_SUCCESS);
-}
-
-
-static NSString *GetPath(const char *path)
-{
-	char buffer[PATH_MAX];
-	realpath(path, buffer);
-	return [NSString stringWithUTF8String:buffer];
-}
-
-
-static void FPrintv(FILE *file, NSString *format, va_list args)
-{
-	NSString *string = [[NSString alloc] initWithFormat:format arguments:args];
-	fputs([string UTF8String], file);
-}
-
-
-static void FPrint(FILE *file, NSString *format, ...)
-{
-	va_list args;
-	va_start(args, format);
-	FPrintv(file, format, args);
-	va_end(args);
-}
-
-
-static void Print(NSString *format, ...)
-{
-	va_list args;
-	va_start(args, format);
-	FPrintv(stdout, format, args);
-	va_end(args);
-}
-
-
-static void EPrint(NSString *format, ...)
-{
-	va_list args;
-	va_start(args, format);
-	FPrintv(stderr, format, args);
-	va_end(args);
 }

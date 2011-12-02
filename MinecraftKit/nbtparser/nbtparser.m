@@ -1,6 +1,7 @@
 #import <Foundation/Foundation.h>
 #import <JAMinecraftKit/JANBTSerialization.h>
 #import "../JANBTTagType.h"
+#import "JAPrintf.h"
 
 
 @interface NSObject (NBTParser)
@@ -11,7 +12,6 @@
 @end
 
 
-#define Print(format...)  fputs([[NSString stringWithFormat:format] UTF8String], stdout)
 static NSString *IndentString(NSUInteger count);
 
 

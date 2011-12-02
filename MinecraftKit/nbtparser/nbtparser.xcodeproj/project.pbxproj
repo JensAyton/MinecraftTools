@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A164C5014894BA20079962D /* JAPrintf.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A164C4F14894BA20079962D /* JAPrintf.m */; };
 		1A4B74121260AEAF00253625 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A4B74111260AEAF00253625 /* libz.dylib */; };
 		1AF54078145C3B710049CCEB /* libminecraftkit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AF54075145C3B580049CCEB /* libminecraftkit.a */; };
 		8DD76F9A0486AA7600D96B5E /* nbtparser.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FB7796FE84155DC02AAC07 /* nbtparser.m */; settings = {ATTRIBUTES = (); }; };
@@ -52,6 +53,8 @@
 /* Begin PBXFileReference section */
 		08FB7796FE84155DC02AAC07 /* nbtparser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = nbtparser.m; sourceTree = "<group>"; };
 		08FB779EFE84155DC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		1A164C4E14894BA20079962D /* JAPrintf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JAPrintf.h; path = ../../Shared/JAPrintf.h; sourceTree = "<group>"; };
+		1A164C4F14894BA20079962D /* JAPrintf.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JAPrintf.m; path = ../../Shared/JAPrintf.m; sourceTree = "<group>"; };
 		1A4B74111260AEAF00253625 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		1AE8E951145A065C000ED823 /* shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = shared.xcconfig; path = ../shared.xcconfig; sourceTree = "<group>"; };
 		1AF5406D145C3B570049CCEB /* MinecraftKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MinecraftKit.xcodeproj; path = ../MinecraftKit.xcodeproj; sourceTree = "<group>"; };
@@ -90,6 +93,8 @@
 			children = (
 				32A70AAB03705E1F00C91783 /* nbtparser_Prefix.pch */,
 				08FB7796FE84155DC02AAC07 /* nbtparser.m */,
+				1A164C4E14894BA20079962D /* JAPrintf.h */,
+				1A164C4F14894BA20079962D /* JAPrintf.m */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -198,6 +203,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8DD76F9A0486AA7600D96B5E /* nbtparser.m in Sources */,
+				1A164C5014894BA20079962D /* JAPrintf.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

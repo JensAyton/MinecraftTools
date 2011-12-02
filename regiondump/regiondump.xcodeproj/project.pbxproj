@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A164C0514894A810079962D /* JAPrintf.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A164C0414894A810079962D /* JAPrintf.m */; };
 		1A9FB22A1281F913003DD1C3 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A9FB2291281F913003DD1C3 /* libz.dylib */; };
 		1AF54062145C3AA40049CCEB /* libminecraftkit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AF54061145C3A870049CCEB /* libminecraftkit.a */; };
 		1AF7035F14706C8A0096EDF1 /* regiondump.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF7035E14706C8A0096EDF1 /* regiondump.m */; };
@@ -51,6 +52,8 @@
 
 /* Begin PBXFileReference section */
 		08FB779EFE84155DC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		1A164C0314894A810079962D /* JAPrintf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JAPrintf.h; path = ../Shared/JAPrintf.h; sourceTree = "<group>"; };
+		1A164C0414894A810079962D /* JAPrintf.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JAPrintf.m; path = ../Shared/JAPrintf.m; sourceTree = "<group>"; };
 		1A9FB2291281F913003DD1C3 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		1AE8E952145A0736000ED823 /* shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = shared.xcconfig; path = /Users/jayton/Programming/Projects/MinecraftTools/MinecraftKit/nbtparser/../shared.xcconfig; sourceTree = "<absolute>"; };
 		1AF54059145C3A860049CCEB /* MinecraftKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MinecraftKit.xcodeproj; path = ../MinecraftKit/MinecraftKit.xcodeproj; sourceTree = "<group>"; };
@@ -89,9 +92,11 @@
 			isa = PBXGroup;
 			children = (
 				1AF7035E14706C8A0096EDF1 /* regiondump.m */,
+				1A164C0314894A810079962D /* JAPrintf.h */,
+				1A164C0414894A810079962D /* JAPrintf.m */,
 			);
-			path = Source;
-			sourceTree = "<group>";
+			name = Source;
+			sourceTree = SOURCE_ROOT;
 		};
 		08FB779DFE84155DC02AAC07 /* External Frameworks and Libraries */ = {
 			isa = PBXGroup;
@@ -196,6 +201,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1AF7035F14706C8A0096EDF1 /* regiondump.m in Sources */,
+				1A164C0514894A810079962D /* JAPrintf.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -215,6 +221,7 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				HEADER_SEARCH_PATHS = ../Shared;
 				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_NAME = regiondump;
 				RUN_CLANG_STATIC_ANALYZER = YES;
@@ -231,6 +238,7 @@
 					NS_BLOCK_ASSERTIONS,
 					NDEBUG,
 				);
+				HEADER_SEARCH_PATHS = ../Shared;
 				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_NAME = regiondump;
 				RUN_CLANG_STATIC_ANALYZER = YES;
