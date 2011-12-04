@@ -150,11 +150,11 @@ static void AnalyzeChunk(JAMinecraftBlockStore *chunk, NSDictionary *metaData, J
 	JATerrainTypeHistorgram *topmostCounts = regionStatistics.topmostCounts;
 	
 	MCGridCoordinates coords;
-	for (coords.y = 0; coords.y < 128; coords.y++)
+	for (coords.x = 0; coords.x < 16; coords.x++)
 	{
-		for (coords.x = 0; coords.x < 16; coords.x++)
+		for (coords.z = 0; coords.z < 16; coords.z++)
 		{
-			for (coords.z = 0; coords.z < 16; coords.z++)
+			for (coords.y = 0; coords.y < 128; coords.y++)
 			{
 				MCCell cell = [chunk cellAt:coords gettingTileEntity:NULL];
 				[countsByLayer incrementValueForBlockType:cell.blockID onLayer:coords.y];
