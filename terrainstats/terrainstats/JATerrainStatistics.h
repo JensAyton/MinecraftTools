@@ -31,6 +31,20 @@
 @end
 
 
+@interface JAObjectHistogram: NSObject
+
+- (NSUInteger) valueForObject:(id <NSCopying>)object;
+- (void) setValue:(NSUInteger)value forObject:(id <NSCopying>)object;
+- (void) addValue:(NSUInteger)delta forObject:(id <NSCopying>)object;
+- (void) incrementValueForObject:(id <NSCopying>)object;
+
+- (NSArray *) knownObjects;
+
+- (void) addValuesFromHistogram:(JAObjectHistogram *)other;
+
+@end
+
+
 @interface JATerrainStatistics: NSObject
 
 @property (readonly, strong, nonatomic) JATerrainTypeByLayerHistorgram *countsByLayer;			// Sum of blocks per layer
@@ -39,6 +53,8 @@
 @property (readonly, strong, nonatomic) JATerrainTypeHistorgram *nonadjacentToAirBelow60Counts;		// Blocks not adjacent to air below level sixty, not counting blocks on chunk borders
 @property (readonly, strong, nonatomic) JATerrainTypeHistorgram *topmostCounts;				// Counts for highest block that’s not air
 @property (readonly, strong, nonatomic) JATerrainTypeHistorgram *topmostTerrainCounts;		// Counts for highest block that’s opaque or liquid
+@property (readonly, strong, nonatomic) JAObjectHistogram *spawnerMobs;
+@property (readonly, strong, nonatomic) JAObjectHistogram *chestContents;
 
 @property (readonly) NSUInteger chunkCount;
 @property (readonly) NSUInteger rejectedChunkCount;

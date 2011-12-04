@@ -9,6 +9,8 @@
 @synthesize nonadjacentToAirBelow60Counts = _nonadjacentToAirBelow60Counts;
 @synthesize topmostCounts = _topmostCounts;
 @synthesize topmostTerrainCounts = _topmostTerrainCounts;
+@synthesize spawnerMobs = _spawnerMobs;
+@synthesize chestContents = _chestContents;
 @synthesize chunkCount = _chunkCount;
 @synthesize rejectedChunkCount = _rejectedChunkCount;
 @synthesize regionCount = _regionCount;
@@ -24,6 +26,8 @@
 		_nonadjacentToAirBelow60Counts = [JATerrainTypeHistorgram new];
 		_topmostCounts = [JATerrainTypeHistorgram new];
 		_topmostTerrainCounts = [JATerrainTypeHistorgram new];
+		_spawnerMobs = [JAObjectHistogram new];
+		_chestContents = [JAObjectHistogram new];
 	}
 	
 	return self;
@@ -56,6 +60,8 @@
 	[self.nonadjacentToAirBelow60Counts addValuesFromHistogram:other.nonadjacentToAirBelow60Counts];
 	[self.topmostCounts addValuesFromHistogram:other.topmostCounts];
 	[self.topmostTerrainCounts addValuesFromHistogram:other.topmostTerrainCounts];
+	[self.spawnerMobs addValuesFromHistogram:other.spawnerMobs];
+	[self.chestContents addValuesFromHistogram:other.chestContents];
 	_chunkCount += other.chunkCount;
 	_rejectedChunkCount += other.rejectedChunkCount;
 	_regionCount += other.regionCount;
@@ -140,3 +146,60 @@
 }
 
 @end
+
+
+@implementation JAObjectHistogram
+{
+	NSMutableDictionary			*_data;
+}
+
+- (id) init
+{
+	if ((self = [super init]))
+	{
+		_data = [NSMutableDictionary new];
+	}
+	return self;
+}
+
+
+- (NSUInteger) valueForObject:(id <NSCopying>)object
+{
+	return [[_data objectForKey:object] unsignedIntegerValue];
+}
+
+
+- (void) setValue:(NSUInteger)value forObject:(id <NSCopying>)object
+{
+	[_data setObject:[NSNumber numberWithUnsignedInteger:value] forKey:object];
+}
+
+
+- (void) addValue:(NSUInteger)delta forObject:(id <NSCopying>)object
+{
+	[self setValue:[self valueForObject:object] + delta forObject:object];
+}
+
+
+- (void) incrementValueForObject:(id <NSCopying>)object
+{
+	[self addValue:1 forObject:object];
+}
+
+
+- (NSArray *) knownObjects
+{
+	return _data.allKeys;
+}
+
+
+- (void) addValuesFromHistogram:(JAObjectHistogram *)other
+{
+	for (id object in other.knownObjects)
+	{
+		[self setValue:[self valueForObject:object] + [other valueForObject:object] forObject:object];
+	}
+}
+
+@end
+

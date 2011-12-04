@@ -18,9 +18,14 @@ static void AnalyzeRegionsInDirectory(NSString *directory);
 static JATerrainStatistics *AnalyzeRegion(NSURL *path);
 static void AnalyzeChunk(JAMinecraftBlockStore *schematic, NSDictionary *metaData, JATerrainStatistics *regionStatistics);
 
+static void AnalyzeSpawner(JAMinecraftBlockStore *schematic, MCGridCoordinates coords, JAObjectHistogram *spawnerMobs);
+static void AnalyzeChest(JAMinecraftBlockStore *schematic, MCGridCoordinates coords, JAObjectHistogram *chestContents);
+
 static void Finish(JATerrainStatistics *statistics);
 
 static NSString *BlockName(uint8_t blockType);
+static NSString *BlockOrItemName(NSUInteger itemID);
+
 static bool HasAdjacentBlock(JAMinecraftBlockStore *schematic, MCGridCoordinates coords, uint8_t targetType);
 
 
@@ -172,6 +177,8 @@ static void AnalyzeChunk(JAMinecraftBlockStore *chunk, NSDictionary *metaData, J
 	JATerrainTypeHistorgram *adjacentToAirBelow60Counts = regionStatistics.adjacentToAirBelow60Counts;
 	JATerrainTypeHistorgram *nonadjacentToAirBelow60Counts = regionStatistics.nonadjacentToAirBelow60Counts;
 	JATerrainTypeHistorgram *topmostCounts = regionStatistics.topmostCounts;
+	JAObjectHistogram *spawnerMobs = regionStatistics.spawnerMobs;
+	JAObjectHistogram *chestContents = regionStatistics.chestContents;
 	
 	MCGridCoordinates coords;
 	for (coords.x = 0; coords.x < 16; coords.x++)
@@ -203,6 +210,20 @@ static void AnalyzeChunk(JAMinecraftBlockStore *chunk, NSDictionary *metaData, J
 						[nonadjacentToAirBelow60Counts incrementValueForBlockType:cell.blockID];
 					}
 				}
+				
+				/*
+					Gather additional statistics for specific object types.
+				*/
+				switch (cell.blockID)
+				{
+					case kMCBlockMobSpawner:
+						AnalyzeSpawner(chunk, coords, spawnerMobs);
+						break;
+						
+					case kMCBlockChest:
+						AnalyzeChest(chunk, coords, chestContents);
+						break;
+				}
 			}
 		}
 	}
@@ -228,6 +249,32 @@ static void AnalyzeChunk(JAMinecraftBlockStore *chunk, NSDictionary *metaData, J
 }
 
 
+static void AnalyzeSpawner(JAMinecraftBlockStore *schematic, MCGridCoordinates coords, JAObjectHistogram *spawnerMobs)
+{
+	NSDictionary *tileEntity;
+	(void)[schematic cellAt:coords gettingTileEntity:&tileEntity];
+	
+	NSString *mobID = [tileEntity ja_stringForKey:@"EntityId"];
+	if (mobID != nil)  [spawnerMobs incrementValueForObject:mobID];
+}
+
+
+static void AnalyzeChest(JAMinecraftBlockStore *schematic, MCGridCoordinates coords, JAObjectHistogram *chestContents)
+{
+	NSDictionary *tileEntity;
+	(void)[schematic cellAt:coords gettingTileEntity:&tileEntity];
+	
+	NSArray *items = [tileEntity ja_arrayForKey:@"Items"];
+	
+	for (NSDictionary *item in items)
+	{
+		NSNumber *ID = [item objectForKey:@"id"];
+		NSUInteger count = [item ja_unsignedIntegerForKey:@"Count"];
+		[chestContents addValue:count forObject:ID];
+	}
+}
+
+
 static void Finish(JATerrainStatistics *statistics)
 {
 	Print(@"Done; processed %lu chunks and rejected %lu chunks in %lu regions.\n", statistics.chunkCount, statistics.rejectedChunkCount, statistics.regionCount);
@@ -237,6 +284,8 @@ static void Finish(JATerrainStatistics *statistics)
 	JATerrainTypeHistorgram *adjacentToAirBelow60Counts = statistics.adjacentToAirBelow60Counts;
 	JATerrainTypeHistorgram *nonadjacentToAirBelow60Counts = statistics.nonadjacentToAirBelow60Counts;
 	JATerrainTypeHistorgram *topmostCounts = statistics.topmostCounts;
+	JAObjectHistogram *spawnerMobs = statistics.spawnerMobs;
+	JAObjectHistogram *chestContents = statistics.chestContents;
 	
 	NSUInteger highestType = 0;
 	
@@ -296,6 +345,22 @@ static void Finish(JATerrainStatistics *statistics)
 	}
 	fclose(file);
 	
+	// Write spawner mob counts.
+	file = fopen("spawner_mob_types.csv", "w");
+	for (NSString *key in spawnerMobs.knownObjects)
+	{
+		FPrint(file, @"%@,%lu\n", key, [spawnerMobs valueForObject:key]);
+	}
+	fclose(file);
+	
+	// Write chest item counts.
+	file = fopen("chest_item_types.csv", "w");
+	for (NSString *key in chestContents.knownObjects)
+	{
+		FPrint(file, @"%@,%@,%lu\n", key, BlockOrItemName([key integerValue]), [chestContents valueForObject:key]);
+	}
+	fclose(file);
+	
 	// Write summary.
 	file = fopen("summary.txt", "w");
 	NSNumberFormatter *formatter = [NSNumberFormatter new];
@@ -308,6 +373,177 @@ static void Finish(JATerrainStatistics *statistics)
 	FPrint(file, @"Rejected chunks (TerrainPopulated flag not set): %@\n", [formatter stringFromNumber:[NSNumber numberWithUnsignedInteger:statistics.rejectedChunkCount]]);
 	FPrint(file, @"Blocks counted: %@\n", [formatter stringFromNumber:[NSNumber numberWithUnsignedInteger:statistics.chunkCount * 16 * 16 * 128]]);
 	fclose(file);
+}
+
+
+static NSString *BlockOrItemName(NSUInteger itemID)
+{
+	if (itemID < 256)  return BlockName(itemID);
+	
+	/*
+		Most items use sequential IDs starting from 256.
+	*/
+	static NSString *const names[] =
+	{
+		@"Iron Shovel",
+		@"Iron Pickaxe",
+		@"Iron Axe",
+		@"Flint and Steel",
+		@"Red Apple",
+		@"Bow",
+		@"Arrow",
+		@"Coal",
+		@"Diamond",
+		@"Iron Ingot ",
+		@"Gold Ingot",
+		@"Iron Sword",
+		@"Wooden Sword",
+		@"Wooden Shovel",
+		@"Wooden Pickaxe",
+		@"Wooden Axe",
+		@"Stone Sword",
+		@"Stone Shovel",
+		@"Stone Pickaxe",
+		@"Stone Axe",
+		@"Diamond Sword",
+		@"Diamond Shovel",
+		@"Diamond Pickaxe",
+		@"Diamond Axe",
+		@"Stick",
+		@"Bowl",
+		@"Mushroom Soup",
+		@"Gold Sword",
+		@"Gold Shovel",
+		@"Gold Pickaxe",
+		@"Gold Axe",
+		@"String",
+		@"Feather",
+		@"Gunpowder",
+		@"Wooden Hoe",
+		@"Stone Hoe",
+		@"Iron Hoe",
+		@"Diamond Hoe",
+		@"Gold Hoe",
+		@"Seeds",
+		@"Wheat",
+		@"Bread",
+		@"Cap",
+		@"Leather Tunic",
+		@"Leather Pants",
+		@"Leather Boots",
+		@"Chain Helmet",
+		@"Chain Chestplate",
+		@"Chain Leggings",
+		@"Chain Boots",
+		@"Iron Helmet",
+		@"Iron Chestplate",
+		@"Iron Leggings",
+		@"Iron Boots",
+		@"Diamond Helmet",
+		@"Diamond Chestplate",
+		@"Diamond Leggings",
+		@"Diamond Boots",
+		@"Gold Helmet",
+		@"Gold Chestplate",
+		@"Gold Leggings",
+		@"Gold Boots",
+		@"Flint",
+		@"Raw Porkchop",
+		@"Cooked Porkchop",
+		@"Paintings",
+		@"Golden Apple",
+		@"Sign",
+		@"Wooden door",
+		@"Bucket",
+		@"Water bucket",
+		@"Lava bucket",
+		@"Minecart",
+		@"Saddle",
+		@"Iron door",
+		@"Redstone",
+		@"Snowball",
+		@"Boat",
+		@"Leather",
+		@"Milk",
+		@"Clay Brick",
+		@"Clay",
+		@"Sugar Cane",
+		@"Paper",
+		@"Book",
+		@"Slimeball",
+		@"Minecart with Chest",
+		@"Minecart with Furnace",
+		@"Egg",
+		@"Compass",
+		@"Fishing Rod",
+		@"Clock",
+		@"Glowstone Dust",
+		@"Raw Fish",
+		@"Cooked Fish",
+		@"Dye",
+		@"Bone",
+		@"Sugar",
+		@"Cake",
+		@"Bed",
+		@"Redstone Repeater",
+		@"Cookie",
+		@"Map",
+		@"Shears",
+		@"Melon (Slice)",
+		@"Pumpkin Seeds",
+		@"Melon Seeds",
+		@"Raw Beef",
+		@"Steak",
+		@"Raw Chicken",
+		@"Cooked Chicken",
+		@"Rotten Flesh",
+		@"Ender Pearl",
+		@"Blaze Rod",
+		@"Ghast Tear",
+		@"Gold Nugget",
+		@"Nether Wart",
+		@"Potion",
+		@"Glass Bottle",
+		@"Spider Eye",
+		@"Fermented Spider Eye",
+		@"Blaze Powder",
+		@"Magma Cream",
+		@"Brewing Stand",
+		@"Cauldron",
+		@"Eye of Ender",
+		@"Glistering Melon"
+	};
+	const unsigned count = sizeof names / sizeof names[0];
+	
+	if (itemID - 256 < count)  return names[itemID - 256];
+	
+	/*
+		A few – currently, music discs – use out-of-sequence numbers. These
+		form a single sequence now, but I went for the flexible approach.
+	*/
+	static NSDictionary *outOfSequence = nil;
+	if (outOfSequence == nil)
+	{
+		outOfSequence = $dict
+		(
+			$int(2256), @"13 Disc",
+			$int(2257), @"Cat Disc",
+			$int(2258), @"blocks Disc",
+			$int(2259), @"chirp Disc",
+			$int(2260), @"far Disc",
+			$int(2261), @"mall Disc",
+			$int(2262), @"mellohi Disc",
+			$int(2263), @"stal Disc",
+			$int(2264), @"strad Disc",
+			$int(2265), @"ward Disc",
+			$int(2266), @"11 Disc"
+		);
+	}
+	
+	NSString *result = [outOfSequence objectForKey:[NSNumber numberWithInteger:itemID]];
+	if (result != nil)  return result;
+	
+	return $sprintf(@"unknown-%u", itemID);
 }
 
 
