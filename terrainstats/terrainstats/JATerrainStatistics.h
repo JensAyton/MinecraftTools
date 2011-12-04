@@ -33,10 +33,10 @@
 
 @interface JATerrainStatistics: NSObject
 
-@property (readonly, strong, nonatomic) JATerrainTypeByLayerHistorgram *countsByLayer;	// Sum of blocks per layer
-@property (readonly, strong, nonatomic) JATerrainTypeHistorgram *totalCounts;				// Sum of blocks on all layers
-@property (readonly, strong, nonatomic) JATerrainTypeHistorgram *adjacentToAirCounts;		// Counts for blocks whose six face neighbours include air
-@property (readonly, strong, nonatomic) JATerrainTypeHistorgram *adjacentToLavaCounts;		// Counts for blocks whose six face neighbours include lava
+@property (readonly, strong, nonatomic) JATerrainTypeByLayerHistorgram *countsByLayer;			// Sum of blocks per layer
+@property (readonly, strong, nonatomic) JATerrainTypeHistorgram *totalCounts;					// Sum of blocks on all layers
+@property (readonly, strong, nonatomic) JATerrainTypeHistorgram *adjacentToAirBelow60Counts;	// Blocks adjacent to air below level sixty, not counting blocks on chunk borders
+@property (readonly, strong, nonatomic) JATerrainTypeHistorgram *nonadjacentToAirBelow60Counts;		// Blocks not adjacent to air below level sixty, not counting blocks on chunk borders
 @property (readonly, strong, nonatomic) JATerrainTypeHistorgram *topmostCounts;				// Counts for highest block that’s not air
 @property (readonly, strong, nonatomic) JATerrainTypeHistorgram *topmostTerrainCounts;		// Counts for highest block that’s opaque or liquid
 

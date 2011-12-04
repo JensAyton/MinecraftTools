@@ -5,8 +5,8 @@
 
 @synthesize countsByLayer = _countsByLayer;
 @synthesize totalCounts = _totalCounts;
-@synthesize adjacentToAirCounts = _adjacentToAirCounts;
-@synthesize adjacentToLavaCounts = _adjacentToLavaCounts;
+@synthesize adjacentToAirBelow60Counts = _adjacentToAirBelow60Counts;
+@synthesize nonadjacentToAirBelow60Counts = _nonadjacentToAirBelow60Counts;
 @synthesize topmostCounts = _topmostCounts;
 @synthesize topmostTerrainCounts = _topmostTerrainCounts;
 @synthesize chunkCount = _chunkCount;
@@ -20,8 +20,8 @@
 	{
 		_countsByLayer = [JATerrainTypeByLayerHistorgram new];
 		_totalCounts = [JATerrainTypeHistorgram new];
-		_adjacentToAirCounts = [JATerrainTypeHistorgram new];
-		_adjacentToLavaCounts = [JATerrainTypeHistorgram new];
+		_adjacentToAirBelow60Counts = [JATerrainTypeHistorgram new];
+		_nonadjacentToAirBelow60Counts = [JATerrainTypeHistorgram new];
 		_topmostCounts = [JATerrainTypeHistorgram new];
 		_topmostTerrainCounts = [JATerrainTypeHistorgram new];
 	}
@@ -52,8 +52,8 @@
 {
 	[self.countsByLayer addValuesFromHistogram:other.countsByLayer];
 	[self.totalCounts addValuesFromHistogram:other.totalCounts];
-	[self.adjacentToAirCounts addValuesFromHistogram:other.adjacentToAirCounts];
-	[self.adjacentToLavaCounts addValuesFromHistogram:other.adjacentToLavaCounts];
+	[self.adjacentToAirBelow60Counts addValuesFromHistogram:other.adjacentToAirBelow60Counts];
+	[self.nonadjacentToAirBelow60Counts addValuesFromHistogram:other.nonadjacentToAirBelow60Counts];
 	[self.topmostCounts addValuesFromHistogram:other.topmostCounts];
 	[self.topmostTerrainCounts addValuesFromHistogram:other.topmostTerrainCounts];
 	_chunkCount += other.chunkCount;

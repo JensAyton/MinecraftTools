@@ -150,8 +150,8 @@ static void AnalyzeChunk(JAMinecraftBlockStore *chunk, NSDictionary *metaData, J
 {
 	JATerrainTypeByLayerHistorgram *countsByLayer = regionStatistics.countsByLayer;
 	JATerrainTypeHistorgram *totalCounts = regionStatistics.totalCounts;
-	JATerrainTypeHistorgram *adjacentToAirCounts = regionStatistics.adjacentToAirCounts;
-	JATerrainTypeHistorgram *adjacentToLavaCounts = regionStatistics.adjacentToLavaCounts;
+	JATerrainTypeHistorgram *adjacentToAirBelow60Counts = regionStatistics.adjacentToAirBelow60Counts;
+	JATerrainTypeHistorgram *nonadjacentToAirBelow60Counts = regionStatistics.nonadjacentToAirBelow60Counts;
 	JATerrainTypeHistorgram *topmostCounts = regionStatistics.topmostCounts;
 	
 	MCGridCoordinates coords;
@@ -165,13 +165,24 @@ static void AnalyzeChunk(JAMinecraftBlockStore *chunk, NSDictionary *metaData, J
 				[countsByLayer incrementValueForBlockType:cell.blockID onLayer:coords.y];
 				[totalCounts incrementValueForBlockType:cell.blockID];
 				
-				if (HasAdjacentBlock(chunk, coords, kMCBlockAir))
+				/*
+					For blocks below level 60, separately count exposed-to-air
+					and enclosed blocks. Blocks on chunk borders are ignored
+					since we’d need to look at adjacent chunks to get good
+					data for those.
+				*/
+				if (coords.y < 60 &&
+					0 < coords.x && coords.x < 15 &&
+					0 < coords.z && coords.z < 15)
 				{
-					[adjacentToAirCounts incrementValueForBlockType:cell.blockID];
-				}
-				if (HasAdjacentBlock(chunk, coords, kMCBlockLava))
-				{
-					[adjacentToLavaCounts incrementValueForBlockType:cell.blockID];
+					if (HasAdjacentBlock(chunk, coords, kMCBlockAir))
+					{
+						[adjacentToAirBelow60Counts incrementValueForBlockType:cell.blockID];
+					}
+					else
+					{
+						[nonadjacentToAirBelow60Counts incrementValueForBlockType:cell.blockID];
+					}
 				}
 			}
 		}
@@ -204,8 +215,8 @@ static void Finish(JATerrainStatistics *statistics, NSString *directory)
 	
 	JATerrainTypeByLayerHistorgram *countsByLayer = statistics.countsByLayer;
 	JATerrainTypeHistorgram *totalCounts = statistics.totalCounts;
-	JATerrainTypeHistorgram *adjacentToAirCounts = statistics.adjacentToAirCounts;
-	JATerrainTypeHistorgram *adjacentToLavaCounts = statistics.adjacentToLavaCounts;
+	JATerrainTypeHistorgram *adjacentToAirBelow60Counts = statistics.adjacentToAirBelow60Counts;
+	JATerrainTypeHistorgram *nonadjacentToAirBelow60Counts = statistics.nonadjacentToAirBelow60Counts;
 	JATerrainTypeHistorgram *topmostCounts = statistics.topmostCounts;
 	
 	NSUInteger highestType = 0;
@@ -220,20 +231,20 @@ static void Finish(JATerrainStatistics *statistics, NSString *directory)
 	}
 	fclose(file);
 	
-	// Write adjacent-to-air counts.
-	file = fopen("adjacent_to_air_counts.csv", "w");
+	// Write below-60-adjacent-to-air counts.
+	file = fopen("below_60_adjacent_to_air.csv", "w");
 	for (NSUInteger type = 0; type < 256; type++)
 	{
-		NSUInteger count = [adjacentToAirCounts valueForBlockType:type];
+		NSUInteger count = [adjacentToAirBelow60Counts valueForBlockType:type];
 		FPrint(file, @"%u,%@,%u\n", type, BlockName(type), count);
 	}
 	fclose(file);
 	
-	// Write adjacent-to-lava counts.
-	file = fopen("adjacent_to_lava_counts.csv", "w");
+	// Write below-60-nonadjacent-to-air counts.
+	file = fopen("below_60_not_adjacent_to_air.csv", "w");
 	for (NSUInteger type = 0; type < 256; type++)
 	{
-		NSUInteger count = [adjacentToLavaCounts valueForBlockType:type];
+		NSUInteger count = [nonadjacentToAirBelow60Counts valueForBlockType:type];
 		FPrint(file, @"%u,%@,%u\n", type, BlockName(type), count);
 	}
 	fclose(file);
@@ -429,7 +440,7 @@ static bool HasAdjacentBlock(JAMinecraftBlockStore *schematic, MCGridCoordinates
 	if ([schematic cellAt:MCCoordinatesEastOf(coords) gettingTileEntity:NULL].blockID == targetType)  return true;
 	if ([schematic cellAt:MCCoordinatesWestOf(coords) gettingTileEntity:NULL].blockID == targetType)  return true;
 	if ([schematic cellAt:MCCoordinatesAbove(coords) gettingTileEntity:NULL].blockID == targetType)  return true;
-	if ([schematic cellAt:MCCoordinatesBelow(coords) gettingTileEntity:NULL].blockID == targetType)  return true;
+	if (coords.y > 0 && [schematic cellAt:MCCoordinatesBelow(coords) gettingTileEntity:NULL].blockID == targetType)  return true;
 	
 	return NO;
 }
