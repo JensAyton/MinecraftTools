@@ -62,16 +62,16 @@ static const MCGridExtents kChunkExtents =
 };
 
 
-static id KeyForCoords(NSInteger x, NSInteger y, NSInteger z)
+static __attribute__((pure)) off_t IndexFromCoords(NSInteger x, NSInteger y, NSInteger z)
 {
-	MCGridCoordinates value = { x, y, z };
-	return [NSValue valueWithBytes:&value objCType:@encode(typeof(value))];
+	return y + kHeight * (z + kLength * x);
 }
 
 
-static off_t IndexFromCoords(NSInteger x, NSInteger y, NSInteger z)
+static id KeyForCoords(NSInteger x, NSInteger y, NSInteger z)
 {
-	return y + kHeight * (z + kLength * x);
+	int idx = IndexFromCoords(x, y, z);
+	return (__bridge_transfer NSNumber *)CFNumberCreate(kCFAllocatorDefault, kCFNumberIntType, &idx);
 }
 
 
