@@ -375,8 +375,7 @@ static inline NSUInteger RepresentedDistance(levels)
 		if (tileEntity != nil)
 		{
 			if (_tileEntities == nil)  _tileEntities = [NSMutableDictionary new];
-			NSDictionary *cleaned = [tileEntity ja_dictionaryByRemovingObjectsForKeys:$set(@"x", @"y", @"z")];
-			[_tileEntities setObject:cleaned forKey:key];
+			[_tileEntities setObject:tileEntity forKey:key];
 		}
 		
 		if (changeAffectsExtents && changed)

@@ -236,8 +236,11 @@ static id KeyForCoords(NSInteger x, NSInteger y, NSInteger z)
 	{
 		if (tileEntity != nil)
 		{
-			NSDictionary *cleaned = [tileEntity ja_dictionaryByRemovingObjectsForKeys:$set(@"x", @"y", @"z")];
-			[_tileEntities setObject:cleaned forKey:KeyForCoords(location.x, location.y, location.z)];
+			[_tileEntities setObject:tileEntity forKey:KeyForCoords(location.x, location.y, location.z)];
+		}
+		else
+		{
+			[_tileEntities removeObjectForKey:KeyForCoords(location.x, location.y, location.z)];
 		}
 		_cells[IndexFromCoords(location.x, location.y, location.z)] = cell;
 		[self noteChangeInLocation:location];
