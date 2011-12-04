@@ -172,12 +172,15 @@ static id KeyForCoords(NSInteger x, NSInteger y, NSInteger z)
 	// Load tile entities.
 	NSArray *serializedEntities = [dict objectForKey:kTileEntitiesKey];
 	
+	NSInteger baseX = [dict ja_integerForKey:@"xPos"] * 16;
+	NSInteger baseZ = [dict ja_integerForKey:@"zPos"] * 16;
+	
 	NSSet *coordKeys = $set(@"x", @"y", @"z");
 	[serializedEntities enumerateObjectsUsingBlock:^(id entityDef, NSUInteger idx, BOOL *stop)
 	{
-		NSUInteger x = [entityDef ja_integerForKey:@"x"];
-		NSUInteger y = [entityDef ja_integerForKey:@"y"];
-		NSUInteger z = [entityDef ja_integerForKey:@"z"];
+		NSInteger x = [entityDef ja_integerForKey:@"x"] - baseX;
+		NSInteger y = [entityDef ja_integerForKey:@"y"];
+		NSInteger z = [entityDef ja_integerForKey:@"z"] - baseZ;
 		entityDef = [entityDef ja_dictionaryByRemovingObjectsForKeys:coordKeys];
 		
 		[_tileEntities setObject:entityDef forKey:KeyForCoords(x, y, z)];
