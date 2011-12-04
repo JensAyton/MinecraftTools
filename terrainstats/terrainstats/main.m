@@ -18,10 +18,18 @@ static void AnalyzeRegionsInDirectory(NSString *directory);
 static JATerrainStatistics *AnalyzeRegion(NSURL *path);
 static void AnalyzeChunk(JAMinecraftBlockStore *schematic, NSDictionary *metaData, JATerrainStatistics *regionStatistics);
 
-static void Finish(JATerrainStatistics *statistics, NSString *directory) __attribute__((noreturn));
+static void Finish(JATerrainStatistics *statistics);
 
 static NSString *BlockName(uint8_t blockType);
 static bool HasAdjacentBlock(JAMinecraftBlockStore *schematic, MCGridCoordinates coords, uint8_t targetType);
+
+
+static dispatch_queue_t sReduceQueue;
+static dispatch_group_t sCompletionGroup;
+static JATerrainStatistics *sTotalStatistics;
+
+static NSUInteger sTotalRegions, sCompletedRegions;
+static bool sAllQueued;
 
 
 int main (int argc, const char * argv[])
@@ -33,14 +41,28 @@ int main (int argc, const char * argv[])
 			PrintHelpAndExit();
 		}
 		
-		NSString *inputPath = RealPathFromCString(argv[1]);
-		if (inputPath == nil)
+		
+		sReduceQueue = dispatch_queue_create("se.ayton.jens.statistics-reduce", DISPATCH_QUEUE_SERIAL);
+		sCompletionGroup = dispatch_group_create();
+		sTotalStatistics = [JATerrainStatistics new];
+		
+		for (int i = 1; i < argc; i++)
 		{
-			EPrint(@"Failed to resolve input path \"%s\".\n", argv[1]);
-			return EXIT_FAILURE;
+			NSString *inputPath = RealPathFromCString(argv[i]);
+			if (inputPath == nil)
+			{
+				EPrint(@"Failed to resolve input path \"%s\".\n", argv[i]);
+				return EXIT_FAILURE;
+			}
+			
+			AnalyzeRegionsInDirectory(inputPath);
 		}
 		
-		AnalyzeRegionsInDirectory(inputPath);
+		Print(@"%lu regions queued.\n", sTotalRegions);
+		sAllQueued = true;
+		
+		dispatch_group_wait(sCompletionGroup, DISPATCH_TIME_FOREVER);
+		Finish(sTotalStatistics);
 	}
 	return EXIT_SUCCESS;
 }
@@ -49,7 +71,6 @@ int main (int argc, const char * argv[])
 static void AnalyzeRegionsInDirectory(NSString *directory)
 {
 	dispatch_queue_t workQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-	dispatch_queue_t reduceQueue = dispatch_queue_create("se.ayton.jens.statistics-reduce", DISPATCH_QUEUE_SERIAL);
 	
 	NSDirectoryEnumerator *dirEnum = [[NSFileManager defaultManager] enumeratorAtURL:[NSURL fileURLWithPath:directory]
 														  includingPropertiesForKeys:[NSArray array]
@@ -61,9 +82,10 @@ static void AnalyzeRegionsInDirectory(NSString *directory)
 	
 	if (dirEnum == nil)  Fatal(@"%@ is not a directory.", directory);
 	
-	JATerrainStatistics *totalStatistics = [JATerrainStatistics new];
-	__block int32_t count = 0;
-	dispatch_group_t completionGroup = dispatch_group_create();
+	
+	NSString *name = directory.lastPathComponent;
+	if ([name isEqualToString:@"region"])  name = directory.stringByDeletingLastPathComponent.lastPathComponent;
+	Print(@"Queueing regions in %@.\n", name);
 	
 	for (NSURL *url in dirEnum)
 	{
@@ -72,16 +94,21 @@ static void AnalyzeRegionsInDirectory(NSString *directory)
 			continue;
 		}
 		
-		count++;
+		sTotalRegions++;
 		
-		dispatch_group_async(completionGroup, workQueue, ^
+		dispatch_group_async(sCompletionGroup, workQueue, ^
 		{
 			JATerrainStatistics *regionStatistics = AnalyzeRegion(url);
 			
-			dispatch_group_async(completionGroup, reduceQueue, ^
+			dispatch_group_async(sCompletionGroup, sReduceQueue, ^
 			{
-				[totalStatistics addValuesFromStatistics:regionStatistics];
-				Print(@"%u regions remaining\n", --count);
+				[sTotalStatistics addValuesFromStatistics:regionStatistics];
+				
+				sCompletedRegions++;
+				if (sAllQueued)
+				{
+					Print(@"%u regions remaining.\n", sTotalRegions - sCompletedRegions);
+				}
 			});
 		});
 		
@@ -89,9 +116,6 @@ static void AnalyzeRegionsInDirectory(NSString *directory)
 		break;
 #endif
 	}
-	
-	dispatch_group_wait(completionGroup, DISPATCH_TIME_FOREVER);
-	Finish(totalStatistics, directory);
 }
 
 
@@ -204,7 +228,7 @@ static void AnalyzeChunk(JAMinecraftBlockStore *chunk, NSDictionary *metaData, J
 }
 
 
-static void Finish(JATerrainStatistics *statistics, NSString *directory)
+static void Finish(JATerrainStatistics *statistics)
 {
 	Print(@"Done; processed %lu chunks and rejected %lu chunks in %lu regions.\n", statistics.chunkCount, statistics.rejectedChunkCount, statistics.regionCount);
 	
@@ -277,19 +301,13 @@ static void Finish(JATerrainStatistics *statistics, NSString *directory)
 	NSNumberFormatter *formatter = [NSNumberFormatter new];
 	formatter.numberStyle = kCFNumberFormatterDecimalStyle;
 	
-	NSString *name = directory.lastPathComponent;
-	if ([name isEqualToString:@"region"])  name = directory.stringByDeletingLastPathComponent.lastPathComponent;
-	
 	FPrint(file, @"Summary\n=======\n");
-	FPrint(file, @"Name: %@\n", name);
 	FPrint(file, @"Date: %@\n", [NSDate date]);
 	FPrint(file, @"Regions: %@\n", [formatter stringFromNumber:[NSNumber numberWithUnsignedInteger:statistics.regionCount]]);
 	FPrint(file, @"Chunks: %@\n", [formatter stringFromNumber:[NSNumber numberWithUnsignedInteger:statistics.chunkCount]]);
 	FPrint(file, @"Rejected chunks (TerrainPopulated flag not set): %@\n", [formatter stringFromNumber:[NSNumber numberWithUnsignedInteger:statistics.rejectedChunkCount]]);
 	FPrint(file, @"Blocks counted: %@\n", [formatter stringFromNumber:[NSNumber numberWithUnsignedInteger:statistics.chunkCount * 16 * 16 * 128]]);
 	fclose(file);
-	
-	exit(EXIT_SUCCESS);
 }
 
 
