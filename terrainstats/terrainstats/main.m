@@ -81,12 +81,7 @@ static void AnalyzeRegionsInDirectory(NSString *directory)
 			dispatch_group_async(completionGroup, reduceQueue, ^
 			{
 				[totalStatistics addValuesFromStatistics:regionStatistics];
-				
-				if (--count == 0)
-				{
-					Finish(totalStatistics, directory);
-				}
-				Print(@"%u regions remaining\n", count);
+				Print(@"%u regions remaining\n", --count);
 			});
 		});
 		
