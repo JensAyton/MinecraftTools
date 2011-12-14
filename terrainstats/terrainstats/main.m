@@ -11,6 +11,23 @@
 
 #define ONE_REGION_ONLY		0	// For quick tests, only analyze the first region encountered.
 
+/*
+	Terrainstats is a type of workload GCD doesn’t handle well: each work unit
+	reads a file, which blocks, and then does work on the loaded data which
+	takes longer to complete than loading another file does. This results in
+	potentially hundreds of work threads being created and then reaching the
+	hard-working phase together, causing ridiculous levels of load.
+	
+	To work around this, we use a pool of serial queues. There ought to be a
+	better way, but I can’t find anything relevant in documentation.
+*/
+static NSUInteger sQueueCount, sNextQueue;
+static dispatch_queue_t *sQueues;
+enum
+{
+	kQueuesPerCore = 2
+};
+
 
 static void PrintHelpAndExit(void) __attribute__((noreturn));
 
@@ -47,9 +64,16 @@ int main (int argc, const char * argv[])
 		}
 		
 		
-		sReduceQueue = dispatch_queue_create("se.ayton.jens.statistics-reduce", DISPATCH_QUEUE_SERIAL);
+		sReduceQueue = dispatch_queue_create("se.ayton.jens.terrainstats-reduce", DISPATCH_QUEUE_SERIAL);
 		sCompletionGroup = dispatch_group_create();
 		sTotalStatistics = [JATerrainStatistics new];
+		
+		sQueueCount = kQueuesPerCore * [[NSProcessInfo processInfo] processorCount];
+		sQueues = calloc(sizeof *sQueues, sQueueCount);
+		for (NSUInteger queueIter = 0; queueIter < sQueueCount; queueIter++)
+		{
+			sQueues[queueIter] = dispatch_queue_create("se.ayton.jens.terrainstats-map", DISPATCH_QUEUE_SERIAL);
+		}
 		
 		for (int i = 1; i < argc; i++)
 		{
@@ -75,8 +99,6 @@ int main (int argc, const char * argv[])
 
 static void AnalyzeRegionsInDirectory(NSString *directory)
 {
-	dispatch_queue_t workQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-	
 	NSDirectoryEnumerator *dirEnum = [[NSFileManager defaultManager] enumeratorAtURL:[NSURL fileURLWithPath:directory]
 														  includingPropertiesForKeys:[NSArray array]
 																			 options:NSDirectoryEnumerationSkipsSubdirectoryDescendants
@@ -101,7 +123,7 @@ static void AnalyzeRegionsInDirectory(NSString *directory)
 		
 		sTotalRegions++;
 		
-		dispatch_group_async(sCompletionGroup, workQueue, ^
+		dispatch_group_async(sCompletionGroup, sQueues[sNextQueue], ^
 		{
 			JATerrainStatistics *regionStatistics = AnalyzeRegion(url);
 			
@@ -116,6 +138,8 @@ static void AnalyzeRegionsInDirectory(NSString *directory)
 				}
 			});
 		});
+		
+		sNextQueue = (sNextQueue + 1) % sQueueCount;
 		
 #if ONE_REGION_ONLY
 		break;
