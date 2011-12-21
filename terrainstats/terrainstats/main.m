@@ -1,7 +1,6 @@
 #import <Foundation/Foundation.h>
 #import "JAPrintf.h"
 #import <JAMinecraftKit/JAMinecraftRegionReader.h>
-#import <JAMinecraftKit/JAMinecraftSchematic+ChunkIO.h>
 #import <JAMinecraftKit/JAMinecraftChunkBlockStore.h>
 #import <JAMinecraftKit/JAPropertyListAccessors.h>
 #import <JAMinecraftKit/MYCollectionUtilities.h>
