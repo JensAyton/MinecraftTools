@@ -12,6 +12,10 @@
 		1A164B7C14893F670079962D /* JAMinecraftChunkBlockStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A164B77148938010079962D /* JAMinecraftChunkBlockStore.m */; };
 		1A3AAB6514592FA0006C7043 /* Data.schema in Resources */ = {isa = PBXBuildFile; fileRef = 1A3AAB6414592FA0006C7043 /* Data.schema */; };
 		1A64907114517A7300F57924 /* JANBTSerialization.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A64906F14517A7300F57924 /* JANBTSerialization.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A6C28B314A26A67008A6535 /* BlockDescriptions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1A6C28B114A26A67008A6535 /* BlockDescriptions.plist */; };
+		1A6C28B714A27430008A6535 /* BlockDescriptions.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A6C28B614A27430008A6535 /* BlockDescriptions.c */; };
+		1A6C292314A27686008A6535 /* JABozoStringTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A6C292214A27686008A6535 /* JABozoStringTemplate.h */; };
+		1A6C292414A27686008A6535 /* JABozoStringTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A6C292214A27686008A6535 /* JABozoStringTemplate.h */; };
 		1AB23B3014543B81008C5723 /* JANBTTagType.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB23B2F14543B81008C5723 /* JANBTTagType.m */; };
 		1AB23B5B14544AAB008C5723 /* JANBTStreamEncoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AB23B5914544AAA008C5723 /* JANBTStreamEncoder.h */; };
 		1AB23B5C14544AAB008C5723 /* JANBTStreamEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB23B5A14544AAA008C5723 /* JANBTStreamEncoder.m */; };
@@ -147,6 +151,9 @@
 		1A3AAB6414592FA0006C7043 /* Data.schema */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Data.schema; path = Resources/Data.schema; sourceTree = SOURCE_ROOT; };
 		1A64906F14517A7300F57924 /* JANBTSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTSerialization.h; sourceTree = SOURCE_ROOT; };
 		1A64907014517A7300F57924 /* JANBTSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTSerialization.m; sourceTree = SOURCE_ROOT; };
+		1A6C28B214A26A67008A6535 /* en */ = {isa = PBXFileReference; explicitFileType = text; name = en; path = Resources/en.lproj/BlockDescriptions.plist; sourceTree = SOURCE_ROOT; };
+		1A6C28B614A27430008A6535 /* BlockDescriptions.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = BlockDescriptions.c; path = ../MinecraftKit.build/$CONFIGURATION/libminecraftkit.build/DerivedSources/BlockDescriptions.c; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A6C292214A27686008A6535 /* JABozoStringTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JABozoStringTemplate.h; sourceTree = SOURCE_ROOT; };
 		1AB23B2F14543B81008C5723 /* JANBTTagType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTTagType.m; sourceTree = SOURCE_ROOT; };
 		1AB23B5914544AAA008C5723 /* JANBTStreamEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTStreamEncoder.h; sourceTree = SOURCE_ROOT; };
 		1AB23B5A14544AAA008C5723 /* JANBTStreamEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTStreamEncoder.m; sourceTree = SOURCE_ROOT; };
@@ -325,7 +332,9 @@
 				1AF540A5145C4D290049CCEB /* DataSchema.c */,
 				1AF540A6145C4D290049CCEB /* SchematicSchema.c */,
 				1AE1B0CE1482A4A8006070F2 /* ChunkSchema.c */,
+				1A6C28B614A27430008A6535 /* BlockDescriptions.c */,
 				1AFE345C13F930BF001A33D4 /* MinecraftKit-Info.plist */,
+				1A6C28B114A26A67008A6535 /* BlockDescriptions.plist */,
 				1A3AAB6414592FA0006C7043 /* Data.schema */,
 				1AF8C149144CA38900D86C3D /* Schematic.schema */,
 				1AE1B0A4148292DE006070F2 /* Chunk.schema */,
@@ -387,6 +396,7 @@
 				1AFE34AE13F931F0001A33D4 /* JAPropertyListAccessors */,
 				1AFE34B313F93209001A33D4 /* JAValueToString */,
 				1AF540A2145C488B0049CCEB /* MCKitSchema.h */,
+				1A6C292214A27686008A6535 /* JABozoStringTemplate.h */,
 			);
 			name = Utility;
 			sourceTree = "<group>";
@@ -426,6 +436,7 @@
 			files = (
 				1AF540A4145C488C0049CCEB /* MCKitSchema.h in Headers */,
 				1AF70348147060840096EDF1 /* JAMinecraftRegionReader.h in Headers */,
+				1A6C292414A27686008A6535 /* JABozoStringTemplate.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -459,6 +470,7 @@
 				1AB23B8F14547EF6008C5723 /* JAZLibCompressor.h in Headers */,
 				1AF540A3145C488C0049CCEB /* MCKitSchema.h in Headers */,
 				1AC7953114643DE3008BBFA4 /* JAPointMaths.h in Headers */,
+				1A6C292314A27686008A6535 /* JABozoStringTemplate.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -568,6 +580,7 @@
 				1A3AAB6514592FA0006C7043 /* Data.schema in Resources */,
 				1AE8E94D145A013A000ED823 /* shared.xcconfig in Resources */,
 				1AE1B0A5148292DE006070F2 /* Chunk.schema in Resources */,
+				1A6C28B314A26A67008A6535 /* BlockDescriptions.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -584,6 +597,7 @@
 				"$(SRCROOT)/Resources/Data.schema",
 				"$(BUILT_PRODUCTS_DIR)/plistpacker",
 				"$(SRCROOT)/Resources/Chunk.schema",
+				"$(SRCROOT)/Resources/en.lproj/BlockDescriptions.plist",
 			);
 			name = "Pack schemata";
 			outputPaths = (
@@ -593,10 +607,12 @@
 				"$(DERIVED_FILE_DIR)/SchematicSchema.c",
 				"$(DERIVED_FILE_DIR)/ChunkSchema.h",
 				"$(DERIVED_FILE_DIR)/ChunkSchema.c",
+				"$(DERIVED_FILE_DIR)/BlockDescriptions.h",
+				"$(DERIVED_FILE_DIR)/BlockDescriptions.c",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "mkdir -p \"$DERIVED_FILE_DIR\"\ncd \"$DERIVED_FILE_DIR\"\n\"$BUILT_PRODUCTS_DIR/plistpacker\" \"$SRCROOT/Resources/Data.schema\" DataSchema\n\"$BUILT_PRODUCTS_DIR/plistpacker\" \"$SRCROOT/Resources/Schematic.schema\" SchematicSchema\n\"$BUILT_PRODUCTS_DIR/plistpacker\" \"$SRCROOT/Resources/Chunk.schema\" ChunkSchema\n";
+			shellScript = "mkdir -p \"$DERIVED_FILE_DIR\"\ncd \"$DERIVED_FILE_DIR\"\n\"$BUILT_PRODUCTS_DIR/plistpacker\" \"$SRCROOT/Resources/Data.schema\" DataSchema\n\"$BUILT_PRODUCTS_DIR/plistpacker\" \"$SRCROOT/Resources/Schematic.schema\" SchematicSchema\n\"$BUILT_PRODUCTS_DIR/plistpacker\" \"$SRCROOT/Resources/Chunk.schema\" ChunkSchema\n\"$BUILT_PRODUCTS_DIR/plistpacker\" \"$SRCROOT/Resources/en.lproj/BlockDescriptions.plist\" BlockDescriptions\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -631,6 +647,7 @@
 				1AF7034A147060840096EDF1 /* JAMinecraftRegionReader.m in Sources */,
 				1AE1B0CF1482A4A8006070F2 /* ChunkSchema.c in Sources */,
 				1A164B7C14893F670079962D /* JAMinecraftChunkBlockStore.m in Sources */,
+				1A6C28B714A27430008A6535 /* BlockDescriptions.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -689,6 +706,17 @@
 			targetProxy = 1AFE34E313F936C9001A33D4 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		1A6C28B114A26A67008A6535 /* BlockDescriptions.plist */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1A6C28B214A26A67008A6535 /* en */,
+			);
+			name = BlockDescriptions.plist;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		1AF54042145C38AE0049CCEB /* Debug */ = {

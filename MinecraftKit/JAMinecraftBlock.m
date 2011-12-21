@@ -104,6 +104,18 @@ static inline BOOL BlocksEqual(JAMinecraftBlock *a, JAMinecraftBlock *b)
 - (id) copyWithZone:(NSZone *)zone { SUBCLASS_RESPONSIBILITY(); }
 - (id) mutableCopyWithZone:(NSZone *)zone { SUBCLASS_RESPONSIBILITY(); }
 
+
+- (NSString *) shortBlockDescription
+{
+	return MCShortDescriptionForBlockID(self.blockID);
+}
+
+
+- (NSString *) longBlockDescription
+{
+	return MCCellLongDescription((MCCell){ self.blockID, self.blockData }, self.tileEntity);
+}
+
 @dynamic blockID, blockData, tileEntity;
 
 @end

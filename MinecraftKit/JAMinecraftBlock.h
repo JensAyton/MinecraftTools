@@ -40,6 +40,9 @@
 
 - (BOOL) isEqualToBlock:(JAMinecraftBlock *)other;
 
+@property (nonatomic, readonly) NSString *shortBlockDescription;
+@property (nonatomic, readonly) NSString *longBlockDescription;
+
 @end
 
 

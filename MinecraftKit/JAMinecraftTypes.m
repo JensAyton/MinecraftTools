@@ -25,6 +25,10 @@
 
 #import "JAMinecraftTypes.h"
 #import "JAPropertyListAccessors.h"
+#import "MCKitSchema.h"
+#import "JABozoStringTemplate.h"
+#import "JAPropertyListAccessors.h"
+#import "MYCollectionUtilities.h"
 
 
 const MCCell kMCAirCell = { .blockID = kMCBlockAir, .blockData = 0 };
@@ -116,6 +120,156 @@ NSDictionary *MCStandardTileEntityForBlockID(uint8_t blockID)
 #endif
 	
 	return nil;
+}
+
+
+static NSDictionary *sBlockDescriptionsDict;
+static NSArray *sBlockNames;
+
+
+NSString *MCShortDescriptionForBlockID(uint8_t blockID)
+{
+	if (sBlockNames == nil)
+	{
+		sBlockDescriptionsDict = GetBlockDescriptions();
+		sBlockNames = [sBlockDescriptionsDict ja_arrayForKey:@"by ID"];
+	}
+	
+	if (blockID < sBlockNames.count)
+	{
+		return [sBlockNames objectAtIndex:blockID];
+	}
+	else
+	{
+		return nil;
+	}
+}
+
+
+NSString *MCCellShortDescription(MCCell cell)
+{
+	return MCShortDescriptionForBlockID(cell.blockID);
+}
+
+
+NSString *MCCellLongDescription(MCCell cell, NSDictionary *tileEntity)
+{
+	BOOL handleOrientationGenerically = YES;
+	NSString *base = MCCellShortDescription(cell);
+	NSString *extra;
+	
+	switch (cell.blockID)
+	{
+		case kMCBlockCloth:
+		{
+			NSArray *types = [sBlockDescriptionsDict ja_arrayForKey:@"Wool"];
+			if (cell.blockData < types.count)
+			{
+				extra = [types objectAtIndex:cell.blockData];
+			}
+			break;
+		}
+			
+		case kMCBlockRedstoneWire:
+			if (cell.blockData == 0)
+			{
+				extra = [sBlockDescriptionsDict ja_stringForKey:@"Redstone0"];
+			}
+			else
+			{
+				NSString *level = [NSString stringWithFormat:@"%u", cell.blockData];
+				extra = TEMPLATE_KEY(sBlockDescriptionsDict, @"Redstone", level);
+			}
+			break;
+			
+		case kMCBlockStoneWithSilverfish:
+		{
+			NSArray *types = [sBlockDescriptionsDict ja_arrayForKey:@"Silverfish"];
+			if (cell.blockData < types.count)
+			{
+				extra = [types objectAtIndex:cell.blockData];
+			}
+			break;
+		}
+			
+		case kMCBlockSignPost:
+		case kMCBlockWallSign:
+		{
+			NSMutableArray *lines = [NSMutableArray arrayWithCapacity:4];
+			for (NSUInteger i = 1; i <= 4; i++)
+			{
+				NSString *text = [tileEntity ja_stringForKey:$sprintf(@"Text%lu", i)];
+				if (text.length > 0)  [lines addObject:text];
+			}
+			
+			if (lines.count > 0)
+			{
+				NSString *text = [lines componentsJoinedByString:@" / "];
+				extra = TEMPLATE_KEY(sBlockDescriptionsDict, @"Quote", text);
+			}
+			else
+			{
+				extra = [sBlockDescriptionsDict ja_stringForKey:@"Sign-empty"];
+			}
+			break;
+		}
+			
+		case kMCBlockWoodenDoor:
+		case kMCBlockIronDoor:
+		case kMCBlockTrapdoor:
+		case kMCBlockGate:
+			extra = [sBlockDescriptionsDict ja_stringForKey:(cell.blockData & kMCInfoDoorOpen) ? @"Door-open" : @"Door-closed"];
+			break;
+			
+		case kMCBlockLever:
+		case kMCBlockStoneButton:
+			extra = [sBlockDescriptionsDict ja_stringForKey:(cell.blockData & kMCInfoLeverOn) ? @"Switch-on" : @"Switch-off"];
+			break;
+			
+		case kMCBlockBed:
+			extra = [sBlockDescriptionsDict ja_stringForKey:(cell.blockData & kInfoBedIsHead) ? @"Bed-head" : @"Bed-foot"];
+			break;
+			
+		case kMCBlockRedstoneRepeaterOn:
+		case kMCBlockRedstoneRepeaterOff:
+		{
+			NSString *delay = $sprintf(@"%u", ((cell.blockData & kMCInfoRedstoneRepeaterDelayMask) >> 2) + 1);
+			NSString *state = [sBlockDescriptionsDict ja_stringForKey:(cell.blockID == kMCBlockRedstoneRepeaterOn) ? @"Switch-on" : @"Switch-off"];
+			extra = TEMPLATE_KEY2(sBlockDescriptionsDict, @"Repeater", delay, state);
+		}	
+	}
+	
+	if (handleOrientationGenerically)
+	{
+		unsigned orientationVal = MCCellGetOrientation(cell);
+		if (orientationVal < kMCDirectionUnknown)
+		{
+			NSArray *orientationStrings = [sBlockDescriptionsDict ja_arrayForKey:@"Orientation"];
+			if (orientationVal < orientationStrings.count)
+			{
+				NSString *orientation = [orientationStrings ja_stringAtIndex:orientationVal];
+				if (extra == nil)  extra = TEMPLATE_KEY(sBlockDescriptionsDict, @"Orientation-alone", orientation);
+				else  extra = TEMPLATE_KEY2(sBlockDescriptionsDict, @"Orientation-append", extra, orientation);
+			}
+		}
+	}
+	
+	if (base != nil)
+	{
+		if (extra != nil)
+		{
+			return TEMPLATE_KEY2(sBlockDescriptionsDict, @"Parens", base, extra);
+		}
+		else
+		{
+			return base;
+		}
+	}
+	else
+	{
+		NSString *blockID = [NSString stringWithFormat:@"%u", cell.blockID];
+		return TEMPLATE_KEY(sBlockDescriptionsDict, @"UnknownID", blockID);
+	}
 }
 
 

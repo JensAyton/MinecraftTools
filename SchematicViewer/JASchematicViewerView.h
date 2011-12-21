@@ -29,10 +29,5 @@
 
 
 @interface JASchematicViewerView: JAMinecraftGridView
-{
-@private
-	NSArray						*_toolTipStrings;
-	NSDictionary				*_toolTipExtraStrings;
-}
 
 @end

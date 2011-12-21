@@ -103,6 +103,14 @@ static inline BOOL MCCellIsRedstoneTorch(MCCell cell) JA_CONST_FUNC;
 static inline uint8_t MCWirePowerLevel(MCCell cell) JA_CONST_FUNC;
 
 
+// Look up a human-readable name for a block ID.
+NSString *MCShortDescriptionForBlockID(uint8_t blockID);
+NSString *MCCellShortDescription(MCCell cell);
+
+// A longer description with extra information like block orientation, wire power level etc.
+NSString *MCCellLongDescription(MCCell cell, NSDictionary *tileEntity);
+
+
 #pragma mark MCGridCoordinates
 /***** MCGridCoordinates *****
  *	A grid location.
