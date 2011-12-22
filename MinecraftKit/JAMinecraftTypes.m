@@ -160,6 +160,73 @@ NSString *MCCellLongDescription(MCCell cell, NSDictionary *tileEntity)
 	
 	switch (cell.blockID)
 	{
+		case kMCBlockWater:
+		case kMCBlockLava:
+		{
+			NSNumber *level = [NSNumber numberWithInteger:8 - (kMCInfoLiquidEmptinessMask & cell.blockData)];
+			extra = TEMPLATE_KEY(sBlockDescriptionsDict, @"Fluid level", level);
+			break;
+		}
+			
+		case kMCBlockLog:
+		case kMCBlockLeaves:
+		{
+			NSArray *types = [sBlockDescriptionsDict ja_arrayForKey:@"Wood types"];
+			NSUInteger woodType = cell.blockData & kMCInfoWoodTypeMask;
+			if (woodType < types.count)
+			{
+				extra = [types objectAtIndex:woodType];
+			}
+			if (cell.blockID == kMCBlockLeaves && (cell.blockData & kMCInfoLeafPermanent))
+			{
+				NSString *type = extra;
+				extra = TEMPLATE_KEY(sBlockDescriptionsDict, @"Leaf permanent", type);
+			}
+			break;
+		}
+			
+		case kMCBlockNoteBlock:
+		{
+			NSNumber *pitch = [tileEntity ja_objectOfClass:[NSNumber class] forKey:@"note"];
+			if (pitch != nil)
+			{
+				extra = TEMPLATE_KEY(sBlockDescriptionsDict, @"Note block pitch", pitch);
+			}
+			break;
+		}
+		
+		case kMCBlockBed:
+		{
+			NSArray *parts = [sBlockDescriptionsDict ja_arrayForKey:@"Bed parts"];
+			NSUInteger idx = 0;
+			if (cell.blockData & kInfoBedIsHead)  idx = 1;
+			extra = [parts objectAtIndex:idx];
+			break;
+		}
+			
+		case kMCBlockPoweredRail:
+		{
+			if (cell.blockData & kMCInfoPoweredRailIsPowered)
+			{
+				extra = [sBlockDescriptionsDict ja_stringForKey:@"Powered rail powered"];
+			}
+			break;
+		}
+			
+		case kMCBlockTallGrass:
+		{
+			NSArray *types = [sBlockDescriptionsDict ja_arrayForKey:@"Tall grass types"];
+			if (cell.blockData < types.count)
+			{
+				extra = [types objectAtIndex:cell.blockData];
+			}
+			break;
+		}
+			
+		case kMCBlockPistonHead:
+			extra = [sBlockDescriptionsDict ja_stringForKey:@"Piston head sticky"];
+			break;
+			
 		case kMCBlockCloth:
 		{
 			NSArray *types = [sBlockDescriptionsDict ja_arrayForKey:@"Wool"];
@@ -170,27 +237,58 @@ NSString *MCCellLongDescription(MCCell cell, NSDictionary *tileEntity)
 			break;
 		}
 			
-		case kMCBlockRedstoneWire:
-			if (cell.blockData == 0)
-			{
-				extra = [sBlockDescriptionsDict ja_stringForKey:@"Redstone0"];
-			}
-			else
-			{
-				NSString *level = [NSString stringWithFormat:@"%u", cell.blockData];
-				extra = TEMPLATE_KEY(sBlockDescriptionsDict, @"Redstone", level);
-			}
-			break;
-			
-		case kMCBlockStoneWithSilverfish:
+		case kMCBlockDoubleSlab:
+		case kMCBlockSingleSlab:
 		{
-			NSArray *types = [sBlockDescriptionsDict ja_arrayForKey:@"Silverfish"];
+			NSArray *types = [sBlockDescriptionsDict ja_arrayForKey:@"Slab types"];
 			if (cell.blockData < types.count)
 			{
 				extra = [types objectAtIndex:cell.blockData];
 			}
 			break;
 		}
+			
+		case kMCBlockMobSpawner:
+		{
+			NSString *entityID = [tileEntity ja_stringForKey:@"EntityId"];
+			NSDictionary *names = [sBlockDescriptionsDict ja_dictionaryForKey:@"Mob entity IDs"];
+			NSString *friendlyID = [names ja_stringForKey:entityID];
+			if (friendlyID != nil)  entityID = friendlyID;
+			
+			extra = entityID;
+			break;
+		}
+			
+		case kMCBlockSoil:
+		{
+			NSInteger wetness = cell.blockData & kMCInfoSoilWetness;
+			if (wetness == 0)
+			{
+				extra = [sBlockDescriptionsDict ja_stringForKey:@"Soil dry"];
+			}
+			else
+			{
+				NSNumber *level = [NSNumber numberWithInteger:wetness];
+				extra = TEMPLATE_KEY(sBlockDescriptionsDict, @"Soil wetness", level);
+			}
+			break;
+		}	
+			
+		case kMCBlockRedstoneWire:
+			if (cell.blockData == 0)
+			{
+				extra = [sBlockDescriptionsDict ja_stringForKey:@"Redstone off"];
+			}
+			else
+			{
+				NSNumber *level = [NSNumber numberWithInteger:cell.blockData];
+				extra = TEMPLATE_KEY(sBlockDescriptionsDict, @"Redstone power level", level);
+			}
+			break;
+			
+		case kMCBlockBurningFurnace:
+			extra = [sBlockDescriptionsDict ja_stringForKey:@"Furnace burning"];
+			break;
 			
 		case kMCBlockSignPost:
 		case kMCBlockWallSign:
@@ -209,34 +307,87 @@ NSString *MCCellLongDescription(MCCell cell, NSDictionary *tileEntity)
 			}
 			else
 			{
-				extra = [sBlockDescriptionsDict ja_stringForKey:@"Sign-empty"];
+				extra = [sBlockDescriptionsDict ja_stringForKey:@"Sign empty"];
 			}
 			break;
 		}
 			
 		case kMCBlockWoodenDoor:
 		case kMCBlockIronDoor:
-		case kMCBlockTrapdoor:
-		case kMCBlockGate:
-			extra = [sBlockDescriptionsDict ja_stringForKey:(cell.blockData & kMCInfoDoorOpen) ? @"Door-open" : @"Door-closed"];
+		{
+			NSString *topOrBottom = [sBlockDescriptionsDict ja_stringForKey:(cell.blockData & kMCInfoDoorTopHalf) ? @"Door top" : @"Door bottom"];
+			NSString *openOrClosed = [sBlockDescriptionsDict ja_stringForKey:(cell.blockData & kMCInfoDoorOpen) ? @"Door open" : @"Door closed"];
+			extra = TEMPLATE_KEY2(sBlockDescriptionsDict, @"Door state", topOrBottom, openOrClosed);
 			break;
+		}
 			
 		case kMCBlockLever:
 		case kMCBlockStoneButton:
-			extra = [sBlockDescriptionsDict ja_stringForKey:(cell.blockData & kMCInfoLeverOn) ? @"Switch-on" : @"Switch-off"];
+			extra = [sBlockDescriptionsDict ja_stringForKey:(cell.blockData & kMCInfoLeverOn) ? @"Switch on" : @"Switch off"];
 			break;
 			
-		case kMCBlockBed:
-			extra = [sBlockDescriptionsDict ja_stringForKey:(cell.blockData & kInfoBedIsHead) ? @"Bed-head" : @"Bed-foot"];
+		case kMCBlockStonePressurePlate:
+		case kMCBlockWoodenPressurePlate:
+			extra = [sBlockDescriptionsDict ja_stringForKey:(cell.blockData & kMCInfoPressurePlateOn) ? @"Switch on" : @"Switch off"];
 			break;
+			
+		case kMCBlockGlowingRedstoneOre:
+			extra = [sBlockDescriptionsDict ja_stringForKey:@"Redstone ore glowing"];
+			break;
+			
+		case kMCBlockRedstoneTorchOff:
+		case kMCBlockRedstoneTorchOn:
+			extra = [sBlockDescriptionsDict ja_stringForKey:(cell.blockID == kMCBlockRedstoneTorchOn) ? @"Redstone on" : @"Redstone off"];
+			
+			if ((cell.blockData & kMCInfoMiscOrientationMask) == kMCInfoMiscOrientationFloor)
+			{
+				handleOrientationGenerically = NO;
+				NSString *state = extra;
+				extra = TEMPLATE_KEY(sBlockDescriptionsDict, @"Redstone torch on floor", state);
+			}
+			break;
+			
+		case kMCBlockJukebox:
+		{
+			NSInteger record = [tileEntity ja_integerForKey:@"Record"];
+			if (record != 0)
+			{
+				NSNumber *recordNumber = [NSNumber numberWithInteger:record];
+				extra = TEMPLATE_KEY(sBlockDescriptionsDict, @"Jukebox record", recordNumber);
+			}
+			break;
+		}
+			
+		case kMCBlockCake:
+		{
+			NSNumber *sliceCount = [NSNumber numberWithInteger:6 - cell.blockData & kMCInfoCakeSliceCountMask];
+			extra = TEMPLATE_KEY(sBlockDescriptionsDict, @"Cake slices", sliceCount);
+			break;
+		}
 			
 		case kMCBlockRedstoneRepeaterOn:
 		case kMCBlockRedstoneRepeaterOff:
 		{
 			NSString *delay = $sprintf(@"%u", ((cell.blockData & kMCInfoRedstoneRepeaterDelayMask) >> 2) + 1);
-			NSString *state = [sBlockDescriptionsDict ja_stringForKey:(cell.blockID == kMCBlockRedstoneRepeaterOn) ? @"Switch-on" : @"Switch-off"];
+			NSString *state = [sBlockDescriptionsDict ja_stringForKey:(cell.blockID == kMCBlockRedstoneRepeaterOn) ? @"Redstone on" : @"Redstone off"];
 			extra = TEMPLATE_KEY2(sBlockDescriptionsDict, @"Repeater", delay, state);
-		}	
+			break;
+		}
+			
+		case kMCBlockTrapdoor:
+		case kMCBlockGate:
+			extra = [sBlockDescriptionsDict ja_stringForKey:(cell.blockData & kMCInfoDoorOpen) ? @"Door open" : @"Door closed"];
+			break;
+			
+		case kMCBlockStoneWithSilverfish:
+		{
+			NSArray *types = [sBlockDescriptionsDict ja_arrayForKey:@"Silverfish block type"];
+			if (cell.blockData < types.count)
+			{
+				extra = [types objectAtIndex:cell.blockData];
+			}
+			break;
+		}
 	}
 	
 	if (handleOrientationGenerically)
@@ -248,8 +399,8 @@ NSString *MCCellLongDescription(MCCell cell, NSDictionary *tileEntity)
 			if (orientationVal < orientationStrings.count)
 			{
 				NSString *orientation = [orientationStrings ja_stringAtIndex:orientationVal];
-				if (extra == nil)  extra = TEMPLATE_KEY(sBlockDescriptionsDict, @"Orientation-alone", orientation);
-				else  extra = TEMPLATE_KEY2(sBlockDescriptionsDict, @"Orientation-append", extra, orientation);
+				if (extra == nil)  extra = TEMPLATE_KEY(sBlockDescriptionsDict, @"Orientation alone", orientation);
+				else  extra = TEMPLATE_KEY2(sBlockDescriptionsDict, @"Orientation append", extra, orientation);
 			}
 		}
 	}

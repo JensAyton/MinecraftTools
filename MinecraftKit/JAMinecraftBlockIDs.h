@@ -101,14 +101,14 @@ enum
 	kMCBlockCobblestoneStairs				= 67,	// Data: kMCInfoStairOrientation
 	kMCBlockWallSign						= 68,	// Sign on wall. Data: kMCInfoMisc2Orientation; tile entity: Sign.
 	kMCBlockLever							= 69,
-	kMCBlockStonePressurePlate				= 70,
+	kMCBlockStonePressurePlate				= 70,	// Data: kMCInfoPressurePlateOn, kMCInfoLeverOn.
 	kMCBlockIronDoor						= 71,	// Data: kMCInfoDoorOrientationMask, kMCInfoDoorOpen and kMCInfoDoorTopHalf.
-	kMCBlockWoodenPressurePlate				= 72,
+	kMCBlockWoodenPressurePlate				= 72,	// Data: kMCInfoPressurePlateOn
 	kMCBlockRedstoneOre						= 73,
 	kMCBlockGlowingRedstoneOre				= 74,
 	kMCBlockRedstoneTorchOff				= 75,	// Data: kMCInfoMiscOrientation.
 	kMCBlockRedstoneTorchOn					= 76,	// Data: kMCInfoMiscOrientation.
-	kMCBlockStoneButton						= 77,	// Data: kMCInfoMiscOrientation.
+	kMCBlockStoneButton						= 77,	// Data: kMCInfoMiscOrientation, kMCInfoButtonOn.
 	kMCBlockSnow							= 78,
 	kMCBlockIce								= 79,
 	kMCBlockSnowBlock						= 80,

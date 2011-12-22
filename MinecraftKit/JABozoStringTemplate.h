@@ -15,10 +15,10 @@
 */
 
 
-#import <Foundation/Foundation.h>
+#import "JAPropertyListAccessors.h"
 
 
-#define TEMPLATE(string, NAME)			[string stringByReplacingOccurrencesOfString:(@"<$"#NAME"$>") withString:NAME]
+#define TEMPLATE(string, NAME)			[string stringByReplacingOccurrencesOfString:(@"<$"#NAME"$>") withString:[NAME description]]
 #define TEMPLATE_KEY(dict, key, NAME)	({ NSString *template = [dict ja_stringForKey:key]; TEMPLATE(template, NAME); })
 
 #define TEMPLATE2(string, NAME1, NAME2)					TEMPLATE(TEMPLATE(string, NAME1), NAME2)

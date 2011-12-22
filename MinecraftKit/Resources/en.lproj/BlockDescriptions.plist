@@ -75,9 +75,9 @@
 		"Iron door",
 		"Wooden pressure plate",
 		"Redstone ore",
-		"Redstone ore (glowing)",	// FIXME: parens to extra
-		"Redstone torch (off)",		// FIXME: parens to extra
-		"Redstone torch (on)",		// FIXME: parens to extra
+		"Redstone ore",
+		"Redstone torch",
+		"Redstone torch",
 		"Button",
 		"Snow",
 		"Ice",
@@ -126,6 +126,37 @@
 		"Dragon egg"
 	);
 	
+	"Fluid level" = "level <$level$>";
+	
+	"Wood types" =
+	(
+		"leafy",
+		"conifer",
+		"birch",
+		"leafy (buggy)"	// Occurs when converting old worlds.
+	);
+	
+	"Leaf permanent" = "<$type$>, permanent";
+	
+	"Note block pitch" = "note <$pitch$>";
+	
+	"Bed parts" =
+	(
+		"foot",
+		"head"
+	);
+	
+	"Powered rail powered" = "powered";
+	
+	"Tall grass types" =
+	(
+		"dead shrub",
+		"tall grass",
+		"fern"
+	);
+	
+	"Piston head sticky" = "sticky";
+	
 	"Wool" =
 	(
 		"white",
@@ -146,12 +177,68 @@
 		"black"
 	);
 	
-	"Redstone0" = "off";
-	"Redstone" = "level <$level$>";
+	"Slab types" =
+	(
+		"stone",
+		"sandstone",
+		"wood",
+		"cobblestone",
+		"brick",
+		"stone brick",
+		"stone"
+	);
+	
+	"Mob entity IDs" =
+	{
+		"CaveSpider" = "cave spider";
+		"Chicken" = "chicken";
+		"Cow" = "cow";
+		"Creeper" = "creeper";
+		"Enderman" = "enderman";
+		"Giant" = "giant";
+		"Pig" = "pig";
+		"PigZombie" = "pig zombie";
+		"Sheep" = "sheep";
+		"Silverfish" = "silverfish";
+		"Skeleton" = "skeleton";
+		"Slime" = "slime";
+		"Spider" = "spider";
+		"Squid" = "squid";
+		"Wolf" = "wolf";
+		"Zombie" = "zombie";
+	};
+	
+	"Soil dry" = "dry";
+	"Soil wetness" = "wetness <$level$>";
+	
+	"Furnace burning" = "burning";
+	
+	"Redstone on" = "on";
+	"Redstone off" = "off";
+	"Redstone power level" = "power level <$level$>";
+	
+	"Door top" = "top";
+	"Door bottom" = "bottom";
+	"Door open" = "open";
+	"Door closed" = "closed";
+	"Door state" = "<$topOrBottom$>, <$openOrClosed$>";
+	
+	"Switch on" = "on";
+	"Switch off" = "off";
+	
+	"Sign empty" = "empty";
+	
+	"Redstone ore glowing" = "glowing";
+	
+	"Redstone torch on floor" = "<$state$>, standing";
+	
+	"Jukebox record" = "record <$recordNumber$>";
+	
+	"Cake slices" = "<$sliceCount$> slices";
 	
 	"Repeater" = "<$state$>, delay: <$delay$>";
 	
-	"Silverfish" =
+	"Silverfish block type" =
 	(
 		"Stone",
 		"Cobblestone",
@@ -168,19 +255,8 @@
 		"down"
 	);
 	
-	"Orientation-alone" = "facing <$orientation$>";
-	"Orientation-append" = "<$extra$>, facing <$orientation$>";
-	
-	"Sign-empty" = "empty";
-	
-	"Door-open" = "open";
-	"Door-closed" = "closed";
-	
-	"Switch-on" = "on";
-	"Switch-off" = "off";
-	
-	"Bed-head" = "head";
-	"Bed-foot" = "foot";
+	"Orientation alone" = "facing <$orientation$>";
+	"Orientation append" = "<$extra$>, facing <$orientation$>";
 	
 	"Parens" = "<$base$> (<$extra$>)";
 	"Quote" = "“<$text$>”";
