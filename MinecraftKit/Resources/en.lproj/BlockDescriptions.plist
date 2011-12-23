@@ -209,7 +209,7 @@
 	};
 	
 	"Soil dry" = "dry";
-	"Soil wetness" = "wetness <$level$>";
+	"Soil wetness" = "wetness <$wetness$>";
 	
 	"Furnace burning" = "burning";
 	

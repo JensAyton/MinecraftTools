@@ -58,6 +58,10 @@
 		1AF540A4145C488C0049CCEB /* MCKitSchema.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AF540A2145C488B0049CCEB /* MCKitSchema.h */; };
 		1AF540A7145C4D290049CCEB /* DataSchema.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AF540A5145C4D290049CCEB /* DataSchema.c */; };
 		1AF540A8145C4D290049CCEB /* SchematicSchema.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AF540A6145C4D290049CCEB /* SchematicSchema.c */; };
+		1AF6E51F14A4ABDA00E38756 /* JAGenericToString.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AF6E51D14A4ABDA00E38756 /* JAGenericToString.h */; };
+		1AF6E52014A4ABDA00E38756 /* JAGenericToString.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AF6E51D14A4ABDA00E38756 /* JAGenericToString.h */; };
+		1AF6E52114A4ABDA00E38756 /* JAGenericToString.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF6E51E14A4ABDA00E38756 /* JAGenericToString.m */; };
+		1AF6E52214A4ABDA00E38756 /* JAGenericToString.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF6E51E14A4ABDA00E38756 /* JAGenericToString.m */; };
 		1AF70347147060840096EDF1 /* JAMinecraftRegionReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AF70345147060840096EDF1 /* JAMinecraftRegionReader.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AF70348147060840096EDF1 /* JAMinecraftRegionReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AF70345147060840096EDF1 /* JAMinecraftRegionReader.h */; };
 		1AF70349147060840096EDF1 /* JAMinecraftRegionReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF70346147060840096EDF1 /* JAMinecraftRegionReader.m */; };
@@ -173,6 +177,8 @@
 		1AF540A2145C488B0049CCEB /* MCKitSchema.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCKitSchema.h; sourceTree = SOURCE_ROOT; };
 		1AF540A5145C4D290049CCEB /* DataSchema.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = DataSchema.c; path = ../MinecraftKit.build/$CONFIGURATION/libminecraftkit.build/DerivedSources/DataSchema.c; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AF540A6145C4D290049CCEB /* SchematicSchema.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = SchematicSchema.c; path = ../MinecraftKit.build/$CONFIGURATION/libminecraftkit.build/DerivedSources/SchematicSchema.c; sourceTree = BUILT_PRODUCTS_DIR; };
+		1AF6E51D14A4ABDA00E38756 /* JAGenericToString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAGenericToString.h; sourceTree = SOURCE_ROOT; };
+		1AF6E51E14A4ABDA00E38756 /* JAGenericToString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAGenericToString.m; sourceTree = SOURCE_ROOT; };
 		1AF70345147060840096EDF1 /* JAMinecraftRegionReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAMinecraftRegionReader.h; sourceTree = SOURCE_ROOT; };
 		1AF70346147060840096EDF1 /* JAMinecraftRegionReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAMinecraftRegionReader.m; sourceTree = SOURCE_ROOT; };
 		1AF8C149144CA38900D86C3D /* Schematic.schema */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Schematic.schema; path = Resources/Schematic.schema; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.plist; };
@@ -397,6 +403,8 @@
 				1AFE34B313F93209001A33D4 /* JAValueToString */,
 				1AF540A2145C488B0049CCEB /* MCKitSchema.h */,
 				1A6C292214A27686008A6535 /* JABozoStringTemplate.h */,
+				1AF6E51D14A4ABDA00E38756 /* JAGenericToString.h */,
+				1AF6E51E14A4ABDA00E38756 /* JAGenericToString.m */,
 			);
 			name = Utility;
 			sourceTree = "<group>";
@@ -437,6 +445,7 @@
 				1AF540A4145C488C0049CCEB /* MCKitSchema.h in Headers */,
 				1AF70348147060840096EDF1 /* JAMinecraftRegionReader.h in Headers */,
 				1A6C292414A27686008A6535 /* JABozoStringTemplate.h in Headers */,
+				1AF6E52014A4ABDA00E38756 /* JAGenericToString.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -471,6 +480,7 @@
 				1AF540A3145C488C0049CCEB /* MCKitSchema.h in Headers */,
 				1AC7953114643DE3008BBFA4 /* JAPointMaths.h in Headers */,
 				1A6C292314A27686008A6535 /* JABozoStringTemplate.h in Headers */,
+				1AF6E51F14A4ABDA00E38756 /* JAGenericToString.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -648,6 +658,7 @@
 				1AE1B0CF1482A4A8006070F2 /* ChunkSchema.c in Sources */,
 				1A164B7C14893F670079962D /* JAMinecraftChunkBlockStore.m in Sources */,
 				1A6C28B714A27430008A6535 /* BlockDescriptions.c in Sources */,
+				1AF6E52214A4ABDA00E38756 /* JAGenericToString.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -679,6 +690,7 @@
 				1AB23B9014547EF6008C5723 /* JAZLibCompressor.m in Sources */,
 				1AF70349147060840096EDF1 /* JAMinecraftRegionReader.m in Sources */,
 				1A164B79148938010079962D /* JAMinecraftChunkBlockStore.m in Sources */,
+				1AF6E52114A4ABDA00E38756 /* JAGenericToString.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

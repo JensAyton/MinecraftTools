@@ -163,7 +163,7 @@ NSString *MCCellLongDescription(MCCell cell, NSDictionary *tileEntity)
 		case kMCBlockWater:
 		case kMCBlockLava:
 		{
-			NSNumber *level = [NSNumber numberWithInteger:8 - (kMCInfoLiquidEmptinessMask & cell.blockData)];
+			NSInteger level = 8 - (kMCInfoLiquidEmptinessMask & cell.blockData);
 			extra = TEMPLATE_KEY(sBlockDescriptionsDict, @"Fluid level", level);
 			break;
 		}
@@ -268,8 +268,7 @@ NSString *MCCellLongDescription(MCCell cell, NSDictionary *tileEntity)
 			}
 			else
 			{
-				NSNumber *level = [NSNumber numberWithInteger:wetness];
-				extra = TEMPLATE_KEY(sBlockDescriptionsDict, @"Soil wetness", level);
+				extra = TEMPLATE_KEY(sBlockDescriptionsDict, @"Soil wetness", wetness);
 			}
 			break;
 		}	
@@ -281,7 +280,7 @@ NSString *MCCellLongDescription(MCCell cell, NSDictionary *tileEntity)
 			}
 			else
 			{
-				NSNumber *level = [NSNumber numberWithInteger:cell.blockData];
+				NSInteger level = cell.blockData;
 				extra = TEMPLATE_KEY(sBlockDescriptionsDict, @"Redstone power level", level);
 			}
 			break;
@@ -349,10 +348,9 @@ NSString *MCCellLongDescription(MCCell cell, NSDictionary *tileEntity)
 			
 		case kMCBlockJukebox:
 		{
-			NSInteger record = [tileEntity ja_integerForKey:@"Record"];
-			if (record != 0)
+			NSInteger recordNumber = [tileEntity ja_integerForKey:@"Record"];
+			if (recordNumber != 0)
 			{
-				NSNumber *recordNumber = [NSNumber numberWithInteger:record];
 				extra = TEMPLATE_KEY(sBlockDescriptionsDict, @"Jukebox record", recordNumber);
 			}
 			break;
@@ -360,7 +358,7 @@ NSString *MCCellLongDescription(MCCell cell, NSDictionary *tileEntity)
 			
 		case kMCBlockCake:
 		{
-			NSNumber *sliceCount = [NSNumber numberWithInteger:6 - cell.blockData & kMCInfoCakeSliceCountMask];
+			NSInteger sliceCount = 6 - cell.blockData & kMCInfoCakeSliceCountMask;
 			extra = TEMPLATE_KEY(sBlockDescriptionsDict, @"Cake slices", sliceCount);
 			break;
 		}
