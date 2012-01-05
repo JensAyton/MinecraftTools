@@ -60,7 +60,7 @@ int main (int argc, const char * argv[])
 		JAMinecraftRegionReader *reader = [JAMinecraftRegionReader regionReaderWithURL:[NSURL fileURLWithPath:inputPath]];
 		if (reader == nil)
 		{
-			EPrint(@"Failed to read region file.");
+			EPrint(@"Failed to read region file.\n");
 			return EXIT_FAILURE;
 		}
 		

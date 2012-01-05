@@ -3,13 +3,7 @@
 
 NSString *JAStringFromNumber(NSNumber *number)
 {
-	static NSNumberFormatter *formatter = nil;
-	if (formatter == nil)
-	{
-		formatter = [NSNumberFormatter new];
-		formatter.numberStyle = NSNumberFormatterDecimalStyle;
-	}
-	return [formatter stringFromNumber:number];
+	return [NSNumberFormatter localizedStringFromNumber:number numberStyle:NSNumberFormatterDecimalStyle];
 }
 
 

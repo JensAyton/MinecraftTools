@@ -63,7 +63,7 @@
 
 
 /*
-	JAStringFrom{Number|Integer|Double}
+	JAStringFrom{Number|Integer|UnsignedInteger|Double}
 	
 	Format numbers using locale-appropriate NSNumberFormatterDecimalStyle.
 */
