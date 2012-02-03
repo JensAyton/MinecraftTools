@@ -219,6 +219,7 @@ enum
 	kMCInfoWoodTypeDefault					= 0x00,
 	kMCInfoWoodTypeConifer					= 0x01,
 	kMCInfoWoodTypeBirch					= 0x02,
+	kMCInfoWoodTypeJungle					= 0x03,
 	
 	/*
 		Leaves: if the pending flag is set, the leaf block will be checked for
