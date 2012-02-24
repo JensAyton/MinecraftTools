@@ -14,7 +14,6 @@
 		1A52C5F2128FF602006E2D65 /* README in Resources */ = {isa = PBXBuildFile; fileRef = 1A52C5F1128FF602006E2D65 /* README */; };
 		1AC44F8A13F93A2C00FB7296 /* JAMinecraftKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AC44F8713F93A1F00FB7296 /* JAMinecraftKit.framework */; };
 		1AC44F8C13F93A3900FB7296 /* JAMinecraftKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1AC44F8713F93A1F00FB7296 /* JAMinecraftKit.framework */; };
-		1AE8E94F145A026D000ED823 /* shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1AE8E94E145A026D000ED823 /* shared.xcconfig */; };
 		1DDD582C0DA1D0D100B32029 /* MyDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58280DA1D0D100B32029 /* MyDocument.xib */; };
 		1DDD582D0DA1D0D100B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD582A0DA1D0D100B32029 /* MainMenu.xib */; };
 		8D15AC2C0486D014006FF6A4 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */; };
@@ -220,7 +219,7 @@
 		2A37F4A9FDCFA73011CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0430;
 			};
 			buildConfigurationList = C05733CB08A9546B00998B17 /* Build configuration list for PBXProject "SchematicViewer" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -275,7 +274,6 @@
 				1DDD582D0DA1D0D100B32029 /* MainMenu.xib in Resources */,
 				1A52C456128F7574006E2D65 /* ColorTable.plist in Resources */,
 				1A52C5F2128FF602006E2D65 /* README in Resources */,
-				1AE8E94F145A026D000ED823 /* shared.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

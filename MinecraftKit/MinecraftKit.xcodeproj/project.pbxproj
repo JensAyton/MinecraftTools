@@ -30,7 +30,6 @@
 		1AE0E32214536FFF009ACC2B /* JANBTTypedNumbers.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE0E32014536FFE009ACC2B /* JANBTTypedNumbers.m */; };
 		1AE1B0A5148292DE006070F2 /* Chunk.schema in Resources */ = {isa = PBXBuildFile; fileRef = 1AE1B0A4148292DE006070F2 /* Chunk.schema */; };
 		1AE1B0CF1482A4A8006070F2 /* ChunkSchema.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AE1B0CE1482A4A8006070F2 /* ChunkSchema.c */; };
-		1AE8E94D145A013A000ED823 /* shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1AE8E94C145A013A000ED823 /* shared.xcconfig */; };
 		1AF54039145C38AE0049CCEB /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AFE345413F930BF001A33D4 /* Cocoa.framework */; };
 		1AF54045145C39740049CCEB /* JAMinecraftBlockIDs.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AFE347913F931C3001A33D4 /* JAMinecraftBlockIDs.c */; };
 		1AF54046145C39780049CCEB /* JAMinecraftTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFE347B13F931C3001A33D4 /* JAMinecraftTypes.m */; };
@@ -46,8 +45,8 @@
 		1AF54051145C39A30049CCEB /* JACollectionHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFC074B14404395009666A9 /* JACollectionHelpers.m */; };
 		1AF54052145C39A70049CCEB /* MYCollectionUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFC075114405F8A009666A9 /* MYCollectionUtilities.m */; };
 		1AF54058145C3A690049CCEB /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AFE34BC13F932CC001A33D4 /* libz.dylib */; };
-		1AF54065145C3ADF0049CCEB /* JAValueToString.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFE34B513F9321F001A33D4 /* JAValueToString.m */; };
-		1AF54066145C3AE50049CCEB /* JAPropertyListAccessors.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFE34B013F93207001A33D4 /* JAPropertyListAccessors.m */; };
+		1AF54065145C3ADF0049CCEB /* JAValueToString.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFE34B513F9321F001A33D4 /* JAValueToString.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		1AF54066145C3AE50049CCEB /* JAPropertyListAccessors.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFE34B013F93207001A33D4 /* JAPropertyListAccessors.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		1AF54067145C3AED0049CCEB /* JANBTSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A64907014517A7300F57924 /* JANBTSerialization.m */; };
 		1AF54068145C3AF20049CCEB /* JANBTTagType.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB23B2F14543B81008C5723 /* JANBTTagType.m */; };
 		1AF54069145C3AF50049CCEB /* JANBTTypedNumbers.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE0E32014536FFE009ACC2B /* JANBTTypedNumbers.m */; };
@@ -95,9 +94,9 @@
 		1AFE34A813F931EE001A33D4 /* IsKeyDown.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AFE34A013F931EE001A33D4 /* IsKeyDown.h */; };
 		1AFE34A913F931EE001A33D4 /* IsKeyDown.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AFE34A113F931EE001A33D4 /* IsKeyDown.c */; };
 		1AFE34B113F93207001A33D4 /* JAPropertyListAccessors.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AFE34AF13F93207001A33D4 /* JAPropertyListAccessors.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1AFE34B213F93207001A33D4 /* JAPropertyListAccessors.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFE34B013F93207001A33D4 /* JAPropertyListAccessors.m */; };
+		1AFE34B213F93207001A33D4 /* JAPropertyListAccessors.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFE34B013F93207001A33D4 /* JAPropertyListAccessors.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		1AFE34B613F9321F001A33D4 /* JAValueToString.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AFE34B413F9321F001A33D4 /* JAValueToString.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1AFE34B713F9321F001A33D4 /* JAValueToString.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFE34B513F9321F001A33D4 /* JAValueToString.m */; };
+		1AFE34B713F9321F001A33D4 /* JAValueToString.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFE34B513F9321F001A33D4 /* JAValueToString.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		1AFE34BD13F932CC001A33D4 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AFE34BC13F932CC001A33D4 /* libz.dylib */; };
 		1AFE34BF13F932DD001A33D4 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AFE34BE13F932DD001A33D4 /* Carbon.framework */; };
 		1AFE8EC01449A1F6007056C1 /* JAMinecraftBlock.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AFE8EBE1449A1F6007056C1 /* JAMinecraftBlock.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -533,7 +532,7 @@
 		1AFE344713F930BF001A33D4 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0430;
 				ORGANIZATIONNAME = "Jens Ayton";
 			};
 			buildConfigurationList = 1AFE344A13F930BF001A33D4 /* Build configuration list for PBXProject "MinecraftKit" */;
@@ -588,7 +587,6 @@
 			files = (
 				1AF8C14A144CA38900D86C3D /* Schematic.schema in Resources */,
 				1A3AAB6514592FA0006C7043 /* Data.schema in Resources */,
-				1AE8E94D145A013A000ED823 /* shared.xcconfig in Resources */,
 				1AE1B0A5148292DE006070F2 /* Chunk.schema in Resources */,
 				1A6C28B314A26A67008A6535 /* BlockDescriptions.plist in Resources */,
 			);

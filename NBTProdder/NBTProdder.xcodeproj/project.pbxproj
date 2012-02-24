@@ -14,7 +14,6 @@
 		1AE8E9D6145A0ABC000ED823 /* NBTDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE8E9D5145A0ABC000ED823 /* NBTDocument.m */; };
 		1AE8E9D9145A0ABC000ED823 /* NBTDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1AE8E9D7145A0ABC000ED823 /* NBTDocument.xib */; };
 		1AE8E9DC145A0ABD000ED823 /* NBTProdder.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1AE8E9DA145A0ABD000ED823 /* NBTProdder.xib */; };
-		1AE8E9E3145A0BEF000ED823 /* shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1AE8E9E2145A0BEF000ED823 /* shared.xcconfig */; };
 		1AE8E9EA145A0CB3000ED823 /* JAMinecraftKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AE8E9E9145A0CA1000ED823 /* JAMinecraftKit.framework */; };
 		1AE8E9EC145A0CD3000ED823 /* JAMinecraftKit.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 1AE8E9E9145A0CA1000ED823 /* JAMinecraftKit.framework */; };
 		1AFB0EAC145AD25A00CDFCCB /* NBTItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFB0EAB145AD25A00CDFCCB /* NBTItem.m */; };
@@ -197,7 +196,7 @@
 		1AE8E9B5145A0ABC000ED823 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0430;
 				ORGANIZATIONNAME = "Jens Ayton";
 			};
 			buildConfigurationList = 1AE8E9B8145A0ABC000ED823 /* Build configuration list for PBXProject "NBTProdder" */;
@@ -249,7 +248,6 @@
 				1AE8E9D3145A0ABC000ED823 /* Credits.rtf in Resources */,
 				1AE8E9D9145A0ABC000ED823 /* NBTDocument.xib in Resources */,
 				1AE8E9DC145A0ABD000ED823 /* NBTProdder.xib in Resources */,
-				1AE8E9E3145A0BEF000ED823 /* shared.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

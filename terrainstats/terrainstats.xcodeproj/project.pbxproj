@@ -164,7 +164,7 @@
 		1AE1B03F14827144006070F2 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0430;
 			};
 			buildConfigurationList = 1AE1B04214827144006070F2 /* Build configuration list for PBXProject "terrainstats" */;
 			compatibilityVersion = "Xcode 3.2";
