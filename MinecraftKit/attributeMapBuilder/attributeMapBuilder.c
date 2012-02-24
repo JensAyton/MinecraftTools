@@ -89,7 +89,9 @@ static const uint8_t kOpaqueIDs[] =
 	kMCBlockWatermelon,
 	kMCBlockMycelium,
 	kMCBlockNetherBrick,
-	kMCBlockEndStone
+	kMCBlockEndStone,
+	kMCBlockRedstoneLampOff,
+	kMCBlockRedstoneLampOn
 };
 
 
@@ -227,7 +229,9 @@ static const uint8_t kPowerSinkIDs[] =
 	kMCBlockRedstoneTorchOn,
 	kMCBlockDispenser,
 	kMCBlockNoteBlock,
-	kMCBlockGate		// As of 1.1.
+	kMCBlockGate,		// As of 1.1.
+	kMCBlockRedstoneLampOff,
+	kMCBlockRedstoneLampOn
 };
 
 

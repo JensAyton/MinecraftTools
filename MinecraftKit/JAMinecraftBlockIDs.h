@@ -153,11 +153,13 @@ enum
 	kMCBlockEndPortal						= 119,	// Tile entity: Airportal
 	kMCBlockEndPortalFrame					= 120,	// Data: FIXME: orientation convention?, kMCInfoAirPortalFrameHasEye
 	kMCBlockEndStone						= 121,
-	kMCBlockDragonEgg						= 122
+	kMCBlockDragonEgg						= 122,
+	kMCBlockRedstoneLampOff					= 123,
+	kMCBlockRedstoneLampOn					= 124
 };
 
 
-#define kMCLastBlockID kMCBlockDragonEgg
+#define kMCLastBlockID kMCBlockRedstoneLampOn
 
 
 enum

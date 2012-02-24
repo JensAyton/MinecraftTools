@@ -386,6 +386,11 @@ NSString *MCCellLongDescription(MCCell cell, NSDictionary *tileEntity)
 			}
 			break;
 		}
+			
+		case kMCBlockRedstoneLampOff:
+		case kMCBlockRedstoneLampOn:
+			extra = [sBlockDescriptionsDict ja_stringForKey:(cell.blockID == kMCBlockRedstoneLampOn) ? @"Redstone on" : @"Redstone off"];
+			break;
 	}
 	
 	if (handleOrientationGenerically)

@@ -801,13 +801,15 @@ const int8_t kGroundLevelWeights[256] =
 	-6,		// End portal frame
 	6,		// End stone
 	-8,		// Dragon egg
+	-8,		// Redstone lamp (off)
+	-8,		// Redstone lamp (on)
 	
 	0
 };
 
 enum
 {
-	kLastWeight = kMCBlockDragonEgg
+	kLastWeight = kMCBlockRedstoneLampOn
 };
 
 

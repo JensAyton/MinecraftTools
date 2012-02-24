@@ -123,7 +123,9 @@
 		"End portal",
 		"End portal frame",
 		"End stone",
-		"Dragon egg"
+		"Dragon egg",
+		"Redstone lamp",		// off
+		"Redstone lamp"			// on
 	);
 	
 	"Fluid level" = "level <$level$>";
