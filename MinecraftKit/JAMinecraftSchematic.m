@@ -713,8 +713,8 @@ const int8_t kGroundLevelWeights[256] =
 	1,		// Red mushroom
 	-2,		// Gold block
 	-2,		// Iron block
-	2,		// Double step
-	0,		// Single step
+	2,		// Double slab
+	0,		// Single slab
 	-2,		// Brick
 	-2,		// TNT
 	-4,		// Bookshelf
@@ -803,13 +803,16 @@ const int8_t kGroundLevelWeights[256] =
 	-8,		// Dragon egg
 	-8,		// Redstone lamp (off)
 	-8,		// Redstone lamp (on)
+	2,		// Double wooden slab
+	0,		// Single wooden slab
+	-8,		// Cocoa pod
 	
 	0
 };
 
 enum
 {
-	kLastWeight = kMCBlockRedstoneLampOn
+	kLastWeight = kMCBlockCocoaPod
 };
 
 

@@ -91,7 +91,8 @@ static const uint8_t kOpaqueIDs[] =
 	kMCBlockNetherBrick,
 	kMCBlockEndStone,
 	kMCBlockRedstoneLampOff,
-	kMCBlockRedstoneLampOn
+	kMCBlockRedstoneLampOn,
+	kMCBlockWoodenDoubleSlab
 };
 
 
@@ -112,7 +113,8 @@ static const uint8_t kTransparentIDs[] =
 	kMCBlockStoneBrickStairs,
 	kMCBlockNetherBrickStairs,
 	kMCBlockEndPortalFrame,
-	kMCBlockDragonEgg
+	kMCBlockDragonEgg,
+	kMCBlockWoodenSingleSlab
 };
 
 
@@ -179,7 +181,8 @@ static const uint8_t kItemIDs[] =
 	kMCBlockEnchantmentTable,
 	kMCBlockBrewingStand,
 	kMCBlockCauldron,
-	kMCBlockEndPortal
+	kMCBlockEndPortal,
+	kMCBlockCocoaPod
 };
 
 
@@ -257,7 +260,8 @@ static const uint8_t kVegetableIDs[] =
 	kMCBlockPumpkinStem,
 	kMCBlockMelonStem,
 	kMCBlockLilyPad,
-	kMCBlockNetherWart
+	kMCBlockNetherWart,
+	kMCBlockCocoaPod
 };
 
 

@@ -74,8 +74,8 @@ enum
 	kMCBlockRedMushroom						= 40,
 	kMCBlockGoldBlock						= 41,
 	kMCBlockIronBlock						= 42,
-	kMCBlockDoubleSlab						= 43,	// Two half-steps on top of each other. Data: kMCInfoSlabTypeMask
-	kMCBlockSingleSlab						= 44,	// A single half-step. Data: kMCInfoSlabTypeMask
+	kMCBlockDoubleSlab						= 43,	// Two half-steps on top of each other. Data: kMCInfoSlabTypeMask, kMCInfoSlabUpsideDown
+	kMCBlockSingleSlab						= 44,	// A single half-step. Data: kMCInfoSlabTypeMask, kMCInfoSlabUpsideDown
 	kMCBlockBrick							= 45,
 	kMCBlockTNT								= 46,
 	kMCBlockBookshelf						= 47,
@@ -155,11 +155,14 @@ enum
 	kMCBlockEndStone						= 121,
 	kMCBlockDragonEgg						= 122,
 	kMCBlockRedstoneLampOff					= 123,
-	kMCBlockRedstoneLampOn					= 124
+	kMCBlockRedstoneLampOn					= 124,
+	kMCBlockWoodenDoubleSlab				= 125,	// Data: kMCInfoWoodTypeMask, kMCInfoSlabUpsideDown
+	kMCBlockWoodenSingleSlab				= 126,	// Data: kMCInfoWoodTypeMask, kMCInfoSlabUpsideDown
+	kMCBlockCocoaPod						= 127
 };
 
 
-#define kMCLastBlockID kMCBlockRedstoneLampOn
+#define kMCLastBlockID kMCBlockCocoaPod
 
 
 enum
@@ -218,7 +221,8 @@ enum
 		Affects texture only.
 	*/
 	kMCInfoWoodTypeMask						= 0x03,
-	kMCInfoWoodTypeDefault					= 0x00,
+	kMCInfoWoodTypeOak						= 0x00,
+	kMCInfoWoodTypeDefault					= kMCInfoWoodTypeOak,	// Old name
 	kMCInfoWoodTypeConifer					= 0x01,
 	kMCInfoWoodTypeBirch					= 0x02,
 	kMCInfoWoodTypeJungle					= 0x03,
@@ -410,11 +414,15 @@ enum
 	
 	/*	Types of slab/half-step.
 	*/
-	kMCInfoSlabTypeMask						= 0x03,
+	kMCInfoSlabTypeMask						= 0x07,
 	kMCInfoSlabTypeStone					= 0x00,
 	kMCInfoSlabTypeSandstone				= 0x01,
-	kMCInfoSlabTypeWood						= 0x02,
+	kMCInfoSlabTypeWood						= 0x02,	// Pre-1.3 oak-looking wooden slab
 	kMCInfoSlabTypeCobblestone				= 0x03,
+	kMCInfoSlabTypeBrick					= 0x04,
+	kMCInfoSlabTypeStoneBrick				= 0x05,
+	
+	kMCInfoSlabUpsideDown					= 0x08,
 	
 	/*	Fire generation: as I understand it, the source of a fire is generation
 		0, and each time fire spreads the new block has a higher generation.
