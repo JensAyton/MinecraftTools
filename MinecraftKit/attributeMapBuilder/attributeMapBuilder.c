@@ -144,7 +144,7 @@ static const uint8_t kItemIDs[] =
 	kMCBlockRedMushroom,
 	kMCBlockTorch,
 	kMCBlockFire,
-	kMCBlockChest,	// FIXME: how do torches interact with redstone in 1.8?
+	kMCBlockChest,
 	kMCBlockRedstoneWire,
 	kMCBlockCrops,
 	kMCBlockSignPost,

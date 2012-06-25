@@ -55,7 +55,7 @@ enum
 	kMCBlockLapisLazuliOre					= 21,
 	kMCBlockLapisLazuliBlock				= 22,
 	kMCBlockDispenser						= 23,	// Data: kMCInfoMisc2Orientation; tile entity: Trap.
-	kMCBlockSandstone						= 24,
+	kMCBlockSandstone						= 24,	// Data: kMCInfoSandstoneAppearance
 	kMCBlockNoteBlock						= 25,	// Tile entity: Music
 	kMCBlockBed								= 26,	// Data: kMCInfoMisc3OrientationMask (direction of foot of bed) and kInfoBedIsHead.
 	kMCBlockPoweredRail						= 27,	// Data: kMCInfoPoweredRailOrientationMask and kMCInfoPoweredRailIsPowered.
@@ -85,7 +85,7 @@ enum
 	kMCBlockFire							= 51,	// Data: kMCBlockFireGenerationMask
 	kMCBlockMobSpawner						= 52,	// Tile entity: MobSpawner
 	kMCBlockWoodenStairs					= 53,	// Data: kMCInfoStairOrientationMask
-	kMCBlockChest							= 54,	// Tile entity: Chest
+	kMCBlockChest							= 54,	// Data: kInfoMisc2Orientation. tile entity: Chest
 	kMCBlockRedstoneWire					= 55,
 	kMCBlockDiamondOre						= 56,
 	kMCBlockDiamondBlock					= 57,
@@ -223,7 +223,7 @@ enum
 	kMCInfoWoodTypeMask						= 0x03,
 	kMCInfoWoodTypeOak						= 0x00,
 	kMCInfoWoodTypeDefault					= kMCInfoWoodTypeOak,	// Old name
-	kMCInfoWoodTypeConifer					= 0x01,
+	kMCInfoWoodTypeSpruce					= 0x01,
 	kMCInfoWoodTypeBirch					= 0x02,
 	kMCInfoWoodTypeJungle					= 0x03,
 	
@@ -237,6 +237,13 @@ enum
 	 */
 	kMCInfoLeafUpdatePending				= 0x04,
 	kMCInfoLeafPermanent					= 0x08,
+	
+	/*	Sandstone block: appearance of sides.
+	*/
+	kMCInfoSandstoneAppearanceMask			= 0x02,
+	kMCInfoSandstoneAppearanceDefault		= 0x00,
+	kMCInfoSandstoneAppearanceChiseled		= 0x01,
+	kMCInfoSandstoneAppearanceSmooth		= 0x02,
 	
 	/*	Wool: colour.
 		This is represented by different block IDs in Creative.
@@ -278,14 +285,15 @@ enum
 	*/
 	kInfoBedIsHead							= 0x08,
 	
-	/*	Stair orientations, for wooden and stone stairs.
+	/*	Stair orientations.
 		The labels are intended to refer to the _ascending_ direction.
 	*/
-	kMCInfoStairOrientationMask				= 0x03,
+	kMCInfoStairOrientationMask				= 0x07,
 	kMCInfoStairOrientationEast				= 0x00,
 	kMCInfoStairOrientationWest				= 0x01,
 	kMCInfoStairOrientationSouth			= 0x02,
 	kMCInfoStairOrientationNorth			= 0x03,
+	kMCInfoStairUpsideDown					= 0x04,
 	
 	/*	Redstone signal strength varies from 0 to 15.
 	*/
@@ -317,6 +325,7 @@ enum
 	/*	kInfoMisc2Orientation
 		Another common set of orientation flags, used for:
 		* Ladders
+		* Chests
 		* Wall signs
 		* Furnaces
 		* Dispensers
@@ -412,7 +421,7 @@ enum
 	kMCInfoTallGrassTypeTallGrass			= 0x01,
 	kMCInfoTallGrassTypeFern				= 0x02,
 	
-	/*	Types of slab/half-step.
+	/*	Types of slab.
 	*/
 	kMCInfoSlabTypeMask						= 0x07,
 	kMCInfoSlabTypeStone					= 0x00,
@@ -464,6 +473,7 @@ enum
 	kMCInfoStoneBrickAppearanceNormal		= 0x00,
 	kMCInfoStoneBrickAppearanceMossy		= 0x01,
 	kMCInfoStoneBrickAppearanceCracked		= 0x02,
+	kMCInfoStoneBrickAppearanceChiseled		= 0x03,
 	
 	kMCInfoMushroomAppearanceMask			= 0x0F,
 	kMCInfoMushroomAppearanceFlesh			= 0x00,	// Pores on all sides.
