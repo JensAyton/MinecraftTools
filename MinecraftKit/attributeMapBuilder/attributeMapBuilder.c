@@ -10,7 +10,7 @@
 	need to be updated and a new JAMinecraftBlockIDs.c generated.
 	
 	
-	Copyright © 2010–2011 Jens Ayton
+	Copyright © 2010–2012 Jens Ayton
 	
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),
@@ -92,7 +92,9 @@ static const uint8_t kOpaqueIDs[] =
 	kMCBlockEndStone,
 	kMCBlockRedstoneLampOff,
 	kMCBlockRedstoneLampOn,
-	kMCBlockWoodenDoubleSlab
+	kMCBlockWoodenDoubleSlab,
+	kMCBlockEmeraldOre,
+	kMCBlockEmeraldBlock,
 };
 
 
@@ -114,7 +116,11 @@ static const uint8_t kTransparentIDs[] =
 	kMCBlockNetherBrickStairs,
 	kMCBlockEndPortalFrame,
 	kMCBlockDragonEgg,
-	kMCBlockWoodenSingleSlab
+	kMCBlockWoodenSingleSlab,
+	kMCBlockSandstoneStairs,
+	kMCBlockSpruceWoodStairs,
+	kMCBlockBirchWoodStairs,
+	kMCBlockJungleWoodStairs,
 };
 
 
@@ -182,7 +188,10 @@ static const uint8_t kItemIDs[] =
 	kMCBlockBrewingStand,
 	kMCBlockCauldron,
 	kMCBlockEndPortal,
-	kMCBlockCocoaPod
+	kMCBlockCocoaPod,
+	KMCBlockEnderChest,
+	kMCBlockTripwireHook,
+	kMCBlockTripwire,
 };
 
 
@@ -204,7 +213,8 @@ static const uint8_t kTileEntityIDs[] =
 	kMCBlockJukebox,
 	kMCBlockEnchantmentTable,
 	kMCBlockBrewingStand,
-	kMCBlockEndPortal
+	kMCBlockEndPortal,
+	// KMCBlockEnderChest // FIXME
 };
 
 
@@ -216,7 +226,7 @@ static const uint8_t kPowerSourceIDs[] =
 	kMCBlockWoodenPressurePlate,
 	kMCBlockRedstoneTorchOff,
 	kMCBlockRedstoneTorchOn,
-	kMCBlockStoneButton
+	kMCBlockStoneButton,
 };
 
 
@@ -234,7 +244,7 @@ static const uint8_t kPowerSinkIDs[] =
 	kMCBlockNoteBlock,
 	kMCBlockGate,		// As of 1.1.
 	kMCBlockRedstoneLampOff,
-	kMCBlockRedstoneLampOn
+	kMCBlockRedstoneLampOn,
 };
 
 
@@ -261,7 +271,7 @@ static const uint8_t kVegetableIDs[] =
 	kMCBlockMelonStem,
 	kMCBlockLilyPad,
 	kMCBlockNetherWart,
-	kMCBlockCocoaPod
+	kMCBlockCocoaPod,
 };
 
 
@@ -270,11 +280,11 @@ static const uint8_t kOreIDs[] =
 	kMCBlockGoldOre,
 	kMCBlockIronOre,
 	kMCBlockCoalOre,
-	kMCBlockLapisLazuliOre,
 	kMCBlockDiamondOre,
 	kMCBlockRedstoneOre,
 	kMCBlockGlowingRedstoneOre,
-	kMCBlockLapisLazuliOre
+	kMCBlockLapisLazuliOre,
+	kMCBlockEmeraldOre,
 };
 
 
@@ -282,7 +292,7 @@ static const uint8_t kRailIDs[] =
 {
 	kMCBlockRail,
 	kMCBlockPoweredRail,
-	kMCBlockDetectorRail
+	kMCBlockDetectorRail,
 };
 
 
@@ -290,7 +300,7 @@ static const uint8_t kPistonIDs[] =
 {
 	kMCBlockPiston,
 	kMCBlockStickyPiston,
-	kMCBlockPistonHead
+	kMCBlockPistonHead,
 };
 
 
@@ -300,7 +310,11 @@ static const uint8_t kStairIDs[] =
 	kMCBlockCobblestoneStairs,
 	kMCBlockBrickStairs,
 	kMCBlockStoneBrickStairs,
-	kMCBlockNetherBrickStairs
+	kMCBlockNetherBrickStairs,
+	kMCBlockSandstoneStairs,
+	kMCBlockSpruceWoodStairs,
+	kMCBlockBirchWoodStairs,
+	kMCBlockJungleWoodStairs,
 };
 
 

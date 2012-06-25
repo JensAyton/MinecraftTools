@@ -806,13 +806,23 @@ const int8_t kGroundLevelWeights[256] =
 	2,		// Double wooden slab
 	0,		// Single wooden slab
 	-8,		// Cocoa pod
+	-2,		// Sandstone stairs
+	8,		// Emerald ore
+	
+	-4,		// Ender chest
+	-8,		// Tripwire hook
+	-8,		// Tripwire
+	-8,		// Emerald block
+	-2,		// Spruce stairs
+	-2,		// Birch stairs
+	-2,		// Jungle stairs
 	
 	0
 };
 
 enum
 {
-	kLastWeight = kMCBlockCocoaPod
+	kLastWeight = kMCBlockJungleWoodStairs
 };
 
 

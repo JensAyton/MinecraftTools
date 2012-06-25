@@ -158,11 +158,20 @@ enum
 	kMCBlockRedstoneLampOn					= 124,
 	kMCBlockWoodenDoubleSlab				= 125,	// Data: kMCInfoWoodTypeMask, kMCInfoSlabUpsideDown
 	kMCBlockWoodenSingleSlab				= 126,	// Data: kMCInfoWoodTypeMask, kMCInfoSlabUpsideDown
-	kMCBlockCocoaPod						= 127
+	kMCBlockCocoaPod						= 127,	// Data: FIXME: orientation, three growth stages?
+	kMCBlockSandstoneStairs					= 128,	// Data: kMCInfoStairOrientation
+	kMCBlockEmeraldOre						= 129,
+	KMCBlockEnderChest						= 130,	// Data: kInfoMisc2Orientation, Tile entity: FIXME
+	kMCBlockTripwireHook					= 131,	// Data: FIXME
+	kMCBlockTripwire						= 132,	// Data: FIXME
+	kMCBlockEmeraldBlock					= 133,
+	kMCBlockSpruceWoodStairs				= 134,	// Data: kMCInfoStairOrientation
+	kMCBlockBirchWoodStairs					= 135,	// Data: kMCInfoStairOrientation
+	kMCBlockJungleWoodStairs				= 136,	// Data: kMCInfoStairOrientation
 };
 
 
-#define kMCLastBlockID kMCBlockCocoaPod
+#define kMCLastBlockID kMCBlockJungleWoodStairs
 
 
 enum
