@@ -7,4 +7,4 @@ types are colour-coded. Blocks with tile entities have dotted orange outlines.
 
 The rendering and scaling is implemented in JASchematicViewerView.m, a
 subclass of JAMinecraftGridView. All other interaction, including selection
-and scrolling, are handled by JAMinecraftGridView.
+and scrolling, is handled by JAMinecraftGridView.
