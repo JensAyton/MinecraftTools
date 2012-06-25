@@ -1,11 +1,7 @@
 /*
 	JAMinecraftRegionReader.h
 	
-	Read-only extractor for Minecraft region files.
-	
-	Looking forward, we want read-only and read-write block stores representing
-	entire worlds, but extracting individual chunks as schematics is a
-	reasonable starting point.
+	Read-only extractor for pre-1.2 Minecraft region files.
 	
 	
 	Copyright © 2011 Jens Ayton
