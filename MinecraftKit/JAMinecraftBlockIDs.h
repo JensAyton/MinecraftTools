@@ -84,7 +84,7 @@ enum
 	kMCBlockTorch							= 50,	// Data: kMCInfoMiscOrientation
 	kMCBlockFire							= 51,	// Data: kMCBlockFireGeneration
 	kMCBlockMobSpawner						= 52,	// Tile entity: MobSpawner
-	kMCBlockWoodenStairs					= 53,	// Data: kMCInfoStairOrientation
+	kMCBlockWoodenStairs					= 53,	// Data: kMCInfoStairOrientation, kMCInfoStairUpsideDown
 	kMCBlockChest							= 54,	// Data: kInfoMisc2Orientation. tile entity: Chest
 	kMCBlockRedstoneWire					= 55,
 	kMCBlockDiamondOre						= 56,
@@ -98,7 +98,7 @@ enum
 	kMCBlockWoodenDoor						= 64,	// Data: kMCInfoDoorOrientation, kMCInfoDoorOpen and kMCInfoDoorTopHalf.
 	kMCBlockLadder							= 65,
 	kMCBlockRail							= 66,
-	kMCBlockCobblestoneStairs				= 67,	// Data: kMCInfoStairOrientation
+	kMCBlockCobblestoneStairs				= 67,	// Data: kMCInfoStairOrientation, kMCInfoStairUpsideDown
 	kMCBlockWallSign						= 68,	// Sign on wall. Data: kMCInfoMisc2Orientation; tile entity: Sign.
 	kMCBlockLever							= 69,
 	kMCBlockStonePressurePlate				= 70,	// Data: kMCInfoPressurePlateOn, kMCInfoLeverOn.
@@ -139,13 +139,13 @@ enum
 	kMCBlockMelonStem						= 105,	// Data: kMCInfoGourdStemAge
 	kMCBlockVines							= 106,	// Data: kMCInfoVineAttachment
 	kMCBlockGate							= 107,	// Data: kMCInfoDoorOrientation and kMCInfoDoorOpen.
-	kMCBlockBrickStairs						= 108,	// Data: kMCInfoStairOrientation
-	kMCBlockStoneBrickStairs				= 109,	// Data: kMCInfoStairOrientation
+	kMCBlockBrickStairs						= 108,	// Data: kMCInfoStairOrientation, kMCInfoStairUpsideDown
+	kMCBlockStoneBrickStairs				= 109,	// Data: kMCInfoStairOrientation, kMCInfoStairUpsideDown
 	kMCBlockMycelium						= 110,
 	kMCBlockLilyPad							= 111,
 	kMCBlockNetherBrick						= 112,
 	kMCBlockNetherBrickFence				= 113,
-	kMCBlockNetherBrickStairs				= 114,	// Data: kMCInfoStairOrientation
+	kMCBlockNetherBrickStairs				= 114,	// Data: kMCInfoStairOrientation, kMCInfoStairUpsideDown
 	kMCBlockNetherWart						= 115,	// Data: kMCInfoNetherWartAge
 	kMCBlockEnchantmentTable				= 116,	// Tile entity: EnchantTable
 	kMCBlockBrewingStand					= 117,	// Data: kMCInfoBrewingStandBottleSlotX; tile entity: Cauldron
@@ -159,15 +159,15 @@ enum
 	kMCBlockWoodenDoubleSlab				= 125,	// Data: kMCInfoWoodTypeMask, kMCInfoSlabUpsideDown
 	kMCBlockWoodenSingleSlab				= 126,	// Data: kMCInfoWoodTypeMask, kMCInfoSlabUpsideDown
 	kMCBlockCocoaPod						= 127,	// Data: FIXME: orientation, three growth stages?
-	kMCBlockSandstoneStairs					= 128,	// Data: kMCInfoStairOrientation
+	kMCBlockSandstoneStairs					= 128,	// Data: kMCInfoStairOrientation, kMCInfoStairUpsideDown
 	kMCBlockEmeraldOre						= 129,
 	KMCBlockEnderChest						= 130,	// Data: kInfoMisc2Orientation, Tile entity: FIXME
 	kMCBlockTripwireHook					= 131,	// Data: FIXME
 	kMCBlockTripwire						= 132,	// Data: FIXME
 	kMCBlockEmeraldBlock					= 133,
-	kMCBlockSpruceWoodStairs				= 134,	// Data: kMCInfoStairOrientation
-	kMCBlockBirchWoodStairs					= 135,	// Data: kMCInfoStairOrientation
-	kMCBlockJungleWoodStairs				= 136,	// Data: kMCInfoStairOrientation
+	kMCBlockSpruceWoodStairs				= 134,	// Data: kMCInfoStairOrientation, kMCInfoStairUpsideDown
+	kMCBlockBirchWoodStairs					= 135,	// Data: kMCInfoStairOrientation, kMCInfoStairUpsideDown
+	kMCBlockJungleWoodStairs				= 136,	// Data: kMCInfoStairOrientation, kMCInfoStairUpsideDown
 };
 
 
@@ -297,11 +297,12 @@ enum
 	/*	Stair orientations.
 		The labels are intended to refer to the _ascending_ direction.
 	*/
-	kMCInfoStairOrientationMask				= 0x07,
+	kMCInfoStairOrientationMask				= 0x03,
 	kMCInfoStairOrientationEast				= 0x00,
 	kMCInfoStairOrientationWest				= 0x01,
 	kMCInfoStairOrientationSouth			= 0x02,
 	kMCInfoStairOrientationNorth			= 0x03,
+	
 	kMCInfoStairUpsideDown					= 0x04,
 	
 	/*	Redstone signal strength varies from 0 to 15.

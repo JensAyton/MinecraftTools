@@ -2,7 +2,7 @@
 	JAMinecraftTypes.m
 	
 	
-	Copyright © 2010–2011 Jens Ayton
+	Copyright © 2010–2012 Jens Ayton
 	
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),
@@ -857,6 +857,10 @@ MCDirection MCCellGetOrientation(MCCell cell)
 		case kMCBlockBrickStairs:
 		case kMCBlockStoneBrickStairs:
 		case kMCBlockNetherBrickStairs:
+		case kMCBlockSandstoneStairs:
+		case kMCBlockSpruceWoodStairs:
+		case kMCBlockBirchWoodStairs:
+		case kMCBlockJungleWoodStairs:
 			switch (blockData & kMCInfoStairOrientationMask)
 			{
 				case kMCInfoStairOrientationEast:
@@ -875,11 +879,13 @@ MCDirection MCCellGetOrientation(MCCell cell)
 					return kMCDirectionUnknown;
 			}
 			
+		case kMCBlockChest:
 		case kMCBlockLadder:
 		case kMCBlockWallSign:
 		case kMCBlockFurnace:
 		case kMCBlockBurningFurnace:
 		case kMCBlockDispenser:
+		case KMCBlockEnderChest:
 			switch (blockData & kMCInfoMisc2OrientationMask)
 			{
 				case kMCInfoMisc2OrientationNorth:
@@ -921,6 +927,7 @@ MCDirection MCCellGetOrientation(MCCell cell)
 		case kMCBlockBed:
 		case kMCBlockRedstoneRepeaterOn:
 		case kMCBlockRedstoneRepeaterOff:
+		case kMCBlockEndPortalFrame:
 			switch (blockData & kMCInfoMisc3OrientationMask)
 			{
 				case kMCInfoMisc3OrientationNorth:
@@ -1075,6 +1082,10 @@ void MCCellSetOrientation(MCCell *cell, MCDirection orientation)
 		case kMCBlockBrickStairs:
 		case kMCBlockStoneBrickStairs:
 		case kMCBlockNetherBrickStairs:
+		case kMCBlockSandstoneStairs:
+		case kMCBlockSpruceWoodStairs:
+		case kMCBlockBirchWoodStairs:
+		case kMCBlockJungleWoodStairs:
 			mask = kMCInfoStairOrientationMask;
 				switch (orientation)
 			{
@@ -1097,11 +1108,13 @@ void MCCellSetOrientation(MCCell *cell, MCDirection orientation)
 			}
 			break;
 			
+		case kMCBlockChest:
 		case kMCBlockLadder:
 		case kMCBlockWallSign:
 		case kMCBlockFurnace:
 		case kMCBlockBurningFurnace:
 		case kMCBlockDispenser:
+		case KMCBlockEnderChest:
 			mask = kMCInfoMisc2OrientationMask;
 			switch (orientation)
 			{
@@ -1151,6 +1164,7 @@ void MCCellSetOrientation(MCCell *cell, MCDirection orientation)
 		case kMCBlockBed:
 		case kMCBlockRedstoneRepeaterOn:
 		case kMCBlockRedstoneRepeaterOff:
+		case kMCBlockEndPortalFrame:
 			mask = kMCInfoMisc3OrientationMask;
 			switch (orientation)
 			{
