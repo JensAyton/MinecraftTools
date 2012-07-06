@@ -664,7 +664,7 @@ static void PerformFill(InnerNode *node, unsigned level, MCGridExtents fillRegio
 	 6: typical ground blocks
 	 8: ore blocks
  */
-const int8_t kGroundLevelWeights[256] =
+const int8_t kGroundLevelWeights[] =
 {
 	-8,		// Air
 	4,		// Smooth stone
@@ -816,17 +816,20 @@ const int8_t kGroundLevelWeights[256] =
 	-2,		// Spruce stairs
 	-2,		// Birch stairs
 	-2,		// Jungle stairs
-	
-	0
 };
+
 
 enum
 {
-	kLastWeight = kMCBlockJungleWoodStairs
+	kLastWeight = sizeof kGroundLevelWeights - 1
 };
 
 
+#if __has_feature(c_static_assert)
+_Static_assert(kLastWeight == kMCLastBlockID, "The ground level weight table (above) needs to be updated.");
+#else
 static char If_you_get_an_error_here_the_ground_level_weight_table_above_needs_to_be_updated[kLastWeight == kMCLastBlockID ? 1 : -1] __attribute__((unused));
+#endif
 
 
 - (NSInteger) findNaturalGroundLevel
@@ -843,6 +846,10 @@ static char If_you_get_an_error_here_the_ground_level_weight_table_above_needs_t
 	memset(weightArray, 0, sizeof weightArray);
 	NSInteger *weights = weightArray;	// Can’t refer to array from inside block.
 	
+	// Copy weights table to one padded to 256 bytes to avoid range checking.
+	int8_t weightTable[256] = { 0 };
+	memcpy(weightTable, kGroundLevelWeights, sizeof kGroundLevelWeights);
+	
 	MCGridCoordinates coords;
 	for (coords.y = extents.minY; coords.y <= extents.maxY; coords.y++)
 	{
@@ -853,7 +860,7 @@ static char If_you_get_an_error_here_the_ground_level_weight_table_above_needs_t
 			for (coords.x = extents.minX; coords.x <= extents.maxX; coords.x++)
 			{
 				MCCell cell = [self cellAt:coords];
-				weight += kGroundLevelWeights[cell.blockID];
+				weight += weightTable[cell.blockID];
 			}
 		}
 		
