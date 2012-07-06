@@ -19,6 +19,8 @@
 	
 	To work around this, we use a pool of serial queues. There ought to be a
 	better way, but I can’t find anything relevant in documentation.
+	
+	FIXME: use dispatch_io.
 */
 static NSUInteger sQueueCount, sNextQueue;
 static dispatch_queue_t *sQueues;
