@@ -10,6 +10,10 @@
 		1A164B78148938010079962D /* JAMinecraftChunkBlockStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A164B76148938010079962D /* JAMinecraftChunkBlockStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A164B79148938010079962D /* JAMinecraftChunkBlockStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A164B77148938010079962D /* JAMinecraftChunkBlockStore.m */; };
 		1A164B7C14893F670079962D /* JAMinecraftChunkBlockStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A164B77148938010079962D /* JAMinecraftChunkBlockStore.m */; };
+		1A1EA94615692B5F005A9E3D /* JAMinecraftAnvilRegionReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A1EA94415692B5F005A9E3D /* JAMinecraftAnvilRegionReader.h */; };
+		1A1EA94715692B5F005A9E3D /* JAMinecraftAnvilRegionReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A1EA94415692B5F005A9E3D /* JAMinecraftAnvilRegionReader.h */; };
+		1A1EA94815692B5F005A9E3D /* JAMinecraftAnvilRegionReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1EA94515692B5F005A9E3D /* JAMinecraftAnvilRegionReader.m */; };
+		1A1EA94915692B5F005A9E3D /* JAMinecraftAnvilRegionReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1EA94515692B5F005A9E3D /* JAMinecraftAnvilRegionReader.m */; };
 		1A3AAB6514592FA0006C7043 /* Data.schema in Resources */ = {isa = PBXBuildFile; fileRef = 1A3AAB6414592FA0006C7043 /* Data.schema */; };
 		1A64907114517A7300F57924 /* JANBTSerialization.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A64906F14517A7300F57924 /* JANBTSerialization.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A6C28B314A26A67008A6535 /* BlockDescriptions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1A6C28B114A26A67008A6535 /* BlockDescriptions.plist */; };
@@ -151,6 +155,8 @@
 /* Begin PBXFileReference section */
 		1A164B76148938010079962D /* JAMinecraftChunkBlockStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAMinecraftChunkBlockStore.h; sourceTree = SOURCE_ROOT; };
 		1A164B77148938010079962D /* JAMinecraftChunkBlockStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAMinecraftChunkBlockStore.m; sourceTree = SOURCE_ROOT; };
+		1A1EA94415692B5F005A9E3D /* JAMinecraftAnvilRegionReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAMinecraftAnvilRegionReader.h; sourceTree = SOURCE_ROOT; };
+		1A1EA94515692B5F005A9E3D /* JAMinecraftAnvilRegionReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAMinecraftAnvilRegionReader.m; sourceTree = SOURCE_ROOT; };
 		1A3AAB6414592FA0006C7043 /* Data.schema */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Data.schema; path = Resources/Data.schema; sourceTree = SOURCE_ROOT; };
 		1A64906F14517A7300F57924 /* JANBTSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTSerialization.h; sourceTree = SOURCE_ROOT; };
 		1A64907014517A7300F57924 /* JANBTSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTSerialization.m; sourceTree = SOURCE_ROOT; };
@@ -372,6 +378,8 @@
 				1AF70346147060840096EDF1 /* JAMinecraftRegionReader.m */,
 				1A164B76148938010079962D /* JAMinecraftChunkBlockStore.h */,
 				1A164B77148938010079962D /* JAMinecraftChunkBlockStore.m */,
+				1A1EA94415692B5F005A9E3D /* JAMinecraftAnvilRegionReader.h */,
+				1A1EA94515692B5F005A9E3D /* JAMinecraftAnvilRegionReader.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -445,6 +453,7 @@
 				1AF70348147060840096EDF1 /* JAMinecraftRegionReader.h in Headers */,
 				1A6C292414A27686008A6535 /* JABozoStringTemplate.h in Headers */,
 				1AF6E52014A4ABDA00E38756 /* JAGenericToString.h in Headers */,
+				1A1EA94715692B5F005A9E3D /* JAMinecraftAnvilRegionReader.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -480,6 +489,7 @@
 				1AC7953114643DE3008BBFA4 /* JAPointMaths.h in Headers */,
 				1A6C292314A27686008A6535 /* JABozoStringTemplate.h in Headers */,
 				1AF6E51F14A4ABDA00E38756 /* JAGenericToString.h in Headers */,
+				1A1EA94615692B5F005A9E3D /* JAMinecraftAnvilRegionReader.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -657,6 +667,7 @@
 				1A164B7C14893F670079962D /* JAMinecraftChunkBlockStore.m in Sources */,
 				1A6C28B714A27430008A6535 /* BlockDescriptions.c in Sources */,
 				1AF6E52214A4ABDA00E38756 /* JAGenericToString.m in Sources */,
+				1A1EA94915692B5F005A9E3D /* JAMinecraftAnvilRegionReader.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -689,6 +700,7 @@
 				1AF70349147060840096EDF1 /* JAMinecraftRegionReader.m in Sources */,
 				1A164B79148938010079962D /* JAMinecraftChunkBlockStore.m in Sources */,
 				1AF6E52114A4ABDA00E38756 /* JAGenericToString.m in Sources */,
+				1A1EA94815692B5F005A9E3D /* JAMinecraftAnvilRegionReader.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

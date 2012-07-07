@@ -201,7 +201,7 @@ static void DumpTileEntities(NSArray *entities)
 
 static void PrintHelpAndExit(void)
 {
-	printf("Usage: regiondump <file.mcr>");
+	printf("Usage: regiondump <file.mcr>\n");
 	
 	exit(EXIT_SUCCESS);
 }
