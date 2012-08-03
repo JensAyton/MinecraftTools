@@ -135,7 +135,7 @@ static void AnalyzeRegionsInDirectory(NSString *directory)
 				sCompletedRegions++;
 				if (sAllQueued)
 				{
-					Print(@"%u regions remaining.\n", sTotalRegions - sCompletedRegions);
+					Print(@"%lu regions remaining.\n", sTotalRegions - sCompletedRegions);
 				}
 			});
 		});
@@ -319,7 +319,7 @@ static void Finish(JATerrainStatistics *statistics)
 	for (NSUInteger type = 0; type < 256; type++)
 	{
 		NSUInteger count = [totalCounts valueForBlockType:type];
-		FPrint(file, @"%u,%@,%u\n", type, BlockName(type), count);
+		FPrint(file, @"%lu,%@,%lu\n", type, BlockName(type), count);
 		if (count != 0)  highestType = type;
 	}
 	fclose(file);
@@ -329,7 +329,7 @@ static void Finish(JATerrainStatistics *statistics)
 	for (NSUInteger type = 0; type < 256; type++)
 	{
 		NSUInteger count = [adjacentToAirBelow60Counts valueForBlockType:type];
-		FPrint(file, @"%u,%@,%u\n", type, BlockName(type), count);
+		FPrint(file, @"%lu,%@,%lu\n", type, BlockName(type), count);
 	}
 	fclose(file);
 	
@@ -338,7 +338,7 @@ static void Finish(JATerrainStatistics *statistics)
 	for (NSUInteger type = 0; type < 256; type++)
 	{
 		NSUInteger count = [nonadjacentToAirBelow60Counts valueForBlockType:type];
-		FPrint(file, @"%u,%@,%u\n", type, BlockName(type), count);
+		FPrint(file, @"%lu,%@,%lu\n", type, BlockName(type), count);
 	}
 	fclose(file);
 	
@@ -347,7 +347,7 @@ static void Finish(JATerrainStatistics *statistics)
 	for (NSUInteger type = 0; type < 256; type++)
 	{
 		NSUInteger count = [topmostCounts valueForBlockType:type];
-		FPrint(file, @"%u,%@,%u\n", type, BlockName(type), count);
+		FPrint(file, @"%lu,%@,%lu\n", type, BlockName(type), count);
 	}
 	fclose(file);
 	
@@ -361,10 +361,10 @@ static void Finish(JATerrainStatistics *statistics)
 	FPrint(file, @"\n");
 	for (NSUInteger y = 0; y < 128; y++)
 	{
-		FPrint(file, @"%u", y);
+		FPrint(file, @"%lu", y);
 		for (NSUInteger type = 0; type <= highestType; type++)
 		{
-			FPrint(file, @",%u", [countsByLayer valueForBlockType:type onLayer:y]);
+			FPrint(file, @",%lu", [countsByLayer valueForBlockType:type onLayer:y]);
 		}
 		FPrint(file, @"\n");
 	}
@@ -568,7 +568,7 @@ static NSString *BlockOrItemName(NSUInteger itemID)
 	NSString *result = [outOfSequence objectForKey:[NSNumber numberWithInteger:itemID]];
 	if (result != nil)  return result;
 	
-	return $sprintf(@"unknown-%u", itemID);
+	return $sprintf(@"unknown-%lu", itemID);
 }
 
 

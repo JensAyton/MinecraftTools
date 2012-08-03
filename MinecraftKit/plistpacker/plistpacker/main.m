@@ -62,7 +62,7 @@ int RealMain(int argc, const char * argv[])
 		  "#include <CoreFoundation/CoreFoundation.h>\n\n\n"
 		  "enum\n"
 		  "{\n"
-		  "\tk%@Size = % lu\n"
+		  "\tk%@Size = %lu\n"
 		  "};\n\n"
 		  "extern char k%@[k%@Size];\n\n\n"
 		  "#if __OBJC__\n"

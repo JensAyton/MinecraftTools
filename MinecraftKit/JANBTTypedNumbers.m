@@ -188,7 +188,7 @@
 
 - (NSString *)stringValue
 {
-	return $sprintf(@"%llu", _value);
+	return $sprintf(@"%lu", _value);
 }
 
 
