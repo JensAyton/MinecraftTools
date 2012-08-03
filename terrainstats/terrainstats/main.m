@@ -549,20 +549,20 @@ static NSString *BlockOrItemName(NSUInteger itemID)
 	static NSDictionary *outOfSequence = nil;
 	if (outOfSequence == nil)
 	{
-		outOfSequence = $dict
-		(
-			$int(2256), @"13 Disc",
-			$int(2257), @"Cat Disc",
-			$int(2258), @"blocks Disc",
-			$int(2259), @"chirp Disc",
-			$int(2260), @"far Disc",
-			$int(2261), @"mall Disc",
-			$int(2262), @"mellohi Disc",
-			$int(2263), @"stal Disc",
-			$int(2264), @"strad Disc",
-			$int(2265), @"ward Disc",
-			$int(2266), @"11 Disc"
-		);
+		outOfSequence =
+		@{
+			@2256: @"13 Disc",
+			@2257: @"Cat Disc",
+			@2258: @"blocks Disc",
+			@2259: @"chirp Disc",
+			@2260: @"far Disc",
+			@2261: @"mall Disc",
+			@2262: @"mellohi Disc",
+			@2263: @"stal Disc",
+			@2264: @"strad Disc",
+			@2265: @"ward Disc",
+			@2266: @"11 Disc"
+		};
 	}
 	
 	NSString *result = [outOfSequence objectForKey:[NSNumber numberWithInteger:itemID]];

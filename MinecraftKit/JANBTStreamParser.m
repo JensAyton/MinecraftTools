@@ -141,7 +141,9 @@ static inline BOOL IsNumericalSchema(id schema);
 		va_end(args);
 	}
 	
-	_error = [NSError errorWithDomain:kJANBTSerializationErrorDomain code:errorCode userInfo:$dict(NSLocalizedDescriptionKey, message, NSUnderlyingErrorKey, underlyingError)];
+	_error = [NSError errorWithDomain:kJANBTSerializationErrorDomain
+								 code:errorCode
+							 userInfo:@{ NSLocalizedDescriptionKey: message, NSUnderlyingErrorKey: underlyingError }];
 }
 
 

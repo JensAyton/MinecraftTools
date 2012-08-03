@@ -441,5 +441,5 @@ static void SetZLibError(int code, z_stream *stream, NSError **outError)
 	
 	*outError = [NSError errorWithDomain:kJAZLibErrorDomain
 									code:code
-								userInfo:$dict(NSLocalizedFailureReasonErrorKey, message)];
+								userInfo:@{ NSLocalizedFailureReasonErrorKey: message }];
 }

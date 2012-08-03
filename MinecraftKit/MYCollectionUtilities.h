@@ -4,9 +4,12 @@
 	Based on Jens Alfke’s CollectionUtils, modified and simplified for Oolite.
 	Now with ARC compatibility.
 	
+	Shortened quite a bit with the addition of collection and number literal
+	syntax.
+	
 	
 	Copyright © 2008, Jens Alfke <jens@mooseyard.com>. All rights reserved.
-	With modifications © 2010–2011 Jens Ayton.
+	With modifications © 2010–2012 Jens Ayton.
 	
 	Redistribution and use in source and binary forms, with or without
 	modification, are permitted provided that the following conditions are met:
@@ -36,62 +39,22 @@
 extern "C" {
 #endif
 
-#ifndef JA_UNSAFE_UNRETAINED
-#if defined(__has_feature) && __has_feature(objc_arc)
-#define JA_UNSAFE_UNRETAINED __unsafe_unretained
-#else
-#define JA_UNSAFE_UNRETAINED
-#endif
-#endif
-
-
 // Collection creation conveniences:
-
-#define $array(OBJS...)		({JA_UNSAFE_UNRETAINED id objs[]={OBJS}; \
-							  [NSArray arrayWithObjects: objs count: sizeof(objs)/sizeof(id)];})
-#define $marray(OBJS...)	({JA_UNSAFE_UNRETAINED id objs[]={OBJS}; \
-							  [NSMutableArray arrayWithObjects: objs count: sizeof(objs)/sizeof(id)];})
-
-#define $set(OBJS...)		({JA_UNSAFE_UNRETAINED id objs[]={OBJS}; \
-							  [NSSet setWithObjects: objs count: sizeof(objs)/sizeof(id)];})
-#define $mset(OBJS...)		({JA_UNSAFE_UNRETAINED id objs[]={OBJS}; \
-							  [NSMutableSet setWithObjects: objs count: sizeof(objs)/sizeof(id)];})
-
-#define $dict(PAIRS...)		({JA_UNSAFE_UNRETAINED id pairs[]={PAIRS}; \
-							  char $dict_macro_must_have_even_number_of_parameters \
-							  [((sizeof(pairs)/sizeof *pairs) & 1) ? -1 : 1] __attribute__((unused)); \
-							  JADictOf(pairs,sizeof(pairs)/sizeof *pairs);})
-#define $mdict(PAIRS...)	({JA_UNSAFE_UNRETAINED id pairs[]={PAIRS}; \
-							  char m$dict_macro_must_have_even_number_of_parameters \
-							  [((sizeof(pairs)/sizeof *pairs) & 1) ? -1 : 1] __attribute__((unused)); \
-							  JAMutableDictOf(pairs,sizeof(pairs)/sizeof *pairs);})
+#define $set(OBJS...)		({__unsafe_unretained id objs[]={OBJS}; \
+							  [NSSet setWithObjects:objs count:sizeof(objs)/sizeof(id)];})
+#define $mset(OBJS...)		({__unsafe_unretained id objs[]={OBJS}; \
+							  [NSMutableSet setWithObjects:objs count:sizeof(objs)/sizeof(id)];})
 
 
 // Object conveniences:
 
 BOOL $equal(id obj1, id obj2);	// Like -isEqual: but works even if either/both are nil
 
-	
 
 #define $sprintf(FORMAT, ARGS... )  [NSString stringWithFormat: (FORMAT), ARGS]
 
 
-#define $true		((NSNumber*)kCFBooleanTrue)
-#define $false		((NSNumber*)kCFBooleanFalse)
-#define $bool(v)	((v) ? $true : $false)
-	
-	
-#define $int(v)		[NSNumber numberWithInteger:v]
-#define $float(v)	[NSNumber numberWithDouble:v]
-
-
-#define $null		[NSNull null]
-
-
-// Internals (don't use directly)
-NSDictionary *JADictOf(JA_UNSAFE_UNRETAINED id values[], size_t count);
-NSDictionary *JAMutableDictOf(JA_UNSAFE_UNRETAINED id values[], size_t count);
-
+#define $bool(v)	((v) ? @(YES) : @(NO))
 
 	
 #if __cplusplus

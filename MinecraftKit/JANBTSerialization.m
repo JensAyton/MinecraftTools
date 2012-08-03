@@ -155,6 +155,8 @@ static void SetError(NSError **outError, NSInteger errorCode, NSString *format, 
 			va_end(args);
 		}
 		
-		*outError = [NSError errorWithDomain:kJANBTSerializationErrorDomain code:errorCode userInfo:$dict(NSLocalizedDescriptionKey, message)];
+		*outError = [NSError errorWithDomain:kJANBTSerializationErrorDomain
+										code:errorCode
+									userInfo:@{ NSLocalizedDescriptionKey: message }];
 	}
 }
