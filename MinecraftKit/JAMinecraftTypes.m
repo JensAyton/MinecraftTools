@@ -610,10 +610,30 @@ MCCell MCRotateCellClockwise(MCCell cell)
 {
 	if (!MCBlockIDIsRail(cell.blockID))
 	{
-		MCDirection direction = MCCellGetOrientation(cell);
-		
-		if (cell.blockID != kMCBlockSignPost)
+		if (cell.blockID == kMCBlockLog)
 		{
+			uint8_t orientation = cell.blockData & kMCInfoLogOrientationMask;
+			if (orientation == kMCInfoLogOrientationEastWest)
+			{
+				orientation = kMCInfoLogOrientationNorthSouth;
+			}
+			else if (orientation == kMCInfoLogOrientationNorthSouth)
+			{
+				orientation = kMCInfoLogOrientationEastWest;
+			}
+			cell.blockData = (cell.blockData & ~kMCInfoLogOrientationMask) | orientation;
+		}
+		else if (cell.blockID == kMCBlockSignPost)
+		{
+			// Special case: signposts.
+			uint8_t orientation = cell.blockData & kMCInfoSignPostOrientationMask;
+			orientation = (orientation + 4) & kMCInfoSignPostOrientationMask;
+			cell.blockData = (cell.blockData & ~kMCInfoSignPostOrientationMask) | orientation;
+		}
+		else
+		{
+			MCDirection direction = MCCellGetOrientation(cell);
+			
 			if (cell.blockID != kMCBlockLever || direction != kMCDirectionDown)
 			{
 				direction = MCRotateClockwise(direction);
@@ -634,13 +654,6 @@ MCCell MCRotateCellClockwise(MCCell cell)
 				cell.blockData = (cell.blockData & ~kMCInfoMiscOrientationMask) | orientation;
 			}
 		}
-		else
-		{
-			// Special case: signposts.
-			uint8_t orientation = cell.blockData & kMCInfoSignPostOrientationMask;
-			orientation = (orientation + 4) & kMCInfoSignPostOrientationMask;
-			cell.blockData = (cell.blockData & ~kMCInfoSignPostOrientationMask) | orientation;
-		}
 	}
 	else
 	{
@@ -659,10 +672,30 @@ MCCell MCRotateCellAntiClockwise(MCCell cell)
 {
 	if (!MCBlockIDIsRail(cell.blockID))
 	{
-		MCDirection direction = MCCellGetOrientation(cell);
-		
-		if (cell.blockID != kMCBlockSignPost)
+		if (cell.blockID == kMCBlockLog)
 		{
+			uint8_t orientation = cell.blockData & kMCInfoLogOrientationMask;
+			if (orientation == kMCInfoLogOrientationEastWest)
+			{
+				orientation = kMCInfoLogOrientationNorthSouth;
+			}
+			else if (orientation == kMCInfoLogOrientationNorthSouth)
+			{
+				orientation = kMCInfoLogOrientationEastWest;
+			}
+			cell.blockData = (cell.blockData & ~kMCInfoLogOrientationMask) | orientation;
+		}
+		else if (cell.blockID == kMCBlockSignPost)
+		{
+			// Special case: signposts.
+			uint8_t orientation = cell.blockData & kMCInfoSignPostOrientationMask;
+			orientation = (orientation + 12) & kMCInfoSignPostOrientationMask;
+			cell.blockData = (cell.blockData & ~kMCInfoSignPostOrientationMask) | orientation;
+		}
+		else
+		{
+			MCDirection direction = MCCellGetOrientation(cell);
+			
 			if (cell.blockID != kMCBlockLever || direction != kMCDirectionDown)
 			{
 				direction = MCRotateAntiClockwise(direction);
@@ -682,13 +715,6 @@ MCCell MCRotateCellAntiClockwise(MCCell cell)
 				}
 				cell.blockData = (cell.blockData & ~kMCInfoMiscOrientationMask) | orientation;
 			}
-		}
-		else
-		{
-			// Special case: signposts.
-			uint8_t orientation = cell.blockData & kMCInfoSignPostOrientationMask;
-			orientation = (orientation + 12) & kMCInfoSignPostOrientationMask;
-			cell.blockData = (cell.blockData & ~kMCInfoSignPostOrientationMask) | orientation;	
 		}
 	}
 	else
@@ -711,7 +737,14 @@ MCCell MCRotateCell180Degrees(MCCell cell)
 {
 	if (!MCBlockIDIsRail(cell.blockID))
 	{
-		if (cell.blockID != kMCBlockSignPost)
+		if (cell.blockID == kMCBlockSignPost)
+		{
+			// Special case: signposts.
+			uint8_t orientation = cell.blockData & kMCInfoSignPostOrientationMask;
+			orientation = (orientation + 8) & kMCInfoSignPostOrientationMask;
+			cell.blockData = (cell.blockData & ~kMCInfoSignPostOrientationMask) | orientation;
+		}
+		else
 		{
 			MCDirection direction = MCCellGetOrientation(cell);
 			
@@ -721,13 +754,6 @@ MCCell MCRotateCell180Degrees(MCCell cell)
 			MCCellSetOrientation(&cell, direction);
 			
 			// No special case for floor levers is needed; they’ll end up unchanged.
-		}
-		else
-		{
-			// Special case: signposts.
-			uint8_t orientation = cell.blockData & kMCInfoSignPostOrientationMask;
-			orientation = (orientation + 8) & kMCInfoSignPostOrientationMask;
-			cell.blockData = (cell.blockData & ~kMCInfoSignPostOrientationMask) | orientation;	
 		}
 	}
 	else
