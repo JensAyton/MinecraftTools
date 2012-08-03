@@ -190,7 +190,7 @@
 		1AE8E956145A07FB000ED823 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0440;
 			};
 			buildConfigurationList = 1AE8E959145A07FB000ED823 /* Build configuration list for PBXProject "Build All" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -330,6 +330,7 @@
 		1AE8E95F145A080B000ED823 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				MCKIT_ROOT = .;
 				PRODUCT_NAME = "Build All";
 			};
@@ -338,6 +339,7 @@
 		1AE8E960145A080B000ED823 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				MCKIT_ROOT = .;
 				PRODUCT_NAME = "Build All";
 			};
