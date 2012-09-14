@@ -196,7 +196,7 @@
 		1AE8E9B5145A0ABC000ED823 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0440;
 				ORGANIZATIONNAME = "Jens Ayton";
 			};
 			buildConfigurationList = 1AE8E9B8145A0ABC000ED823 /* Build configuration list for PBXProject "NBTProdder" */;
@@ -338,6 +338,7 @@
 		1AE8E9E0145A0ABD000ED823 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "NBTProdder/NBTProdder-Prefix.pch";
 				INFOPLIST_FILE = "NBTProdder/NBTProdder-Info.plist";
@@ -350,6 +351,7 @@
 		1AE8E9E1145A0ABD000ED823 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "NBTProdder/NBTProdder-Prefix.pch";
 				INFOPLIST_FILE = "NBTProdder/NBTProdder-Info.plist";

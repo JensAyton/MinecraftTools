@@ -30,39 +30,6 @@
 #import "MYCollectionUtilities.h"
 
 
-static id JADictOfImpl(JA_UNSAFE_UNRETAINED id values[], size_t count, Class cls)
-{
-	NSCParameterAssert((count & 1) == 0);
-	if (count == 0)  return [NSDictionary dictionary];
-	
-	JA_UNSAFE_UNRETAINED id objects[count / 2], keys[count / 2];
-	size_t n = 0;
-	for (size_t i = 0; i < count; i += 2)
-	{
-		id key = values[i], value = values[i + 1];
-		if (value != nil)
-		{
-			objects[n] = value;
-			keys[n] = key;
-			n++;
-		}
-	}
-	return [cls dictionaryWithObjects:objects forKeys:keys count:n];
-}
-
-
-NSDictionary *JADictOf(JA_UNSAFE_UNRETAINED id values[], size_t count)
-{
-	return JADictOfImpl(values, count, [NSDictionary class]);
-}
-
-
-NSDictionary *JAMutableDictOf(JA_UNSAFE_UNRETAINED id values[], size_t count)
-{
-	return JADictOfImpl(values, count, [NSMutableDictionary class]);
-}
-
-
 BOOL $equal(id obj1, id obj2)	  // Like -isEqual: but works even if either/both are nil
 {
 	if (obj1 != nil)

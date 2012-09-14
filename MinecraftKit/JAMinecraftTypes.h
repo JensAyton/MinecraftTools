@@ -367,8 +367,8 @@ uint8_t MCFlipRailEastWest(uint8_t railBlockData);
 /*
 	General cell rotation and flipping.
 	
-	These functions work for MCDirection-compliant types, rails and signposts.
-	For cells with no orientation, they do nothing.
+	These functions work for MCDirection-compliant types, rails, signposts and
+	logs. For cells with no orientation, they do nothing.
  */
 MCCell MCRotateCellClockwise(MCCell cell);
 MCCell MCRotateCellAntiClockwise(MCCell cell);

@@ -155,7 +155,7 @@
 		08FB7793FE84155DC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0440;
 			};
 			buildConfigurationList = 1DEB927808733DD40010E9CD /* Build configuration list for PBXProject "mcxform" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -264,7 +264,7 @@
 				MCKIT_ROOT = ..;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-ObjC";
-				SDKROOT = macosx10.7;
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -274,7 +274,7 @@
 			buildSettings = {
 				MCKIT_ROOT = ..;
 				OTHER_LDFLAGS = "-ObjC";
-				SDKROOT = macosx10.7;
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};

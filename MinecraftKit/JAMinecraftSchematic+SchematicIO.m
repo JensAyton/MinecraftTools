@@ -76,7 +76,7 @@ static id KeyForCoords(NSInteger x, NSInteger y, NSInteger z)
 	{
 		if (outError != NULL)  *outError = [NSError errorWithDomain:kJAMinecraftBlockStoreErrorDomain
 															   code:kJABlockStoreErrorWrongFileFormat
-														   userInfo:$dict(NSUnderlyingErrorKey, *outError)];
+														   userInfo:@{ NSUnderlyingErrorKey: *outError }];
 		return nil;
 	}
 	

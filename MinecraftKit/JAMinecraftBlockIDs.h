@@ -48,7 +48,7 @@ enum
 	kMCBlockGoldOre							= 14,
 	kMCBlockIronOre							= 15,
 	kMCBlockCoalOre							= 16,	// “Coal ore”? Meh. You get the point.
-	kMCBlockLog								= 17,	// Data: kMCInfoWoodType
+	kMCBlockLog								= 17,	// Data: kMCInfoWoodType, kMCInfoLogOrientation
 	kMCBlockLeaves							= 18,	// Data: kMCInfoLeafUpdatePending, kMCInfoLeafPermanent and kMCInfoWoodType
 	kMCBlockSponge							= 19,
 	kMCBlockGlass							= 20,
@@ -235,6 +235,17 @@ enum
 	kMCInfoWoodTypeSpruce					= 0x01,
 	kMCInfoWoodTypeBirch					= 0x02,
 	kMCInfoWoodTypeJungle					= 0x03,
+	
+	/*
+		Logs: orientation. There are only three valid orientations because of
+		the symmetry of logs (and only having two bits). The invalid combination
+		0x0C produces a block with bark on all sides.
+	*/
+	kMCInfoLogOrientationMask				= 0x0C,
+	kMCInfoLogOrientationVertical			= 0x00,
+	kMCInfoLogOrientationEastWest			= 0x04,
+	kMCInfoLogOrientationNorthSouth			= 0x08,
+	kMCInfoLogOrientationNone				= 0x0C,
 	
 	/*
 		Leaves: if the pending flag is set, the leaf block will be checked for
