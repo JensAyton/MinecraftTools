@@ -95,6 +95,7 @@ static const uint8_t kOpaqueIDs[] =
 	kMCBlockWoodenDoubleSlab,
 	kMCBlockEmeraldOre,
 	kMCBlockEmeraldBlock,
+	kMCBlockCommandBlock,
 };
 
 
@@ -121,6 +122,7 @@ static const uint8_t kTransparentIDs[] =
 	kMCBlockSpruceWoodStairs,
 	kMCBlockBirchWoodStairs,
 	kMCBlockJungleWoodStairs,
+	kMCBlockBeacon,
 };
 
 
@@ -192,6 +194,12 @@ static const uint8_t kItemIDs[] =
 	KMCBlockEnderChest,
 	kMCBlockTripwireHook,
 	kMCBlockTripwire,
+	kMCBlockCobblestoneWall,
+	kMCBlockFlowerPot,
+	kMCBlockCarrots,
+	kMCBlockPotatoes,
+	kMCBlockWoodenButton,
+	kMCBlockHead,
 };
 
 
@@ -214,7 +222,8 @@ static const uint8_t kTileEntityIDs[] =
 	kMCBlockEnchantmentTable,
 	kMCBlockBrewingStand,
 	kMCBlockEndPortal,
-	// KMCBlockEnderChest // FIXME
+	kMCBlockCommandBlock,
+	kMCBlockBeacon,
 };
 
 
@@ -227,6 +236,8 @@ static const uint8_t kPowerSourceIDs[] =
 	kMCBlockRedstoneTorchOff,
 	kMCBlockRedstoneTorchOn,
 	kMCBlockStoneButton,
+	kMCBlockWoodenButton,
+	kMCBlockTripwireHook,
 };
 
 
@@ -242,9 +253,10 @@ static const uint8_t kPowerSinkIDs[] =
 	kMCBlockRedstoneTorchOn,
 	kMCBlockDispenser,
 	kMCBlockNoteBlock,
-	kMCBlockGate,		// As of 1.1.
+	kMCBlockGate,
 	kMCBlockRedstoneLampOff,
 	kMCBlockRedstoneLampOn,
+	kMCBlockCommandBlock,
 };
 
 
@@ -272,6 +284,8 @@ static const uint8_t kVegetableIDs[] =
 	kMCBlockLilyPad,
 	kMCBlockNetherWart,
 	kMCBlockCocoaPod,
+	kMCBlockCarrots,
+	kMCBlockPotatoes,
 };
 
 

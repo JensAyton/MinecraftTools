@@ -816,6 +816,14 @@ const int8_t kGroundLevelWeights[] =
 	-2,		// Spruce stairs
 	-2,		// Birch stairs
 	-2,		// Jungle stairs
+	-4,		// Command block
+	-8,		// Beacon
+	-8,		// Stone wall
+	
+	-8,		// Flower pot
+	-8,		// Carrots
+	-8,		// Potatoes
+	-8,		// Wooden button
 };
 
 

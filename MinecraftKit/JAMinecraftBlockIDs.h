@@ -57,7 +57,7 @@ enum
 	kMCBlockDispenser						= 23,	// Data: kMCInfoMisc2Orientation; tile entity: Trap.
 	kMCBlockSandstone						= 24,	// Data: kMCInfoSandstoneAppearance
 	kMCBlockNoteBlock						= 25,	// Tile entity: Music
-	kMCBlockBed								= 26,	// Data: kMCInfoMisc3Orientation (direction of foot of bed) and kInfoBedIsHead.
+	kMCBlockBed								= 26,	// Data: kMCInfoMisc3Orientation (direction of foot of bed) and kMCInfoBedIsHead.
 	kMCBlockPoweredRail						= 27,	// Data: kMCInfoPoweredRailOrientation and kMCInfoPoweredRailIsPowered.
 	kMCBlockDetectorRail					= 28,	// Data: kMCInfoPoweredRailOrientation
 	kMCBlockStickyPiston					= 29,	// Data: kMCInfoPistonOrientation
@@ -85,7 +85,7 @@ enum
 	kMCBlockFire							= 51,	// Data: kMCBlockFireGeneration
 	kMCBlockMobSpawner						= 52,	// Tile entity: MobSpawner
 	kMCBlockWoodenStairs					= 53,	// Data: kMCInfoStairOrientation, kMCInfoStairUpsideDown
-	kMCBlockChest							= 54,	// Data: kInfoMisc2Orientation. tile entity: Chest
+	kMCBlockChest							= 54,	// Data: kMCInfoMisc2Orientation. tile entity: Chest
 	kMCBlockRedstoneWire					= 55,
 	kMCBlockDiamondOre						= 56,
 	kMCBlockDiamondBlock					= 57,
@@ -106,9 +106,9 @@ enum
 	kMCBlockWoodenPressurePlate				= 72,	// Data: kMCInfoPressurePlateOn
 	kMCBlockRedstoneOre						= 73,
 	kMCBlockGlowingRedstoneOre				= 74,
-	kMCBlockRedstoneTorchOff				= 75,	// Data: kMCInfoMiscOrientation.
-	kMCBlockRedstoneTorchOn					= 76,	// Data: kMCInfoMiscOrientation.
-	kMCBlockStoneButton						= 77,	// Data: kMCInfoMiscOrientation, kMCInfoButtonOn.
+	kMCBlockRedstoneTorchOff				= 75,	// Data: kMCInfoMiscOrientation
+	kMCBlockRedstoneTorchOn					= 76,	// Data: kMCInfoMiscOrientation
+	kMCBlockStoneButton						= 77,	// Data: kMCInfoMiscOrientation, kMCInfoButtonOn
 	kMCBlockSnow							= 78,
 	kMCBlockIce								= 79,
 	kMCBlockSnowBlock						= 80,
@@ -117,7 +117,7 @@ enum
 	kMCBlockReed							= 83,
 	kMCBlockJukebox							= 84,	// Tile entity: RecordPlayer
 	kMCBlockFence							= 85,
-	kMCBlockPumpkin							= 86,	// Data: kMCInfoPumpkinOrientation.
+	kMCBlockPumpkin							= 86,	// Data: kMCInfoPumpkinOrientation
 	kMCBlockNetherrack						= 87,
 	kMCBlockSoulSand						= 88,
 	kMCBlockGlowstone						= 89,
@@ -126,7 +126,7 @@ enum
 	kMCBlockCake							= 92,	// Data: kMCInfoCakeSliceCount
 	kMCBlockRedstoneRepeaterOff				= 93,	// Data: kMCInfoMisc3Orientation and kMCInfoRedstoneRepeaterDelay
 	kMCBlockRedstoneRepeaterOn				= 94,	// Data: kMCInfoMisc3Orientation and kMCInfoRedstoneRepeaterDelay	
-	kMCBlockLockedChest						= 95,	// April 1 2011 easter egg item, currently deteriorates like leaves.
+	kMCBlockLockedChest						= 95,	// April 1 2011 easter egg item.
 	kMCBlockTrapdoor						= 96,	// Data: kMCInfoTrapdoorOrientation and kMCInfoDoorOpen
 	kMCBlockStoneWithSilverfish				= 97,	// Data: kMCInfoSilverfishAppearance
 	kMCBlockStoneBrick						= 98,	// Data: kMCInfoStoneBrickAppearance
@@ -158,20 +158,28 @@ enum
 	kMCBlockRedstoneLampOn					= 124,
 	kMCBlockWoodenDoubleSlab				= 125,	// Data: kMCInfoWoodTypeMask, kMCInfoSlabUpsideDown
 	kMCBlockWoodenSingleSlab				= 126,	// Data: kMCInfoWoodTypeMask, kMCInfoSlabUpsideDown
-	kMCBlockCocoaPod						= 127,	// Data: FIXME: orientation, three growth stages?
+	kMCBlockCocoaPod						= 127,	// Data: kMCInfoMisc3Orientation, kMCInfoCocoaPodAge
 	kMCBlockSandstoneStairs					= 128,	// Data: kMCInfoStairOrientation, kMCInfoStairUpsideDown
 	kMCBlockEmeraldOre						= 129,
-	KMCBlockEnderChest						= 130,	// Data: kInfoMisc2Orientation, Tile entity: FIXME
-	kMCBlockTripwireHook					= 131,	// Data: FIXME
-	kMCBlockTripwire						= 132,	// Data: FIXME
+	KMCBlockEnderChest						= 130,	// Data: kMCInfoMisc2Orientation
+	kMCBlockTripwireHook					= 131,	// Data: kMCInfoTripwireHookOrientation, kMCInfoTripwireHookConnected, kMCInfoTripWireHookActive
+	kMCBlockTripwire						= 132,	// Data: kMCInfoTripwirePieceActive, kMCInfoTripwireWireActive
 	kMCBlockEmeraldBlock					= 133,
 	kMCBlockSpruceWoodStairs				= 134,	// Data: kMCInfoStairOrientation, kMCInfoStairUpsideDown
 	kMCBlockBirchWoodStairs					= 135,	// Data: kMCInfoStairOrientation, kMCInfoStairUpsideDown
 	kMCBlockJungleWoodStairs				= 136,	// Data: kMCInfoStairOrientation, kMCInfoStairUpsideDown
+	kMCBlockCommandBlock					= 137,	// Tile entity: Control
+	kMCBlockBeacon							= 138,	// Tile entity: Beacon
+	kMCBlockCobblestoneWall					= 139,	// Data: kMCInfoCobblestoneWallType
+	kMCBlockFlowerPot						= 140,	// Data: kMCInfoFlowerPotType
+	kMCBlockCarrots							= 141,	// Data: FIXME (growth stages)
+	kMCBlockPotatoes						= 142,	// Data: FIXME (growth stages)
+	kMCBlockWoodenButton					= 143,	// Data: kMCInfoMiscOrientation, kMCInfoButtonOn
+	kMCBlockHead							= 144,	// FIXME: wiki data for heads is incomplete and possibly inaccurate at the time of writing.
 };
 
 
-#define kMCLastBlockID kMCBlockJungleWoodStairs
+#define kMCLastBlockID kMCBlockWoodenButton
 
 
 enum
@@ -303,7 +311,7 @@ enum
 	
 	/*	Bed flag: set for head block, clear for foot block.
 	*/
-	kInfoBedIsHead							= 0x08,
+	kMCInfoBedIsHead						= 0x08,
 	
 	/*	Stair orientations.
 		The labels are intended to refer to the _ascending_ direction.
@@ -343,7 +351,7 @@ enum
 	kMCInfoDoorOpen							= 0x04,
 	kMCInfoDoorTopHalf						= 0x08,
 	
-	/*	kInfoMisc2Orientation
+	/*	kMCInfoMisc2Orientation
 		Another common set of orientation flags, used for:
 		* Ladders
 		* Chests
@@ -401,7 +409,7 @@ enum
 	*/
 	kMCInfoCactusAgeMask					= 0x0F,
 	
-	/*	Pumpkin/Jack-o-lanternU orientation.
+	/*	Pumpkin/Jack-o-lantern orientation.
 	*/
 	kMCInfoPumpkinOrientationMask			= 0x03,
 	kMCInfoPumpkinOrientationSouth			= 0x00,
@@ -409,7 +417,7 @@ enum
 	kMCInfoPumpkinOrientationNorth			= 0x02,
 	kMCInfoPumpkinOrientationWest			= 0x03,
 	
-	/*	Bed/redstone repeater orientation.
+	/*	Bed/redstone repeater/cocoa orientation.
 	*/
 	kMCInfoMisc3OrientationMask				= 0x03,
 	kMCInfoMisc3OrientationNorth			= 0x00,
@@ -543,7 +551,67 @@ enum
 	*/
 	kMCInfoCauldronFillLevel				= 0x03,
 	
-	kMCInfoAirPortalFrameHasEye				= 0x04
+	kMCInfoAirPortalFrameHasEye				= 0x04,
+	
+	/*
+		kMCInfoCocoaPodAge: growth stages of a cocoa pod.
+	*/
+	kMCInfoCocoaPodAgeMask					= 0x0C,
+	kMCInfoCocoaPodAgeSmall					= 0x00,
+	kMCInfoCocoaPodAgeMedum					= 0x04,
+	kMCInfoCocoaPodAgeLarge					= 0x08,
+	
+	/*
+		kMCInfoTripwireHookOrientation: because what we really need is another
+		orientation enumeration.
+	*/
+	kMCInfoTripwireHookOrientationMask		= 0x03,
+	kMCInfoTripwireHookOrientationSouth		= 0x00,
+	kMCInfoTripwireHookOrientationWest		= 0x01,
+	kMCInfoTripwireHookOrientationNorth		= 0x02,
+	kMCInfoTripwireHookOrientationEast		= 0x03,
+	
+	/*
+		kMCInfoTripwireHookConnected: true if this hook is connected by a
+		complete wire to another hook.
+		kMCInfoTripWireHookActive: true if the wire this hook is connected to
+		is activated.
+	*/
+	kMCInfoTripwireHookConnected			= 0x04,
+	kMCInfoTripWireHookActive				= 0x08,
+	
+	/*
+		kMCInfoTripwirePieceActive: true if this particular piece of string is
+		activated.
+		kMCInfoTripwireWireActive: true if this block is part of an activated
+		wire.
+	*/
+	kMCInfoTripwirePieceActive				= 0x01,
+	kMCInfoTripwireWireActive				= 0x04,
+	
+	/*
+		Cobblestone wall variants.
+	*/
+	kMCInfoCobblestoneWallTypeMask			= 0x01,
+	kMCInfoCobblestoneWallTypePlain			= 0x00,
+	kMCInfoCobblestoneWallTypeMossy			= 0x01,
+	
+	/*
+		Flower pot contents.
+	*/
+	kMCInfoFlowerPotTypeMask				= 0x0F,
+	kMCInfoFlowerPotTypeEmpty				= 0x00,
+	kMCInfoFlowerPotTypeRedFlower			= 0x01,
+	kMCInfoFlowerPotTypeYellowFlower		= 0x02,
+	kMCInfoFlowerPotTypeOakSapling			= 0x03,
+	kMCInfoFlowerPotTypeSpruceSapling		= 0x04,
+	kMCInfoFlowerPotTypeBirchSapling		= 0x05,
+	kMCInfoFlowerPotTypeJungleSapling		= 0x06,
+	kMCInfoFlowerPotTypeRedMushroom			= 0x07,
+	kMCInfoFlowerPotTypeBrownMushroom		= 0x08,
+	kMCInfoFlowerPotTypeCactus				= 0x09,
+	kMCInfoFlowerPotTypeDeadShrub			= 0x0A,
+	kMCInfoFlowerPotTypeFern				= 0x0B,
 };
 
 

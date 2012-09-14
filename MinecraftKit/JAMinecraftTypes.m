@@ -60,6 +60,8 @@ NSString *MCExpectedTileEntityTypeForBlockID(uint8_t blockID)
 		case kMCBlockEnchantmentTable:	return @"EnchantTable";
 		case kMCBlockBrewingStand:		return @"Cauldron";
 		case kMCBlockEndPortal:			return @"Airportal";
+		case kMCBlockCommandBlock:		return @"Control";
+		case kMCBlockBeacon:			return @"Beacon";
 			
 		default:
 			if (!MCBlockIDHasTileEntity(blockID))  return nil;
@@ -199,7 +201,7 @@ NSString *MCCellLongDescription(MCCell cell, NSDictionary *tileEntity)
 		{
 			NSArray *parts = [sBlockDescriptionsDict ja_arrayForKey:@"Bed parts"];
 			NSUInteger idx = 0;
-			if (cell.blockData & kInfoBedIsHead)  idx = 1;
+			if (cell.blockData & kMCInfoBedIsHead)  idx = 1;
 			extra = [parts objectAtIndex:idx];
 			break;
 		}
@@ -322,6 +324,7 @@ NSString *MCCellLongDescription(MCCell cell, NSDictionary *tileEntity)
 			
 		case kMCBlockLever:
 		case kMCBlockStoneButton:
+		case kMCBlockWoodenButton:
 			extra = [sBlockDescriptionsDict ja_stringForKey:(cell.blockData & kMCInfoLeverOn) ? @"Switch on" : @"Switch off"];
 			break;
 			
@@ -391,6 +394,38 @@ NSString *MCCellLongDescription(MCCell cell, NSDictionary *tileEntity)
 		case kMCBlockRedstoneLampOn:
 			extra = [sBlockDescriptionsDict ja_stringForKey:(cell.blockID == kMCBlockRedstoneLampOn) ? @"Redstone on" : @"Redstone off"];
 			break;
+			
+		case kMCBlockTripwireHook:
+			if (cell.blockData & kMCInfoTripWireHookActive)
+			{
+				extra = [sBlockDescriptionsDict ja_stringForKey:@"Tripwire hook active"];
+			}
+			else if (cell.blockData & kMCInfoTripwireHookConnected)
+			{
+				extra = [sBlockDescriptionsDict ja_stringForKey:@"Tripwire hook connected"];
+			}
+			else
+			{
+				extra = [sBlockDescriptionsDict ja_stringForKey:@"Tripwire hook disconnected"];
+			}
+			break;
+			
+		case kMCBlockTripwire:
+			if (cell.blockData & kMCInfoTripwireWireActive)
+			{
+				extra = [sBlockDescriptionsDict ja_stringForKey:@"Tripwire live"];
+			}
+			break;
+			
+		case kMCBlockFlowerPot:
+		{
+			NSArray *types = [sBlockDescriptionsDict ja_arrayForKey:@"Flowerpot type"];
+			if (cell.blockData < types.count)
+			{
+				extra = [types objectAtIndex:cell.blockData];
+			}
+			break;
+		}
 	}
 	
 	if (handleOrientationGenerically)
@@ -836,6 +871,7 @@ MCDirection MCCellGetOrientation(MCCell cell)
 		case kMCBlockRedstoneTorchOn:
 		case kMCBlockLever:
 		case kMCBlockStoneButton:
+		case kMCBlockWoodenButton:
 			switch (blockData & kMCInfoMiscOrientationMask)
 			{
 				case kMCInfoMiscOrientationSouth:
@@ -954,6 +990,7 @@ MCDirection MCCellGetOrientation(MCCell cell)
 		case kMCBlockRedstoneRepeaterOn:
 		case kMCBlockRedstoneRepeaterOff:
 		case kMCBlockEndPortalFrame:
+		case kMCBlockCocoaPod:
 			switch (blockData & kMCInfoMisc3OrientationMask)
 			{
 				case kMCInfoMisc3OrientationNorth:
@@ -1015,6 +1052,22 @@ MCDirection MCCellGetOrientation(MCCell cell)
 					return kMCDirectionEast;
 			}
 			
+		case kMCBlockTripwireHook:
+			switch (blockData & kMCInfoTripwireHookOrientationMask)
+			{
+				case kMCInfoTripwireHookOrientationNorth:
+					return kMCDirectionNorth;
+					
+				case kMCInfoTripwireHookOrientationSouth:
+					return kMCDirectionSouth;
+					
+				case kMCInfoTripwireHookOrientationWest:
+					return kMCDirectionWest;
+					
+				case kMCInfoTripwireHookOrientationEast:
+					return kMCDirectionEast;
+			}
+			
 		default:
 			return kMCDirectionUnknown;
 	}
@@ -1035,6 +1088,7 @@ void MCCellSetOrientation(MCCell *cell, MCDirection orientation)
 		case kMCBlockRedstoneTorchOn:
 		case kMCBlockLever:
 		case kMCBlockStoneButton:
+		case kMCBlockWoodenButton:
 			mask = kMCInfoMiscOrientationMask;
 			switch (orientation)
 			{
@@ -1065,9 +1119,9 @@ void MCCellSetOrientation(MCCell *cell, MCDirection orientation)
 							value = kMCInfoLeverOrientationFloorNS;
 						}
 					}
-					else if (cell->blockID == kMCBlockStoneButton)
+					else if (cell->blockID == kMCBlockStoneButton || cell->blockID == kMCBlockWoodenButton)
 					{
-						// For stone buttons, down is meaningless.
+						// For buttons, down is meaningless.
 						value = kMCInfoMiscOrientationWest;
 					}
 					else
@@ -1191,6 +1245,7 @@ void MCCellSetOrientation(MCCell *cell, MCDirection orientation)
 		case kMCBlockRedstoneRepeaterOn:
 		case kMCBlockRedstoneRepeaterOff:
 		case kMCBlockEndPortalFrame:
+		case kMCBlockCocoaPod:
 			mask = kMCInfoMisc3OrientationMask;
 			switch (orientation)
 			{
@@ -1265,6 +1320,29 @@ void MCCellSetOrientation(MCCell *cell, MCDirection orientation)
 			case kMCDirectionSouth:
 			default:
 				value = kMCInfoTrapdoorOrientationSouth;
+				break;
+			}
+			break;
+			
+		case kMCBlockTripwireHook:
+			mask = kMCInfoTripwireHookOrientationMask;
+			switch (orientation)
+		{
+			case kMCDirectionEast:
+				value = kMCInfoTripwireHookOrientationEast;
+				break;
+				
+			case kMCDirectionWest:
+				value = kMCInfoTripwireHookOrientationWest;
+				break;
+				
+			case kMCDirectionNorth:
+				value = kMCInfoTripwireHookOrientationNorth;
+				break;
+				
+			case kMCDirectionSouth:
+			default:
+				value = kMCInfoTripwireHookOrientationSouth;
 				break;
 			}
 			break;

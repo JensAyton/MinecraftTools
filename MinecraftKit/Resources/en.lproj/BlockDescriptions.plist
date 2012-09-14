@@ -247,6 +247,28 @@
 		"Stone brick"
 	);
 	
+	"Tripwire hook active" = "active";
+	"Tripwire hook connected" = "connected";
+	"Tripwire hook disconnected" = "disconnected";
+	
+	"Tripwire live" = "live";
+	
+	"Flowerpot type" =
+	(
+		"empty",
+		"red flower",
+		"yellow flower",
+		"oak sapling",
+		"spruce sapling",
+		"birch sapling",
+		"jungle sapling",
+		"red mushroom",
+		"brown mushroom",
+		"cactus",
+		"dead shrub",
+		"fern"
+	);
+	
 	"Orientation" =
 	(
 		"north",
