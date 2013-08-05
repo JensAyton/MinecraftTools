@@ -47,21 +47,29 @@ NSString *MCExpectedTileEntityTypeForBlockID(uint8_t blockID)
 {
 	switch (blockID)
 	{
-		case kMCBlockDispenser:			return @"Trap";
-		case kMCBlockMovingPiston:		return @"Piston";
-		case kMCBlockNoteBlock:			return @"Music";
-		case kMCBlockMobSpawner:		return @"Monster Spawner";
-		case kMCBlockChest:				return @"Chest";
+		case kMCBlockDispenser:				return @"Trap";
+		case kMCBlockMovingPiston:			return @"Piston";
+		case kMCBlockNoteBlock:				return @"Music";
+		case kMCBlockMobSpawner:			return @"Monster Spawner";
+		case kMCBlockChest:					return @"Chest";
 		case kMCBlockFurnace:
-		case kMCBlockBurningFurnace:	return @"Furnace";
+		case kMCBlockBurningFurnace:		return @"Furnace";
 		case kMCBlockSignPost:
-		case kMCBlockWallSign:			return @"Sign";
-		case kMCBlockJukebox:			return @"RecordPlayer";
-		case kMCBlockEnchantmentTable:	return @"EnchantTable";
-		case kMCBlockBrewingStand:		return @"Cauldron";
-		case kMCBlockEndPortal:			return @"Airportal";
-		case kMCBlockCommandBlock:		return @"Control";
-		case kMCBlockBeacon:			return @"Beacon";
+		case kMCBlockWallSign:				return @"Sign";
+		case kMCBlockJukebox:				return @"RecordPlayer";
+		case kMCBlockEnchantmentTable:		return @"EnchantTable";
+		case kMCBlockBrewingStand:			return @"Cauldron";
+		case kMCBlockEndPortal:				return @"Airportal";
+		case KMCBlockEnderChest:			return @"EnderChest";
+		case kMCBlockCommandBlock:			return @"Control";
+		case kMCBlockBeacon:				return @"Beacon";
+		case kMCBlockHead:					return @"Skull";
+		case kMCBlockTrappedChest:			return @"Chest";
+		case kMCBlockRedstoneComparatorOff:
+		case kMCBlockRedstoneComparatorOn:	return @"Comparator";
+		case kMCBlockDaylightSensor:		return @"DLDetector";
+		case kMCBlockHopper:				return @"Hopper";
+		case kMCBlockDropper:				return @"kMCBlockDropper";
 			
 		default:
 			if (!MCBlockIDHasTileEntity(blockID))  return nil;

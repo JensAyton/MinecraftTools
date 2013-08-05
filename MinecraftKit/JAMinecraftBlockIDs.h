@@ -74,8 +74,8 @@ enum
 	kMCBlockRedMushroom						= 40,
 	kMCBlockGoldBlock						= 41,
 	kMCBlockIronBlock						= 42,
-	kMCBlockDoubleSlab						= 43,	// Two half-steps on top of each other. Data: kMCInfoSlabTypeMask, kMCInfoSlabUpsideDown
-	kMCBlockSingleSlab						= 44,	// A single half-step. Data: kMCInfoSlabTypeMask, kMCInfoSlabUpsideDown
+	kMCBlockDoubleSlab						= 43,	// Two slabs on top of each other. Data: kMCInfoSlabType, kMCInfoSlabUpsideDown
+	kMCBlockSingleSlab						= 44,	// A single slab. Data: kMCInfoSlabType, kMCInfoSlabUpsideDown
 	kMCBlockBrick							= 45,
 	kMCBlockTNT								= 46,
 	kMCBlockBookshelf						= 47,
@@ -156,12 +156,12 @@ enum
 	kMCBlockDragonEgg						= 122,
 	kMCBlockRedstoneLampOff					= 123,
 	kMCBlockRedstoneLampOn					= 124,
-	kMCBlockWoodenDoubleSlab				= 125,	// Data: kMCInfoWoodTypeMask, kMCInfoSlabUpsideDown
-	kMCBlockWoodenSingleSlab				= 126,	// Data: kMCInfoWoodTypeMask, kMCInfoSlabUpsideDown
+	kMCBlockWoodenDoubleSlab				= 125,	// Data: kMCInfoWoodType, kMCInfoSlabUpsideDown
+	kMCBlockWoodenSingleSlab				= 126,	// Data: kMCInfoWoodType, kMCInfoSlabUpsideDown
 	kMCBlockCocoaPod						= 127,	// Data: kMCInfoMisc3Orientation, kMCInfoCocoaPodAge
 	kMCBlockSandstoneStairs					= 128,	// Data: kMCInfoStairOrientation, kMCInfoStairUpsideDown
 	kMCBlockEmeraldOre						= 129,
-	KMCBlockEnderChest						= 130,	// Data: kMCInfoMisc2Orientation
+	KMCBlockEnderChest						= 130,	// Data: kMCInfoMisc2Orientation; tile entity: EnderChest
 	kMCBlockTripwireHook					= 131,	// Data: kMCInfoTripwireHookOrientation, kMCInfoTripwireHookConnected, kMCInfoTripWireHookActive
 	kMCBlockTripwire						= 132,	// Data: kMCInfoTripwirePieceActive, kMCInfoTripwireWireActive
 	kMCBlockEmeraldBlock					= 133,
@@ -175,11 +175,31 @@ enum
 	kMCBlockCarrots							= 141,	// Data: FIXME (growth stages)
 	kMCBlockPotatoes						= 142,	// Data: FIXME (growth stages)
 	kMCBlockWoodenButton					= 143,	// Data: kMCInfoMiscOrientation, kMCInfoButtonOn
-	kMCBlockHead							= 144,	// FIXME: wiki data for heads is incomplete and possibly inaccurate at the time of writing.
+	kMCBlockHead							= 144,	// Data: kMCInfoMisc2Orientation; tile entity: Skull
+	kMCBlockAnvil							= 145,	// Data: kMCInfoAnvilOrientation, kMCInfoAnvilDamageLevel
+	kMCBlockTrappedChest					= 146,	// Data: kMCInfoMisc2Orientation. tile entity: Chest
+	kMCBlockGoldPressurePlate				= 147,	// Data: kMCInfoPressurePlateOn
+	kMCBlockIronPressurePlate				= 148,	// Data: kMCInfoPressurePlateOn
+	kMCBlockRedstoneComparatorOff			= 149,	// FIXME: orientation and mode in data. Tile entity: Comparator
+	kMCBlockRedstoneComparatorOn			= 150,	// As above
+	kMCBlockDaylightSensor					= 151,
+	kMCBlockRedstoneBlock					= 152,
+	kMCBlockNetherQuartzOre					= 153,
+	kMCBlockHopper							= 154,	// Data: kMCInfoMisc2Orientation; tile entity: Hopper
+	kMCBlockQuartzBlock						= 155,
+	kMCBlockQuartzStairs					= 156,
+	kMCBlockActivatorRail					= 157,	// FIXME: data. Presumably one bit for active.
+	kMCBlockDropper							= 158,	// Data: kMCInfoMisc2Orientation; tile entity: Dropper
+	kMCBlockStainedClay						= 159,	// Data: kMCInfoWoolColor
+	// 160-169: unused
+	kMCBlockHayBlock						= 170,	// FIXME: data. Hopefully kMCInfoLogOrientation?
+	kMCBlockCarpet							= 171,	// Data: kMCInfoWoolColor
+	kMCBlockHardenedClay					= 172,
+	kMCBlockCoalBlock						= 173,
 };
 
 
-#define kMCLastBlockID kMCBlockWoodenButton
+#define kMCLastBlockID kMCBlockCoalBlock
 
 
 enum
@@ -358,8 +378,10 @@ enum
 		* Wall signs
 		* Furnaces
 		* Dispensers
+	    * Heads
 	*/
 	kMCInfoMisc2OrientationMask				= 0x07,
+	kMCInfoMisc2OrientationFloor			= 0x01,	// Heads only
 	kMCInfoMisc2OrientationNorth			= 0x02,
 	kMCInfoMisc2OrientationSouth			= 0x03,
 	kMCInfoMisc2OrientationWest				= 0x04,
@@ -450,15 +472,21 @@ enum
 	kMCInfoTallGrassTypeTallGrass			= 0x01,
 	kMCInfoTallGrassTypeFern				= 0x02,
 	
-	/*	Types of slab.
+	/*	Types of slab. Values above 7 are only used for double slabs.
 	*/
 	kMCInfoSlabTypeMask						= 0x07,
+	kMCInfoDoubleSlabTypeMask				= 0x07,
 	kMCInfoSlabTypeStone					= 0x00,
 	kMCInfoSlabTypeSandstone				= 0x01,
 	kMCInfoSlabTypeWood						= 0x02,	// Pre-1.3 oak-looking wooden slab
 	kMCInfoSlabTypeCobblestone				= 0x03,
 	kMCInfoSlabTypeBrick					= 0x04,
 	kMCInfoSlabTypeStoneBrick				= 0x05,
+	kMCInfoSlabTypeNetherBrick				= 0x06,
+	kMCInfoSlabTypeQuartz					= 0x07,
+	kMCInfoSlabSmoothStoneUndivided			= 0x08,
+	kMCInfoSlabSmoothSandstone				= 0x09,
+	kMCInfoSlabTileQuartz					= 0x0F,
 	
 	kMCInfoSlabUpsideDown					= 0x08,
 	
@@ -612,6 +640,22 @@ enum
 	kMCInfoFlowerPotTypeCactus				= 0x09,
 	kMCInfoFlowerPotTypeDeadShrub			= 0x0A,
 	kMCInfoFlowerPotTypeFern				= 0x0B,
+	
+	/*
+		Anvil orientations.
+	*/
+	kMCInfoAnvilOrientationMask				= 0x01,
+	kMCInfoAnvilOrientationNorthSouth		= 0x00,
+	kMCInfoAnvilOrientationEastWest			= 0x01,
+	
+	/*
+		Anvil damage levels. Medium is "Slighty Damaged Anvil", high is "Very
+		Damaged Anvil".
+	*/
+	kMCInfoAnvilOrientationDamageLevelMask	= 0x0C,
+	kMCInfoAnvilOrientationDamageLow		= 0x00,
+	kMCInfoAnvilOrientationDamageMedium		= 0x04,
+	kMCInfoAnvilOrientationDamageHigh		= 0x08,
 };
 
 
@@ -641,6 +685,7 @@ enum
 enum
 {
 	// Primary attributes. Every known block type is exactly one of these.
+	kMCBlockPrimaryTypeMask					= 0x000F,
 	kMCBlockIsOpaque						= 0x0001,
 	kMCBlockIsTransparent					= 0x0002,
 	kMCBlockIsLiquid						= 0x0004,
@@ -669,12 +714,13 @@ enum
 	kMCBlockIsVegetable						= 0x0040,
 	
 	/*
-		Coal, iron, redstone, diamond or lapis ore blocks. Eat it, geologists.
+		Coal, iron, gold, redstone, diamond, emerald, lapis or quartz ore
+		blocks. Eat it, geologists.
 	*/
 	kMCBlockIsOre							= 0x0080,
 	
 	/*
-		Rail, powered rail or detector rail.
+		Rail, powered rail, detector rail or activator rail.
 	*/
 	kMCBlockIsRail							= 0x0100,
 	
@@ -752,7 +798,7 @@ JA_INLINE bool MCBlockIDIsPowerSink(uint8_t blockID)
 
 JA_INLINE bool MCBlockIDIsPowerActive(uint8_t blockID)
 {
-	return kMCBlockTypeClassifications[blockID] & kMCBlockIsPowerActive;
+	return kMCBlockTypeClassifications[blockID] & kMCBlockIsPowerActive || blockID == kMCBlockRedstoneWire;
 }
 
 

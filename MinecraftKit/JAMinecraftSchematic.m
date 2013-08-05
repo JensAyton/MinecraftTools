@@ -649,7 +649,7 @@ static void PerformFill(InnerNode *node, unsigned level, MCGridExtents fillRegio
 /*
 	Assign a weight to each block type. Positive weights are “ground-like”,
 	and negative weights are “above-ground-like”. Needs testing with a
-	greater variety of circuits to tweak weights. These are pretty
+	greater variety of schematics to tweak weights. These are pretty
 	arbitrary.
 
 	The general idea is that the floor level of a house or cave should be
@@ -824,6 +824,40 @@ const int8_t kGroundLevelWeights[] =
 	-8,		// Carrots
 	-8,		// Potatoes
 	-8,		// Wooden button
+	-8,		// Head
+	-8,		// Anvil
+	-4,		// Trapped chest
+	-8,		// Gold pressure plate
+	-8,		// Iron pressure plate
+	-8,		// Redstone comparator (off)
+	
+	-8,		// Redstone comparator (on)
+	-10,	// Daylight sensor
+	-6,		// Redstone block
+	8,		// Nether quartz ore
+	-8,		// Hopper
+	-2,		// Quartz block
+	-2,		// Quartz stairs
+	-8,		// Activator rail
+	-4,		// Dropper
+	-2,		// Stained clay
+	
+	// 160-169 are unused
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	
+	-8,		// Hay block
+	-8,		// Carpet
+	-2,		// Hardened clay
+	-2,		// Coal block
 };
 
 

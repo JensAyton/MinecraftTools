@@ -96,6 +96,14 @@ static const uint8_t kOpaqueIDs[] =
 	kMCBlockEmeraldOre,
 	kMCBlockEmeraldBlock,
 	kMCBlockCommandBlock,
+	kMCBlockRedstoneBlock,
+	kMCBlockNetherQuartzOre,
+	kMCBlockQuartzBlock,
+	kMCBlockDropper,
+	kMCBlockStainedClay,
+	kMCBlockHayBlock,
+	kMCBlockHardenedClay,
+	kMCBlockCoalBlock,
 };
 
 
@@ -123,6 +131,7 @@ static const uint8_t kTransparentIDs[] =
 	kMCBlockBirchWoodStairs,
 	kMCBlockJungleWoodStairs,
 	kMCBlockBeacon,
+	kMCBlockQuartzStairs,
 };
 
 
@@ -200,6 +209,22 @@ static const uint8_t kItemIDs[] =
 	kMCBlockPotatoes,
 	kMCBlockWoodenButton,
 	kMCBlockHead,
+	kMCBlockAnvil,
+	kMCBlockTrappedChest,
+	kMCBlockGoldPressurePlate,
+	kMCBlockIronPressurePlate,
+	kMCBlockRedstoneComparatorOff,
+	kMCBlockRedstoneComparatorOn,
+	kMCBlockDaylightSensor,
+	kMCBlockHopper,
+	kMCBlockActivatorRail,
+	kMCBlockCarpet,
+};
+
+
+static const uint8_t kUnusedIDs[] =
+{
+	160, 161, 162, 163, 164, 165, 166, 167, 168, 169,
 };
 
 
@@ -222,8 +247,16 @@ static const uint8_t kTileEntityIDs[] =
 	kMCBlockEnchantmentTable,
 	kMCBlockBrewingStand,
 	kMCBlockEndPortal,
+	KMCBlockEnderChest,
 	kMCBlockCommandBlock,
 	kMCBlockBeacon,
+	kMCBlockHead,
+	kMCBlockTrappedChest,
+	kMCBlockRedstoneComparatorOff,
+	kMCBlockRedstoneComparatorOn,
+	kMCBlockDaylightSensor,
+	kMCBlockHopper,
+	kMCBlockDropper,
 };
 
 
@@ -238,6 +271,17 @@ static const uint8_t kPowerSourceIDs[] =
 	kMCBlockStoneButton,
 	kMCBlockWoodenButton,
 	kMCBlockTripwireHook,
+	kMCBlockChest,
+	kMCBlockFurnace,
+	kMCBlockTrappedChest,
+	kMCBlockGoldPressurePlate,
+	kMCBlockIronPressurePlate,
+	kMCBlockRedstoneComparatorOff,
+	kMCBlockRedstoneComparatorOn,
+	kMCBlockDaylightSensor,
+	kMCBlockRedstoneBlock,
+	kMCBlockHopper,
+	kMCBlockDropper,
 };
 
 
@@ -257,6 +301,11 @@ static const uint8_t kPowerSinkIDs[] =
 	kMCBlockRedstoneLampOff,
 	kMCBlockRedstoneLampOn,
 	kMCBlockCommandBlock,
+	kMCBlockRedstoneComparatorOff,
+	kMCBlockRedstoneComparatorOn,
+	kMCBlockHopper,
+	kMCBlockActivatorRail,
+	kMCBlockDropper,
 };
 
 
@@ -299,6 +348,7 @@ static const uint8_t kOreIDs[] =
 	kMCBlockGlowingRedstoneOre,
 	kMCBlockLapisLazuliOre,
 	kMCBlockEmeraldOre,
+	kMCBlockNetherQuartzOre,
 };
 
 
@@ -307,6 +357,7 @@ static const uint8_t kRailIDs[] =
 	kMCBlockRail,
 	kMCBlockPoweredRail,
 	kMCBlockDetectorRail,
+	kMCBlockActivatorRail,
 };
 
 
@@ -329,12 +380,15 @@ static const uint8_t kStairIDs[] =
 	kMCBlockSpruceWoodStairs,
 	kMCBlockBirchWoodStairs,
 	kMCBlockJungleWoodStairs,
+	kMCBlockQuartzStairs,
 };
 
 
 static void ApplyAttribute(const uint8_t *idList, size_t idCount, JAMCBlockIDMetadata flag, JAMCBlockIDMetadata attributeMap[256]);
 
 #define APPLY_ATTRIBUTE(idList, flag)  ApplyAttribute(idList, sizeof idList / sizeof *idList, flag, attributeMap)
+
+static bool IsUnusedID(uint8_t blockID);
 
 
 int main (int argc, const char * argv[])
@@ -354,24 +408,35 @@ int main (int argc, const char * argv[])
 	unsigned i;
 	for (i = 0; i <= kMCLastBlockID; i++)
 	{
+		if (IsUnusedID(i))  continue;
+		
 		JAMCBlockIDMetadata attr = attributeMap[i] & 0x0F;
 		if (attr == 0)
 		{
-			fprintf(stderr, "Error: block ID %u has no basic category.\n", i);
+			fprintf(stderr, "error: block ID %u has no basic category.\n", i);
 			exit(EXIT_FAILURE);
 		}
 		if (attr != kMCBlockIsOpaque && attr != kMCBlockIsTransparent && attr != kMCBlockIsLiquid && attr != kMCBlockIsItem)
 		{
-			fprintf(stderr, "Error: block ID %u has more than one basic category (0x%X).\n", i, attr);
+			fprintf(stderr, "error: block ID %u has more than one basic category (0x%X).\n", i, attr);
 			exit(EXIT_FAILURE);
 		}
 	}
 	for (; i < 256; i++)
 	{
 		JAMCBlockIDMetadata attr = attributeMap[i];
-		if (attr < 0)
+		if (attr != 0)
 		{
-			fprintf(stderr, "Error: block ID %u is beyond kMCLastBlockID, but has attributes set (0x%X).\n", i, attr);
+			fprintf(stderr, "error: block ID %u is beyond kMCLastBlockID, but has attributes set (0x%X).\n", i, attr);
+			exit(EXIT_FAILURE);
+		}
+	}
+	for (i = 0; i < sizeof kUnusedIDs / sizeof *kUnusedIDs; i++)
+	{
+		JAMCBlockIDMetadata attr = attributeMap[kUnusedIDs[i]];
+		if (attr != 0)
+		{
+			fprintf(stderr, "error: block ID %u is beyond kMCLastBlockID, but has attributes set (0x%X).\n", i, attr);
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -403,4 +468,16 @@ static void ApplyAttribute(const uint8_t *idList, size_t idCount, JAMCBlockIDMet
 		uint8_t blockID = idList[i];
 		attributeMap[blockID] |= flag;
 	}
+}
+
+
+static bool IsUnusedID(uint8_t blockID)
+{
+	if (blockID > kMCLastBlockID)  return true;
+	for (unsigned i = 0; i < sizeof kUnusedIDs / sizeof *kUnusedIDs; i++)
+	{
+		if (blockID == kUnusedIDs[i])  return true;
+	}
+	
+	return false;
 }
