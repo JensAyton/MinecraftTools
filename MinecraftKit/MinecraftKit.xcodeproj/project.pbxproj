@@ -10,11 +10,17 @@
 		1A164B78148938010079962D /* JAMinecraftChunkBlockStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A164B76148938010079962D /* JAMinecraftChunkBlockStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A164B79148938010079962D /* JAMinecraftChunkBlockStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A164B77148938010079962D /* JAMinecraftChunkBlockStore.m */; };
 		1A164B7C14893F670079962D /* JAMinecraftChunkBlockStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A164B77148938010079962D /* JAMinecraftChunkBlockStore.m */; };
-		1A1EA94615692B5F005A9E3D /* JAMinecraftAnvilRegionReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A1EA94415692B5F005A9E3D /* JAMinecraftAnvilRegionReader.h */; };
-		1A1EA94715692B5F005A9E3D /* JAMinecraftAnvilRegionReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A1EA94415692B5F005A9E3D /* JAMinecraftAnvilRegionReader.h */; };
+		1A1EA94615692B5F005A9E3D /* JAMinecraftAnvilRegionReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A1EA94415692B5F005A9E3D /* JAMinecraftAnvilRegionReader.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A1EA94715692B5F005A9E3D /* JAMinecraftAnvilRegionReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A1EA94415692B5F005A9E3D /* JAMinecraftAnvilRegionReader.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A1EA94815692B5F005A9E3D /* JAMinecraftAnvilRegionReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1EA94515692B5F005A9E3D /* JAMinecraftAnvilRegionReader.m */; };
 		1A1EA94915692B5F005A9E3D /* JAMinecraftAnvilRegionReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A1EA94515692B5F005A9E3D /* JAMinecraftAnvilRegionReader.m */; };
 		1A3AAB6514592FA0006C7043 /* Data.schema in Resources */ = {isa = PBXBuildFile; fileRef = 1A3AAB6414592FA0006C7043 /* Data.schema */; };
+		1A498BEC17AD43F90019164A /* JAMinecraftAnvilChunkBlockStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A498BEA17AD43F90019164A /* JAMinecraftAnvilChunkBlockStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A498BED17AD43F90019164A /* JAMinecraftAnvilChunkBlockStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A498BEA17AD43F90019164A /* JAMinecraftAnvilChunkBlockStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1A498BEE17AD43F90019164A /* JAMinecraftAnvilChunkBlockStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A498BEB17AD43F90019164A /* JAMinecraftAnvilChunkBlockStore.m */; };
+		1A498BEF17AD43F90019164A /* JAMinecraftAnvilChunkBlockStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A498BEB17AD43F90019164A /* JAMinecraftAnvilChunkBlockStore.m */; };
+		1A498BF117AD49FF0019164A /* AnvilChunk.schema in Resources */ = {isa = PBXBuildFile; fileRef = 1A498BF017AD49FF0019164A /* AnvilChunk.schema */; };
+		1A498BF317AD4A750019164A /* AnvilChunkSchema.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A498BF217AD4A750019164A /* AnvilChunkSchema.c */; };
 		1A64907114517A7300F57924 /* JANBTSerialization.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A64906F14517A7300F57924 /* JANBTSerialization.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A6C28B314A26A67008A6535 /* BlockDescriptions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1A6C28B114A26A67008A6535 /* BlockDescriptions.plist */; };
 		1A6C28B714A27430008A6535 /* BlockDescriptions.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A6C28B614A27430008A6535 /* BlockDescriptions.c */; };
@@ -158,6 +164,10 @@
 		1A1EA94415692B5F005A9E3D /* JAMinecraftAnvilRegionReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAMinecraftAnvilRegionReader.h; sourceTree = SOURCE_ROOT; };
 		1A1EA94515692B5F005A9E3D /* JAMinecraftAnvilRegionReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAMinecraftAnvilRegionReader.m; sourceTree = SOURCE_ROOT; };
 		1A3AAB6414592FA0006C7043 /* Data.schema */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Data.schema; path = Resources/Data.schema; sourceTree = SOURCE_ROOT; };
+		1A498BEA17AD43F90019164A /* JAMinecraftAnvilChunkBlockStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAMinecraftAnvilChunkBlockStore.h; sourceTree = SOURCE_ROOT; };
+		1A498BEB17AD43F90019164A /* JAMinecraftAnvilChunkBlockStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAMinecraftAnvilChunkBlockStore.m; sourceTree = SOURCE_ROOT; };
+		1A498BF017AD49FF0019164A /* AnvilChunk.schema */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = AnvilChunk.schema; path = Resources/AnvilChunk.schema; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.plist; };
+		1A498BF217AD4A750019164A /* AnvilChunkSchema.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = AnvilChunkSchema.c; path = ../MinecraftKit.build/$CONFIGURATION/libminecraftkit.build/DerivedSources/AnvilChunkSchema.c; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A64906F14517A7300F57924 /* JANBTSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTSerialization.h; sourceTree = SOURCE_ROOT; };
 		1A64907014517A7300F57924 /* JANBTSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTSerialization.m; sourceTree = SOURCE_ROOT; };
 		1A6C28B214A26A67008A6535 /* en */ = {isa = PBXFileReference; explicitFileType = text; name = en; path = Resources/en.lproj/BlockDescriptions.plist; sourceTree = SOURCE_ROOT; };
@@ -340,15 +350,17 @@
 		1AFE345B13F930BF001A33D4 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				1AF540A5145C4D290049CCEB /* DataSchema.c */,
-				1AF540A6145C4D290049CCEB /* SchematicSchema.c */,
-				1AE1B0CE1482A4A8006070F2 /* ChunkSchema.c */,
-				1A6C28B614A27430008A6535 /* BlockDescriptions.c */,
 				1AFE345C13F930BF001A33D4 /* MinecraftKit-Info.plist */,
 				1A6C28B114A26A67008A6535 /* BlockDescriptions.plist */,
 				1A3AAB6414592FA0006C7043 /* Data.schema */,
 				1AF8C149144CA38900D86C3D /* Schematic.schema */,
 				1AE1B0A4148292DE006070F2 /* Chunk.schema */,
+				1A498BF017AD49FF0019164A /* AnvilChunk.schema */,
+				1AF540A5145C4D290049CCEB /* DataSchema.c */,
+				1AF540A6145C4D290049CCEB /* SchematicSchema.c */,
+				1AE1B0CE1482A4A8006070F2 /* ChunkSchema.c */,
+				1A498BF217AD4A750019164A /* AnvilChunkSchema.c */,
+				1A6C28B614A27430008A6535 /* BlockDescriptions.c */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -380,6 +392,8 @@
 				1A164B77148938010079962D /* JAMinecraftChunkBlockStore.m */,
 				1A1EA94415692B5F005A9E3D /* JAMinecraftAnvilRegionReader.h */,
 				1A1EA94515692B5F005A9E3D /* JAMinecraftAnvilRegionReader.m */,
+				1A498BEA17AD43F90019164A /* JAMinecraftAnvilChunkBlockStore.h */,
+				1A498BEB17AD43F90019164A /* JAMinecraftAnvilChunkBlockStore.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -454,6 +468,7 @@
 				1A6C292414A27686008A6535 /* JABozoStringTemplate.h in Headers */,
 				1AF6E52014A4ABDA00E38756 /* JAGenericToString.h in Headers */,
 				1A1EA94715692B5F005A9E3D /* JAMinecraftAnvilRegionReader.h in Headers */,
+				1A498BED17AD43F90019164A /* JAMinecraftAnvilChunkBlockStore.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -490,6 +505,7 @@
 				1A6C292314A27686008A6535 /* JABozoStringTemplate.h in Headers */,
 				1AF6E51F14A4ABDA00E38756 /* JAGenericToString.h in Headers */,
 				1A1EA94615692B5F005A9E3D /* JAMinecraftAnvilRegionReader.h in Headers */,
+				1A498BEC17AD43F90019164A /* JAMinecraftAnvilChunkBlockStore.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -599,6 +615,7 @@
 				1A3AAB6514592FA0006C7043 /* Data.schema in Resources */,
 				1AE1B0A5148292DE006070F2 /* Chunk.schema in Resources */,
 				1A6C28B314A26A67008A6535 /* BlockDescriptions.plist in Resources */,
+				1A498BF117AD49FF0019164A /* AnvilChunk.schema in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -616,6 +633,7 @@
 				"$(BUILT_PRODUCTS_DIR)/plistpacker",
 				"$(SRCROOT)/Resources/Chunk.schema",
 				"$(SRCROOT)/Resources/en.lproj/BlockDescriptions.plist",
+				"$(SRCROOT)/Resources/AnvilChunk.schema",
 			);
 			name = "Pack schemata";
 			outputPaths = (
@@ -627,10 +645,12 @@
 				"$(DERIVED_FILE_DIR)/ChunkSchema.c",
 				"$(DERIVED_FILE_DIR)/BlockDescriptions.h",
 				"$(DERIVED_FILE_DIR)/BlockDescriptions.c",
+				"$(DERIVED_FILE_DIR)/AnvilChunkSchema.h",
+				"$(DERIVED_FILE_DIR)/AnvilChunkSchema.c",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "mkdir -p \"$DERIVED_FILE_DIR\"\ncd \"$DERIVED_FILE_DIR\"\n\"$BUILT_PRODUCTS_DIR/plistpacker\" \"$SRCROOT/Resources/Data.schema\" DataSchema\n\"$BUILT_PRODUCTS_DIR/plistpacker\" \"$SRCROOT/Resources/Schematic.schema\" SchematicSchema\n\"$BUILT_PRODUCTS_DIR/plistpacker\" \"$SRCROOT/Resources/Chunk.schema\" ChunkSchema\n\"$BUILT_PRODUCTS_DIR/plistpacker\" \"$SRCROOT/Resources/en.lproj/BlockDescriptions.plist\" BlockDescriptions\n";
+			shellScript = "mkdir -p \"$DERIVED_FILE_DIR\"\ncd \"$DERIVED_FILE_DIR\"\n\"$BUILT_PRODUCTS_DIR/plistpacker\" \"$SRCROOT/Resources/Data.schema\" DataSchema\n\"$BUILT_PRODUCTS_DIR/plistpacker\" \"$SRCROOT/Resources/Schematic.schema\" SchematicSchema\n\"$BUILT_PRODUCTS_DIR/plistpacker\" \"$SRCROOT/Resources/Chunk.schema\" ChunkSchema\n\"$BUILT_PRODUCTS_DIR/plistpacker\" \"$SRCROOT/Resources/AnvilChunk.schema\" AnvilChunkSchema\n\"$BUILT_PRODUCTS_DIR/plistpacker\" \"$SRCROOT/Resources/en.lproj/BlockDescriptions.plist\" BlockDescriptions\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -668,6 +688,8 @@
 				1A6C28B714A27430008A6535 /* BlockDescriptions.c in Sources */,
 				1AF6E52214A4ABDA00E38756 /* JAGenericToString.m in Sources */,
 				1A1EA94915692B5F005A9E3D /* JAMinecraftAnvilRegionReader.m in Sources */,
+				1A498BEF17AD43F90019164A /* JAMinecraftAnvilChunkBlockStore.m in Sources */,
+				1A498BF317AD4A750019164A /* AnvilChunkSchema.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -701,6 +723,7 @@
 				1A164B79148938010079962D /* JAMinecraftChunkBlockStore.m in Sources */,
 				1AF6E52114A4ABDA00E38756 /* JAGenericToString.m in Sources */,
 				1A1EA94815692B5F005A9E3D /* JAMinecraftAnvilRegionReader.m in Sources */,
+				1A498BEE17AD43F90019164A /* JAMinecraftAnvilChunkBlockStore.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

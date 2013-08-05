@@ -2,7 +2,7 @@
 	JAMinecraftChunkBlockStore.m
 	
 	
-	Copyright © 2011 Jens Ayton
+	Copyright © 2011-13 Jens Ayton
 	
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),
@@ -150,9 +150,9 @@ static id KeyForCoords(NSInteger x, NSInteger y, NSInteger z)
 	{
 		for (z = 0; z < kLength; z++)
 		{
+			uint8_t meta = 0;
 			for (y = 0; y < kHeight; y++)
 			{
-				uint8_t meta;
 				uint8_t blockID = *blockBytes++;
 				if ((x & 1) == 0)
 				{

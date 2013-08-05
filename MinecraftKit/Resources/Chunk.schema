@@ -1,5 +1,5 @@
 /*
-	Definitions of expected types for chunk structure in region files.
+	Definitions of expected types for chunk structure in McRegion files.
 	Note: the root key of a chunk is the empty string. The empty string-keyed
 	outer compound contains a single compound keyed "Level".
 */

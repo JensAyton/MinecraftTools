@@ -10,6 +10,7 @@
 #import "SchematicSchema.h"
 #import "DataSchema.h"
 #import "ChunkSchema.h"
+#import "AnvilChunkSchema.h"
 #import "BlockDescriptions.h"
 
 #else
@@ -36,6 +37,12 @@ static inline id GetDataSchema(void)
 static inline id GetChunkSchema(void)
 {
 	return GetNamedSchema(@"Chunk");
+}
+
+
+static inline id GetAnvilChunkSchema(void)
+{
+	return GetNamedSchema(@"AnvilChunk");
 }
 
 

@@ -1,0 +1,398 @@
+/*
+	Definitions of expected types for chunk structure in Anvil region files.
+	Note: the root key of a chunk is the empty string. The empty string-keyed
+	outer compound contains a single compound keyed "Level".
+*/
+
+{
+	Level =
+	{
+		xPos = int;
+		zPos = int;
+		LastUpdate = long;
+		TerrainPopulated = byte;
+		InhabitedTime = long;
+		Biomes = data;
+		HeightMap = intarray;
+		
+		Sections =
+		(
+			{
+				Y = byte;
+				Blocks = data;
+				Add = data;
+				Data = data;
+				BlockLight = data;
+				SkyLight = data;
+			}
+		);
+		
+		Entities =
+		(
+			{
+				id = string;
+				
+				Pos = ( double );
+				Motion = ( double );
+				Rotation = ( float );
+				FallDistance = float;
+				Fire = short;
+				Air = short;
+				OnGround = byte;
+				Dimension = int;
+				Invulnerable = byte;
+				PortalCooldown = int;
+				UUIDMost = long;
+				UUIDLeast = long;
+				Riding = { /* Entity */ };
+				
+				// Mobs
+				Health = short;
+				HealF = float;
+				AbsorptionAmount = float;
+				AttackTime = short;
+				HurtTime = short;
+				DeathTime = short;
+				Attributes =
+				(
+					{
+						Name = string;
+						Base = double;
+						Modifiers =
+						(
+							{
+								Name = string;
+								Amount = double;
+								Operation = int;
+								UUIDMost = long;
+								UUIDLeast = long;
+							}
+						);
+					}
+				);
+				ActiveEffects =
+				(
+					{
+						Id = byte;
+						Amplifier = byte;
+						Duration = int;
+						Ambient = byte;
+					}
+				);
+				Equipment =
+				(
+					{ /* Item */ }
+				);
+				DropChances = ( float );
+				CanPickUpLoot = byte;
+				PersistenceRequired = byte;
+				CustomName = string;
+				CustomNameVisible = byte;
+				Leashed = byte;
+				Leash =
+				{
+					// Either a UUID pair for an entity, or x,y,z for a fence post
+					UUIDMost = long;
+					UUIDLeast = long;
+					X = int;
+					Y = int;
+					Z = int;
+				};
+				
+				// Breedable mobs
+				InLove = int;
+				Age = int;
+				
+				// Pets
+				Owner = string;
+				Sitting = byte;
+				
+				// Bat
+				BatFlags = byte;
+				
+				// Creeper
+				powered = byte;
+				ExplosionRadius = byte;
+				Fuse = short;
+				
+				// Enderman
+				carried = short;
+				carriedData = short;
+				
+				// Horse
+				Bred = byte;
+				ChestedHorse = byte;
+				EatingHaystack = byte;
+				HasReproduced = byte;
+				Tame = byte;
+				Temper = int;
+				Type = int;
+				Variant = int;
+				OwnerName = string;
+				Items = ( { /* Item */ } );
+				ArmorItem = { /* Item */ };
+				SaddleItem = {/* Item */ };
+				
+				// Ghast
+				ExplosionPower = int;
+				
+				// Ocelot/cat
+				CatType = int;
+				
+				// Pig
+				Saddle = byte;
+				
+				// Sheep
+				Sheared = byte;
+				Color = byte;
+				
+				// Skeleton
+				SkeletonType = byte;
+				
+				// Slime/magma cube
+				Size = int;
+				
+				// Wither boss
+				Invul = int;
+				
+				// Wolf/dog
+				Angry = byte;
+				CollarColor = byte;
+				
+				// Villager
+				Profession = int;
+				Riches = int;
+				Offers =
+				{
+					Recipes =
+					(
+						{
+							maxUses = int;
+							uses = int;
+							buy = { /* Item */ };
+							buyB = { /* item */ };
+							sell = { /* item */ };
+						}
+					);
+				};
+				
+				// Iron golem
+				PlayerCreated = byte;
+				
+				// Zombie/zombie pigman
+				IsVillager = byte;
+				IsBaby = byte;
+				ConversionTime = int;
+				
+				// Zombie pigman
+				Anger = short;
+				
+				
+				// Projectiles
+				xTile = short;
+				yTile = short;
+				zTile = short;
+				inTile = byte;
+				shake = byte;
+				inGround = byte;
+				
+				// Arrow
+				inData = byte;
+				pickup = byte;
+				player = byte;
+				damage = double;
+				
+				// Fireball/small fireball
+				direction = ( double );
+				
+				// Fireball
+				ExplosionPower = int;
+				
+				// Thrown ender pearl/thrown bottle o' enchanting/thrown potion/snowball
+				ownerName = string;
+				
+				// Thrown potion
+				Potion = { /* Item */ };
+				potionValue = int;
+				
+				
+				// Item and XP orb
+				Health = short;
+				// Age = short; // PROBLEM: Age is short for items and int for breedable mobs. Need more expressive semantics.
+				
+				// Item
+				Item = { /* Item */ };
+				
+				// XP orb
+				Value = short;
+				
+				
+				// All minecart types
+				CustomDisplayTile = byte;
+				DisplayTile = int;
+				DisplayData = int;
+				DispalyOffset = int;
+				CustomName = string;
+				
+				// Chest and hopper minecarts
+				Items = ( { /* Item */ } );
+				
+				// Hopper minecart
+				TransferCooldown = int;
+				
+				// Furnace minecart
+				PushX = double;
+				PushZ = double;
+				Fuel = short;
+				
+				// TNT minecart
+				TNTFuse = int;
+				
+				// Spawner minecart
+				SpawnPotentials =
+				(
+					{
+						Weight = int;
+						Type = string;
+						Properties = { /* Entity */ };
+					}
+				);
+				EntityID = string;
+				SpawnData = { /* Entity */ };
+				SpawnCount = short;
+				SpawnRange = short;
+				Delay = short;
+				MinSpawnDelay = short;
+				MaxSpawnDelay = short;
+				MaxNearbyEntities = short;
+				RequiredPlayerRange = short;
+				
+				
+				// Primed TNT
+				// Fuse = byte; // PROBLEM: short for creeper, byte for primed TNT.
+				
+				// Falling sand
+				Tile = byte;
+				TileID = int;
+				TileEntityData = { /* Entity */ };
+				Data = byte;
+				Time = byte;
+				DropItem = byte;
+				HurtEntities = byte;
+				FallHurtMax = int;
+				FallHurtAmount = float;
+				
+				
+				// Fireworks rocket
+				Life = int;
+				LifeTime = int;
+				FireworksItem = { /* Item */ };
+				
+				// Paintings and item frames
+				TileX = int;
+				TileY = int;
+				TileZ = int;
+				Direction = byte;
+				Dir = byte;
+				
+				// Item frame
+				Item = { /* Item */ };
+				ItemDropChance = float;
+				ItemRotaion = byte;
+				
+				// Painting
+				Motive = string;
+			}
+		);
+		TileEntities =
+		(
+			{
+				id = string;
+				x = int;
+				y = int;
+				z = int;
+				
+				// Various
+				CustomName = string;
+				Items = ( { /* Item */ } );
+				
+				// Beacon
+				Levels = int;
+				Primary = int;
+				Secondary = int;
+				
+				// Brewing stand
+				BrewTime = int;
+				
+				// Comparator
+				OutputSignal = int;
+				
+				// Command block
+				Command = string;
+				SuccessCount = int;
+				
+				// Furnace
+				BurnTime = short;
+				CookTime = short;
+				
+				// Hopper
+				TransferCooldon = int;
+				
+				// Mob spawner
+				SpawnPotentials =
+				(
+					{
+						Weight = int;
+						Type = string;
+						Properties = { /* Entity */ };
+					}
+				);
+				EntityID = string;
+				SpawnData = { /* Entity */ };
+				SpawnCount = short;
+				SpawnRange = short;
+				Delay = short;
+				MinSpawnDelay = short;
+				MaxSpawnDelay = short;
+				MaxNearbyEntities = short;
+				RequiredPlayerRange = short;
+				
+				// Note block
+				note = byte;
+				
+				// Piston
+				blockId = int;
+				blockData = int;
+				facing = int;
+				progress = float;
+				extending = byte;
+				
+				// Jukebox
+				Record = int;
+				RecordItem = { /* Item */ };
+				
+				// Sign
+				Text1 = string;
+				Text2 = string;
+				Text3 = string;
+				Text4 = string;
+				
+				// Skull
+				SkullType = byte;
+				ExtraType = string;
+				Rot = byte;
+			}
+		);
+		TileTicks =
+		(
+			{
+				i = int;
+				t = int;
+				p = int;
+				x = int;
+				y = int;
+				z = int;
+			}
+		);
+	};
+}

@@ -4,7 +4,7 @@
 	Abstract block store.
 	
 	
-	Copyright © 2010–2011 Jens Ayton
+	Copyright © 2010–2013 Jens Ayton
 	
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),
@@ -159,5 +159,6 @@ enum
 	kJABlockStoreErrorUnknownFormatVersion,
 	kJABlockStoreErrorTruncatedData,
 	kJABlockStoreErrorEmptyDocument,
-	kJABlockStoreErrorDocumentTooLarge
+	kJABlockStoreErrorDocumentTooLarge,
+	kJABlockStoreErrorExtendedBlockIDsNotSupported
 };

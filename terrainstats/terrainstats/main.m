@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 #import "JAPrintf.h"
-#import <JAMinecraftKit/JAMinecraftRegionReader.h>
-#import <JAMinecraftKit/JAMinecraftChunkBlockStore.h>
+#import <JAMinecraftKit/JAMinecraftAnvilRegionReader.h>
+#import <JAMinecraftKit/JAMinecraftAnvilChunkBlockStore.h>
 #import <JAMinecraftKit/JAPropertyListAccessors.h>
 #import <JAMinecraftKit/MYCollectionUtilities.h>
 #import <JAMinecraftKit/JANBTSerialization.h>
@@ -117,7 +117,7 @@ static void AnalyzeRegionsInDirectory(NSString *directory)
 	
 	for (NSURL *url in dirEnum)
 	{
-		if ([url.pathExtension caseInsensitiveCompare:@"mcr"] != NSOrderedSame)
+		if ([url.pathExtension caseInsensitiveCompare:@"mca"] != NSOrderedSame)
 		{
 			continue;
 		}
@@ -151,7 +151,7 @@ static void AnalyzeRegionsInDirectory(NSString *directory)
 
 static JATerrainStatistics *AnalyzeRegion(NSURL *regionURL)
 {
-	JAMinecraftRegionReader *region = [JAMinecraftRegionReader regionReaderWithURL:regionURL];
+	JAMinecraftAnvilRegionReader *region = [JAMinecraftAnvilRegionReader regionReaderWithURL:regionURL];
 	if (region == nil)
 	{
 		Fatal(@"Could not read region file %@.", regionURL.lastPathComponent);
@@ -166,26 +166,21 @@ static JATerrainStatistics *AnalyzeRegion(NSURL *regionURL)
 		{
 			@autoreleasepool
 			{
-				NSData *data = [region chunkDataAtLocalX:x localZ:z];
-				if (data != NULL)
+				NSError *error;
+				JAMinecraftAnvilChunkBlockStore *chunk = [region chunkAtLocalX:x localZ:z error:&error];
+				if (chunk == nil)
 				{
-					NSError *error;
-					JAMinecraftChunkBlockStore *chunk = [[JAMinecraftChunkBlockStore alloc] initWithData:data error:&error];
-					
-					if (chunk == nil)
-					{
-						Fatal(@"Failed to read a chunk. %@\n", error);
-					}
-					
-					if ([chunk.metadata ja_boolForKey:@"TerrainPopulated"])
-					{
-						[regionStatistics incrementChunkCount];
-						AnalyzeChunk(chunk, chunk.metadata, regionStatistics);
-					}
-					else
-					{
-						[regionStatistics incrementRejectedChunkCount];
-					}
+					Fatal(@"Failed to read a chunk. %@\n", error);
+				}
+				
+				if ([chunk.metadata ja_boolForKey:@"TerrainPopulated"])
+				{
+					[regionStatistics incrementChunkCount];
+					AnalyzeChunk(chunk, chunk.metadata, regionStatistics);
+				}
+				else
+				{
+					[regionStatistics incrementRejectedChunkCount];
 				}
 			}
 		}
