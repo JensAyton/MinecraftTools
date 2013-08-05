@@ -2,7 +2,7 @@
 	JANBTTagType.m
 	
 	
-	Copyright © 2011 Jens Ayton
+	Copyright © 2011-2013 Jens Ayton
 	
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),
@@ -112,6 +112,7 @@ static const void *kNBTListElementTypeStorageKey = &kNBTListElementTypeStorageKe
 	if ([self isEqualToString:@"double"])	return kJANBTTagDouble;
 	if ([self isEqualToString:@"data"])		return kJANBTTagByteArray;
 	if ([self isEqualToString:@"string"])	return kJANBTTagString;
+	if ([self isEqualToString:@"intarray"])	return kJANBTTagIntArray;
 	return kJANBTTagUnknown;
 }
 
@@ -171,9 +172,13 @@ NSString *JANBTTagNameFromTagType(JANBTTagType type)
 		case kJANBTTagCompound:
 			return @"TAG_Compound";
 			
+		case kJANBTTagIntArray:
+			return @"TAG_Int_Array";
+			
 		case kJANBTTagAny:
 			return @"wildcard";
 			
+		case kJANBTTagIntArrayContent:
 		case kJANBTTagUnknown:
 			;
 			// Fall through
@@ -197,9 +202,11 @@ BOOL JANBTIsKnownTagType(JANBTTagType type)
 		case kJANBTTagString:
 		case kJANBTTagList:
 		case kJANBTTagCompound:
+		case kJANBTTagIntArray:
 			return YES;
 			
 		case kJANBTTagEnd:
+		case kJANBTTagIntArrayContent:
 		case kJANBTTagAny:
 		case kJANBTTagUnknown:
 			;

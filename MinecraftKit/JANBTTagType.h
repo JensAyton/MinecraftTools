@@ -4,7 +4,7 @@
 	Internal type used to identify NBT file elements.
 	
 	
-	Copyright © 2011 Jens Ayton
+	Copyright © 2011-2013 Jens Ayton
 	
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),
@@ -30,20 +30,22 @@
 
 typedef enum
 {
-	kJANBTTagEnd		= 0,
-	kJANBTTagByte		= 1,
-	kJANBTTagShort		= 2,
-	kJANBTTagInt		= 3,
-	kJANBTTagLong		= 4,
-	kJANBTTagFloat		= 5,
-	kJANBTTagDouble		= 6,
-	kJANBTTagByteArray	= 7,
-	kJANBTTagString		= 8,
-	kJANBTTagList		= 9,
-	kJANBTTagCompound	= 10,
+	kJANBTTagEnd				= 0,
+	kJANBTTagByte				= 1,
+	kJANBTTagShort				= 2,
+	kJANBTTagInt				= 3,
+	kJANBTTagLong				= 4,
+	kJANBTTagFloat				= 5,
+	kJANBTTagDouble				= 6,
+	kJANBTTagByteArray			= 7,
+	kJANBTTagString				= 8,
+	kJANBTTagList				= 9,
+	kJANBTTagCompound			= 10,
+	kJANBTTagIntArray			= 11,
 	
-	kJANBTTagAny		= 0xFE,
-	kJANBTTagUnknown	= 0xFF
+	kJANBTTagIntArrayContent	= 0xFD,	// Special ja_NBTListElementType value for NSArrays to be represented as IntArrays.
+	kJANBTTagAny				= 0xFE,
+	kJANBTTagUnknown			= 0xFF
 } JANBTTagType;
 
 

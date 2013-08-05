@@ -2,7 +2,7 @@
 	JANBTStreamEncoder.m
 	
 	
-	Copyright © 2011 Jens Ayton
+	Copyright © 2011-2013 Jens Ayton
 	
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),
@@ -202,7 +202,11 @@ static JANBTTagType NormalizedTagType(id value, id schema);
 		case kJANBTTagCompound:
 			return [self encodeCompound:value withSchema:schema];
 			
+		case kJANBTTagIntArray:
+			return [self encodeIntArray:value withSchema:schema];
+			
 		case kJANBTTagEnd:
+		case kJANBTTagIntArrayContent:
 		case kJANBTTagAny:
 		case kJANBTTagUnknown:
 			;
@@ -280,11 +284,16 @@ static JANBTTagType NormalizedTagType(id value, id schema);
 
 - (BOOL) encodeList:(NSArray *)value withSchema:(id)schema
 {
+	if (value.ja_NBTListElementType == kJANBTTagIntArrayContent || [schema isEqual:@"intarray"])
+	{
+		return [self encodeIntArray:value withSchema:schema];
+	}
+	
 	REQUIRE_SCHEMA(schema == nil || ([schema isKindOfClass:[NSArray class]] && [schema count] == 1), @"TAG_List", schema);
 	
 	schema = [schema objectAtIndex:0];
 	
-	JANBTTagType type = [value ja_NBTListElementType];
+	JANBTTagType type = value.ja_NBTListElementType;
 	if (type == kJANBTTagUnknown && schema != nil)
 	{
 		type = [schema ja_NBTSchemaType];
@@ -337,6 +346,25 @@ static JANBTTagType NormalizedTagType(id value, id schema);
 	}
 	
 	return [self writeByte:kJANBTTagEnd];
+}
+
+
+- (BOOL) encodeIntArray:(NSArray *)value withSchema:(id)schema
+{
+	REQUIRE_SCHEMA(schema == nil || [schema isEqual:@"intarray"], @"TAG_Int_Array", schema);
+	
+	NSUInteger count = value.count;
+	REQUIRE_ERR(count <= INT32_MAX, kJANBTSerializationObjectTooLargeError, @"List too long (%lu items)", count);
+	
+	REQUIRE([self writeInt:count]);
+	
+	for (id elem in value)
+	{
+		REQUIRE_ERR([elem respondsToSelector:@selector(intValue)], kJANBTSerializationWrongTypeError, @"Int array contains non-numerical object.");
+		REQUIRE([self writeInt:[elem intValue]]);
+	}
+	
+	return YES;
 }
 
 

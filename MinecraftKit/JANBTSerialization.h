@@ -41,6 +41,7 @@
 		double			64-bit IEEE float, TAG_Double
 		data			Binary data, TAG_Byte_Array
 		string			UTF-8 string, TAG_String
+		intarray		list of 32-bit signed integers, TAG_Int_Array
 	
 	For example, here’s a fragment of a schema in OpenStep plist format. It
 	specifies that Items is a TAG_List containing TAG_Compounds with four
@@ -66,7 +67,7 @@
 	the read value doesn’t match.
 	
 	
-	Copyright © 2011 Jens Ayton
+	Copyright © 2011-2013 Jens Ayton
 	
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),

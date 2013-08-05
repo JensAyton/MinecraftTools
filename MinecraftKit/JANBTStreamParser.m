@@ -2,7 +2,7 @@
 	JANBTStreamParser.m
 	
 	
-	Copyright © 2011 Jens Ayton
+	Copyright © 2011-2013 Jens Ayton
 	
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),
@@ -64,43 +64,13 @@ static inline BOOL IsNumericalSchema(id schema);
 #define REQUIRE(COND) do { if (__builtin_expect(!(COND), 0))  return 0; } while (0)
 
 
-@interface JANBTStreamParser ()
-
-- (BOOL) parseWithSchemaInner:(id)schema expectedRootName:(NSString *)expectedName  __attribute__((warn_unused_result));
-- (id) parseOneTagBodyOfType:(JANBTTagType)type withSchema:(id)schema;
-
-- (void) setErrorIfClear:(NSInteger)errorCode underlyingError:(NSError *)underlyingError format:(NSString *)format, ... NS_FORMAT_FUNCTION(3, 4);
-
-- (NSNumber *) parseByteWithSchema:(id)schema;
-- (NSNumber *) parseShortWithSchema:(id)schema;
-- (NSNumber *) parseIntWithSchema:(id)schema;
-- (NSNumber *) parseLongWithSchema:(id)schema;
-- (NSNumber *) parseFloatWithSchema:(id)schema;
-- (NSNumber *) parseDoubleWithSchema:(id)schema;
-- (NSData *) parseByteArrayWithSchema:(id)schema;
-- (NSString *) parseStringWithSchema:(id)schema;
-- (NSArray *) parseListWithSchema:(id)schema;
-- (NSDictionary *) parseCompoundWithSchema:(id)schema;
-
-// Read functions all throw exception on failure.
-- (BOOL) readBytes:(void *)bytes length:(NSUInteger)length __attribute__((nonnull, warn_unused_result));
-- (BOOL) readByte:(int8_t *)value __attribute__((nonnull, warn_unused_result));
-- (BOOL) readShort:(int16_t *)value __attribute__((nonnull, warn_unused_result));
-- (BOOL) readInt:(int32_t *)value __attribute__((nonnull, warn_unused_result));
-- (BOOL) readLong:(int64_t *)value __attribute__((nonnull, warn_unused_result));
-- (BOOL) readFloat:(Float32 *)value __attribute__((nonnull, warn_unused_result));
-- (BOOL) readDouble:(Float64 *)value __attribute__((nonnull, warn_unused_result));
-- (NSString *) readStringMutable:(BOOL)mutable;
-
-@end
-
-
 @implementation JANBTStreamParser
 {
 	id						_result;
 	NSString				*_rootName;
 	JAZlibDecompressor		*_decompressor;
 	NSError					*_error;
+	NSMutableArray			*_keyPath;
 	BOOL					_mutableContainers;
 	BOOL					_mutableLeaves;
 	BOOL					_allowFragments;
@@ -122,6 +92,8 @@ static inline BOOL IsNumericalSchema(id schema);
 		_mutableContainers = options & kJANBTReadingMutableContainers;
 		_mutableLeaves = options & kJANBTReadingMutableLeaves;
 		_allowFragments = options & kJANBTReadingAllowFragments;
+		
+		_keyPath = [NSMutableArray new];
 	}
 	return self;
 }
@@ -143,7 +115,8 @@ static inline BOOL IsNumericalSchema(id schema);
 	
 	_error = [NSError errorWithDomain:kJANBTSerializationErrorDomain
 								 code:errorCode
-							 userInfo:@{ NSLocalizedDescriptionKey: message, NSUnderlyingErrorKey: underlyingError }];
+							 userInfo:@{ NSLocalizedDescriptionKey: message,
+										 NSUnderlyingErrorKey: underlyingError ?: @"" }];
 }
 
 
@@ -226,6 +199,10 @@ static inline BOOL IsNumericalSchema(id schema);
 		case kJANBTTagCompound:
 			return [self parseCompoundWithSchema:schema];
 			
+		case kJANBTTagIntArray:
+			return [self parseIntArrayWithSchema:schema];
+			
+		case kJANBTTagIntArrayContent:
 		case kJANBTTagEnd:
 		case kJANBTTagAny:
 		case kJANBTTagUnknown:
@@ -237,8 +214,26 @@ static inline BOOL IsNumericalSchema(id schema);
 }
 
 
-#define REQUIRE_SCHEMA(COND, GOT, SCH)  REQUIRE_ERR(COND, kJANBTSerializationWrongTypeError, @"Wrong type in NBT - expected %@, got %@.", JANBTTagNameFromSchema(SCH), GOT)
+#define REQUIRE_SCHEMA(COND, GOT, SCH)  REQUIRE_ERR(COND, kJANBTSerializationWrongTypeError, @"Wrong type in NBT - expected %@, got %@ - at %@.", JANBTTagNameFromSchema(SCH), GOT, self.currentKeyPath)
 #define REQUIRE_NUMERICAL_SCHEMA(SCH)  REQUIRE_SCHEMA(JANBTIsNumericalSchema(SCH), @"numerical type", SCH)
+
+#define PUSH_PATH(FORMAT, ELEM)	do { [_keyPath addObject:FORMAT]; [_keyPath addObject:ELEM]; } while (0)
+#define POP_PATH()				do { [_keyPath removeLastObject]; [_keyPath removeLastObject]; } while (0)
+
+
+- (NSString *) currentKeyPath
+{
+	NSMutableString *result = [NSMutableString stringWithString:_rootName];
+	
+	for (NSUInteger i = 0; i < _keyPath.count; i += 2)
+	{
+		NSString *format = _keyPath[i];
+		id value = _keyPath[i + 1];
+		[result appendString:[format stringByReplacingOccurrencesOfString:@"%@" withString:[value description]]];
+	}
+	
+	return result;
+}
 
 
 - (NSNumber *) parseByteWithSchema:(id)schema
@@ -362,9 +357,13 @@ static inline BOOL IsNumericalSchema(id schema);
 	
 	for (i = 0; i < count; i++)
 	{
+		PUSH_PATH(@"[%@]", @(i));
+		
 		id value = [self parseOneTagBodyOfType:type withSchema:schema];
 		REQUIRE(value);
 		[array addObject:value];
+		
+		POP_PATH();
 	}
 	
 	PARSE_LOG_OUTDENT();
@@ -393,11 +392,15 @@ static inline BOOL IsNumericalSchema(id schema);
 		@autoreleasepool
 		{
 			NSString *key = [self readStringMutable:NO];
+			PUSH_PATH(@".%@", key);
+			
 			PARSE_LOG(@"%@ [%@] =", key, JANBTTagNameFromTagType(type));
 			REQUIRE(key);
 			id value = [self parseOneTagBodyOfType:type withSchema:[schema objectForKey:key]];
 			REQUIRE(value);
 			[dictionary setObject:value forKey:key];
+			
+			POP_PATH();
 		}
 	}
 	
@@ -405,6 +408,33 @@ static inline BOOL IsNumericalSchema(id schema);
 	
 	if (!_mutableContainers)  dictionary = [dictionary copy];
 	return dictionary;
+}
+
+
+- (NSArray *) parseIntArrayWithSchema:(id)schema
+{
+	REQUIRE_SCHEMA(schema == nil || [schema isEqual:@"intarray"], @"TAG_Int_Array", schema);
+	
+	uint32_t i, count;
+	REQUIRE([self readInt:(int32_t *)&count]);
+	
+	PARSE_LOG(@"INTARRAY: %u x int", count);
+	PARSE_LOG_INDENT();
+	
+	NSMutableArray *array = [NSMutableArray arrayWithCapacity:count];
+	
+	for (i = 0; i < count; i++)
+	{
+		int32_t value;
+		REQUIRE([self readInt:&value]);
+		[array addObject:@(value)];
+	}
+	
+	PARSE_LOG_OUTDENT();
+	
+	if (!_mutableContainers)  array = [array copy];
+	array.ja_NBTListElementType = kJANBTTagIntArrayContent;
+	return array;
 }
 
 
