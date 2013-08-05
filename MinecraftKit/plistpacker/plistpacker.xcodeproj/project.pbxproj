@@ -102,7 +102,7 @@
 		1AF5407B145C3C850049CCEB /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0440;
+				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = "Jens Ayton";
 			};
 			buildConfigurationList = 1AF5407E145C3C850049CCEB /* Build configuration list for PBXProject "plistpacker" */;

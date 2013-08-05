@@ -15,7 +15,6 @@
 			dependencies = (
 				1A164BB8148943740079962D /* PBXTargetDependency */,
 				1AF703EC14707DF60096EDF1 /* PBXTargetDependency */,
-				1ADE4125145AEB05008263C8 /* PBXTargetDependency */,
 				1AE8E9B2145A09B9000ED823 /* PBXTargetDependency */,
 				1AE8E9B0145A09B7000ED823 /* PBXTargetDependency */,
 				1AE8E9AE145A09B4000ED823 /* PBXTargetDependency */,
@@ -45,13 +44,6 @@
 			containerPortal = 1ADE411D145AEAFC008263C8 /* NBTProdder.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 1AE8E9BE145A0ABC000ED823;
-			remoteInfo = NBTProdder;
-		};
-		1ADE4124145AEB05008263C8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1ADE411D145AEAFC008263C8 /* NBTProdder.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 1AE8E9BD145A0ABC000ED823;
 			remoteInfo = NBTProdder;
 		};
 		1AE8E999145A098F000ED823 /* PBXContainerItemProxy */ = {
@@ -190,7 +182,7 @@
 		1AE8E956145A07FB000ED823 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0440;
+				LastUpgradeCheck = 0460;
 			};
 			buildConfigurationList = 1AE8E959145A07FB000ED823 /* Build configuration list for PBXProject "Build All" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -284,11 +276,6 @@
 			isa = PBXTargetDependency;
 			name = terrainstats;
 			targetProxy = 1A164BB7148943740079962D /* PBXContainerItemProxy */;
-		};
-		1ADE4125145AEB05008263C8 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = NBTProdder;
-			targetProxy = 1ADE4124145AEB05008263C8 /* PBXContainerItemProxy */;
 		};
 		1AE8E9AE145A09B4000ED823 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

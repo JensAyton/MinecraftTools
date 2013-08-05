@@ -542,7 +542,7 @@
 		1AFE344713F930BF001A33D4 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0440;
+				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = "Jens Ayton";
 			};
 			buildConfigurationList = 1AFE344A13F930BF001A33D4 /* Build configuration list for PBXProject "MinecraftKit" */;
