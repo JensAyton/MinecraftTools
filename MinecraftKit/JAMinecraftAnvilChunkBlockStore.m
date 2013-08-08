@@ -160,7 +160,7 @@ static id KeyForCoords(NSInteger x, NSInteger y, NSInteger z)
 
 - (MCGridExtents) extents
 {
-	return (MCGridExtents){ 0, kWidth, 0, _sections.count * kSectionHeight, 0, kLength };
+	return (MCGridExtents){ 0, kWidth, 0, _sections.count * kSectionHeight - 1, 0, kLength };
 }
 
 
@@ -208,6 +208,33 @@ static id KeyForCoords(NSInteger x, NSInteger y, NSInteger z)
 }
 
 
+- (BOOL) iterateOverRegionsOverlappingExtents:(MCGridExtents)clipExtents
+									withBlock:(JAMinecraftRegionIteratorBlock)block
+{
+	if (block == nil)  return NO;
+	
+	BOOL stop = NO;
+	for (NSUInteger i = 0; i < _sections.count; i++)
+	{
+		JAMinecraftAnvilSection *section = _sections[i];
+		if (section.empty)  continue;
+		
+		MCGridExtents sectionExtents =
+		{
+			.minX = 0, .maxX = kWidth - 1,
+			.minZ = 0, .maxZ = kLength - 1,
+			.minY = i * kSectionHeight,
+			.maxY = (i + 1) * kSectionHeight - 1
+		};
+		if (!MCGridExtentsIntersect(sectionExtents, clipExtents))  continue;
+		
+		block(sectionExtents, &stop);
+		if (stop)  return NO;
+	}
+	return YES;
+}
+
+
 // Retrieve an indexed section, creating it (and intermediate sections) if necessary.
 - (JAMinecraftAnvilSection *) sectionAtIndex:(NSUInteger)index
 {
@@ -249,7 +276,7 @@ static id KeyForCoords(NSInteger x, NSInteger y, NSInteger z)
 }
 
 
-- (bool) empty
+- (bool) isEmpty
 {
 	return _storage == nil;
 }

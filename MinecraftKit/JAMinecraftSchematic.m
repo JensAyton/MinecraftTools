@@ -1303,6 +1303,21 @@ static BOOL ForEachChunk(InnerNode *node, MCGridCoordinates base, NSUInteger siz
 }
 
 
+- (BOOL) iterateOverRegionsOverlappingExtents:(MCGridExtents)clipExtents
+									withBlock:(JAMinecraftRegionIteratorBlock)block
+{
+	if (block == nil)  return NO;
+	
+	// TODO: reimplement so that solid (or near-solid?) groups of chunks are coalesced.
+	return [self forEachChunkInRegion:clipExtents do:^BOOL(Chunk *chunk, MCGridCoordinates base) {
+		BOOL stop = NO;
+		MCGridExtents extents = MCGridExtentsWithCoordinatesAndSize(base, kChunkSize, kChunkSize, kChunkSize);
+		block(extents, &stop);
+		return !stop;
+	}];
+}
+
+
 static BOOL ChunkIsEmpty(Chunk *chunk, NSInteger baseY, NSInteger groundLevel)
 {
 	for (unsigned y = 0; y < kChunkSize; y++)

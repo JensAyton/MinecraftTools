@@ -36,13 +36,25 @@ enum
 };
 
 
+/**
+	Type for iteration blocks used ith iterateOverRegionsWithBlock: and
+	iterateOverRegionsOverlappingExtents:withBlock:.
+	
+	@param region The region to examine in this iteration.
+	@param stop A pointer to a boolean indicating whether iteration should
+		   halt. Setting *stop to YES wil halt iteration and also cause the
+		   iteration method to return NO.
+ */
+typedef void (^JAMinecraftRegionIteratorBlock)(MCGridExtents region, BOOL *stop);
+
+
 @interface JAMinecraftBlockStore: NSObject
 
 @property (readonly) MCGridExtents extents;
 
 /*
 	Minimum and maximum layer: highest and lowest y coordinates in which
-	blocks may be added without going over 128 blocks high.
+	blocks may be added.
 */
 @property (readonly) NSInteger minimumLayer;
 @property (readonly) NSInteger maximumLayer;
@@ -62,6 +74,36 @@ enum
 	NSInvalidArgumentException will be thrown.
 */
 - (MCCell) cellAt:(MCGridCoordinates)location gettingTileEntity:(NSDictionary **)outTileEntity;
+
+/**
+	Iterate over subsets of the block store's extents.
+	
+	Iterating this way will hit every non-empty block in the store exactly
+	once. ("Non-empty" means not air above ground level and not stone below
+	ground level.) Depending on the specific block store implementation and
+	the shape of the represented data, this may significantly reduce the number
+	of blocks traversed compared to iterating over all of extents.
+	
+	@param block An iteration block to invoke for each non-empty region.
+	@return YES if all regions were iterated over; NO if the block set *stop to
+		    YES, if the block is nil, or if some internal error occurred.
+*/
+- (BOOL) iterateOverRegionsWithBlock:(JAMinecraftRegionIteratorBlock)block;
+
+/**
+	Iterate over subsets of the block store's extents, potentially ignoring
+	regions outside the specified extents.
+	
+	This is not guaranteed to clip precisely to clipExtents, it only provides
+	an opportunity for the block store to ignore some regions.
+	
+	@param clipExtents The region of interest.
+	@param block An iteration block to invoke for each non-empty region.
+	@return YES if all regions were iterated over; NO if the block set *stop to
+		    YES, if the block is nil, or if some internal error occurred.
+ */
+- (BOOL) iterateOverRegionsOverlappingExtents:(MCGridExtents)clipExtents
+									withBlock:(JAMinecraftRegionIteratorBlock)block;
 
 @end
 

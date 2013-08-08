@@ -82,6 +82,23 @@ static void ThrowSubclassResponsibility(const char *func) __attribute__((noretur
 	ThrowSubclassResponsibility(__FUNCTION__);
 }
 
+
+- (BOOL) iterateOverRegionsWithBlock:(JAMinecraftRegionIteratorBlock)block
+{
+	return [self iterateOverRegionsOverlappingExtents:self.extents withBlock:block];
+}
+
+
+- (BOOL) iterateOverRegionsOverlappingExtents:(MCGridExtents)clipExtents
+									withBlock:(JAMinecraftRegionIteratorBlock)block
+{
+	if (block == nil)  return NO;
+	
+	BOOL stop = NO;
+	block(self.extents, &stop);
+	return !stop;
+}
+
 @end
 
 
