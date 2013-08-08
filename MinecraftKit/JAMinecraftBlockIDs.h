@@ -151,7 +151,7 @@ enum
 	kMCBlockBrewingStand					= 117,	// Data: kMCInfoBrewingStandBottleSlotX; tile entity: Cauldron
 	kMCBlockCauldron						= 118,	// Data: kMCInfoCauldronFillLevel
 	kMCBlockEndPortal						= 119,	// Tile entity: Airportal
-	kMCBlockEndPortalFrame					= 120,	// Data: kMCInfoMisc3Orientation (representing outside edge), kMCInfoAirPortalFrameHasEye
+	kMCBlockEndPortalFrame					= 120,	// Data: kMCInfoMisc3Orientation (representing outside edge), kMCInfoEndPortalFrameHasEye
 	kMCBlockEndStone						= 121,
 	kMCBlockDragonEgg						= 122,
 	kMCBlockRedstoneLampOff					= 123,
@@ -204,8 +204,7 @@ enum
 
 enum
 {
-	/*
-		Info - block data in Minecraft terminology, called info here to avoid
+	/*	Info - block data in Minecraft terminology, called info here to avoid
 		confusion.
 		Minecraft stores four bits of data for each block. In schematic files,
 		eight bits per block are stored, but the top four bits are always
@@ -214,15 +213,11 @@ enum
 		MinecraftKit stores eight info bits per block in memory. The bottom
 		four bits are Minecraft flags, and the top four are MinecraftKit-
 		internal.
-		
-		Directions use the astronomical convention, a.k.a. “normal English”:
-		east means the direction of sunrise.
 	*/
 	
 	kMCInfoStandardBitsMask					= 0x0F,
 	
-	/*
-		Any block type: a flag indicating that a block is powered. This is
+	/*	Any block type: a flag indicating that a block is powered. This is
 		used for non-special blocks that transmit power. For instance, if a
 		redstone wire leads into any opaque block, the block is powered, and
 		can turn off torches attached to it (among other things).
@@ -238,10 +233,6 @@ enum
 	/*	Sapling: low 2 bits are kMCInfoWoodTypeMask. The next two bits –
 		kMCInfoSaplingAge – are “age”. This value is incremented randomly until
 		it’s incremented beyond 3, when the sapling is replaced with a tree.
-		
-		NOTE: prior to Beta 1.5, a 4-bit age value was used. 1.5 appears to
-		ignore the difference when opening old files, so wild saplings (and
-		leaf blocks) were quasi-randomly assigned species.
 	*/
 	kMCInfoSaplingAge						= 0x0C,
 	
@@ -264,8 +255,7 @@ enum
 	kMCInfoWoodTypeBirch					= 0x02,
 	kMCInfoWoodTypeJungle					= 0x03,
 	
-	/*
-		Logs: orientation. There are only three valid orientations because of
+	/*	Logs: orientation. There are only three valid orientations because of
 		the symmetry of logs (and only having two bits). The invalid combination
 		0x0C produces a block with bark on all sides.
 	*/
@@ -275,8 +265,7 @@ enum
 	kMCInfoLogOrientationNorthSouth			= 0x08,
 	kMCInfoLogOrientationNone				= 0x0C,
 	
-	/*
-		Leaves: if the pending flag is set, the leaf block will be checked for
+	/*	Leaves: if the pending flag is set, the leaf block will be checked for
 		random decay. If it’s clear, the block won’t decay (but the flag is
 		set again if any adjacent block changes).
 		
@@ -288,13 +277,12 @@ enum
 	
 	/*	Sandstone block: appearance of sides.
 	*/
-	kMCInfoSandstoneAppearanceMask			= 0x02,
+	kMCInfoSandstoneAppearanceMask			= 0x03,
 	kMCInfoSandstoneAppearanceDefault		= 0x00,
 	kMCInfoSandstoneAppearanceChiseled		= 0x01,
 	kMCInfoSandstoneAppearanceSmooth		= 0x02,
 	
 	/*	Wool: colour.
-		This is represented by different block IDs in Creative.
 	*/
 	kMCInfoWoolColorMask					= 0x0F,
 	kMCInfoWoolColorWhite					= 0x00,
@@ -317,7 +305,7 @@ enum
 	/*	Several block types use these orientation flags, but some oriented
 		block types do not. Use MCCellGet/SetOrientation() for generic access.
 		Block types using MiscOrientation:
-			Torch/lantern
+			Torch
 			Redstone torch (off and on)
 			Lever (special case for two on-floor versions, see below)
 			Stone button
@@ -458,14 +446,14 @@ enum
 	kMCInfoPistonOrientationWest			= 0x04,
 	kMCInfoPistonOrientationEast			= 0x05,
 	
-	/*	Sticky and non-sticky piston bases are distinguished by type, but heads
-		use a flag. Oh, that wacky Jeb.
+	/*	Sticky and non-sticky piston bases are distinguished by type, but
+		heads use a flag.
 	*/
 	kMCInfoPistonHeadIsSticky				= 0x08,
 	
 	/*	Types of “tall grass” (or, more generally, ground cover).
-		Note that “dead shrubs” can be represented as their own block type or as a
-		tall grass object (which apparently yields seeds).
+		Note that “dead shrubs” can be represented as their own block type or
+		as a tall grass object.
 	*/
 	kMCInfoTallGrassTypeMask				= 0x03,
 	kMCInfoTallGrassTypeDeadShrub			= 0x00,
@@ -512,8 +500,8 @@ enum
 	/*	Trapdoor orientation. Will probably end up being kMCInfoMisc4OrientationMask
 		at some point in the future…
 		
-		The orientation of a trapdoor is the side away from the hinge (the opposite of
-		the usage on the wiki, which is silly).
+		The orientation of a trapdoor is the side away from the hinge (the
+		opposite of the usage on the wiki, which is silly).
 	*/
 	kMCInfoTrapdoorOrientationMask			= 0x03,
 	kMCInfoTrapdoorOrientationNorth			= 0x00,
@@ -545,13 +533,11 @@ enum
 	kMCInfoMushroomAppearanceCapNW			= 0x0A,	// Cap texture on top, north and west sides.
 	kMCInfoMushroomAppearanceCapStem		= 0x0B,	// Stem texture on north, south, east and west sides; pores on top and bottom.
 	
-	/*
-		Gourd stem age: age of pumpkin and melon stems, ranging from 0 to 7.
+	/*	Gourd stem age: age of pumpkin and melon stems, ranging from 0 to 7.
 	*/
 	kMCInfoGourdStemAge						= 0x07,
 	
-	/*
-		Vine attachment is a bit mask rather than an enumeration – vines may
+	/*	Vine attachment is a bit mask rather than an enumeration – vines may
 		be attached to multiple sides at once.
 	*/
 	kMCInfoVineAttachmentMask				= 0x0F,
@@ -560,13 +546,11 @@ enum
 	kMCInfoVineAttachmentNorth				= 0x04,
 	kMCInfoVineAttachmentEast				= 0x08,
 	
-	/*
-		Nether Wart age ranges from 0 to 3, with 1 and 2 looking the same.
+	/*	Nether Wart age ranges from 0 to 3, with 1 and 2 looking the same.
 	*/
 	kMCInfoNetherWartAge					= 0x03,
 	
-	/*
-		Flags indicating which of a brewing stand’s three slots are occupied
+	/*	Flags indicating which of a brewing stand’s three slots are occupied
 		by bottles. Note that actual information about bottles is in tile
 		entity.
 	*/
@@ -574,23 +558,23 @@ enum
 	kMCInfoBrewingStandBottleSlotSouthWest	= 0x02,
 	kMCInfoBrewingStandBottleSlotNorthWest	= 0x04,
 	
-	/*
-		Cauldron fill level ranges from 0 to 3.
+	/*	Cauldron fill level ranges from 0 to 3.
 	*/
-	kMCInfoCauldronFillLevel				= 0x03,
+	kMCInfoCauldronFillLevelMask			= 0x03,
 	
-	kMCInfoAirPortalFrameHasEye				= 0x04,
+	/*	kMCInfoEndPortalFrameHasEye: whether an end portal frame block has an
+		Eye of Ender in it.
+	*/
+	kMCInfoEndPortalFrameHasEye				= 0x04,
 	
-	/*
-		kMCInfoCocoaPodAge: growth stages of a cocoa pod.
+	/*	kMCInfoCocoaPodAge: growth stages of a cocoa pod.
 	*/
 	kMCInfoCocoaPodAgeMask					= 0x0C,
 	kMCInfoCocoaPodAgeSmall					= 0x00,
 	kMCInfoCocoaPodAgeMedum					= 0x04,
 	kMCInfoCocoaPodAgeLarge					= 0x08,
 	
-	/*
-		kMCInfoTripwireHookOrientation: because what we really need is another
+	/*	kMCInfoTripwireHookOrientation: because what we really need is another
 		orientation enumeration.
 	*/
 	kMCInfoTripwireHookOrientationMask		= 0x03,
@@ -599,8 +583,7 @@ enum
 	kMCInfoTripwireHookOrientationNorth		= 0x02,
 	kMCInfoTripwireHookOrientationEast		= 0x03,
 	
-	/*
-		kMCInfoTripwireHookConnected: true if this hook is connected by a
+	/*	kMCInfoTripwireHookConnected: true if this hook is connected by a
 		complete wire to another hook.
 		kMCInfoTripWireHookActive: true if the wire this hook is connected to
 		is activated.
@@ -608,8 +591,7 @@ enum
 	kMCInfoTripwireHookConnected			= 0x04,
 	kMCInfoTripWireHookActive				= 0x08,
 	
-	/*
-		kMCInfoTripwirePieceActive: true if this particular piece of string is
+	/*	kMCInfoTripwirePieceActive: true if this particular piece of string is
 		activated.
 		kMCInfoTripwireWireActive: true if this block is part of an activated
 		wire.
@@ -617,15 +599,13 @@ enum
 	kMCInfoTripwirePieceActive				= 0x01,
 	kMCInfoTripwireWireActive				= 0x04,
 	
-	/*
-		Cobblestone wall variants.
+	/*	Cobblestone wall variants.
 	*/
 	kMCInfoCobblestoneWallTypeMask			= 0x01,
 	kMCInfoCobblestoneWallTypePlain			= 0x00,
 	kMCInfoCobblestoneWallTypeMossy			= 0x01,
 	
-	/*
-		Flower pot contents.
+	/*	Flower pot contents.
 	*/
 	kMCInfoFlowerPotTypeMask				= 0x0F,
 	kMCInfoFlowerPotTypeEmpty				= 0x00,
@@ -641,15 +621,13 @@ enum
 	kMCInfoFlowerPotTypeDeadShrub			= 0x0A,
 	kMCInfoFlowerPotTypeFern				= 0x0B,
 	
-	/*
-		Anvil orientations.
+	/*	Anvil orientations.
 	*/
 	kMCInfoAnvilOrientationMask				= 0x01,
 	kMCInfoAnvilOrientationNorthSouth		= 0x00,
 	kMCInfoAnvilOrientationEastWest			= 0x01,
 	
-	/*
-		Anvil damage levels. Medium is "Slighty Damaged Anvil", high is "Very
+	/*	Anvil damage levels. Medium is "Slighty Damaged Anvil", high is "Very
 		Damaged Anvil".
 	*/
 	kMCInfoAnvilOrientationDamageLevelMask	= 0x0C,
