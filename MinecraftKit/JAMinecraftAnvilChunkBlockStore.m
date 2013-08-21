@@ -166,7 +166,8 @@ static id KeyForCoords(NSInteger x, NSInteger y, NSInteger z)
 
 - (NSInteger) groundLevel
 {
-	return kGroundLevel;
+	// FIXME: zero because we treat all-air sections as "empty" regardless of level.
+	return 0;//kGroundLevel;
 }
 
 
@@ -278,6 +279,7 @@ static id KeyForCoords(NSInteger x, NSInteger y, NSInteger z)
 
 - (bool) isEmpty
 {
+	// FIXME: "empty" here means all air, which doesn't suit our ground-level-dependent definition.
 	return _storage == nil;
 }
 

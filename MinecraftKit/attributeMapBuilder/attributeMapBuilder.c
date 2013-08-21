@@ -44,7 +44,7 @@ static const uint8_t kOpaqueIDs[] =
 	kMCBlockGrass,
 	kMCBlockDirt,
 	kMCBlockCobblestone,
-	kMCBlockWood,
+	kMCBlockWoodPlanks,
 	kMCBlockBedrock,
 	kMCBlockSand,
 	kMCBlockGravel,

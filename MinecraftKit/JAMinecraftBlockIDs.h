@@ -17,11 +17,11 @@
 
 #include <cstdint>
 #else
-#ifndef JA_EXTERN
-#define JA_EXTERN extern
-#endif
 #ifndef JA_INLINE
 #define JA_INLINE static inline
+#endif
+#ifndef JA_EXTERN
+#define JA_EXTERN extern
 #endif
 
 #include <stdint.h>
@@ -36,9 +36,9 @@ enum
 	kMCBlockGrass							= 2,
 	kMCBlockDirt							= 3,
 	kMCBlockCobblestone						= 4,
-	kMCBlockWood							= 5,
+	kMCBlockWoodPlanks						= 5,	// Data: kMCInfoWoodType
 	kMCBlockSapling							= 6,	// Data: kMCInfoWoodType and kMCInfoSaplingAge
-	kMCBlockBedrock							= 7,	// “Adminium”
+	kMCBlockBedrock							= 7,
 	kMCBlockWater							= 8,	// Data: kMCInfoLiquidEmptiness and kMCInfoLiquidFlowing
 	kMCBlockStationaryWater					= 9,	// Data: wiki links to same data as for flowing water. Only kMCInfoLiquidFlowing relevant? Unconfirmed.
 	kMCBlockLava							= 10,	// Like kMCBlockWater
@@ -47,7 +47,7 @@ enum
 	kMCBlockGravel							= 13,
 	kMCBlockGoldOre							= 14,
 	kMCBlockIronOre							= 15,
-	kMCBlockCoalOre							= 16,	// “Coal ore”? Meh. You get the point.
+	kMCBlockCoalOre							= 16,
 	kMCBlockLog								= 17,	// Data: kMCInfoWoodType, kMCInfoLogOrientation
 	kMCBlockLeaves							= 18,	// Data: kMCInfoLeafUpdatePending, kMCInfoLeafPermanent and kMCInfoWoodType
 	kMCBlockSponge							= 19,
@@ -250,7 +250,6 @@ enum
 	*/
 	kMCInfoWoodTypeMask						= 0x03,
 	kMCInfoWoodTypeOak						= 0x00,
-	kMCInfoWoodTypeDefault					= kMCInfoWoodTypeOak,	// Old name
 	kMCInfoWoodTypeSpruce					= 0x01,
 	kMCInfoWoodTypeBirch					= 0x02,
 	kMCInfoWoodTypeJungle					= 0x03,
