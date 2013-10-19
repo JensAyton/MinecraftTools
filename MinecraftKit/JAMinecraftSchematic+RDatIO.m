@@ -76,6 +76,13 @@ static uint8_t OrientationFromRDATInfo(uint8_t info);
 static uint8_t CellInfoOrientationFromMeta(uint8_t meta);
 static uint8_t CellInfoOrientationFromDoorMeta(uint8_t meta);
 
+static NSUInteger Read16(const uint8_t **bytes)
+{
+	NSUInteger result = (**bytes << 8) + **bytes;
+	*bytes += 2;
+	return result;
+}
+
 
 @implementation JAMinecraftSchematic (RDatIO)
 
@@ -123,9 +130,9 @@ static uint8_t CellInfoOrientationFromDoorMeta(uint8_t meta);
 	
 	// Read dimensions.
 	NSInteger length, width, height;
-	height = (*bytes++ << 8) + *bytes++;
-	width = (*bytes++ << 8) + *bytes++;
-	length = (*bytes++ << 8) + *bytes++;
+	height = Read16(&bytes);
+	width = Read16(&bytes);
+	length = Read16(&bytes);
 	remaining -= 11;
 	
 	NSUInteger planeSize = length * width * height;
