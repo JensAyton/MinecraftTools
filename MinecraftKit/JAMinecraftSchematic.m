@@ -707,7 +707,7 @@ const int8_t kGroundLevelWeights[] =
 	-2,		// Cloth
 	-4,		// Piston animation
 	-8,		// Yellow flower
-	-8,		// Red flower
+	-8,		// Flower
 	1,		// Brown mushroom
 	
 	1,		// Red mushroom
@@ -752,7 +752,7 @@ const int8_t kGroundLevelWeights[] =
 	-8,		// Redstone torch (on)
 	-8,		// Stone button
 	-8,		// Snow
-	-8,		// Ice
+	2,		// Ice
 	
 	-2,		// Snow block
 	-8,		// Cactus
@@ -770,7 +770,7 @@ const int8_t kGroundLevelWeights[] =
 	-8,		// Cake
 	-8,		// Redstone repeater (off)
 	-8,		// Redstone repeater (on)
-	-8,		// Locked chest
+	-8,		// Stained glass
 	-8,		// Trapdoor
 	8,		// Stone with silverfish
 	-2,		// Stone brick
@@ -842,8 +842,9 @@ const int8_t kGroundLevelWeights[] =
 	-4,		// Dropper
 	-2,		// Stained clay
 	
-	// 160-169 are unused
-	0,
+	-8,		// Stained glass pane
+	
+	// 161-169 are unused
 	0,
 	0,
 	0,
@@ -858,6 +859,8 @@ const int8_t kGroundLevelWeights[] =
 	-8,		// Carpet
 	-2,		// Hardened clay
 	-2,		// Coal block
+	2,		// Packed ice
+	-8,		// Double plant
 };
 
 

@@ -69,7 +69,7 @@ enum
 	kMCBlockCloth							= 35,	// Data: kMCInfoWoolColor
 	kMCBlockMovingPiston					= 36,	// Used for piston animations. Tile entity: Piston.
 	kMCBlockYellowFlower					= 37,
-	kMCBlockRedFlower						= 38,
+	kMCBlockFlower							= 38,	// Data: kMCInfoFlowerType (always 0 in MC 1.6.x and earlier)
 	kMCBlockBrownMushroom					= 39,
 	kMCBlockRedMushroom						= 40,
 	kMCBlockGoldBlock						= 41,
@@ -125,8 +125,9 @@ enum
 	kMCBlockJackOLantern					= 91,	// Data: kMCInfoPumpkinOrientation
 	kMCBlockCake							= 92,	// Data: kMCInfoCakeSliceCount
 	kMCBlockRedstoneRepeaterOff				= 93,	// Data: kMCInfoMisc3Orientation and kMCInfoRedstoneRepeaterDelay
-	kMCBlockRedstoneRepeaterOn				= 94,	// Data: kMCInfoMisc3Orientation and kMCInfoRedstoneRepeaterDelay	
-	kMCBlockLockedChest						= 95,	// April 1 2011 easter egg item.
+	kMCBlockRedstoneRepeaterOn				= 94,	// Data: kMCInfoMisc3Orientation and kMCInfoRedstoneRepeaterDelay
+	kMCBlockStainedGlass					= 95,	// Data: FIXME (kMCInfoWoolColor?)
+//	kMCBlockLockedChest						= 95,	// April 1 2011 easter egg item; note: replaced by stained glass.
 	kMCBlockTrapdoor						= 96,	// Data: kMCInfoTrapdoorOrientation and kMCInfoDoorOpen
 	kMCBlockStoneWithSilverfish				= 97,	// Data: kMCInfoSilverfishAppearance
 	kMCBlockStoneBrick						= 98,	// Data: kMCInfoStoneBrickAppearance
@@ -191,15 +192,18 @@ enum
 	kMCBlockActivatorRail					= 157,	// FIXME: data. Presumably one bit for active.
 	kMCBlockDropper							= 158,	// Data: kMCInfoMisc2Orientation; tile entity: Dropper
 	kMCBlockStainedClay						= 159,	// Data: kMCInfoWoolColor
-	// 160-169: unused
+	kMCBlockStainedGlassPane				= 160,	// Data: FIXME (kMCInfoWoolColor?)
+	// 161-169: unused
 	kMCBlockHayBlock						= 170,	// FIXME: data. Hopefully kMCInfoLogOrientation?
 	kMCBlockCarpet							= 171,	// Data: kMCInfoWoolColor
 	kMCBlockHardenedClay					= 172,
 	kMCBlockCoalBlock						= 173,
+	kMCBlockPackedIce						= 174,
+	kMCBlockDoublePlant						= 175,	// Data: kMCInfoDoublePlantType
 };
 
 
-#define kMCLastBlockID kMCBlockCoalBlock
+#define kMCLastBlockID kMCBlockDoublePlant
 
 
 enum
@@ -477,6 +481,19 @@ enum
 	
 	kMCInfoSlabUpsideDown					= 0x08,
 	
+	/*	Types of flower (not counting yellow flowers, which have their own
+		block ID for historical reasons, and "double plants".
+	*/
+	kMCInfoFlowerTypePoppy					= 0x00,
+	kMCInfoFlowerTypeBlueOrchid				= 0x01,
+	kMCInfoFlowerTypeAllium					= 0x02,
+	kMCInfoFlowerTypeAzureBluet				= 0x03,
+	kMCInfoFlowerTypeRedTulip				= 0x04,
+	kMCInfoFlowerTypeOrangeTulip			= 0x05,
+	kMCInfoFlowerTypeWhiteTulip				= 0x06,
+	kMCInfoFlowerTypePinkTulip				= 0x07,
+	kMCInfoFlowerTypeOxeyeDaisy				= 0x08,
+	
 	/*	Fire generation: as I understand it, the source of a fire is generation
 		0, and each time fire spreads the new block has a higher generation.
 		Fire of generation 15 doesn’t spread.
@@ -633,6 +650,18 @@ enum
 	kMCInfoAnvilOrientationDamageLow		= 0x00,
 	kMCInfoAnvilOrientationDamageMedium		= 0x04,
 	kMCInfoAnvilOrientationDamageHigh		= 0x08,
+	
+	/*	Types of "double plant" block.
+		A double plant consists of two blocks stacked vertically. The bottom
+		one defines the species, and the top one is always
+		kMCInfoDoublePlantTypeTopHalf.
+	*/
+	kMCInfoDoublePlantTypeSunflower			= 0x00,
+	kMCInfoDoublePlantTypeLilac				= 0x01,
+	kMCInfoDoublePlantTypeDoubleTallGrass	= 0x02,
+	kMCInfoDoublePlantTypeLargeFern			= 0x03,
+	kMCInfoDoublePlantRoseBush				= 0x04,
+	kMCInfoDoublePlantPeony					= 0x05,
 };
 
 

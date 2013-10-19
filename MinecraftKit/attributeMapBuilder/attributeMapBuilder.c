@@ -81,7 +81,6 @@ static const uint8_t kOpaqueIDs[] =
 	kMCBlockNetherrack,
 	kMCBlockSoulSand,
 	kMCBlockJackOLantern,
-	kMCBlockLockedChest,
 	kMCBlockStoneWithSilverfish,
 	kMCBlockStoneBrick,
 	kMCBlockHugeBrownMushroom,
@@ -104,6 +103,7 @@ static const uint8_t kOpaqueIDs[] =
 	kMCBlockHayBlock,
 	kMCBlockHardenedClay,
 	kMCBlockCoalBlock,
+	kMCBlockPackedIce,
 };
 
 
@@ -120,6 +120,7 @@ static const uint8_t kTransparentIDs[] =
 	kMCBlockSoil,
 	kMCBlockCobblestoneStairs,
 	kMCBlockGlowstone,
+	kMCBlockStainedGlass,
 	kMCBlockBrickStairs,
 	kMCBlockStoneBrickStairs,
 	kMCBlockNetherBrickStairs,
@@ -156,7 +157,7 @@ static const uint8_t kItemIDs[] =
 	kMCBlockPistonHead,
 	kMCBlockMovingPiston,
 	kMCBlockYellowFlower,
-	kMCBlockRedFlower,
+	kMCBlockFlower,
 	kMCBlockBrownMushroom,
 	kMCBlockRedMushroom,
 	kMCBlockTorch,
@@ -219,12 +220,14 @@ static const uint8_t kItemIDs[] =
 	kMCBlockHopper,
 	kMCBlockActivatorRail,
 	kMCBlockCarpet,
+	kMCBlockStainedGlassPane,
+	kMCBlockDoublePlant,
 };
 
 
 static const uint8_t kUnusedIDs[] =
 {
-	160, 161, 162, 163, 164, 165, 166, 167, 168, 169,
+	161, 162, 163, 164, 165, 166, 167, 168, 169,
 };
 
 
@@ -315,7 +318,7 @@ static const uint8_t kVegetableIDs[] =
 	kMCBlockDeadShrubs,
 	kMCBlockSapling,
 	kMCBlockYellowFlower,
-	kMCBlockRedFlower,
+	kMCBlockFlower,
 	kMCBlockBrownMushroom,
 	kMCBlockRedMushroom,
 	kMCBlockCrops,
@@ -335,6 +338,7 @@ static const uint8_t kVegetableIDs[] =
 	kMCBlockCocoaPod,
 	kMCBlockCarrots,
 	kMCBlockPotatoes,
+	kMCBlockDoublePlant,
 };
 
 
