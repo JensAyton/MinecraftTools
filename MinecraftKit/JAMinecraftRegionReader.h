@@ -1,22 +1,18 @@
 /*
-	JAMinecraftAnvilRegionReader.h
-	
-	Read-only extractor for Minecraft Anvil region files.
-	
-	Looking forward, we want read-only and read-write block stores representing
-	entire worlds, but extracting individual chunks as schematics is a
-	reasonable starting point.
-	
-	
-	Copyright © 2013 Jens Ayton
-	
+	JAMinecraftRegionReader.h
+
+	Protocol for region readers.
+
+
+	Copyright © 2016 Jens Ayton
+
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),
 	to deal in the Software without restriction, including without limitation
 	the rights to use, copy, modify, merge, publish, distribute, sublicense,
 	and/or sell copies of the Software, and to permit persons to whom the
 	Software is furnished to do so, subject to the following conditions:
-	
+
 	The above copyright notice and this permission notice shall be included in
 	all copies or substantial portions of the Software.
 
@@ -30,21 +26,23 @@
 */
 
 #import <Foundation/Foundation.h>
-#import "JAMinecraftRegionReader.h"
 
-@class JAMinecraftAnvilChunkBlockStore;
+NS_ASSUME_NONNULL_BEGIN
+
+@class JAMinecraftBlockStore;
 
 
-@interface JAMinecraftAnvilRegionReader: NSObject <JAMinecraftRegionReader>
-
-+ (id) regionReaderWithData:(NSData *)regionData;
-+ (id) regionReaderWithURL:(NSURL *)regionFileURL;
+@protocol JAMinecraftRegionReader <NSObject>
 
 // Chunk coordinates range from 0 to 32 in region-local space.
-- (bool) hasChunkAtLocalX:(uint8_t)x localZ:(uint8_t)z;
+- (BOOL) hasChunkAtLocalX:(uint8_t)x localZ:(uint8_t)z;
 
 // Retrieve chunk.
-- (JAMinecraftAnvilChunkBlockStore *) chunkAtLocalX:(uint8_t)x localZ:(uint8_t)z;
-- (JAMinecraftAnvilChunkBlockStore *) chunkAtLocalX:(uint8_t)x localZ:(uint8_t)z error:(NSError **)error;
+- (nullable JAMinecraftBlockStore *) chunkAtLocalX:(uint8_t)x localZ:(uint8_t)z error:(NSError **)error;
+
+// Retrieve chunk NBT data.
+- (NSData *) chunkDataAtLocalX:(uint8_t)x localZ:(uint8_t)z error:(NSError **)error;
 
 @end
+
+NS_ASSUME_NONNULL_END

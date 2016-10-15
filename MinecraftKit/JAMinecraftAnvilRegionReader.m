@@ -127,7 +127,7 @@ static inline uint16_t ChunkIndexFromLocalCoords(uint16_t x, uint16_t z)
 }
 
 
-- (NSData *) chunkDataAtLocalX:(uint8_t)x localZ:(uint8_t)z  error:(NSError **)error
+- (NSData *) chunkDataAtLocalX:(uint8_t)x localZ:(uint8_t)z error:(NSError **)error
 {
 	NSParameterAssert(x < kChunksPerRegionSide && z < kChunksPerRegionSide);
 	

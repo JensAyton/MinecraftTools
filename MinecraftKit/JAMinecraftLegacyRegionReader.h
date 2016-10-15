@@ -26,11 +26,12 @@
 */
 
 #import <Foundation/Foundation.h>
+#import "JAMinecraftRegionReader.h"
 
 @class JAMinecraftChunkBlockStore;
 
 
-@interface JAMinecraftLegacyRegionReader: NSObject
+@interface JAMinecraftLegacyRegionReader: NSObject <JAMinecraftRegionReader>
 
 + (id) regionReaderWithData:(NSData *)regionData;
 + (id) regionReaderWithURL:(NSURL *)regionFileURL;
@@ -40,8 +41,6 @@
 
 // Retrieve chunk.
 - (JAMinecraftChunkBlockStore *) chunkAtLocalX:(uint8_t)x localZ:(uint8_t)z;
-
-// Retrieve chunk NBT data.
-- (NSData *) chunkDataAtLocalX:(uint8_t)x localZ:(uint8_t)z;
+- (JAMinecraftChunkBlockStore *) chunkAtLocalX:(uint8_t)x localZ:(uint8_t)z error:(NSError **)error;
 
 @end
