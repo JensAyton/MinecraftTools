@@ -3,10 +3,15 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 47;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A0BFE9A1DB24ACF0031BDE2 /* AnvilChunkSchema.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A0BFE951DB24ACF0031BDE2 /* AnvilChunkSchema.c */; };
+		1A0BFE9B1DB24ACF0031BDE2 /* BlockDescriptions.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A0BFE961DB24ACF0031BDE2 /* BlockDescriptions.c */; };
+		1A0BFE9C1DB24ACF0031BDE2 /* ChunkSchema.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A0BFE971DB24ACF0031BDE2 /* ChunkSchema.c */; };
+		1A0BFE9D1DB24ACF0031BDE2 /* DataSchema.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A0BFE981DB24ACF0031BDE2 /* DataSchema.c */; };
+		1A0BFE9E1DB24ACF0031BDE2 /* SchematicSchema.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A0BFE991DB24ACF0031BDE2 /* SchematicSchema.c */; };
 		1A164B78148938010079962D /* JAMinecraftChunkBlockStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A164B76148938010079962D /* JAMinecraftChunkBlockStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A164B79148938010079962D /* JAMinecraftChunkBlockStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A164B77148938010079962D /* JAMinecraftChunkBlockStore.m */; };
 		1A164B7C14893F670079962D /* JAMinecraftChunkBlockStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A164B77148938010079962D /* JAMinecraftChunkBlockStore.m */; };
@@ -20,10 +25,8 @@
 		1A498BEE17AD43F90019164A /* JAMinecraftAnvilChunkBlockStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A498BEB17AD43F90019164A /* JAMinecraftAnvilChunkBlockStore.m */; };
 		1A498BEF17AD43F90019164A /* JAMinecraftAnvilChunkBlockStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A498BEB17AD43F90019164A /* JAMinecraftAnvilChunkBlockStore.m */; };
 		1A498BF117AD49FF0019164A /* AnvilChunk.schema in Resources */ = {isa = PBXBuildFile; fileRef = 1A498BF017AD49FF0019164A /* AnvilChunk.schema */; };
-		1A498BF317AD4A750019164A /* AnvilChunkSchema.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A498BF217AD4A750019164A /* AnvilChunkSchema.c */; };
 		1A64907114517A7300F57924 /* JANBTSerialization.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A64906F14517A7300F57924 /* JANBTSerialization.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1A6C28B314A26A67008A6535 /* BlockDescriptions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1A6C28B114A26A67008A6535 /* BlockDescriptions.plist */; };
-		1A6C28B714A27430008A6535 /* BlockDescriptions.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A6C28B614A27430008A6535 /* BlockDescriptions.c */; };
 		1A6C292314A27686008A6535 /* JABozoStringTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A6C292214A27686008A6535 /* JABozoStringTemplate.h */; };
 		1A6C292414A27686008A6535 /* JABozoStringTemplate.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A6C292214A27686008A6535 /* JABozoStringTemplate.h */; };
 		1AB23B3014543B81008C5723 /* JANBTTagType.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB23B2F14543B81008C5723 /* JANBTTagType.m */; };
@@ -39,8 +42,6 @@
 		1AE0E32114536FFF009ACC2B /* JANBTTypedNumbers.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AE0E31F14536FFE009ACC2B /* JANBTTypedNumbers.h */; };
 		1AE0E32214536FFF009ACC2B /* JANBTTypedNumbers.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE0E32014536FFE009ACC2B /* JANBTTypedNumbers.m */; };
 		1AE1B0A5148292DE006070F2 /* Chunk.schema in Resources */ = {isa = PBXBuildFile; fileRef = 1AE1B0A4148292DE006070F2 /* Chunk.schema */; };
-		1AE1B0CF1482A4A8006070F2 /* ChunkSchema.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AE1B0CE1482A4A8006070F2 /* ChunkSchema.c */; };
-		1AF54039145C38AE0049CCEB /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AFE345413F930BF001A33D4 /* Cocoa.framework */; };
 		1AF54045145C39740049CCEB /* JAMinecraftBlockIDs.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AFE347913F931C3001A33D4 /* JAMinecraftBlockIDs.c */; };
 		1AF54046145C39780049CCEB /* JAMinecraftTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFE347B13F931C3001A33D4 /* JAMinecraftTypes.m */; };
 		1AF54047145C397B0049CCEB /* JAMinecraftBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFE8EBF1449A1F6007056C1 /* JAMinecraftBlock.m */; };
@@ -54,7 +55,6 @@
 		1AF54050145C39A00049CCEB /* IsKeyDown.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AFE34A113F931EE001A33D4 /* IsKeyDown.c */; };
 		1AF54051145C39A30049CCEB /* JACollectionHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFC074B14404395009666A9 /* JACollectionHelpers.m */; };
 		1AF54052145C39A70049CCEB /* MYCollectionUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFC075114405F8A009666A9 /* MYCollectionUtilities.m */; };
-		1AF54058145C3A690049CCEB /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AFE34BC13F932CC001A33D4 /* libz.dylib */; };
 		1AF54065145C3ADF0049CCEB /* JAValueToString.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFE34B513F9321F001A33D4 /* JAValueToString.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		1AF54066145C3AE50049CCEB /* JAPropertyListAccessors.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFE34B013F93207001A33D4 /* JAPropertyListAccessors.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		1AF54067145C3AED0049CCEB /* JANBTSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A64907014517A7300F57924 /* JANBTSerialization.m */; };
@@ -65,8 +65,6 @@
 		1AF5406C145C3B010049CCEB /* JAZLibCompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AB23B8E14547EF5008C5723 /* JAZLibCompressor.m */; };
 		1AF540A3145C488C0049CCEB /* MCKitSchema.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AF540A2145C488B0049CCEB /* MCKitSchema.h */; };
 		1AF540A4145C488C0049CCEB /* MCKitSchema.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AF540A2145C488B0049CCEB /* MCKitSchema.h */; };
-		1AF540A7145C4D290049CCEB /* DataSchema.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AF540A5145C4D290049CCEB /* DataSchema.c */; };
-		1AF540A8145C4D290049CCEB /* SchematicSchema.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AF540A6145C4D290049CCEB /* SchematicSchema.c */; };
 		1AF6E51F14A4ABDA00E38756 /* JAGenericToString.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AF6E51D14A4ABDA00E38756 /* JAGenericToString.h */; };
 		1AF6E52014A4ABDA00E38756 /* JAGenericToString.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AF6E51D14A4ABDA00E38756 /* JAGenericToString.h */; };
 		1AF6E52114A4ABDA00E38756 /* JAGenericToString.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF6E51E14A4ABDA00E38756 /* JAGenericToString.m */; };
@@ -159,6 +157,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1A0BFE951DB24ACF0031BDE2 /* AnvilChunkSchema.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = AnvilChunkSchema.c; sourceTree = "<group>"; };
+		1A0BFE961DB24ACF0031BDE2 /* BlockDescriptions.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BlockDescriptions.c; sourceTree = "<group>"; };
+		1A0BFE971DB24ACF0031BDE2 /* ChunkSchema.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ChunkSchema.c; sourceTree = "<group>"; };
+		1A0BFE981DB24ACF0031BDE2 /* DataSchema.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = DataSchema.c; sourceTree = "<group>"; };
+		1A0BFE991DB24ACF0031BDE2 /* SchematicSchema.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SchematicSchema.c; sourceTree = "<group>"; };
+		1A0BFEAE1DB24B180031BDE2 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		1A164B76148938010079962D /* JAMinecraftChunkBlockStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAMinecraftChunkBlockStore.h; sourceTree = SOURCE_ROOT; };
 		1A164B77148938010079962D /* JAMinecraftChunkBlockStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAMinecraftChunkBlockStore.m; sourceTree = SOURCE_ROOT; };
 		1A1EA94415692B5F005A9E3D /* JAMinecraftAnvilRegionReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAMinecraftAnvilRegionReader.h; sourceTree = SOURCE_ROOT; };
@@ -167,11 +171,9 @@
 		1A498BEA17AD43F90019164A /* JAMinecraftAnvilChunkBlockStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAMinecraftAnvilChunkBlockStore.h; sourceTree = SOURCE_ROOT; };
 		1A498BEB17AD43F90019164A /* JAMinecraftAnvilChunkBlockStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAMinecraftAnvilChunkBlockStore.m; sourceTree = SOURCE_ROOT; };
 		1A498BF017AD49FF0019164A /* AnvilChunk.schema */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = AnvilChunk.schema; path = Resources/AnvilChunk.schema; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.plist; };
-		1A498BF217AD4A750019164A /* AnvilChunkSchema.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = AnvilChunkSchema.c; path = ../MinecraftKit.build/$CONFIGURATION/libminecraftkit.build/DerivedSources/AnvilChunkSchema.c; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A64906F14517A7300F57924 /* JANBTSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTSerialization.h; sourceTree = SOURCE_ROOT; };
 		1A64907014517A7300F57924 /* JANBTSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTSerialization.m; sourceTree = SOURCE_ROOT; };
 		1A6C28B214A26A67008A6535 /* en */ = {isa = PBXFileReference; explicitFileType = text; name = en; path = Resources/en.lproj/BlockDescriptions.plist; sourceTree = SOURCE_ROOT; };
-		1A6C28B614A27430008A6535 /* BlockDescriptions.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = BlockDescriptions.c; path = ../MinecraftKit.build/$CONFIGURATION/libminecraftkit.build/DerivedSources/BlockDescriptions.c; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A6C292214A27686008A6535 /* JABozoStringTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JABozoStringTemplate.h; sourceTree = SOURCE_ROOT; };
 		1AB23B2F14543B81008C5723 /* JANBTTagType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTTagType.m; sourceTree = SOURCE_ROOT; };
 		1AB23B5914544AAA008C5723 /* JANBTStreamEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTStreamEncoder.h; sourceTree = SOURCE_ROOT; };
@@ -185,13 +187,10 @@
 		1AE0E31F14536FFE009ACC2B /* JANBTTypedNumbers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTTypedNumbers.h; sourceTree = SOURCE_ROOT; };
 		1AE0E32014536FFE009ACC2B /* JANBTTypedNumbers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTTypedNumbers.m; sourceTree = SOURCE_ROOT; };
 		1AE1B0A4148292DE006070F2 /* Chunk.schema */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Chunk.schema; path = Resources/Chunk.schema; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.plist; };
-		1AE1B0CE1482A4A8006070F2 /* ChunkSchema.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ChunkSchema.c; path = ../MinecraftKit.build/$CONFIGURATION/libminecraftkit.build/DerivedSources/ChunkSchema.c; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AE8E94C145A013A000ED823 /* shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = shared.xcconfig; sourceTree = "<group>"; };
 		1AF54038145C38AE0049CCEB /* libminecraftkit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libminecraftkit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AF54096145C3C860049CCEB /* plistpacker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = plistpacker.xcodeproj; path = plistpacker/plistpacker.xcodeproj; sourceTree = "<group>"; };
 		1AF540A2145C488B0049CCEB /* MCKitSchema.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCKitSchema.h; sourceTree = SOURCE_ROOT; };
-		1AF540A5145C4D290049CCEB /* DataSchema.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = DataSchema.c; path = ../MinecraftKit.build/$CONFIGURATION/libminecraftkit.build/DerivedSources/DataSchema.c; sourceTree = BUILT_PRODUCTS_DIR; };
-		1AF540A6145C4D290049CCEB /* SchematicSchema.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = SchematicSchema.c; path = ../MinecraftKit.build/$CONFIGURATION/libminecraftkit.build/DerivedSources/SchematicSchema.c; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AF6E51D14A4ABDA00E38756 /* JAGenericToString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAGenericToString.h; sourceTree = SOURCE_ROOT; };
 		1AF6E51E14A4ABDA00E38756 /* JAGenericToString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAGenericToString.m; sourceTree = SOURCE_ROOT; };
 		1AF70345147060840096EDF1 /* JAMinecraftRegionReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAMinecraftRegionReader.h; sourceTree = SOURCE_ROOT; };
@@ -247,8 +246,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1AF54039145C38AE0049CCEB /* Cocoa.framework in Frameworks */,
-				1AF54058145C3A690049CCEB /* libz.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -265,6 +262,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1A0BFE851DB24A430031BDE2 /* Derived files */ = {
+			isa = PBXGroup;
+			children = (
+				1A0BFE951DB24ACF0031BDE2 /* AnvilChunkSchema.c */,
+				1A0BFE961DB24ACF0031BDE2 /* BlockDescriptions.c */,
+				1A0BFE971DB24ACF0031BDE2 /* ChunkSchema.c */,
+				1A0BFE981DB24ACF0031BDE2 /* DataSchema.c */,
+				1A0BFE991DB24ACF0031BDE2 /* SchematicSchema.c */,
+			);
+			name = "Derived files";
+			path = "$(DERIVED_FILES_DIR)";
+			sourceTree = "<absolute>";
+		};
 		1AE0E31C14536D59009ACC2B /* NBT */ = {
 			isa = PBXGroup;
 			children = (
@@ -303,6 +313,7 @@
 				1AF54096145C3C860049CCEB /* plistpacker.xcodeproj */,
 			);
 			sourceTree = "<group>";
+			usesTabs = 1;
 		};
 		1AFE345213F930BF001A33D4 /* Products */ = {
 			isa = PBXGroup;
@@ -316,6 +327,7 @@
 		1AFE345313F930BF001A33D4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1A0BFEAE1DB24B180031BDE2 /* libz.tbd */,
 				1AFE34BE13F932DD001A33D4 /* Carbon.framework */,
 				1AFE34BC13F932CC001A33D4 /* libz.dylib */,
 				1AFE34BA13F932BD001A33D4 /* ApplicationServices.framework */,
@@ -356,11 +368,7 @@
 				1AF8C149144CA38900D86C3D /* Schematic.schema */,
 				1AE1B0A4148292DE006070F2 /* Chunk.schema */,
 				1A498BF017AD49FF0019164A /* AnvilChunk.schema */,
-				1AF540A5145C4D290049CCEB /* DataSchema.c */,
-				1AF540A6145C4D290049CCEB /* SchematicSchema.c */,
-				1AE1B0CE1482A4A8006070F2 /* ChunkSchema.c */,
-				1A498BF217AD4A750019164A /* AnvilChunkSchema.c */,
-				1A6C28B614A27430008A6535 /* BlockDescriptions.c */,
+				1A0BFE851DB24A430031BDE2 /* Derived files */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -558,11 +566,11 @@
 		1AFE344713F930BF001A33D4 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Jens Ayton";
 			};
 			buildConfigurationList = 1AFE344A13F930BF001A33D4 /* Build configuration list for PBXProject "MinecraftKit" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 6.3";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -650,7 +658,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "mkdir -p \"$DERIVED_FILE_DIR\"\ncd \"$DERIVED_FILE_DIR\"\n\"$BUILT_PRODUCTS_DIR/plistpacker\" \"$SRCROOT/Resources/Data.schema\" DataSchema\n\"$BUILT_PRODUCTS_DIR/plistpacker\" \"$SRCROOT/Resources/Schematic.schema\" SchematicSchema\n\"$BUILT_PRODUCTS_DIR/plistpacker\" \"$SRCROOT/Resources/Chunk.schema\" ChunkSchema\n\"$BUILT_PRODUCTS_DIR/plistpacker\" \"$SRCROOT/Resources/AnvilChunk.schema\" AnvilChunkSchema\n\"$BUILT_PRODUCTS_DIR/plistpacker\" \"$SRCROOT/Resources/en.lproj/BlockDescriptions.plist\" BlockDescriptions\n";
+			shellScript = "mkdir -p \"$DERIVED_FILE_DIR\"\ncd \"$DERIVED_FILE_DIR\"\npwd\n\"$BUILT_PRODUCTS_DIR/plistpacker\" \"$SRCROOT/Resources/Data.schema\" DataSchema\n\"$BUILT_PRODUCTS_DIR/plistpacker\" \"$SRCROOT/Resources/Schematic.schema\" SchematicSchema\n\"$BUILT_PRODUCTS_DIR/plistpacker\" \"$SRCROOT/Resources/Chunk.schema\" ChunkSchema\n\"$BUILT_PRODUCTS_DIR/plistpacker\" \"$SRCROOT/Resources/AnvilChunk.schema\" AnvilChunkSchema\n\"$BUILT_PRODUCTS_DIR/plistpacker\" \"$SRCROOT/Resources/en.lproj/BlockDescriptions.plist\" BlockDescriptions\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -663,12 +671,16 @@
 				1AF54046145C39780049CCEB /* JAMinecraftTypes.m in Sources */,
 				1AF54047145C397B0049CCEB /* JAMinecraftBlock.m in Sources */,
 				1AF54048145C397E0049CCEB /* JAMinecraftBlockStore.m in Sources */,
+				1A0BFE9E1DB24ACF0031BDE2 /* SchematicSchema.c in Sources */,
 				1AF54049145C39820049CCEB /* JAMinecraftSchematic.m in Sources */,
 				1AF5404A145C39860049CCEB /* JAMinecraftMergedBlockStore.m in Sources */,
 				1AF5404B145C39890049CCEB /* JAMinecraftSchematic+RDatIO.m in Sources */,
+				1A0BFE9A1DB24ACF0031BDE2 /* AnvilChunkSchema.c in Sources */,
 				1AF5404C145C398C0049CCEB /* JAMinecraftSchematic+SchematicIO.m in Sources */,
+				1A0BFE9D1DB24ACF0031BDE2 /* DataSchema.c in Sources */,
 				1AF5404D145C39900049CCEB /* JAMinecraftBlockStore+RedstoneHelpers.m in Sources */,
 				1AF5404F145C399C0049CCEB /* JAHashEnumeration.m in Sources */,
+				1A0BFE9B1DB24ACF0031BDE2 /* BlockDescriptions.c in Sources */,
 				1AF54050145C39A00049CCEB /* IsKeyDown.c in Sources */,
 				1AF54051145C39A30049CCEB /* JACollectionHelpers.m in Sources */,
 				1AF54052145C39A70049CCEB /* MYCollectionUtilities.m in Sources */,
@@ -679,17 +691,13 @@
 				1AF54069145C3AF50049CCEB /* JANBTTypedNumbers.m in Sources */,
 				1AF5406A145C3AF90049CCEB /* JANBTStreamParser.m in Sources */,
 				1AF5406B145C3AFE0049CCEB /* JANBTStreamEncoder.m in Sources */,
+				1A0BFE9C1DB24ACF0031BDE2 /* ChunkSchema.c in Sources */,
 				1AF5406C145C3B010049CCEB /* JAZLibCompressor.m in Sources */,
-				1AF540A7145C4D290049CCEB /* DataSchema.c in Sources */,
-				1AF540A8145C4D290049CCEB /* SchematicSchema.c in Sources */,
 				1AF7034A147060840096EDF1 /* JAMinecraftRegionReader.m in Sources */,
-				1AE1B0CF1482A4A8006070F2 /* ChunkSchema.c in Sources */,
 				1A164B7C14893F670079962D /* JAMinecraftChunkBlockStore.m in Sources */,
-				1A6C28B714A27430008A6535 /* BlockDescriptions.c in Sources */,
 				1AF6E52214A4ABDA00E38756 /* JAGenericToString.m in Sources */,
 				1A1EA94915692B5F005A9E3D /* JAMinecraftAnvilRegionReader.m in Sources */,
 				1A498BEF17AD43F90019164A /* JAMinecraftAnvilChunkBlockStore.m in Sources */,
-				1A498BF317AD4A750019164A /* AnvilChunkSchema.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -788,13 +796,30 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1AE8E94C145A013A000ED823 /* shared.xcconfig */;
 			buildSettings = {
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MCKIT_ROOT = ..;
 				ONLY_ACTIVE_ARCH = YES;
@@ -805,8 +830,24 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1AE8E94C145A013A000ED823 /* shared.xcconfig */;
 			buildSettings = {
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MCKIT_ROOT = ..;
 			};
@@ -821,6 +862,7 @@
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = "Resources/MinecraftKit-Info.plist";
 				INSTALL_PATH = "@rpath";
+				PRODUCT_BUNDLE_IDENTIFIER = se.jens.ayton.minecraftkit;
 				PRODUCT_NAME = JAMinecraftKit;
 				USER_HEADER_SEARCH_PATHS = "$SRCROOT/**";
 				WRAPPER_EXTENSION = framework;
@@ -836,6 +878,7 @@
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = "Resources/MinecraftKit-Info.plist";
 				INSTALL_PATH = "@rpath";
+				PRODUCT_BUNDLE_IDENTIFIER = se.jens.ayton.minecraftkit;
 				PRODUCT_NAME = JAMinecraftKit;
 				USER_HEADER_SEARCH_PATHS = "$SRCROOT/**";
 				WRAPPER_EXTENSION = framework;

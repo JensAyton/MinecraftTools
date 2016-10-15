@@ -6,6 +6,8 @@
 TemplateIcon.icns
 xcuserdata/
 project.xcworkspace/
+*.xccheckout
+*.xcscmblueprint
 
 Test data/Output
 

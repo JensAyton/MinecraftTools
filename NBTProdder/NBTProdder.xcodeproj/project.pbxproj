@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 47;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -102,6 +102,7 @@
 				1AE8E9BF145A0ABC000ED823 /* Products */,
 			);
 			sourceTree = "<group>";
+			usesTabs = 1;
 		};
 		1AE8E9BF145A0ABC000ED823 /* Products */ = {
 			isa = PBXGroup;
@@ -200,7 +201,7 @@
 				ORGANIZATIONNAME = "Jens Ayton";
 			};
 			buildConfigurationList = 1AE8E9B8145A0ABC000ED823 /* Build configuration list for PBXProject "NBTProdder" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 6.3";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
