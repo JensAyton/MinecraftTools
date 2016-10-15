@@ -106,4 +106,18 @@
 	return [NSData dataWithBytes:result length:1000];
 }
 
+- (void)testRoundtripSimpleTest
+{
+	NSData *testNBT = [self NBTWithName:@"test"];
+
+	NSString *rootName;
+	id root = [JANBTSerialization NBTObjectWithData:testNBT rootName:&rootName options:JANBTReadingOptionsUncompressed schema:nil error:nil];
+
+	NSError *error;
+	NSData *reencoded = [JANBTSerialization dataWithNBTObject:root rootName:rootName options:JANBTWritingOptionsUncompressed schema:nil error:&error];
+
+	XCTAssertNil(error);
+	XCTAssertEqualObjects(testNBT, reencoded);
+}
+
 @end
