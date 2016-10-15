@@ -26,8 +26,8 @@
 */
 
 
-#import <JAMinecraftKit/JAMinecraftLegacyRegionReader.h>
 #import <JAMinecraftKit/JAMinecraftAnvilRegionReader.h>
+#import <JAMinecraftKit/JAMinecraftLegacyRegionReader.h>
 #import <JANBTSerialization/JANBTSerialization.h>
 #import <JAMinecraftKit/JAPropertyListAccessors.h>
 #import "JAPrintf.h"
@@ -35,7 +35,7 @@
 
 static void PrintHelpAndExit(void) __attribute__((noreturn));
 
-static void DumpRegionInfo(JAMinecraftLegacyRegionReader *reader);
+static void DumpRegionInfo(id<JAMinecraftRegionReader> reader);
 static void DumpChunkInfo(NSData *chunkData);
 static void DumpEntities(NSArray *entities);
 static void DumpTileEntities(NSArray *entities);
@@ -59,7 +59,14 @@ int main (int argc, const char * argv[])
 				return EXIT_FAILURE;
 			}
 
-			JAMinecraftLegacyRegionReader *reader = [JAMinecraftLegacyRegionReader regionReaderWithURL:[NSURL fileURLWithPath:inputPath]];
+			id<JAMinecraftRegionReader> reader;
+			NSURL *inputURL = [NSURL fileURLWithPath:inputPath];
+			NSString *extension = inputPath.pathExtension.lowercaseString;
+			if ([extension isEqualToString:@"mca"]) {
+				reader = [JAMinecraftAnvilRegionReader regionReaderWithURL:inputURL];
+			} else if ([extension isEqualToString:@"mcr"]) {
+				reader = [JAMinecraftLegacyRegionReader regionReaderWithURL:inputURL];
+			}
 			if (reader == nil)
 			{
 				EPrint(@"Failed to read region file.\n");
@@ -79,7 +86,7 @@ int main (int argc, const char * argv[])
 }
 
 
-static void DumpRegionInfo(JAMinecraftLegacyRegionReader *reader)
+static void DumpRegionInfo(id<JAMinecraftRegionReader> reader)
 {
 	for (unsigned x = 0; x < 32; x++)
 	{
@@ -88,7 +95,8 @@ static void DumpRegionInfo(JAMinecraftLegacyRegionReader *reader)
 			Print(@"Chunk %u, %u:", x, z);
 			if ([reader hasChunkAtLocalX:x localZ:z])
 			{
-				NSData *chunkData = [reader chunkDataAtLocalX:x localZ:z];
+				NSError *error;
+				NSData *chunkData = [reader chunkDataAtLocalX:x localZ:z error:&error];
 				if (chunkData != nil)
 				{
 					Print(@"\n");
@@ -96,7 +104,7 @@ static void DumpRegionInfo(JAMinecraftLegacyRegionReader *reader)
 				}
 				else
 				{
-					Print(@" UNREADABLE\n");
+					Print(@" UNREADABLE - %@\n", error);
 				}
 			}
 			else
@@ -267,7 +275,7 @@ static void DumpTileEntities(NSArray *entities)
 
 static void PrintHelpAndExit(void)
 {
-	printf("Usage: regiondump <file.mcr>\n");
+	printf("Usage: regiondump <file.mca>\n");
 	
 	exit(EXIT_SUCCESS);
 }
