@@ -1,10 +1,10 @@
 /*
-	JAMinecraftRegionReader.h
+	JAMinecraftLegacyRegionReader.h
 	
 	Read-only extractor for pre-1.2 Minecraft region files.
 	
 	
-	Copyright © 2011 Jens Ayton
+	Copyright © 2011–2016 Jens Ayton
 	
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),
@@ -30,7 +30,7 @@
 @class JAMinecraftChunkBlockStore;
 
 
-@interface JAMinecraftRegionReader: NSObject
+@interface JAMinecraftLegacyRegionReader: NSObject
 
 + (id) regionReaderWithData:(NSData *)regionData;
 + (id) regionReaderWithURL:(NSURL *)regionFileURL;

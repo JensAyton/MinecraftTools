@@ -1,8 +1,8 @@
 /*
-	JAMinecraftRegionReader.m
+	JAMinecraftLegacyRegionReader.m
 	
 	
-	Copyright © 2011 Jens Ayton
+	Copyright © 2011–2016 Jens Ayton
 	
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),
@@ -23,7 +23,7 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#import "JAMinecraftRegionReader.h"
+#import "JAMinecraftLegacyRegionReader.h"
 #import "JAMinecraftChunkBlockStore.h"
 
 
@@ -51,14 +51,14 @@ static inline uint16_t ChunkIndexFromLocalCoords(uint16_t x, uint16_t z)
 }
 
 
-@interface JAMinecraftRegionReader ()
+@interface JAMinecraftLegacyRegionReader ()
 
 - (BOOL) parseHeader;
 
 @end
 
 
-@implementation JAMinecraftRegionReader
+@implementation JAMinecraftLegacyRegionReader
 {
 	NSData					*_regionData;
 	uint32_t				_offsets[kChunksPerRegion];

@@ -4,7 +4,7 @@
 	Print information about Minecraft region files.
 	
 	
-	Copyright © 2011 Jens Ayton
+	Copyright © 2011–2016 Jens Ayton
 	
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),
@@ -26,7 +26,8 @@
 */
 
 
-#import <JAMinecraftKit/JAMinecraftRegionReader.h>
+#import <JAMinecraftKit/JAMinecraftLegacyRegionReader.h>
+#import <JAMinecraftKit/JAMinecraftAnvilRegionReader.h>
 #import <JANBTSerialization/JANBTSerialization.h>
 #import <JAMinecraftKit/JAPropertyListAccessors.h>
 #import "JAPrintf.h"
@@ -34,7 +35,7 @@
 
 static void PrintHelpAndExit(void) __attribute__((noreturn));
 
-static void DumpRegionInfo(JAMinecraftRegionReader *reader);
+static void DumpRegionInfo(JAMinecraftLegacyRegionReader *reader);
 static void DumpChunkInfo(NSData *chunkData);
 static void DumpEntities(NSArray *entities);
 static void DumpTileEntities(NSArray *entities);
@@ -57,8 +58,8 @@ int main (int argc, const char * argv[])
 				EPrint(@"Failed to resolve input path \"%s\".\n", argv[1]);
 				return EXIT_FAILURE;
 			}
-			
-			JAMinecraftRegionReader *reader = [JAMinecraftRegionReader regionReaderWithURL:[NSURL fileURLWithPath:inputPath]];
+
+			JAMinecraftLegacyRegionReader *reader = [JAMinecraftLegacyRegionReader regionReaderWithURL:[NSURL fileURLWithPath:inputPath]];
 			if (reader == nil)
 			{
 				EPrint(@"Failed to read region file.\n");
@@ -78,7 +79,7 @@ int main (int argc, const char * argv[])
 }
 
 
-static void DumpRegionInfo(JAMinecraftRegionReader *reader)
+static void DumpRegionInfo(JAMinecraftLegacyRegionReader *reader)
 {
 	for (unsigned x = 0; x < 32; x++)
 	{
