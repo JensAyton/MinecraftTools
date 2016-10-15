@@ -50,22 +50,31 @@ int main (int argc, const char * argv[])
 			PrintHelpAndExit();
 		}
 		
-		NSString *inputPath = RealPathFromCString(argv[1]);
-		if (inputPath == nil)
+		for (int argi = 1; argi < argc; argi++)
 		{
-			EPrint(@"Failed to resolve input path \"%s\".\n", argv[1]);
-			return EXIT_FAILURE;
+			NSString *inputPath = RealPathFromCString(argv[argi]);
+			if (inputPath == nil)
+			{
+				EPrint(@"Failed to resolve input path \"%s\".\n", argv[1]);
+				return EXIT_FAILURE;
+			}
+			
+			JAMinecraftRegionReader *reader = [JAMinecraftRegionReader regionReaderWithURL:[NSURL fileURLWithPath:inputPath]];
+			if (reader == nil)
+			{
+				EPrint(@"Failed to read region file.\n");
+				return EXIT_FAILURE;
+			}
+			
+			if (argc > 2)
+			{
+				Print(@"\nRegion %@:\n", [inputPath lastPathComponent]);
+			}
+			DumpRegionInfo(reader);
 		}
-		
-		JAMinecraftRegionReader *reader = [JAMinecraftRegionReader regionReaderWithURL:[NSURL fileURLWithPath:inputPath]];
-		if (reader == nil)
-		{
-			EPrint(@"Failed to read region file.\n");
-			return EXIT_FAILURE;
-		}
-		
-		DumpRegionInfo(reader);
 	}
+	
+	fflush(stdout);
     return 0;
 }
 
@@ -120,6 +129,7 @@ static void DumpChunkInfo(NSData *chunkData)
 	NSInteger z = [level ja_integerForKey:@"zPos"];
 	Print(@"  Coordinates: %li, %li (%li, %li)\n", x, z, x * 16, z * 16);
 	Print(@"  LastUpdate: %li\n", [level ja_integerForKey:@"LastUpdate"]);
+	Print(@"  InhabitedTime: %li\n", [level ja_integerForKey:@"InhabitedTime"]);
 	
 	NSArray *entities = [level ja_arrayForKey:@"Entities"];
 	if (entities.count != 0)
@@ -142,7 +152,7 @@ static void DumpChunkInfo(NSData *chunkData)
 	
 	// List unknown keys.
 	static NSSet *knownKeys;
-	if (knownKeys == nil)  knownKeys = $set(@"Blocks", @"Data", @"SkyLight", @"BlockLight", @"HeightMap", @"Entities", @"TileEntities", @"LastUpdate", @"xPos", @"zPos", @"TerrainPopulated");
+	if (knownKeys == nil)  knownKeys = $set(@"Blocks", @"Data", @"SkyLight", @"BlockLight", @"HeightMap", @"Entities", @"TileEntities", @"LastUpdate", @"xPos", @"zPos", @"TerrainPopulated", @"V", @"Biomes", @"InhabitedTime", @"LightPopulated", @"Sections");
 	NSMutableArray *unknown;
 	
 	for (id key in level)
@@ -163,10 +173,14 @@ static void DumpChunkInfo(NSData *chunkData)
 		else
 		{
 			[unknown sortUsingSelector:@selector(caseInsensitiveCompare:)];
-			Print(@"  Unknown keys: %@", [unknown componentsJoinedByString:@", "]);
+			Print(@"  Unknown keys: %@\n", [unknown componentsJoinedByString:@", "]);
 		}
 	}
 }
+
+
+static void DumpItem(NSDictionary *entity);
+static void DumpHorse(NSDictionary *entity);
 
 
 static void DumpEntities(NSArray *entities)
@@ -175,13 +189,46 @@ static void DumpEntities(NSArray *entities)
 	for (idx = 0; idx < count; idx++)
 	{
 		NSDictionary *entity = [entities objectAtIndex:idx];
+		NSString *entityID = [entity ja_stringForKey:@"id"];
 		Print(@"    %li:\n", idx);
-		Print(@"      ID: %@\n", [entity ja_stringForKey:@"id"]);
+		Print(@"      ID: %@\n", entityID);
 		NSArray *pos = [entity ja_arrayForKey:@"Pos"];
 		if (pos.count == 3)
 		{
 			Print(@"      Coordinates: %g, %g, %g\n", [pos ja_doubleAtIndex:0], [pos ja_doubleAtIndex:1], [pos ja_doubleAtIndex:2]);
 		}
+		
+		if ([entityID isEqualToString:@"Item"])  DumpItem(entity);
+		if ([entityID isEqualToString:@"EntityHorse"])  DumpHorse(entity);
+	}
+}
+
+
+static void DumpItem(NSDictionary *entity)
+{
+	NSDictionary *item = [entity ja_dictionaryForKey:@"Item"];
+	
+	id itemID = item[@"id"];	// May be integer or string
+	long count = [item ja_integerForKey:@"Count"];
+	long data = [item ja_integerForKey:@"Damage"];
+	
+	Print(@"      %lu x %@:%lu\n", count, itemID, data);
+}
+
+
+static void DumpHorse(NSDictionary *entity)
+{
+	if ([entity ja_boolForKey:@"ChestedHorse"])  Print(@"      Chested: true\n");
+	
+	NSDictionary *saddleItem = [entity ja_dictionaryForKey:@"SaddleItem"];
+	if (saddleItem != nil)
+	{
+		Print(@"      Saddle: %@:%@\n", saddleItem[@"id"], saddleItem[@"Damage"]);
+	}
+	NSDictionary *armorItem = [entity ja_dictionaryForKey:@"ArmorItem"];
+	if (armorItem != nil)
+	{
+		Print(@"      Armor: %@:%@\n", armorItem[@"id"], armorItem[@"Damage"]);
 	}
 }
 
