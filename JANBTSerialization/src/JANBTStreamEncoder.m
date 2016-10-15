@@ -25,7 +25,7 @@
 
 #import "JANBTStreamEncoder.h"
 #import "JANBTTagType.h"
-#include <zlib.h>
+#import "JANBTParserNullCompressor.h"
 #import "JAZLibCompressor.h"
 
 
@@ -81,7 +81,7 @@ static JANBTTagType NormalizedTagType(id value, id schema);
 
 @implementation JANBTStreamEncoder
 {
-	JAZLibCompressor			*_compressor;
+	id<JANBTParserCompressor>	_compressor;
 	NSError						*_error;
 }
 
@@ -92,7 +92,11 @@ static JANBTTagType NormalizedTagType(id value, id schema);
 	{
 		if (stream != nil)
 		{
-			_compressor = [[JAZLibCompressor alloc] initWithStream:stream mode:kJAZLibCompressionGZip];
+			if (options & JANBTWritingOptionsUncompressed) {
+				_compressor = [[JANBTParserNullCompressor alloc] initWithStream:stream];
+			} else {
+				_compressor = [[JAZLibCompressor alloc] initWithStream:stream mode:kJAZLibCompressionGZip];
+			}
 			if (_compressor == nil)  return nil;
 		}
 	}

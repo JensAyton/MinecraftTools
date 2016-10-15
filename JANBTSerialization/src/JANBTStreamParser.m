@@ -26,6 +26,7 @@
 #import "JANBTStreamParser.h"
 #import "JANBTTagType.h"
 #import "JANBTTypedNumbers.h"
+#import "JANBTParserNullCompressor.h"
 #import "JAZLibCompressor.h"
 
 
@@ -67,7 +68,7 @@ static inline BOOL IsNumericalSchema(id schema);
 {
 	id						_result;
 	NSString				*_rootName;
-	JAZlibDecompressor		*_decompressor;
+	id<JANBTParserDecompressor>	_decompressor;
 	NSError					*_error;
 	NSMutableArray			*_keyPath;
 	BOOL					_mutableContainers;
@@ -86,7 +87,11 @@ static inline BOOL IsNumericalSchema(id schema);
 	
 	if ((self = [super init]))
 	{
-		_decompressor = [[JAZlibDecompressor alloc] initWithStream:stream mode:kJAZLibCompressionAutoDetect];
+		if (options & JANBTReadingOptionsUncompressed) {
+			_decompressor = [[JANBTParserNullDecompressor alloc] initWithStream:stream];
+		} else {
+			_decompressor = [[JAZlibDecompressor alloc] initWithStream:stream mode:kJAZLibCompressionAutoDetect];
+		}
 		
 		_mutableContainers = options & JANBTReadingOptionsMutableContainers;
 		_mutableLeaves = options & JANBTReadingOptionsMutableLeaves;

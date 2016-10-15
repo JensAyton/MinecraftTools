@@ -23,6 +23,10 @@
 		1ADC07141DB25C0E00C51535 /* libJANBTSerialization.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A87F4491DB24F0500AAFD2E /* libJANBTSerialization.a */; };
 		1ADC071B1DB25CCE00C51535 /* JANBTTagTypeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ADC071A1DB25CCE00C51535 /* JANBTTagTypeTests.m */; };
 		1ADC071E1DB25E6A00C51535 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ADC071D1DB25E6A00C51535 /* libz.tbd */; };
+		1ADC07221DB2624300C51535 /* bigtest.nbt in Resources */ = {isa = PBXBuildFile; fileRef = 1ADC07201DB2624300C51535 /* bigtest.nbt */; };
+		1ADC07231DB2624300C51535 /* test.nbt in Resources */ = {isa = PBXBuildFile; fileRef = 1ADC07211DB2624300C51535 /* test.nbt */; };
+		1AE663A31DB269A20094A2A0 /* JANBTParserNullCompressor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AE663A11DB269A20094A2A0 /* JANBTParserNullCompressor.h */; };
+		1AE663A41DB269A20094A2A0 /* JANBTParserNullCompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE663A21DB269A20094A2A0 /* JANBTParserNullCompressor.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +59,11 @@
 		1ADC07131DB25C0E00C51535 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1ADC071A1DB25CCE00C51535 /* JANBTTagTypeTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTTagTypeTests.m; sourceTree = "<group>"; };
 		1ADC071D1DB25E6A00C51535 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		1ADC07201DB2624300C51535 /* bigtest.nbt */ = {isa = PBXFileReference; lastKnownFileType = file; path = bigtest.nbt; sourceTree = "<group>"; };
+		1ADC07211DB2624300C51535 /* test.nbt */ = {isa = PBXFileReference; lastKnownFileType = file; path = test.nbt; sourceTree = "<group>"; };
+		1AE663A01DB268A70094A2A0 /* JANBTParserCompressor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JANBTParserCompressor.h; sourceTree = "<group>"; };
+		1AE663A11DB269A20094A2A0 /* JANBTParserNullCompressor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTParserNullCompressor.h; sourceTree = "<group>"; };
+		1AE663A21DB269A20094A2A0 /* JANBTParserNullCompressor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTParserNullCompressor.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,8 +120,11 @@
 				1A87F4681DB2503200AAFD2E /* JANBTTagType.m */,
 				1A87F4691DB2503200AAFD2E /* JANBTTypedNumbers.h */,
 				1A87F46A1DB2503200AAFD2E /* JANBTTypedNumbers.m */,
+				1AE663A01DB268A70094A2A0 /* JANBTParserCompressor.h */,
 				1A87F4751DB2508D00AAFD2E /* JAZLibCompressor.h */,
 				1A87F4761DB2508D00AAFD2E /* JAZLibCompressor.m */,
+				1AE663A11DB269A20094A2A0 /* JANBTParserNullCompressor.h */,
+				1AE663A21DB269A20094A2A0 /* JANBTParserNullCompressor.m */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -131,6 +143,7 @@
 			children = (
 				1ADC07111DB25C0E00C51535 /* JANBTSerializationTests.m */,
 				1ADC071A1DB25CCE00C51535 /* JANBTTagTypeTests.m */,
+				1ADC071F1DB2624300C51535 /* data */,
 				1ADC07131DB25C0E00C51535 /* Info.plist */,
 			);
 			path = tests;
@@ -144,6 +157,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		1ADC071F1DB2624300C51535 /* data */ = {
+			isa = PBXGroup;
+			children = (
+				1ADC07201DB2624300C51535 /* bigtest.nbt */,
+				1ADC07211DB2624300C51535 /* test.nbt */,
+			);
+			path = data;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -154,6 +176,7 @@
 				1A87F4711DB2503200AAFD2E /* JANBTTagType.h in Headers */,
 				1A87F46F1DB2503200AAFD2E /* JANBTStreamParser.h in Headers */,
 				1A87F4771DB2508D00AAFD2E /* JAZLibCompressor.h in Headers */,
+				1AE663A31DB269A20094A2A0 /* JANBTParserNullCompressor.h in Headers */,
 				1A87F46D1DB2503200AAFD2E /* JANBTStreamEncoder.h in Headers */,
 				1ADC06AB1DB2552D00C51535 /* JANBTSerialization.h in Headers */,
 				1A87F4731DB2503200AAFD2E /* JANBTTypedNumbers.h in Headers */,
@@ -242,6 +265,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1ADC07231DB2624300C51535 /* test.nbt in Resources */,
+				1ADC07221DB2624300C51535 /* bigtest.nbt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -258,6 +283,7 @@
 				1A87F46C1DB2503200AAFD2E /* JANBTSerialization.m in Sources */,
 				1A87F4781DB2508D00AAFD2E /* JAZLibCompressor.m in Sources */,
 				1A87F4741DB2503200AAFD2E /* JANBTTypedNumbers.m in Sources */,
+				1AE663A41DB269A20094A2A0 /* JANBTParserNullCompressor.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -444,6 +470,7 @@
 				1ADC07191DB25C0E00C51535 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

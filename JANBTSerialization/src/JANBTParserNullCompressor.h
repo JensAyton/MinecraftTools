@@ -1,18 +1,18 @@
 /*
-	JAZLibCompressor.h
-	
-	Streaming ZLib compressor and decompressor.
-	
-	
-	Copyright © 2011-2016 Jens Ayton
-	
+	JANBTParserNullCompressor.h
+
+	Pass-through implementations of compressor/decompressor protocols.
+
+
+	Copyright © 2016 Jens Ayton
+
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),
 	to deal in the Software without restriction, including without limitation
 	the rights to use, copy, modify, merge, publish, distribute, sublicense,
 	and/or sell copies of the Software, and to permit persons to whom the
 	Software is furnished to do so, subject to the following conditions:
-	
+
 	The above copyright notice and this permission notice shall be included in
 	all copies or substantial portions of the Software.
 
@@ -28,37 +28,18 @@
 #import <Foundation/Foundation.h>
 #import "JANBTParserCompressor.h"
 
+NS_ASSUME_NONNULL_BEGIN
 
-// Compression mode determines the type of header generated.
-typedef enum
-{
-	kJAZLibCompressionRawDeflate,
-	kJAZLibCompressionZLib,
-	kJAZLibCompressionGZip,
-	kJAZLibCompressionAutoDetect	// Gzip or zlib, decompression only.
-} JAZLibCompressionMode;
+@interface JANBTParserNullCompressor : NSObject <JANBTParserCompressor>
 
-
-@interface JAZLibCompressor: NSObject <JANBTParserCompressor>
-
-- (id) initWithStream:(NSOutputStream *)stream mode:(JAZLibCompressionMode)mode;
-
-@property (readonly) NSUInteger rawBytesWritten;
-@property (readonly) NSUInteger compressedBytesWritten;
+- (id)initWithStream:(NSOutputStream *)stream;
 
 @end
 
+@interface JANBTParserNullDecompressor : NSObject <JANBTParserDecompressor>
 
-@interface JAZlibDecompressor: NSObject <JANBTParserDecompressor>
-
-- (id) initWithStream:(NSInputStream *)stream mode:(JAZLibCompressionMode)mode;
-
-/*
-	Read until end of compressed data.
-*/
-- (NSData *) readToEndWithError:(NSError **)outError;
+- (id)initWithStream:(NSInputStream *)stream;
 
 @end
 
-
-extern NSString * const kJAZLibErrorDomain;	// Error codes are defined in zlib.h.
+NS_ASSUME_NONNULL_END

@@ -1,18 +1,18 @@
 /*
-	JAZLibCompressor.h
-	
-	Streaming ZLib compressor and decompressor.
-	
-	
-	Copyright © 2011-2016 Jens Ayton
-	
+	JANBTParserCompressor.h
+
+	Protocols for compression/decompression filters.
+
+
+	Copyright © 2016 Jens Ayton
+
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),
 	to deal in the Software without restriction, including without limitation
 	the rights to use, copy, modify, merge, publish, distribute, sublicense,
 	and/or sell copies of the Software, and to permit persons to whom the
 	Software is furnished to do so, subject to the following conditions:
-	
+
 	The above copyright notice and this permission notice shall be included in
 	all copies or substantial portions of the Software.
 
@@ -26,39 +26,28 @@
 */
 
 #import <Foundation/Foundation.h>
-#import "JANBTParserCompressor.h"
 
+NS_ASSUME_NONNULL_BEGIN
 
-// Compression mode determines the type of header generated.
-typedef enum
-{
-	kJAZLibCompressionRawDeflate,
-	kJAZLibCompressionZLib,
-	kJAZLibCompressionGZip,
-	kJAZLibCompressionAutoDetect	// Gzip or zlib, decompression only.
-} JAZLibCompressionMode;
+@protocol JANBTParserCompressor <NSObject>
 
+- (BOOL) write:(const uint8_t *)bytes length:(NSUInteger)length error:(NSError **)outError;
+- (BOOL) flushWithError:(NSError **)outError;
 
-@interface JAZLibCompressor: NSObject <JANBTParserCompressor>
-
-- (id) initWithStream:(NSOutputStream *)stream mode:(JAZLibCompressionMode)mode;
-
-@property (readonly) NSUInteger rawBytesWritten;
 @property (readonly) NSUInteger compressedBytesWritten;
 
 @end
 
 
-@interface JAZlibDecompressor: NSObject <JANBTParserDecompressor>
-
-- (id) initWithStream:(NSInputStream *)stream mode:(JAZLibCompressionMode)mode;
+@protocol JANBTParserDecompressor <NSObject>
 
 /*
-	Read until end of compressed data.
+	Read from stream, returning number of bytes read. This will differ from
+	requested amount only if the end of the stream is reached or an error
+	occurs. In the case of an error, the result will be negative.
 */
-- (NSData *) readToEndWithError:(NSError **)outError;
+- (NSInteger) read:(nonnull uint8_t *)bytes length:(NSInteger)length error:(NSError **)outError;
 
 @end
 
-
-extern NSString * const kJAZLibErrorDomain;	// Error codes are defined in zlib.h.
+NS_ASSUME_NONNULL_END

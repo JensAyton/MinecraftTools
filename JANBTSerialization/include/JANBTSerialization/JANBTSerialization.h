@@ -95,16 +95,23 @@ typedef NS_ENUM(NSInteger, JANBTReadingOptions)
 {
 	// Produce mutable NSDictionaries and NSArrays.
 	JANBTReadingOptionsMutableContainers	= 0x0001,
-	
+
 	// Produce mutable NSStrings and NSDatas.
 	JANBTReadingOptionsMutableLeaves		= 0x0002,
-	
+
 	// Allow top-level objects that are not dictionaries or arrays.
 	JANBTReadingOptionsAllowFragments		= 0x0004,
+
+	// The provided data is not zlib-compressed.
+	JANBTReadingOptionsUncompressed			= 0x0008,
 };
 
 
-typedef NSInteger JANBTWritingOptions;	 // No options defined, use 0.
+typedef NS_ENUM(NSInteger, JANBTWritingOptions)
+{
+	// Produce uncomressed data.
+	JANBTWritingOptionsUncompressed			= 0x0008,
+};
 
 
 @interface JANBTSerialization : NSObject
