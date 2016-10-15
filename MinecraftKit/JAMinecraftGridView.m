@@ -798,7 +798,7 @@ static void *kStoreObservingContext = &kStoreObservingContext;
 {
 	NSPoint location;
 	if (event != nil)  location = event.locationInWindow;
-	else  location = [self.window convertScreenToBase:[NSEvent mouseLocation]];
+	else  location = [self.window convertRectFromScreen:(NSRect){ .origin = NSEvent.mouseLocation }].origin;
 	
 	switch (_dragAction)
 	{
@@ -1263,10 +1263,8 @@ static void *kStoreObservingContext = &kStoreObservingContext;
 - (NSRect) rectFromCellLocation:(MCGridCoordinates)location
 {
 	NSPoint origin = [self projectFromFlattenedCellSpace:(NSPoint){ location.x, location.z }];
-	origin = [self convertPointToBase:origin];
 	origin.x = round(origin.x);
 	origin.y = round(origin.y);
-	origin = [self convertPointFromBase:origin];
 	return (NSRect)
 	{
 		{ origin.x, origin.y - _cellSize },
