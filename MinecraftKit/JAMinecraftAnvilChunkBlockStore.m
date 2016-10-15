@@ -53,7 +53,7 @@ static __attribute__((pure)) off_t IndexFromCoordinates(MCGridCoordinates coords
 
 static id KeyForCoords(NSInteger x, NSInteger y, NSInteger z)
 {
-	unsigned idx = IndexFromCoordinates((MCGridCoordinates){ x, y, z });
+	off_t idx = IndexFromCoordinates((MCGridCoordinates){ x, y, z });
 	return @(idx);
 }
 

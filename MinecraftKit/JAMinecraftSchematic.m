@@ -1397,7 +1397,8 @@ static void OptimizeStructure(InnerNode **nodePtr, unsigned level, MCGridExtents
 
 - (void) optimizeStructureInRegion:(MCGridExtents)region deferred:(BOOL)deferred
 {
-	return;
+#if 0
+	// This was originally disabled as part of ground level handling, I don't remember why.
 	
 	if (MCGridExtentsEmpty(region))  return;
 	
@@ -1429,6 +1430,7 @@ static void OptimizeStructure(InnerNode **nodePtr, unsigned level, MCGridExtents
 	}
 	
 	LogOutdent();
+#endif
 }
 
 
@@ -1667,14 +1669,15 @@ static id TileEntityKeyForCoords(MCGridCoordinates coords)
 }
 
 
-static inline off_t Offset(unsigned x, unsigned y, unsigned z)  __attribute__((const, always_inline));
-static inline off_t Offset(unsigned x, unsigned y, unsigned z)
+
+__attribute__((const, always_inline))
+static inline off_t Offset(NSUInteger x, NSUInteger y, NSUInteger z)
 {
 	return (y * kChunkSize + z) * kChunkSize + x;
 }
 
 
-static void ThrowMallocException(void) __attribute__((noreturn));
+__attribute__((noreturn))
 static void ThrowMallocException(void)
 {
 	[NSException raise:NSMallocException format:@"Out of memory"];
@@ -1980,7 +1983,7 @@ static BOOL ChunkSetCell(Chunk *chunk, NSInteger x, NSInteger y, NSInteger z, MC
 					   0 <= y && y < kChunkSize &&
 					   0 <= z && z < kChunkSize);
 	
-	unsigned offset = Offset(x, y, z);
+	off_t offset = Offset(x, y, z);
 	if (MCCellsEqual(chunk->cells[offset], cell))  return NO;
 	
 	chunk->cells[offset] = cell;
@@ -2005,11 +2008,11 @@ static void FillPartialChunk(Chunk *chunk, MCCell cell, MCGridExtents extents)
 	NSCParameterAssert(chunk != NULL && chunk->tag == kTagChunk && chunk->refCountMinusOne == 0);
 	NSCParameterAssert(MCGridExtentsAreWithinExtents(extents, MCGridExtentsWithCoordinatesAndSize(kMCZeroCoordinates, kChunkSize, kChunkSize, kChunkSize)));
 	
-	for (unsigned y = extents.minY; y <= extents.maxY; y++)
+	for (NSInteger y = extents.minY; y <= extents.maxY; y++)
 	{
-		for (unsigned z = extents.minZ; z <= extents.maxZ; z++)
+		for (NSInteger z = extents.minZ; z <= extents.maxZ; z++)
 		{
-			for (unsigned x = extents.minX; x <= extents.maxX; x++)
+			for (NSInteger x = extents.minX; x <= extents.maxX; x++)
 			{
 				chunk->cells[Offset(x, y, z)] = cell;
 			}

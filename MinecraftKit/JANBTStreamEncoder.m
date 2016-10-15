@@ -269,7 +269,7 @@ static JANBTTagType NormalizedTagType(id value, id schema);
 	NSUInteger length = value.length;
 	REQUIRE_ERR(length <= INT32_MAX, kJANBTSerializationObjectTooLargeError, @"Byte array is too long (%lu bytes)", length);
 	
-	REQUIRE([self writeInt:length]);
+	REQUIRE([self writeInt:(int32_t)length]);
 	return [self writeBytes:value.bytes length:length];
 	
 }
@@ -308,7 +308,7 @@ static JANBTTagType NormalizedTagType(id value, id schema);
 	REQUIRE_ERR(count <= INT32_MAX, kJANBTSerializationObjectTooLargeError, @"List too long (%lu items)", count);
 	
 	REQUIRE([self writeByte:type]);
-	REQUIRE([self writeInt:count]);
+	REQUIRE([self writeInt:(int32_t)count]);
 	
 	for (id elem in value)
 	{
@@ -356,7 +356,7 @@ static JANBTTagType NormalizedTagType(id value, id schema);
 	NSUInteger count = value.count;
 	REQUIRE_ERR(count <= INT32_MAX, kJANBTSerializationObjectTooLargeError, @"List too long (%lu items)", count);
 	
-	REQUIRE([self writeInt:count]);
+	REQUIRE([self writeInt:(int32_t)count]);
 	
 	for (id elem in value)
 	{

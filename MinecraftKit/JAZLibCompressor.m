@@ -355,7 +355,7 @@ static void SetZLibError(int code, z_stream *stream, NSError **outError);
 				NSInteger status = [_stream read:_zstream.next_in maxLength:kBufferSize];
 				if (status > 0)
 				{
-					_zstream.avail_in = status;
+					_zstream.avail_in = (uint)status;
 				}
 				else
 				{

@@ -70,8 +70,8 @@ static __attribute__((pure)) off_t IndexFromCoords(NSInteger x, NSInteger y, NSI
 
 static id KeyForCoords(NSInteger x, NSInteger y, NSInteger z)
 {
-	int idx = IndexFromCoords(x, y, z);
-	return (__bridge_transfer NSNumber *)CFNumberCreate(kCFAllocatorDefault, kCFNumberIntType, &idx);
+	off_t idx = IndexFromCoords(x, y, z);
+	return @(idx);
 }
 
 

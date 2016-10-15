@@ -60,11 +60,11 @@
 			break;
 			
 		case kJANBTTagInt:
-			*(int32_t *)value = _value;
+			*(int32_t *)value = (int32_t)(intptr_t)_value;
 			break;
 			
 		case kJANBTTagLong:
-			*(int64_t *)value = _value;
+			*(int64_t *)value = (intptr_t)_value;
 			break;
 			
 		default:
@@ -98,61 +98,61 @@
 
 - (char) charValue
 {
-	return _value;
+	return (char)_value;
 }
 
 
 - (unsigned char) unsignedCharValue
 {
-	return _value;
+	return (unsigned char)_value;
 }
 
 
 - (short) shortValue
 {
-	return _value;
+	return (short)_value;
 }
 
 
 - (unsigned short) unsignedShortValue
 {
-	return _value;
+	return (unsigned short)_value;
 }
 
 
 - (int) intValue
 {
-	return _value;
+	return (int)_value;
 }
 
 
 - (unsigned int) unsignedIntValue
 {
-	return _value;
+	return (unsigned int)_value;
 }
 
 
 - (long) longValue
 {
-	return _value;
+	return (long)_value;
 }
 
 
 - (unsigned long) unsignedLongValue
 {
-	return _value;
+	return (unsigned long)_value;
 }
 
 
 - (long long) longLongValue
 {
-	return _value;
+	return (long long)_value;
 }
 
 
 - (unsigned long long) unsignedLongLongValue
 {
-	return _value;
+	return (unsigned long long)_value;
 }
 
 
