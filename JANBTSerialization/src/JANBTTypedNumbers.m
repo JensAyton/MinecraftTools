@@ -34,6 +34,8 @@
 
 - (id) initWithValue:(NSInteger)value type:(JANBTTagType)type
 {
+	NSParameterAssert(JANBTIsNumericalTagType(type) && type != kJANBTTagFloat && type != kJANBTTagDouble);
+
 	if ((self = [super init]))
 	{
 		_value = value;

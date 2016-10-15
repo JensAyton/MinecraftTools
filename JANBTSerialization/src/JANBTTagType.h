@@ -56,15 +56,15 @@ BOOL JANBTIsKnownTagType(JANBTTagType type);	// True if type is valid for use in
 
 @interface NSObject (JANBTInternal)
 
-- (JANBTTagType) ja_NBTType;
-- (JANBTTagType) ja_NBTSchemaType;
+@property (readonly, getter=ja_NBTType) JANBTTagType NBTType;
+@property (readonly, getter=ja_NBTSchemaType) JANBTTagType NBTSchemaType;
 
 @end
 
 
 @interface NSArray (JANBTInternal)
 
-@property (nonatomic, setter=ja_setNBTListElementType:) JANBTTagType ja_NBTListElementType;
+@property (nonatomic, getter=ja_NBTListElementType, setter=ja_setNBTListElementType:) JANBTTagType NBTListElementType;
 
 @end
 

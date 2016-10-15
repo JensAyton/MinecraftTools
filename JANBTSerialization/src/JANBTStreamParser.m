@@ -368,7 +368,7 @@ static inline BOOL IsNumericalSchema(id schema);
 	PARSE_LOG_OUTDENT();
 	
 	if (!_mutableContainers)  array = [array copy];
-	if (schema == nil)  array.ja_NBTListElementType = type;
+	if (schema == nil)  array.NBTListElementType = type;
 	return array;
 }
 
@@ -432,7 +432,7 @@ static inline BOOL IsNumericalSchema(id schema);
 	PARSE_LOG_OUTDENT();
 	
 	if (!_mutableContainers)  array = [array copy];
-	array.ja_NBTListElementType = kJANBTTagIntArrayContent;
+	array.NBTListElementType = kJANBTTagIntArrayContent;
 	return array;
 }
 
