@@ -27,7 +27,7 @@
 
 
 #import <JAMinecraftKit/JAMinecraftRegionReader.h>
-#import <JAMinecraftKit/JANBTSerialization.h>
+#import <JANBTSerialization/JANBTSerialization.h>
 #import <JAMinecraftKit/JAPropertyListAccessors.h>
 #import <JAMinecraftKit/MYCollectionUtilities.h>
 #import "JAPrintf.h"

@@ -16,3 +16,6 @@ GCC_TREAT_WARNINGS_AS_ERRORS	= YES
 
 // MCKIT_ROOT is set to the MinecraftTools repository root in each project’s build settings.
 SYMROOT							= $(MCKIT_ROOT)/build
+
+HEADER_SEARCH_PATHS				= $(inherited) $(MCKIT_ROOT)/JANBTSerialization/include
+USER_HEADER_SEARCH_PATHS		= $(inherited) $(MCKIT_ROOT)/Shared

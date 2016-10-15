@@ -1,0 +1,299 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 47;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1A87F46C1DB2503200AAFD2E /* JANBTSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A87F4621DB2503200AAFD2E /* JANBTSerialization.m */; };
+		1A87F46D1DB2503200AAFD2E /* JANBTStreamEncoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A87F4631DB2503200AAFD2E /* JANBTStreamEncoder.h */; };
+		1A87F46E1DB2503200AAFD2E /* JANBTStreamEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A87F4641DB2503200AAFD2E /* JANBTStreamEncoder.m */; };
+		1A87F46F1DB2503200AAFD2E /* JANBTStreamParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A87F4651DB2503200AAFD2E /* JANBTStreamParser.h */; };
+		1A87F4701DB2503200AAFD2E /* JANBTStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A87F4661DB2503200AAFD2E /* JANBTStreamParser.m */; };
+		1A87F4711DB2503200AAFD2E /* JANBTTagType.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A87F4671DB2503200AAFD2E /* JANBTTagType.h */; };
+		1A87F4721DB2503200AAFD2E /* JANBTTagType.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A87F4681DB2503200AAFD2E /* JANBTTagType.m */; };
+		1A87F4731DB2503200AAFD2E /* JANBTTypedNumbers.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A87F4691DB2503200AAFD2E /* JANBTTypedNumbers.h */; };
+		1A87F4741DB2503200AAFD2E /* JANBTTypedNumbers.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A87F46A1DB2503200AAFD2E /* JANBTTypedNumbers.m */; };
+		1A87F4771DB2508D00AAFD2E /* JAZLibCompressor.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A87F4751DB2508D00AAFD2E /* JAZLibCompressor.h */; };
+		1A87F4781DB2508D00AAFD2E /* JAZLibCompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A87F4761DB2508D00AAFD2E /* JAZLibCompressor.m */; };
+		1ADC06AB1DB2552D00C51535 /* JANBTSerialization.h in Headers */ = {isa = PBXBuildFile; fileRef = 1ADC06AA1DB2552D00C51535 /* JANBTSerialization.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1A87F4491DB24F0500AAFD2E /* libJANBTSerialization.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libJANBTSerialization.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A87F45C1DB24F2E00AAFD2E /* shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = shared.xcconfig; path = ../MinecraftKit/shared.xcconfig; sourceTree = "<group>"; };
+		1A87F4621DB2503200AAFD2E /* JANBTSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTSerialization.m; sourceTree = "<group>"; };
+		1A87F4631DB2503200AAFD2E /* JANBTStreamEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTStreamEncoder.h; sourceTree = "<group>"; };
+		1A87F4641DB2503200AAFD2E /* JANBTStreamEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTStreamEncoder.m; sourceTree = "<group>"; };
+		1A87F4651DB2503200AAFD2E /* JANBTStreamParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTStreamParser.h; sourceTree = "<group>"; };
+		1A87F4661DB2503200AAFD2E /* JANBTStreamParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTStreamParser.m; sourceTree = "<group>"; };
+		1A87F4671DB2503200AAFD2E /* JANBTTagType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTTagType.h; sourceTree = "<group>"; };
+		1A87F4681DB2503200AAFD2E /* JANBTTagType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTTagType.m; sourceTree = "<group>"; };
+		1A87F4691DB2503200AAFD2E /* JANBTTypedNumbers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTTypedNumbers.h; sourceTree = "<group>"; };
+		1A87F46A1DB2503200AAFD2E /* JANBTTypedNumbers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JANBTTypedNumbers.m; sourceTree = "<group>"; };
+		1A87F4751DB2508D00AAFD2E /* JAZLibCompressor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JAZLibCompressor.h; sourceTree = "<group>"; };
+		1A87F4761DB2508D00AAFD2E /* JAZLibCompressor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JAZLibCompressor.m; sourceTree = "<group>"; };
+		1ADC06AA1DB2552D00C51535 /* JANBTSerialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JANBTSerialization.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1A87F4461DB24F0500AAFD2E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1A87F4401DB24F0500AAFD2E = {
+			isa = PBXGroup;
+			children = (
+				1ADC06A91DB2550300C51535 /* include */,
+				1A87F44B1DB24F0500AAFD2E /* src */,
+				1A87F44A1DB24F0500AAFD2E /* Products */,
+				1A87F45C1DB24F2E00AAFD2E /* shared.xcconfig */,
+			);
+			sourceTree = "<group>";
+			usesTabs = 1;
+		};
+		1A87F44A1DB24F0500AAFD2E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1A87F4491DB24F0500AAFD2E /* libJANBTSerialization.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1A87F44B1DB24F0500AAFD2E /* src */ = {
+			isa = PBXGroup;
+			children = (
+				1A87F4621DB2503200AAFD2E /* JANBTSerialization.m */,
+				1A87F4631DB2503200AAFD2E /* JANBTStreamEncoder.h */,
+				1A87F4641DB2503200AAFD2E /* JANBTStreamEncoder.m */,
+				1A87F4651DB2503200AAFD2E /* JANBTStreamParser.h */,
+				1A87F4661DB2503200AAFD2E /* JANBTStreamParser.m */,
+				1A87F4671DB2503200AAFD2E /* JANBTTagType.h */,
+				1A87F4681DB2503200AAFD2E /* JANBTTagType.m */,
+				1A87F4691DB2503200AAFD2E /* JANBTTypedNumbers.h */,
+				1A87F46A1DB2503200AAFD2E /* JANBTTypedNumbers.m */,
+				1A87F4751DB2508D00AAFD2E /* JAZLibCompressor.h */,
+				1A87F4761DB2508D00AAFD2E /* JAZLibCompressor.m */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		1ADC06A91DB2550300C51535 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				1ADC06AA1DB2552D00C51535 /* JANBTSerialization.h */,
+			);
+			name = include;
+			path = include/JANBTSerialization;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		1A87F4471DB24F0500AAFD2E /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1A87F4711DB2503200AAFD2E /* JANBTTagType.h in Headers */,
+				1A87F46F1DB2503200AAFD2E /* JANBTStreamParser.h in Headers */,
+				1A87F4771DB2508D00AAFD2E /* JAZLibCompressor.h in Headers */,
+				1A87F46D1DB2503200AAFD2E /* JANBTStreamEncoder.h in Headers */,
+				1ADC06AB1DB2552D00C51535 /* JANBTSerialization.h in Headers */,
+				1A87F4731DB2503200AAFD2E /* JANBTTypedNumbers.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		1A87F4481DB24F0500AAFD2E /* JANBTSerialization */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1A87F4521DB24F0500AAFD2E /* Build configuration list for PBXNativeTarget "JANBTSerialization" */;
+			buildPhases = (
+				1A87F4451DB24F0500AAFD2E /* Sources */,
+				1A87F4461DB24F0500AAFD2E /* Frameworks */,
+				1A87F4471DB24F0500AAFD2E /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = JANBTSerialization;
+			productName = JANBTSerialization;
+			productReference = 1A87F4491DB24F0500AAFD2E /* libJANBTSerialization.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1A87F4411DB24F0500AAFD2E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0800;
+				ORGANIZATIONNAME = "Jens Ayton";
+				TargetAttributes = {
+					1A87F4481DB24F0500AAFD2E = {
+						CreatedOnToolsVersion = 8.0;
+						DevelopmentTeam = SZLN482V5G;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 1A87F4441DB24F0500AAFD2E /* Build configuration list for PBXProject "JANBTSerialization" */;
+			compatibilityVersion = "Xcode 6.3";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 1A87F4401DB24F0500AAFD2E;
+			productRefGroup = 1A87F44A1DB24F0500AAFD2E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1A87F4481DB24F0500AAFD2E /* JANBTSerialization */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1A87F4451DB24F0500AAFD2E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1A87F46E1DB2503200AAFD2E /* JANBTStreamEncoder.m in Sources */,
+				1A87F4701DB2503200AAFD2E /* JANBTStreamParser.m in Sources */,
+				1A87F4721DB2503200AAFD2E /* JANBTTagType.m in Sources */,
+				1A87F46C1DB2503200AAFD2E /* JANBTSerialization.m in Sources */,
+				1A87F4781DB2508D00AAFD2E /* JAZLibCompressor.m in Sources */,
+				1A87F4741DB2503200AAFD2E /* JANBTTypedNumbers.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1A87F4501DB24F0500AAFD2E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A87F45C1DB24F2E00AAFD2E /* shared.xcconfig */;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MCKIT_ROOT = ..;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+			};
+			name = Debug;
+		};
+		1A87F4511DB24F0500AAFD2E /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A87F45C1DB24F2E00AAFD2E /* shared.xcconfig */;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MCKIT_ROOT = ..;
+				MTL_ENABLE_DEBUG_INFO = NO;
+			};
+			name = Release;
+		};
+		1A87F4531DB24F0500AAFD2E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = SZLN482V5G;
+				EXECUTABLE_PREFIX = lib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		1A87F4541DB24F0500AAFD2E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = SZLN482V5G;
+				EXECUTABLE_PREFIX = lib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1A87F4441DB24F0500AAFD2E /* Build configuration list for PBXProject "JANBTSerialization" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1A87F4501DB24F0500AAFD2E /* Debug */,
+				1A87F4511DB24F0500AAFD2E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1A87F4521DB24F0500AAFD2E /* Build configuration list for PBXNativeTarget "JANBTSerialization" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1A87F4531DB24F0500AAFD2E /* Debug */,
+				1A87F4541DB24F0500AAFD2E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1A87F4411DB24F0500AAFD2E /* Project object */;
+}

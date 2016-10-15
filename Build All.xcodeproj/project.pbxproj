@@ -110,7 +110,7 @@
 		1AE8E979145A0865000ED823 /* shared.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = shared.xcconfig; path = /Users/jayton/Programming/Projects/MinecraftTools/SchematicViewer/../MinecraftKit/shared.xcconfig; sourceTree = "<absolute>"; };
 		1AE8E995145A098E000ED823 /* SchematicViewer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SchematicViewer.xcodeproj; path = SchematicViewer/SchematicViewer.xcodeproj; sourceTree = "<group>"; };
 		1AE8E99B145A0998000ED823 /* mcxform.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = mcxform.xcodeproj; path = mcxform/mcxform.xcodeproj; sourceTree = "<group>"; };
-		1AE8E9A7145A09A3000ED823 /* nbtparser.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = nbtparser.xcodeproj; path = mcxform/../MinecraftKit/nbtparser/nbtparser.xcodeproj; sourceTree = "<group>"; };
+		1AE8E9A7145A09A3000ED823 /* nbtparser.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = nbtparser.xcodeproj; path = JANBTSerialization/nbtparser/nbtparser.xcodeproj; sourceTree = "<group>"; };
 		1AF703DC14707DD40096EDF1 /* regiondump.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = regiondump.xcodeproj; path = regiondump/regiondump.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 

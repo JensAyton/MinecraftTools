@@ -4,7 +4,7 @@
 #import <JAMinecraftKit/JAMinecraftAnvilChunkBlockStore.h>
 #import <JAMinecraftKit/JAPropertyListAccessors.h>
 #import <JAMinecraftKit/MYCollectionUtilities.h>
-#import <JAMinecraftKit/JANBTSerialization.h>
+#import <JANBTSerialization/JANBTSerialization.h>
 #import "JATerrainStatistics.h"
 
 

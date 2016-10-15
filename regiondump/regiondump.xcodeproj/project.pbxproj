@@ -222,7 +222,6 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				HEADER_SEARCH_PATHS = ../Shared;
 				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_NAME = regiondump;
 				RUN_CLANG_STATIC_ANALYZER = YES;
@@ -239,7 +238,6 @@
 					NS_BLOCK_ASSERTIONS,
 					NDEBUG,
 				);
-				HEADER_SEARCH_PATHS = ../Shared;
 				INSTALL_PATH = /usr/local/bin;
 				PRODUCT_NAME = regiondump;
 				RUN_CLANG_STATIC_ANALYZER = YES;

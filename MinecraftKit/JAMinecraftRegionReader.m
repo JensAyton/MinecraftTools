@@ -25,7 +25,6 @@
 
 #import "JAMinecraftRegionReader.h"
 #import "JAMinecraftChunkBlockStore.h"
-#import "JAZLibCompressor.h"
 
 
 enum

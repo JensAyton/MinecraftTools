@@ -24,7 +24,7 @@
 */
 
 #import "JAMinecraftSchematic+SchematicIO.h"
-#import "JANBTSerialization.h"
+#import <JANBTSerialization/JANBTSerialization.h>
 #import "JACollectionHelpers.h"
 #import "JAPropertyListAccessors.h"
 #import "MYCollectionUtilities.h"

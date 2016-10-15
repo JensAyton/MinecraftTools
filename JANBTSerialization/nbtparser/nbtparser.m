@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 #import <JAMinecraftKit/JANBTSerialization.h>
-#import "../JANBTTagType.h"
+#import "../src/JANBTTagType.h"
 #import "JAPrintf.h"
 
 

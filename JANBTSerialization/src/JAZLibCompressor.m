@@ -25,7 +25,6 @@
 
 #import "JAZLibCompressor.h"
 #import <zlib.h>
-#import "MYCollectionUtilities.h"
 
 
 enum

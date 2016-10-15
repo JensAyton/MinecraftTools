@@ -17,7 +17,7 @@
          location = "group:mcxform/mcxform.xcodeproj">
       </FileRef>
       <FileRef
-         location = "group:MinecraftKit/nbtparser/nbtparser.xcodeproj">
+         location = "group:JANBTSerialization/nbtparser/nbtparser.xcodeproj">
       </FileRef>
       <FileRef
          location = "group:regiondump/regiondump.xcodeproj">

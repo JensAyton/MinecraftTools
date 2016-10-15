@@ -24,8 +24,6 @@
 */
 
 #import "JANBTTypedNumbers.h"
-#import "MYCollectionUtilities.h"
-
 
 @implementation JANBTInteger
 {
@@ -188,7 +186,7 @@
 
 - (NSString *)stringValue
 {
-	return $sprintf(@"%lu", _value);
+	return @(_value).description;
 }
 
 

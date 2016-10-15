@@ -27,7 +27,6 @@
 #import "JANBTTagType.h"
 #import "JANBTStreamParser.h"
 #import "JANBTStreamEncoder.h"
-#import "MYCollectionUtilities.h"
 
 
 NSString * const kJANBTSerializationErrorDomain = @"se.ayton.jens.minecraftkit JANBTSerialization ErrorDomain";

@@ -24,7 +24,7 @@
 */
 
 #import "JAMinecraftChunkBlockStore.h"
-#import "JANBTSerialization.h"
+#import <JANBTSerialization/JANBTSerialization.h>
 #import "MCKitSchema.h"
 #import "JACollectionHelpers.h"
 #import "JAPropertyListAccessors.h"

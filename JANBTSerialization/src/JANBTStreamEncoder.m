@@ -26,7 +26,6 @@
 #import "JANBTStreamEncoder.h"
 #import "JANBTTagType.h"
 #include <zlib.h>
-#import "MYCollectionUtilities.h"
 #import "JAZLibCompressor.h"
 
 
