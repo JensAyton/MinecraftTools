@@ -26,7 +26,7 @@
 #import "JAValueToString.h"
 #import "JACollectionHelpers.h"
 #import "JAPropertyListAccessors.h"
-#import "MYCollectionUtilities.h"
+#import "JAEqual.h"
 
 
 // Base debug features: validate node types and levels. Required for logging and instance tracking.
@@ -370,7 +370,7 @@ static inline NSUInteger RepresentedDistance(levels)
 		changed = ChunkSetCell(chunk, location.x - base.x, location.y - base.y, location.z - base.z, cell);
 		
 		id key = TileEntityKeyForCoords(location);
-		if (!changed)  changed = !$equal([_tileEntities objectForKey:key], tileEntity);
+		if (!changed)  changed = !JAEqual([_tileEntities objectForKey:key], tileEntity);
 		
 		if (tileEntity != nil)
 		{

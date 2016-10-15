@@ -27,7 +27,6 @@
 #import <JANBTSerialization/JANBTSerialization.h>
 #import "JACollectionHelpers.h"
 #import "JAPropertyListAccessors.h"
-#import "MYCollectionUtilities.h"
 #import "MCKitSchema.h"
 
 
@@ -100,7 +99,7 @@ static id KeyForCoords(NSInteger x, NSInteger y, NSInteger z)
 	NSArray *serializedEntities = [dict objectForKey:kTileEntitiesKey];
 	tileEntities = [NSMutableDictionary dictionaryWithCapacity:serializedEntities.count];
 	
-	NSSet *coordKeys = $set(@"x", @"y", @"z");
+	NSSet *coordKeys = [NSSet setWithObjects:@"x", @"y", @"z", nil];
 	[serializedEntities enumerateObjectsUsingBlock:^(id entityDef, NSUInteger idx, BOOL *stop)
 	{
 		NSUInteger x = [entityDef ja_integerForKey:@"x"];

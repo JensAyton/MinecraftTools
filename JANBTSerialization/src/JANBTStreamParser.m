@@ -539,7 +539,7 @@ static inline BOOL IsNumericalSchema(id schema);
 static NSString *IndentString(NSUInteger count);
 static void ParseLog(NSString *message, NSInteger indent, NSUInteger offset)
 {
-	message = $sprintf(@"%@[%lu] %@", IndentString(indent), offset, message);
+	message = [NSString stringWithFormat:@"%@[%lu] %@", IndentString(indent), offset, message];
 	puts([message UTF8String]);
 }
 

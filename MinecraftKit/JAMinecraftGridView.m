@@ -31,7 +31,6 @@
 #import "JAMinecraftKitLionInterfaces.h"
 #import "JAMinecraftBlock.h"
 #import "JAPointMaths.h"
-#import "MYCollectionUtilities.h"
 
 
 #define kSelectionRefreshInterval	0.1	// Selection animation interval in seconds
@@ -1013,7 +1012,7 @@ static void *kStoreObservingContext = &kStoreObservingContext;
 		
 		NSString *result = [self stringForToolTipForBlock:block at:location];
 #if DEBUG_DRAWING
-		result = $sprintf(@"%li, %li, %li\n%@", location.x, location.y, location.z, result);
+		result = [NSString stringWithFormat:@"%li, %li, %li\n%@", location.x, location.y, location.z, result];
 #endif
 		return result;
 	}

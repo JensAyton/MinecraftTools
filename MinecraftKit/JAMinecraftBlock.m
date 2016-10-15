@@ -24,9 +24,9 @@
 */
 
 #import "JAMinecraftBlock.h"
-#import "MYCollectionUtilities.h"
 #import "JAPropertyListAccessors.h"
 #import <objc/runtime.h>
+#import "JAEqual.h"
 
 @interface JAMinecraftBlock (Internal)
 
@@ -78,14 +78,14 @@ static inline void ThrowImmutable(const char *name) __attribute((noreturn));
 
 - (NSString *) description
 {
-	return $sprintf(@"<%@ %p>{ ID: %u, data: 0x%X }", self.class, self, self.blockID, self.blockData);
+	return [NSString stringWithFormat:@"<%@ %p>{ ID: %u, data: 0x%X }", self.class, self, self.blockID, self.blockData];
 }
 
 
 static inline BOOL BlocksEqual(JAMinecraftBlock *a, JAMinecraftBlock *b) __attribute__((nonnull));
 static inline BOOL BlocksEqual(JAMinecraftBlock *a, JAMinecraftBlock *b)
 {
-	return a.blockID == b.blockID && a.blockData == b.blockData && $equal(a.tileEntity, b.tileEntity);
+	return a.blockID == b.blockID && a.blockData == b.blockData && JAEqual(a.tileEntity, b.tileEntity);
 }
 
 

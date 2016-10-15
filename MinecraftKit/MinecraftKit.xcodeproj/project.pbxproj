@@ -45,7 +45,6 @@
 		1AF5404F145C399C0049CCEB /* JAHashEnumeration.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFE349F13F931EE001A33D4 /* JAHashEnumeration.m */; };
 		1AF54050145C39A00049CCEB /* IsKeyDown.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AFE34A113F931EE001A33D4 /* IsKeyDown.c */; };
 		1AF54051145C39A30049CCEB /* JACollectionHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFC074B14404395009666A9 /* JACollectionHelpers.m */; };
-		1AF54052145C39A70049CCEB /* MYCollectionUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFC075114405F8A009666A9 /* MYCollectionUtilities.m */; };
 		1AF54065145C3ADF0049CCEB /* JAValueToString.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFE34B513F9321F001A33D4 /* JAValueToString.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		1AF54066145C3AE50049CCEB /* JAPropertyListAccessors.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFE34B013F93207001A33D4 /* JAPropertyListAccessors.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		1AF540A3145C488C0049CCEB /* MCKitSchema.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AF540A2145C488B0049CCEB /* MCKitSchema.h */; };
@@ -61,8 +60,6 @@
 		1AF8C14A144CA38900D86C3D /* Schematic.schema in Resources */ = {isa = PBXBuildFile; fileRef = 1AF8C149144CA38900D86C3D /* Schematic.schema */; };
 		1AFC074C14404395009666A9 /* JACollectionHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AFC074A14404395009666A9 /* JACollectionHelpers.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AFC074D14404395009666A9 /* JACollectionHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFC074B14404395009666A9 /* JACollectionHelpers.m */; };
-		1AFC075214405F8A009666A9 /* MYCollectionUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AFC075014405F8A009666A9 /* MYCollectionUtilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1AFC075314405F8A009666A9 /* MYCollectionUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFC075114405F8A009666A9 /* MYCollectionUtilities.m */; };
 		1AFE345513F930BF001A33D4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AFE345413F930BF001A33D4 /* Cocoa.framework */; };
 		1AFE348813F931C3001A33D4 /* JAMinecraftBlockIDs.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AFE347813F931C3001A33D4 /* JAMinecraftBlockIDs.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AFE348913F931C3001A33D4 /* JAMinecraftBlockIDs.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AFE347913F931C3001A33D4 /* JAMinecraftBlockIDs.c */; };
@@ -187,8 +184,6 @@
 		1AF8C149144CA38900D86C3D /* Schematic.schema */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Schematic.schema; path = Resources/Schematic.schema; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.plist; };
 		1AFC074A14404395009666A9 /* JACollectionHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JACollectionHelpers.h; sourceTree = SOURCE_ROOT; };
 		1AFC074B14404395009666A9 /* JACollectionHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JACollectionHelpers.m; sourceTree = SOURCE_ROOT; };
-		1AFC075014405F8A009666A9 /* MYCollectionUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYCollectionUtilities.h; sourceTree = SOURCE_ROOT; };
-		1AFC075114405F8A009666A9 /* MYCollectionUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYCollectionUtilities.m; sourceTree = SOURCE_ROOT; };
 		1AFE345113F930BF001A33D4 /* JAMinecraftKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = JAMinecraftKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AFE345413F930BF001A33D4 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		1AFE345713F930BF001A33D4 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -405,8 +400,6 @@
 				1AFE34A113F931EE001A33D4 /* IsKeyDown.c */,
 				1AFC074A14404395009666A9 /* JACollectionHelpers.h */,
 				1AFC074B14404395009666A9 /* JACollectionHelpers.m */,
-				1AFC075014405F8A009666A9 /* MYCollectionUtilities.h */,
-				1AFC075114405F8A009666A9 /* MYCollectionUtilities.m */,
 				1AC7953014643DE3008BBFA4 /* JAPointMaths.h */,
 				1A87F4791DB2509C00AAFD2E /* JANBTSerialization.h */,
 				1AFE34AE13F931F0001A33D4 /* JAPropertyListAccessors */,
@@ -465,7 +458,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1AFC075214405F8A009666A9 /* MYCollectionUtilities.h in Headers */,
 				1AFC074C14404395009666A9 /* JACollectionHelpers.h in Headers */,
 				1AFE348813F931C3001A33D4 /* JAMinecraftBlockIDs.h in Headers */,
 				1AFE348A13F931C3001A33D4 /* JAMinecraftTypes.h in Headers */,
@@ -671,7 +663,6 @@
 				1A0BFE9B1DB24ACF0031BDE2 /* BlockDescriptions.c in Sources */,
 				1AF54050145C39A00049CCEB /* IsKeyDown.c in Sources */,
 				1AF54051145C39A30049CCEB /* JACollectionHelpers.m in Sources */,
-				1AF54052145C39A70049CCEB /* MYCollectionUtilities.m in Sources */,
 				1AF54065145C3ADF0049CCEB /* JAValueToString.m in Sources */,
 				1AF54066145C3AE50049CCEB /* JAPropertyListAccessors.m in Sources */,
 				1A0BFE9C1DB24ACF0031BDE2 /* ChunkSchema.c in Sources */,
@@ -701,7 +692,6 @@
 				1AFE34B213F93207001A33D4 /* JAPropertyListAccessors.m in Sources */,
 				1AFE34B713F9321F001A33D4 /* JAValueToString.m in Sources */,
 				1AFC074D14404395009666A9 /* JACollectionHelpers.m in Sources */,
-				1AFC075314405F8A009666A9 /* MYCollectionUtilities.m in Sources */,
 				1AFE8EC11449A1F6007056C1 /* JAMinecraftBlock.m in Sources */,
 				1AF70349147060840096EDF1 /* JAMinecraftRegionReader.m in Sources */,
 				1A164B79148938010079962D /* JAMinecraftChunkBlockStore.m in Sources */,
@@ -845,7 +835,6 @@
 				INSTALL_PATH = "@rpath";
 				PRODUCT_BUNDLE_IDENTIFIER = se.jens.ayton.minecraftkit;
 				PRODUCT_NAME = JAMinecraftKit;
-				USER_HEADER_SEARCH_PATHS = "$SRCROOT/**";
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Debug;
@@ -861,7 +850,6 @@
 				INSTALL_PATH = "@rpath";
 				PRODUCT_BUNDLE_IDENTIFIER = se.jens.ayton.minecraftkit;
 				PRODUCT_NAME = JAMinecraftKit;
-				USER_HEADER_SEARCH_PATHS = "$SRCROOT/**";
 				WRAPPER_EXTENSION = framework;
 			};
 			name = Release;

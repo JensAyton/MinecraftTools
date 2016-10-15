@@ -28,7 +28,6 @@
 #import "MCKitSchema.h"
 #import "JABozoStringTemplate.h"
 #import "JAPropertyListAccessors.h"
-#import "MYCollectionUtilities.h"
 
 
 const MCCell kMCAirCell = { .blockID = kMCBlockAir, .blockData = 0 };
@@ -305,7 +304,7 @@ NSString *MCCellLongDescription(MCCell cell, NSDictionary *tileEntity)
 			NSMutableArray *lines = [NSMutableArray arrayWithCapacity:4];
 			for (NSUInteger i = 1; i <= 4; i++)
 			{
-				NSString *text = [tileEntity ja_stringForKey:$sprintf(@"Text%lu", i)];
+				NSString *text = [tileEntity ja_stringForKey:[NSString stringWithFormat:@"Text%lu", i]];
 				if (text.length > 0)  [lines addObject:text];
 			}
 			
@@ -377,7 +376,7 @@ NSString *MCCellLongDescription(MCCell cell, NSDictionary *tileEntity)
 		case kMCBlockRedstoneRepeaterOn:
 		case kMCBlockRedstoneRepeaterOff:
 		{
-			NSString *delay = $sprintf(@"%u", ((cell.blockData & kMCInfoRedstoneRepeaterDelayMask) >> 2) + 1);
+			NSString *delay = [NSString stringWithFormat:@"%u", ((cell.blockData & kMCInfoRedstoneRepeaterDelayMask) >> 2) + 1];
 			NSString *state = [sBlockDescriptionsDict ja_stringForKey:(cell.blockID == kMCBlockRedstoneRepeaterOn) ? @"Redstone on" : @"Redstone off"];
 			extra = TEMPLATE_KEY2(sBlockDescriptionsDict, @"Repeater", delay, state);
 			break;

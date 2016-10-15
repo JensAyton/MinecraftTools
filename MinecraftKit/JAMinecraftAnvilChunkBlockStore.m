@@ -28,7 +28,6 @@
 #import "MCKitSchema.h"
 #import "JACollectionHelpers.h"
 #import "JAPropertyListAccessors.h"
-#import "MYCollectionUtilities.h"
 
 
 enum
@@ -126,7 +125,7 @@ static id KeyForCoords(NSInteger x, NSInteger y, NSInteger z)
 	NSInteger baseX = [dict ja_integerForKey:@"xPos"] * 16;
 	NSInteger baseZ = [dict ja_integerForKey:@"zPos"] * 16;
 	
-	NSSet *coordKeys = $set(@"x", @"y", @"z");
+	NSSet *coordKeys = [NSSet setWithObjects:@"x", @"y", @"z", nil];
 	[serializedEntities enumerateObjectsUsingBlock:^(id entityDef, NSUInteger idx, BOOL *stop)
 	 {
 		 NSInteger x = [entityDef ja_integerForKey:@"x"] - baseX;
@@ -137,7 +136,7 @@ static id KeyForCoords(NSInteger x, NSInteger y, NSInteger z)
 		 [_tileEntities setObject:entityDef forKey:KeyForCoords(x, y, z)];
 	 }];
 	
-	self.metadata = [dict ja_dictionaryByRemovingObjectsForKeys:$set(@"Sections", @"TileEntities", @"HeightMap")];
+	self.metadata = [dict ja_dictionaryByRemovingObjectsForKeys:[NSSet setWithObjects:@"Sections", @"TileEntities", @"HeightMap", nil]];
 	
 	[self endBulkUpdate];
 	[self noteChangeInExtents:self.extents];

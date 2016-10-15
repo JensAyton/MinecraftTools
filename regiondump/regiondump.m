@@ -29,7 +29,6 @@
 #import <JAMinecraftKit/JAMinecraftRegionReader.h>
 #import <JANBTSerialization/JANBTSerialization.h>
 #import <JAMinecraftKit/JAPropertyListAccessors.h>
-#import <JAMinecraftKit/MYCollectionUtilities.h>
 #import "JAPrintf.h"
 
 
@@ -152,7 +151,26 @@ static void DumpChunkInfo(NSData *chunkData)
 	
 	// List unknown keys.
 	static NSSet *knownKeys;
-	if (knownKeys == nil)  knownKeys = $set(@"Blocks", @"Data", @"SkyLight", @"BlockLight", @"HeightMap", @"Entities", @"TileEntities", @"LastUpdate", @"xPos", @"zPos", @"TerrainPopulated", @"V", @"Biomes", @"InhabitedTime", @"LightPopulated", @"Sections");
+	if (knownKeys == nil) {
+		knownKeys = [NSSet setWithObjects:
+					 @"Blocks",
+					 @"Data",
+					 @"SkyLight",
+					 @"BlockLight",
+					 @"HeightMap",
+					 @"Entities",
+					 @"TileEntities",
+					 @"LastUpdate",
+					 @"xPos",
+					 @"zPos",
+					 @"TerrainPopulated",
+					 @"V",
+					 @"Biomes",
+					 @"InhabitedTime",
+					 @"LightPopulated",
+					 @"Sections",
+					nil];
+	}
 	NSMutableArray *unknown;
 	
 	for (id key in level)

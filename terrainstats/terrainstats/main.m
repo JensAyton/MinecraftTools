@@ -3,7 +3,6 @@
 #import <JAMinecraftKit/JAMinecraftAnvilRegionReader.h>
 #import <JAMinecraftKit/JAMinecraftAnvilChunkBlockStore.h>
 #import <JAMinecraftKit/JAPropertyListAccessors.h>
-#import <JAMinecraftKit/MYCollectionUtilities.h>
 #import <JANBTSerialization/JANBTSerialization.h>
 #import "JATerrainStatistics.h"
 
@@ -563,7 +562,7 @@ static NSString *BlockOrItemName(NSUInteger itemID)
 	NSString *result = [outOfSequence objectForKey:[NSNumber numberWithInteger:itemID]];
 	if (result != nil)  return result;
 	
-	return $sprintf(@"unknown-%lu", itemID);
+	return [NSString stringWithFormat:@"unknown-%lu", itemID];
 }
 
 
