@@ -91,18 +91,17 @@
 #import <Foundation/Foundation.h>
 
 
-enum
+typedef NS_ENUM(NSInteger, JANBTReadingOptions)
 {
 	// Produce mutable NSDictionaries and NSArrays.
-	kJANBTReadingMutableContainers		= 0x0001,
+	JANBTReadingOptionsMutableContainers	= 0x0001,
 	
 	// Produce mutable NSStrings and NSDatas.
-	kJANBTReadingMutableLeaves			= 0x0002,
+	JANBTReadingOptionsMutableLeaves		= 0x0002,
 	
 	// Allow top-level objects that are not dictionaries or arrays.
-	kJANBTReadingAllowFragments			= 0x0004
+	JANBTReadingOptionsAllowFragments		= 0x0004,
 };
-typedef NSInteger JANBTReadingOptions;
 
 
 typedef NSInteger JANBTWritingOptions;	 // No options defined, use 0.

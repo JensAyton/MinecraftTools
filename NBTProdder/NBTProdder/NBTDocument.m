@@ -79,7 +79,7 @@
 {
 	NSString *rootName;
 	id root = [JANBTSerialization NBTObjectWithData:data
-										   rootName:&rootName options:kJANBTReadingMutableLeaves | kJANBTReadingMutableContainers | kJANBTReadingAllowFragments
+										   rootName:&rootName options:JANBTReadingOptionsMutableLeaves | JANBTReadingOptionsMutableContainers | JANBTReadingOptionsAllowFragments
 											 schema:nil
 											  error:outError];
 	

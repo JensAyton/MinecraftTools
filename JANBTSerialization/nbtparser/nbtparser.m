@@ -38,7 +38,7 @@ int main (int argc, const char * argv[])
 			
 			NSString __autoreleasing *rootName;
 			NSError __autoreleasing *error;
-			id root = [JANBTSerialization NBTObjectWithData:data rootName:&rootName options:kJANBTReadingAllowFragments schema:nil error:&error];
+			id root = [JANBTSerialization NBTObjectWithData:data rootName:&rootName options:JANBTReadingOptionsAllowFragments schema:nil error:&error];
 			
 			if (root == nil)
 			{

@@ -88,9 +88,9 @@ static inline BOOL IsNumericalSchema(id schema);
 	{
 		_decompressor = [[JAZlibDecompressor alloc] initWithStream:stream mode:kJAZLibCompressionAutoDetect];
 		
-		_mutableContainers = options & kJANBTReadingMutableContainers;
-		_mutableLeaves = options & kJANBTReadingMutableLeaves;
-		_allowFragments = options & kJANBTReadingAllowFragments;
+		_mutableContainers = options & JANBTReadingOptionsMutableContainers;
+		_mutableLeaves = options & JANBTReadingOptionsMutableLeaves;
+		_allowFragments = options & JANBTReadingOptionsAllowFragments;
 		
 		_keyPath = [NSMutableArray new];
 	}
